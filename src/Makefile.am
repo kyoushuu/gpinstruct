@@ -17,7 +17,16 @@ AM_CFLAGS =\
 bin_PROGRAMS = canvas
 
 canvas_SOURCES = \
-	main.c
+	main.c \
+	canvas-project.h \
+	canvas-project.c \
+	canvas-category.h \
+	canvas-category.c \
+	canvas-lesson.h \
+	canvas-lesson.c \
+	canvas.h \
+	canvas-lesson-element.h \
+	canvas-lesson-element.c
 
 canvas_LDFLAGS = \
 	-Wl,--export-dynamic
