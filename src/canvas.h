@@ -25,7 +25,21 @@
  */
 
 #include "canvas-lesson-element.h"
+
+#include "canvas-lesson-discussion.h"
+#include "canvas-lesson-reading.h"
+
+
+#include "canvas-lesson-test.h"
+
+#include "canvas-lesson-test-multi-choice-question.h"
+#include "canvas-lesson-test-multi-choice.h"
+#include "canvas-lesson-test-word-pool-question.h"
+#include "canvas-lesson-test-word-pool.h"
+
+
 #include "canvas-lesson.h"
 #include "canvas-category.h"
 #include "canvas-project.h"
+
 #include "canvas-parser.h"

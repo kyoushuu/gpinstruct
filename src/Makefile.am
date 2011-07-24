@@ -18,17 +18,31 @@ bin_PROGRAMS = canvas
 
 canvas_SOURCES = \
 	main.c \
+	canvas.h \
 	canvas-project.h \
 	canvas-project.c \
 	canvas-category.h \
 	canvas-category.c \
 	canvas-lesson.h \
 	canvas-lesson.c \
-	canvas.h \
 	canvas-lesson-element.h \
 	canvas-lesson-element.c \
 	canvas-parser.h \
-	canvas-parser.c
+	canvas-parser.c \
+	canvas-lesson-discussion.h \
+	canvas-lesson-discussion.c \
+	canvas-lesson-test.h \
+	canvas-lesson-test.c \
+	canvas-lesson-reading.h \
+	canvas-lesson-reading.c \
+	canvas-lesson-test-multi-choice.h \
+	canvas-lesson-test-multi-choice.c \
+	canvas-lesson-test-word-pool.h \
+	canvas-lesson-test-word-pool.c \
+	canvas-lesson-test-multi-choice-question.h \
+	canvas-lesson-test-multi-choice-question.c \
+	canvas-lesson-test-word-pool-question.h \
+	canvas-lesson-test-word-pool-question.c
 
 canvas_LDFLAGS = \
 	-Wl,--export-dynamic

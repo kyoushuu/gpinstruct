@@ -26,10 +26,15 @@ typedef struct _CanvasParserPrivate CanvasParserPrivate;
 struct _CanvasParserPrivate
 {
 	CanvasProject* project;
+
 	CanvasProject* current_project;
 	CanvasCategory* current_category;
 	CanvasLesson* current_lesson;
+
 	CanvasLessonElement* current_lesson_element;
+	CanvasLessonDiscussion* current_lesson_discussion;
+	CanvasLessonReading* current_lesson_reading;
+	CanvasLessonTest* current_lesson_test;
 };
 
 #define CANVAS_PARSER_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_PARSER, CanvasParserPrivate))
@@ -42,11 +47,17 @@ static void
 canvas_parser_init (CanvasParser *object)
 {
 	CanvasParserPrivate* private_data = CANVAS_PARSER_PRIVATE (object);
+
 	private_data->project = NULL;
+
 	private_data->current_project = NULL;
 	private_data->current_category = NULL;
 	private_data->current_lesson = NULL;
+
 	private_data->current_lesson_element = NULL;
+	private_data->current_lesson_discussion = NULL;
+	private_data->current_lesson_reading = NULL;
+	private_data->current_lesson_test = NULL;
 }
 
 static void
@@ -84,7 +95,6 @@ void parse_start_element (GMarkupParseContext *context,
 	{
 		if (private_data->current_project == NULL)
 		{
-			g_print("Start of Project\n");
 			CanvasProject* project = canvas_project_new ();
 			private_data->current_project = project;
 			private_data->project = project;
@@ -92,10 +102,7 @@ void parse_start_element (GMarkupParseContext *context,
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
-				{
-					g_print("Title of Project: %s\n", attribute_names[i]);
 					canvas_project_set_title (project, attribute_names[i]);
-				}
 			}
 		}
 		else
@@ -105,7 +112,6 @@ void parse_start_element (GMarkupParseContext *context,
 	{
 		if (private_data->current_project)
 		{
-			g_print("Start of Category\n");
 			CanvasCategory* category = canvas_category_new ();
 			private_data->current_category = category;
 			canvas_project_add_category (private_data->current_project, category);
@@ -113,10 +119,7 @@ void parse_start_element (GMarkupParseContext *context,
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
-				{
-					g_print("Title of Category: %s\n", attribute_names[i]);
 					canvas_category_set_title (category, attribute_names[i]);
-				}
 			}
 		}
 		else
@@ -126,7 +129,6 @@ void parse_start_element (GMarkupParseContext *context,
 	{
 		if (private_data->current_category)
 		{
-			g_print("Start of Lesson\n");
 			CanvasLesson* lesson = canvas_lesson_new ();
 			private_data->current_lesson = lesson;
 			canvas_category_add_lesson (private_data->current_category, lesson);
@@ -134,20 +136,16 @@ void parse_start_element (GMarkupParseContext *context,
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
-				{
-					g_print("Title of Lesson: %s\n", attribute_names[i]);
 					canvas_lesson_set_title (lesson, attribute_names[i]);
-				}
 			}
 		}
 		else
 			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Lesson element without Category element parent."));
 	}
-	else if (g_strcmp0 ("lesson-element_name", element_name) == 0)
+/*	else if (g_strcmp0 ("lesson-element", element_name) == 0)
 	{
 		if (private_data->current_lesson)
 		{
-			g_print("Start of Lesson Element\n");
 			CanvasLessonElement* lesson_element = canvas_lesson_element_new ();
 			private_data->current_lesson_element = lesson_element;
 			canvas_lesson_add_lesson_element (private_data->current_lesson, lesson_element);
@@ -155,15 +153,72 @@ void parse_start_element (GMarkupParseContext *context,
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
-				{
-					g_print("Title of Lesson Element: %s\n", attribute_names[i]);
 					canvas_lesson_element_set_title (lesson_element, attribute_names[i]);
-				}
 			}
 		}
 		else
 			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Lesson Element element without Lesson element parent."));
+	}*/
+	else if (g_strcmp0 ("lesson-discussion", element_name) == 0)
+	{
+		if (private_data->current_lesson)
+		{
+			CanvasLessonDiscussion* lesson_discussion = canvas_lesson_discussion_new ();
+			private_data->current_lesson_discussion = lesson_discussion;
+			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_discussion);
+			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_discussion));
+			int i;
+			for (i=0; attribute_names[i] != NULL; i++)
+			{
+				if (g_strcmp0 ("title", attribute_names[i]) == 0)
+					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_discussion), attribute_names[i]);
+				else if (g_strcmp0 ("text", attribute_names[i]) == 0)
+					canvas_lesson_discussion_set_text (lesson_discussion, attribute_names[i]);
+			}
+		}
+		else
+			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Lesson Discussion element without Lesson element parent."));
 	}
+	else if (g_strcmp0 ("lesson-reading", element_name) == 0)
+	{
+		if (private_data->current_lesson)
+		{
+			CanvasLessonReading* lesson_reading = canvas_lesson_reading_new ();
+			private_data->current_lesson_reading = lesson_reading;
+			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_reading);
+			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_reading));
+			int i;
+			for (i=0; attribute_names[i] != NULL; i++)
+			{
+				if (g_strcmp0 ("title", attribute_names[i]) == 0)
+					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_reading), attribute_names[i]);
+				else if (g_strcmp0 ("text", attribute_names[i]) == 0)
+					canvas_lesson_reading_set_text (lesson_reading, attribute_names[i]);
+			}
+		}
+		else
+			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Lesson Reading element without Lesson element parent."));
+	}
+/*	else if (g_strcmp0 ("lesson-test", element_name) == 0)
+	{
+		if (private_data->current_lesson)
+		{
+			CanvasLessonTest* lesson_test = canvas_lesson_test_new ();
+			private_data->current_lesson_test = lesson_test;
+			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test);
+			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test));
+			int i;
+			for (i=0; attribute_names[i] != NULL; i++)
+			{
+				if (g_strcmp0 ("title", attribute_names[i]) == 0)
+					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_test), attribute_names[i]);
+				else if (g_strcmp0 ("direction", attribute_names[i]) == 0)
+					canvas_lesson_test_set_direction (lesson_test, attribute_names[i]);
+			}
+		}
+		else
+			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Lesson Test element without Lesson element parent."));
+	}*/
 	else
 		g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT, _("Unknown element: %s"), element_name);
 }
@@ -181,8 +236,23 @@ void parse_end_element (GMarkupParseContext *context,
 		private_data->current_category = NULL;
 	else if (g_strcmp0 ("lesson", element_name) == 0)
 		private_data->current_lesson = NULL;
-	else if (g_strcmp0 ("lesson-element_name", element_name) == 0)
+/*	else if (g_strcmp0 ("lesson-element", element_name) == 0)
+		private_data->current_lesson_element = NULL;*/
+	else if (g_strcmp0 ("lesson-discussion", element_name) == 0)
+	{
 		private_data->current_lesson_element = NULL;
+		private_data->current_lesson_discussion = NULL;
+	}
+	else if (g_strcmp0 ("lesson-reading", element_name) == 0)
+	{
+		private_data->current_lesson_element = NULL;
+		private_data->current_lesson_reading = NULL;
+	}
+/*	else if (g_strcmp0 ("lesson-test", element_name) == 0)
+	{
+		private_data->current_lesson_element = NULL;
+		private_data->current_lesson_test = NULL;
+	}*/
 	else
 		g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT, _("Unknown element: %s"), element_name);
 }
