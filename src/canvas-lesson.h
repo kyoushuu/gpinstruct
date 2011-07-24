@@ -51,6 +51,7 @@ void canvas_lesson_set_title (CanvasLesson* lesson, const gchar* title);
 guint canvas_lesson_get_lesson_elements_length (CanvasLesson* lesson);
 void canvas_lesson_add_lesson_element (CanvasLesson* lesson, CanvasLessonElement* element);
 void canvas_lesson_remove_lesson_element (CanvasLesson* lesson, CanvasLessonElement* element);
+GList* canvas_lesson_get_lesson_elements (CanvasLesson* lesson);
 
 G_END_DECLS
 

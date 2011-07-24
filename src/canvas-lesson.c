@@ -114,3 +114,9 @@ canvas_lesson_remove_lesson_element (CanvasLesson* lesson,
 	CanvasLessonPrivate* private_data = CANVAS_LESSON_PRIVATE(lesson);
 	private_data->lesson_elements = g_list_append (private_data->lesson_elements, element);
 }
+
+GList*
+canvas_lesson_get_lesson_elements (CanvasLesson* lesson)
+{
+	return g_list_copy (CANVAS_LESSON_PRIVATE(lesson)->lesson_elements);
+}

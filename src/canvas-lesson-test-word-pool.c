@@ -73,7 +73,7 @@ canvas_lesson_test_word_pool_new (void)
 
 void
 canvas_lesson_test_word_pool_add_question (CanvasLessonTestWordPool* test,
-                                              CanvasLessonTestWordPoolQuestion* question)
+                                           CanvasLessonTestWordPoolQuestion* question)
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_WORD_POOL (test));
 
@@ -83,10 +83,43 @@ canvas_lesson_test_word_pool_add_question (CanvasLessonTestWordPool* test,
 
 void
 canvas_lesson_test_word_pool_remove_question (CanvasLessonTestWordPool* test,
-                                                 CanvasLessonTestWordPoolQuestion* question)
+                                              guint question)
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_WORD_POOL (test));
 
 	CanvasLessonTestWordPoolPrivate* private_data = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
-	private_data->questions = g_list_remove (private_data->questions, question);
+	private_data->questions = g_list_remove (private_data->questions, g_list_nth (private_data->questions, question));
+}
+
+GList*
+canvas_lesson_test_word_pool_get_questions (CanvasLessonTestWordPool* test)
+{
+	return g_list_copy (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->questions);
+}
+
+void
+canvas_lesson_test_word_pool_add_choice (CanvasLessonTestWordPool* test,
+                                         const gchar* choice)
+{
+	g_return_if_fail (CANVAS_IS_LESSON_TEST_WORD_POOL (test));
+
+	CanvasLessonTestWordPoolPrivate* private_data = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
+	private_data->choices = g_list_append (private_data->choices, g_strdup (choice));
+}
+
+void
+canvas_lesson_test_word_pool_remove_choice (CanvasLessonTestWordPool* test,
+                                            guint choice)
+{
+	g_return_if_fail (CANVAS_IS_LESSON_TEST_WORD_POOL (test));
+
+	CanvasLessonTestWordPoolPrivate* private_data = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
+	
+	private_data->questions = g_list_delete_link (private_data->choices, g_list_nth (private_data->choices, choice));
+}
+
+GList*
+canvas_lesson_test_word_pool_get_choices (CanvasLessonTestWordPool* test)
+{
+	return g_list_copy (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->choices);
 }

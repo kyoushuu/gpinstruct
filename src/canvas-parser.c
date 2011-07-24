@@ -35,6 +35,9 @@ struct _CanvasParserPrivate
 	CanvasLessonDiscussion* current_lesson_discussion;
 	CanvasLessonReading* current_lesson_reading;
 	CanvasLessonTest* current_lesson_test;
+
+	gboolean text;
+	gboolean discussion;
 };
 
 #define CANVAS_PARSER_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_PARSER, CanvasParserPrivate))
@@ -58,6 +61,9 @@ canvas_parser_init (CanvasParser *object)
 	private_data->current_lesson_discussion = NULL;
 	private_data->current_lesson_reading = NULL;
 	private_data->current_lesson_test = NULL;
+
+	private_data->text = FALSE;
+	private_data->discussion = FALSE;
 }
 
 static void
@@ -172,8 +178,6 @@ void parse_start_element (GMarkupParseContext *context,
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
 					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_discussion), attribute_names[i]);
-				else if (g_strcmp0 ("text", attribute_names[i]) == 0)
-					canvas_lesson_discussion_set_text (lesson_discussion, attribute_names[i]);
 			}
 		}
 		else
@@ -192,8 +196,6 @@ void parse_start_element (GMarkupParseContext *context,
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
 					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_reading), attribute_names[i]);
-				else if (g_strcmp0 ("text", attribute_names[i]) == 0)
-					canvas_lesson_reading_set_text (lesson_reading, attribute_names[i]);
 			}
 		}
 		else
@@ -219,6 +221,10 @@ void parse_start_element (GMarkupParseContext *context,
 		else
 			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Lesson Test element without Lesson element parent."));
 	}*/
+	else if (g_strcmp0 ("text", element_name) == 0)
+		private_data->text = TRUE;
+	else if (g_strcmp0 ("discussion", element_name) == 0)
+		private_data->discussion = TRUE;
 	else
 		g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT, _("Unknown element: %s"), element_name);
 }
@@ -253,8 +259,42 @@ void parse_end_element (GMarkupParseContext *context,
 		private_data->current_lesson_element = NULL;
 		private_data->current_lesson_test = NULL;
 	}*/
+	else if (g_strcmp0 ("text", element_name) == 0)
+		private_data->text = FALSE;
+	else if (g_strcmp0 ("discussion", element_name) == 0)
+		private_data->discussion = FALSE;
 	else
 		g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT, _("Unknown element: %s"), element_name);
+}
+
+/* Called for character data */
+/* text is not nul-terminated */
+void parse_text (GMarkupParseContext *context,
+                 const gchar         *text,
+                 gsize                text_len,
+                 gpointer             user_data,
+                 GError             **error)
+{
+	CanvasParserPrivate* private_data = user_data;
+	gchar* text_nul = g_strndup (text, text_len);
+
+	if (private_data->text)
+	{
+		if (private_data->current_lesson_discussion)
+			canvas_lesson_discussion_set_text (private_data->current_lesson_discussion,
+			                                   text_nul);
+		else if (private_data->current_lesson_reading)
+			canvas_lesson_reading_set_text (private_data->current_lesson_reading,
+			                                text_nul);
+	}
+	else if (private_data->discussion)
+	{
+		if (private_data->current_lesson_test)
+			canvas_lesson_test_set_direction (private_data->current_lesson_test,
+			                                  text_nul);
+	}
+
+	g_free (text_nul);
 }
 
 
@@ -271,7 +311,7 @@ canvas_parser_parse (CanvasParser* parser, const gchar* text, GError** error)
 	GMarkupParser markup_parser = {
 		parse_start_element,
 		parse_end_element,
-		NULL,
+		parse_text,
 		NULL,
 		NULL
 	};

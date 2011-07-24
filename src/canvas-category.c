@@ -114,3 +114,9 @@ canvas_category_remove_lesson (CanvasCategory* category,
 	CanvasCategoryPrivate* private_data = CANVAS_CATEGORY_PRIVATE(category);
 	private_data->lessons = g_list_remove (private_data->lessons, lesson);
 }
+
+GList*
+canvas_category_get_lessons (CanvasCategory* category)
+{
+	return g_list_copy (CANVAS_CATEGORY_PRIVATE(category)->lessons);
+}

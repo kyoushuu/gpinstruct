@@ -24,6 +24,7 @@ struct _CanvasLessonTestMultiChoiceQuestionPrivate
 {
 	gchar* text;
 	guint answer;
+	GList* choices;
 };
 
 #define CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, CanvasLessonTestMultiChoiceQuestionPrivate))
@@ -99,4 +100,30 @@ canvas_lesson_test_multi_choice_question_set_answer (CanvasLessonTestMultiChoice
 	CanvasLessonTestMultiChoiceQuestionPrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question);
 
 	private_data->answer = answer;
+}
+
+void
+canvas_lesson_test_multi_choice_question_add_choice (CanvasLessonTestMultiChoiceQuestion* question,
+                                                     const gchar* choice)
+{
+	g_return_if_fail (CANVAS_IS_LESSON_TEST_MULTI_CHOICE_QUESTION (question));
+
+	CanvasLessonTestMultiChoiceQuestionPrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE (question);
+	private_data->choices = g_list_append (private_data->choices, g_strdup (choice));
+}
+
+void
+canvas_lesson_test_multi_choice_question_remove_choice (CanvasLessonTestMultiChoiceQuestion* question,
+                                                        guint choice)
+{
+	g_return_if_fail (CANVAS_IS_LESSON_TEST_MULTI_CHOICE_QUESTION (question));
+
+	CanvasLessonTestMultiChoiceQuestionPrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE (question);
+	private_data->choices = g_list_delete_link (private_data->choices, g_list_nth (private_data->choices, choice));
+}
+
+GList*
+canvas_lesson_test_multi_choice_question_get_choices (CanvasLessonTestMultiChoiceQuestion* question)
+{
+	return g_list_copy (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices);
 }

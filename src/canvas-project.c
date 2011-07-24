@@ -113,3 +113,9 @@ canvas_project_remove_category (CanvasProject* project,
 	CanvasProjectPrivate* private_data = CANVAS_PROJECT_PRIVATE(project);
 	private_data->categories = g_list_remove (private_data->categories, category);
 }
+
+GList*
+canvas_project_get_categories (CanvasProject* project)
+{
+	return g_list_copy (CANVAS_PROJECT_PRIVATE(project)->categories);
+}

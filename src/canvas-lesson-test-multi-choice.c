@@ -79,10 +79,16 @@ canvas_lesson_test_multi_choice_add_question (CanvasLessonTestMultiChoice* test,
 
 void
 canvas_lesson_test_multi_choice_remove_question (CanvasLessonTestMultiChoice* test,
-                                                 CanvasLessonTestMultiChoiceQuestion* question)
+                                                 guint question)
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (test));
 
 	CanvasLessonTestMultiChoicePrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test);
-	private_data->questions = g_list_remove (private_data->questions, question);
+	private_data->questions = g_list_delete_link (private_data->questions, g_list_nth (private_data->questions, question));
+}
+
+GList*
+canvas_lesson_test_multi_choice_get_questions (CanvasLessonTestMultiChoice* test)
+{
+	return g_list_copy (CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test)->questions);
 }
