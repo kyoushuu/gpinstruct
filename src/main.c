@@ -60,6 +60,7 @@ main (int argc, char *argv[])
 		printf(_("Error: %s\n"), error->message);
 		g_error_free (error);
 	}
+	g_free (contents);
 
 	canvas_parser_save (parser, project, "english2.xml", &error);
 	if (error)
