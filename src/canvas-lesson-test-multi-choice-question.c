@@ -39,6 +39,7 @@ canvas_lesson_test_multi_choice_question_init (CanvasLessonTestMultiChoiceQuesti
 	CanvasLessonTestMultiChoiceQuestionPrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(object);
 	private_data->text = g_strdup ("");
 	private_data->answer = 0;
+	private_data->choices = NULL;
 }
 
 static void
@@ -48,6 +49,9 @@ canvas_lesson_test_multi_choice_question_finalize (GObject *object)
 
 	if (private_data->text)
 		g_free (private_data->text);
+
+	if (private_data->choices)
+		g_list_free_full (private_data->choices, g_free);
 
 	G_OBJECT_CLASS (canvas_lesson_test_multi_choice_question_parent_class)->finalize (object);
 }
