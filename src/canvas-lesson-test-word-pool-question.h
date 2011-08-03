@@ -36,12 +36,12 @@ typedef struct _CanvasLessonTestWordPoolQuestion CanvasLessonTestWordPoolQuestio
 
 struct _CanvasLessonTestWordPoolQuestionClass
 {
-	GObjectClass parent_class;
+	CanvasObjectClass parent_class;
 };
 
 struct _CanvasLessonTestWordPoolQuestion
 {
-	GObject parent_instance;
+	CanvasObject parent_instance;
 };
 
 GType canvas_lesson_test_word_pool_question_get_type (void) G_GNUC_CONST;

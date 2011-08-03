@@ -46,7 +46,7 @@ canvas_lesson_test_word_pool_finalize (GObject *object)
 	CanvasLessonTestWordPoolPrivate* private_data = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(object);
 
 	if (private_data->questions)
-		g_list_free_full (private_data->questions, g_free);
+		g_list_free_full (private_data->questions, g_object_unref);
 	if (private_data->choices)
 		g_list_free_full (private_data->choices, g_free);
 
@@ -57,7 +57,7 @@ static void
 canvas_lesson_test_word_pool_class_init (CanvasLessonTestWordPoolClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	CanvasLessonTestClass* parent_class = CANVAS_LESSON_TEST_CLASS (klass);
+	/*CanvasLessonTestClass* parent_class = CANVAS_LESSON_TEST_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestWordPoolPrivate));
 

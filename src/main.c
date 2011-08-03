@@ -27,21 +27,6 @@
 
 
 
-static GtkWidget*
-create_window (void)
-{
-	GtkWidget *window;
-
-	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title (GTK_WINDOW (window), "Canvas");
-
-	/* Exit when the window is closed */
-	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-	
-	return window;
-}
-
-
 int
 main (int argc, char *argv[])
 {
@@ -56,9 +41,6 @@ main (int argc, char *argv[])
 
 	
 	gtk_init (&argc, &argv);
-
-	window = create_window ();
-	gtk_widget_show (window);
 
 	GError* error = NULL;
 
@@ -86,6 +68,17 @@ main (int argc, char *argv[])
 		g_error_free (error);
 	}
 
+	window = canvas_project_view_new (project);
+
+	/* Exit when the window is closed */
+	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+	gtk_widget_show_all (window);
+
 	gtk_main ();
+
+	g_object_unref (project);
+	g_object_unref (parser);
+
 	return 0;
 }

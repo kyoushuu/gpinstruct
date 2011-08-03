@@ -36,12 +36,12 @@ typedef struct _CanvasParser CanvasParser;
 
 struct _CanvasParserClass
 {
-	GObjectClass parent_class;
+	CanvasObjectClass parent_class;
 };
 
 struct _CanvasParser
 {
-	GObject parent_instance;
+	CanvasObject parent_instance;
 };
 
 GType canvas_parser_get_type (void) G_GNUC_CONST;

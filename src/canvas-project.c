@@ -30,7 +30,7 @@ struct _CanvasProjectPrivate
 
 
 
-G_DEFINE_TYPE (CanvasProject, canvas_project, G_TYPE_OBJECT);
+G_DEFINE_TYPE (CanvasProject, canvas_project, CANVAS_TYPE_OBJECT);
 
 static void
 canvas_project_init (CanvasProject *object)
@@ -48,7 +48,7 @@ canvas_project_finalize (GObject *object)
 	if (private_data->title)
 		g_free (private_data->title);
 	if (private_data->categories)
-		g_list_free_full (private_data->categories, g_free);
+		g_list_free_full (private_data->categories, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_project_parent_class)->finalize (object);
 }
@@ -57,7 +57,7 @@ static void
 canvas_project_class_init (CanvasProjectClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GObjectClass* parent_class = G_OBJECT_CLASS (klass);
+	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasProjectPrivate));
 

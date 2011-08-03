@@ -36,12 +36,12 @@ typedef struct _CanvasCategory CanvasCategory;
 
 struct _CanvasCategoryClass
 {
-	GObjectClass parent_class;
+	CanvasObjectClass parent_class;
 };
 
 struct _CanvasCategory
 {
-	GObject parent_instance;
+	CanvasObject parent_instance;
 };
 
 GType canvas_category_get_type (void) G_GNUC_CONST;

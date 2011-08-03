@@ -44,7 +44,7 @@ canvas_lesson_test_multi_choice_finalize (GObject *object)
 	CanvasLessonTestMultiChoicePrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(object);
 
 	if (private_data->questions)
-		g_list_free_full (private_data->questions, g_free);
+		g_list_free_full (private_data->questions, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_lesson_test_multi_choice_parent_class)->finalize (object);
 }
@@ -53,7 +53,7 @@ static void
 canvas_lesson_test_multi_choice_class_init (CanvasLessonTestMultiChoiceClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	CanvasLessonTestClass* parent_class = CANVAS_LESSON_TEST_CLASS (klass);
+	/*CanvasLessonTestClass* parent_class = CANVAS_LESSON_TEST_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestMultiChoicePrivate));
 

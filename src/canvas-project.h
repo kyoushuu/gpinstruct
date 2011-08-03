@@ -37,12 +37,12 @@ typedef struct _CanvasProject CanvasProject;
 
 struct _CanvasProjectClass
 {
-	GObjectClass parent_class;
+	CanvasObjectClass parent_class;
 };
 
 struct _CanvasProject
 {
-	GObject parent_instance;
+	CanvasObject parent_instance;
 };
 
 GType canvas_project_get_type (void) G_GNUC_CONST;

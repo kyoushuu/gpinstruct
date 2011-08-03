@@ -52,7 +52,7 @@ struct _CanvasParserPrivate
 
 
 
-G_DEFINE_TYPE (CanvasParser, canvas_parser, G_TYPE_OBJECT);
+G_DEFINE_TYPE (CanvasParser, canvas_parser, CANVAS_TYPE_OBJECT);
 
 static void
 canvas_parser_init (CanvasParser *object)
@@ -83,9 +83,6 @@ canvas_parser_init (CanvasParser *object)
 static void
 canvas_parser_finalize (GObject *object)
 {
-	CanvasParserPrivate* private_data = CANVAS_PARSER_PRIVATE (object);
-	if (private_data->current_project)
-		g_free (private_data->current_project);
 
 	G_OBJECT_CLASS (canvas_parser_parent_class)->finalize (object);
 }
@@ -94,7 +91,7 @@ static void
 canvas_parser_class_init (CanvasParserClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GObjectClass* parent_class = G_OBJECT_CLASS (klass);
+	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasParserPrivate));
 
@@ -157,6 +154,13 @@ void parse_start_element (GMarkupParseContext *context,
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
 					canvas_lesson_set_title (lesson, attribute_values[i]);
+				else if (g_strcmp0 ("single-score", attribute_names[i]) == 0)
+				{
+					if (g_strcmp0 ("true", attribute_values[i]) == 0)
+						canvas_lesson_set_single_score (lesson, TRUE);
+					else
+						canvas_lesson_set_single_score (lesson, FALSE);
+				}
 			}
 		}
 		else
@@ -249,8 +253,6 @@ void parse_start_element (GMarkupParseContext *context,
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
 					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_test_multi_choice), attribute_values[i]);
-				else if (g_strcmp0 ("directions", attribute_names[i]) == 0)
-					canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (lesson_test_multi_choice), attribute_values[i]);
 			}
 		}
 		else
@@ -270,8 +272,6 @@ void parse_start_element (GMarkupParseContext *context,
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
 					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_test_word_pool), attribute_values[i]);
-				else if (g_strcmp0 ("directions", attribute_names[i]) == 0)
-					canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (lesson_test_word_pool), attribute_values[i]);
 			}
 		}
 		else
@@ -291,8 +291,6 @@ void parse_start_element (GMarkupParseContext *context,
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
-				if (g_strcmp0 ("text", attribute_names[i]) == 0)
-					canvas_lesson_test_multi_choice_question_set_text (lesson_test_multi_choice_question, attribute_values[i]);
 				if (g_strcmp0 ("answer", attribute_names[i]) == 0)
 					canvas_lesson_test_multi_choice_question_set_answer (lesson_test_multi_choice_question, atoi (attribute_values[i]));
 			}
@@ -305,8 +303,6 @@ void parse_start_element (GMarkupParseContext *context,
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
-				if (g_strcmp0 ("text", attribute_names[i]) == 0)
-					canvas_lesson_test_word_pool_question_set_text (lesson_test_word_pool_question, attribute_values[i]);
 				if (g_strcmp0 ("answer", attribute_names[i]) == 0)
 					canvas_lesson_test_word_pool_question_set_answer (lesson_test_word_pool_question, atoi (attribute_values[i]));
 			}
@@ -392,7 +388,13 @@ void parse_text (GMarkupParseContext *context,
 
 	if (private_data->text)
 	{
-		if (private_data->current_lesson_discussion)
+		if (private_data->current_lesson_test_multi_choice_question)
+			canvas_lesson_test_multi_choice_question_set_text (private_data->current_lesson_test_multi_choice_question,
+			                                                   text_nul);
+		else if (private_data->current_lesson_test_word_pool_question)
+			canvas_lesson_test_word_pool_question_set_text (private_data->current_lesson_test_word_pool_question,
+			                                                text_nul);
+		else if (private_data->current_lesson_discussion)
 			canvas_lesson_discussion_set_text (private_data->current_lesson_discussion,
 			                                   text_nul);
 		else if (private_data->current_lesson_reading)
@@ -466,8 +468,6 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 	GList *categories, *lessons, *lesson_elements, *questions, *choices;
 	GList *curr_categories, *curr_lessons, *curr_lesson_elements, *curr_questions, *curr_choices;
 	gchar *output;
-	const gchar *title, *text;
-	guint answer;
 
 	GError* error_local = NULL;
 	GFile* file = g_file_new_for_path (filename);
@@ -481,8 +481,8 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 
 	GDataOutputStream* dataout = g_data_output_stream_new (G_OUTPUT_STREAM (fileout));
 
-	title = canvas_project_get_title (project);
-	output = g_markup_printf_escaped ("<canvas-project title=\"%s\">\n", title);
+	output = g_markup_printf_escaped ("<canvas-project title=\"%s\">\n",
+	                                  canvas_project_get_title (project));
 	g_data_output_stream_put_string (dataout, output, NULL, NULL);
 	g_free (output);
 
@@ -493,8 +493,8 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 	{
 		curr_category = CANVAS_CATEGORY (curr_categories->data);
 
-		title = canvas_category_get_title (curr_category);
-		output = g_markup_printf_escaped ("<category title=\"%s\">\n", title);
+		output = g_markup_printf_escaped ("<category title=\"%s\">\n",
+		                                  canvas_category_get_title (curr_category));
 		g_data_output_stream_put_string (dataout, output, NULL, NULL);
 		g_free (output);
 
@@ -505,8 +505,9 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 		{
 			curr_lesson = CANVAS_LESSON (curr_lessons->data);
 
-			title = canvas_lesson_get_title (curr_lesson);
-			output = g_markup_printf_escaped ("<lesson title=\"%s\">\n", title);
+			output = g_markup_printf_escaped ("<lesson title=\"%s\" single-score=\"%s\">\n",
+			                                  canvas_lesson_get_title (curr_lesson),
+			                                  canvas_lesson_get_single_score (curr_lesson)?"true":"false");
 			g_data_output_stream_put_string (dataout, output, NULL, NULL);
 			g_free (output);
 
@@ -521,13 +522,13 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 				{
 					curr_lesson_discussion = CANVAS_LESSON_DISCUSSION (curr_lesson_element);
 
-					title = canvas_lesson_element_get_title (curr_lesson_element);
-					output = g_markup_printf_escaped ("<lesson-discussion title=\"%s\">\n", title);
+					output = g_markup_printf_escaped ("<lesson-discussion title=\"%s\">\n",
+					                                  canvas_lesson_element_get_title (curr_lesson_element));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
-					text = canvas_lesson_discussion_get_text (curr_lesson_discussion);
-					output = g_markup_printf_escaped ("<text>%s</text>\n", text);
+					output = g_markup_printf_escaped ("<text>%s</text>\n",
+					                                  canvas_lesson_discussion_get_text (curr_lesson_discussion));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
@@ -537,13 +538,13 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 				{
 					curr_lesson_reading = CANVAS_LESSON_READING (curr_lesson_element);
 
-					title = canvas_lesson_element_get_title (curr_lesson_element);
-					output = g_markup_printf_escaped ("<lesson-reading title=\"%s\">\n", title);
+					output = g_markup_printf_escaped ("<lesson-reading title=\"%s\">\n",
+					                                  canvas_lesson_element_get_title (curr_lesson_element));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
-					text = canvas_lesson_reading_get_text (curr_lesson_reading);
-					output = g_markup_printf_escaped ("<text>%s</text>\n", text);
+					output = g_markup_printf_escaped ("<text>%s</text>\n",
+					                                  canvas_lesson_reading_get_text (curr_lesson_reading));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
@@ -553,13 +554,13 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 				{
 					curr_lesson_test_multi_choice = CANVAS_LESSON_TEST_MULTI_CHOICE (curr_lesson_element);
 
-					title = canvas_lesson_element_get_title (curr_lesson_element);
-					output = g_markup_printf_escaped ("<lesson-test-multi-choice title=\"%s\">\n", title);
+					output = g_markup_printf_escaped ("<lesson-test-multi-choice title=\"%s\">\n",
+					                                  canvas_lesson_element_get_title (curr_lesson_element));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
-					text = canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice));
-					output = g_markup_printf_escaped ("<directions>%s</directions>\n", text);
+					output = g_markup_printf_escaped ("<directions>%s</directions>\n",
+					                                  canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
@@ -570,9 +571,13 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 					{
 						curr_lesson_test_multi_choice_question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (curr_questions->data);
 
-						text = canvas_lesson_test_multi_choice_question_get_text (curr_lesson_test_multi_choice_question);
-						answer = canvas_lesson_test_multi_choice_question_get_answer (curr_lesson_test_multi_choice_question);
-						output = g_markup_printf_escaped ("<question text=\"%s\" answer=\"%u\">\n", text, answer);
+						output = g_markup_printf_escaped ("<question answer=\"%u\">\n",
+						                                  canvas_lesson_test_multi_choice_question_get_answer (curr_lesson_test_multi_choice_question));
+						g_data_output_stream_put_string (dataout, output, NULL, NULL);
+						g_free (output);
+
+						output = g_markup_printf_escaped ("<text>%s</text>\n",
+						                                  canvas_lesson_test_multi_choice_question_get_text (curr_lesson_test_multi_choice_question));
 						g_data_output_stream_put_string (dataout, output, NULL, NULL);
 						g_free (output);
 
@@ -605,13 +610,13 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 				{
 					curr_lesson_test_word_pool = CANVAS_LESSON_TEST_WORD_POOL (curr_lesson_element);
 
-					title = canvas_lesson_element_get_title (curr_lesson_element);
-					output = g_markup_printf_escaped ("<lesson-test-word-pool title=\"%s\">\n", title);
+					output = g_markup_printf_escaped ("<lesson-test-word-pool title=\"%s\">\n",
+					                                  canvas_lesson_element_get_title (curr_lesson_element));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
-					text = canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice));
-					output = g_markup_printf_escaped ("<directions>%s</directions>\n", text);
+					output = g_markup_printf_escaped ("<directions>%s</directions>\n",
+					                                  canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
@@ -638,11 +643,17 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 					{
 						curr_lesson_test_word_pool_question = CANVAS_LESSON_TEST_WORD_POOL_QUESTION (curr_questions->data);
 
-						text = canvas_lesson_test_word_pool_question_get_text (curr_lesson_test_word_pool_question);
-						answer = canvas_lesson_test_word_pool_question_get_answer (curr_lesson_test_word_pool_question);
-						output = g_markup_printf_escaped ("<question text=\"%s\" answer=\"%u\"/>n", text, answer);
+						output = g_markup_printf_escaped ("<question answer=\"%u\">\n",
+						                                  canvas_lesson_test_word_pool_question_get_answer (curr_lesson_test_word_pool_question));
 						g_data_output_stream_put_string (dataout, output, NULL, NULL);
 						g_free (output);
+
+						output = g_markup_printf_escaped ("<text>%s</text>\n",
+						                                  canvas_lesson_test_word_pool_question_get_text (curr_lesson_test_word_pool_question));
+						g_data_output_stream_put_string (dataout, output, NULL, NULL);
+						g_free (output);
+
+						g_data_output_stream_put_string (dataout, "</question>\n", NULL, NULL);
 
 						curr_questions = curr_questions->next;
 					}

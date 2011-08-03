@@ -30,7 +30,7 @@ struct _CanvasLessonTestWordPoolQuestionPrivate
 
 
 
-G_DEFINE_TYPE (CanvasLessonTestWordPoolQuestion, canvas_lesson_test_word_pool_question, G_TYPE_OBJECT);
+G_DEFINE_TYPE (CanvasLessonTestWordPoolQuestion, canvas_lesson_test_word_pool_question, CANVAS_TYPE_OBJECT);
 
 static void
 canvas_lesson_test_word_pool_question_init (CanvasLessonTestWordPoolQuestion *object)
@@ -55,7 +55,7 @@ static void
 canvas_lesson_test_word_pool_question_class_init (CanvasLessonTestWordPoolQuestionClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GObjectClass* parent_class = G_OBJECT_CLASS (klass);
+	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestWordPoolQuestionPrivate));
 

@@ -36,12 +36,12 @@ typedef struct _CanvasLesson CanvasLesson;
 
 struct _CanvasLessonClass
 {
-	GObjectClass parent_class;
+	CanvasObjectClass parent_class;
 };
 
 struct _CanvasLesson
 {
-	GObject parent_instance;
+	CanvasObject parent_instance;
 };
 
 GType canvas_lesson_get_type (void) G_GNUC_CONST;
@@ -52,6 +52,8 @@ guint canvas_lesson_get_lesson_elements_length (CanvasLesson* lesson);
 void canvas_lesson_add_lesson_element (CanvasLesson* lesson, CanvasLessonElement* element);
 void canvas_lesson_remove_lesson_element (CanvasLesson* lesson, CanvasLessonElement* element);
 GList* canvas_lesson_get_lesson_elements (CanvasLesson* lesson);
+gboolean canvas_lesson_get_single_score (CanvasLesson* lesson);
+void canvas_lesson_set_single_score (CanvasLesson* lesson, gboolean single_score);
 
 G_END_DECLS
 

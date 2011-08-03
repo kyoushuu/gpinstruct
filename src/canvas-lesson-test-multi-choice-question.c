@@ -31,7 +31,7 @@ struct _CanvasLessonTestMultiChoiceQuestionPrivate
 
 
 
-G_DEFINE_TYPE (CanvasLessonTestMultiChoiceQuestion, canvas_lesson_test_multi_choice_question, G_TYPE_OBJECT);
+G_DEFINE_TYPE (CanvasLessonTestMultiChoiceQuestion, canvas_lesson_test_multi_choice_question, CANVAS_TYPE_OBJECT);
 
 static void
 canvas_lesson_test_multi_choice_question_init (CanvasLessonTestMultiChoiceQuestion *object)
@@ -56,7 +56,7 @@ static void
 canvas_lesson_test_multi_choice_question_class_init (CanvasLessonTestMultiChoiceQuestionClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GObjectClass* parent_class = G_OBJECT_CLASS (klass);
+	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestMultiChoiceQuestionPrivate));
 

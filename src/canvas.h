@@ -24,6 +24,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "canvas-object.h"
+
 #include "canvas-lesson-element.h"
 
 #include "canvas-lesson-discussion.h"
@@ -43,3 +45,22 @@
 #include "canvas-project.h"
 
 #include "canvas-parser.h"
+
+#include <gtk/gtk.h>
+
+#include "canvas-lesson-view-page.h"
+#include "canvas-lesson-view.h"
+#include "canvas-project-view.h"
+
+#include "canvas-lesson-score.h"
+
+#include "canvas-lesson-view-page.h"
+#include "canvas-lesson-discussion-page.h"
+#include "canvas-lesson-reading-page.h"
+#include "canvas-lesson-directions-page.h"
+#include "canvas-lesson-score-page.h"
+#include "canvas-lesson-test-multi-choice-page.h"
+#include "canvas-lesson-test-word-pool-page.h"
+
+#include "canvas-lesson-view.h"
+#include "canvas-project-view.h"

@@ -29,7 +29,7 @@ struct _CanvasLessonElementPrivate
 
 
 
-G_DEFINE_TYPE (CanvasLessonElement, canvas_lesson_element, G_TYPE_OBJECT);
+G_DEFINE_TYPE (CanvasLessonElement, canvas_lesson_element, CANVAS_TYPE_OBJECT);
 
 static void
 canvas_lesson_element_init (CanvasLessonElement *object)
@@ -53,7 +53,7 @@ static void
 canvas_lesson_element_class_init (CanvasLessonElementClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GObjectClass* parent_class = G_OBJECT_CLASS (klass);
+	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonElementPrivate));
 

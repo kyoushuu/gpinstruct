@@ -36,12 +36,12 @@ typedef struct _CanvasLessonTestMultiChoiceQuestion CanvasLessonTestMultiChoiceQ
 
 struct _CanvasLessonTestMultiChoiceQuestionClass
 {
-	GObjectClass parent_class;
+	CanvasObjectClass parent_class;
 };
 
 struct _CanvasLessonTestMultiChoiceQuestion
 {
-	GObject parent_instance;
+	CanvasObject parent_instance;
 };
 
 GType canvas_lesson_test_multi_choice_question_get_type (void) G_GNUC_CONST;

@@ -24,13 +24,14 @@ struct _CanvasLessonPrivate
 {
 	gchar* title;
 	GList* lesson_elements;
+	gboolean single_score;
 };
 
 #define CANVAS_LESSON_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON, CanvasLessonPrivate))
 
 
 
-G_DEFINE_TYPE (CanvasLesson, canvas_lesson, G_TYPE_OBJECT);
+G_DEFINE_TYPE (CanvasLesson, canvas_lesson, CANVAS_TYPE_OBJECT);
 
 static void
 canvas_lesson_init (CanvasLesson *object)
@@ -39,6 +40,7 @@ canvas_lesson_init (CanvasLesson *object)
 
 	private_data->title = g_strdup ("");
 	private_data->lesson_elements = NULL;
+	private_data->single_score = FALSE;
 }
 
 static void
@@ -49,7 +51,7 @@ canvas_lesson_finalize (GObject *object)
 	if (private_data->title)
 		g_free (private_data->title);
 	if (private_data->lesson_elements)
-		g_list_free_full (private_data->lesson_elements, g_free);
+		g_list_free_full (private_data->lesson_elements, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_lesson_parent_class)->finalize (object);
 }
@@ -58,7 +60,7 @@ static void
 canvas_lesson_class_init (CanvasLessonClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GObjectClass* parent_class = G_OBJECT_CLASS (klass);
+	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonPrivate));
 
@@ -69,13 +71,13 @@ canvas_lesson_class_init (CanvasLessonClass *klass)
 CanvasLesson*
 canvas_lesson_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON, NULL);
 }
 
 const gchar*
 canvas_lesson_get_title (CanvasLesson* lesson)
 {
-	return CANVAS_LESSON_PRIVATE(lesson)->title;
+	return CANVAS_LESSON_PRIVATE (lesson)->title;
 }
 
 void
@@ -119,4 +121,14 @@ GList*
 canvas_lesson_get_lesson_elements (CanvasLesson* lesson)
 {
 	return g_list_copy (CANVAS_LESSON_PRIVATE(lesson)->lesson_elements);
+}
+
+gboolean canvas_lesson_get_single_score (CanvasLesson* lesson)
+{
+	return CANVAS_LESSON_PRIVATE(lesson)->single_score;
+}
+
+void canvas_lesson_set_single_score (CanvasLesson* lesson, gboolean single_score)
+{
+	CANVAS_LESSON_PRIVATE(lesson)->single_score = single_score;
 }

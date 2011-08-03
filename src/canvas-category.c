@@ -30,7 +30,7 @@ struct _CanvasCategoryPrivate
 
 
 
-G_DEFINE_TYPE (CanvasCategory, canvas_category, G_TYPE_OBJECT);
+G_DEFINE_TYPE (CanvasCategory, canvas_category, CANVAS_TYPE_OBJECT);
 
 static void
 canvas_category_init (CanvasCategory *object)
@@ -49,7 +49,7 @@ canvas_category_finalize (GObject *object)
 	if (private_data->title)
 		g_free (private_data->title);
 	if (private_data->lessons)
-		g_list_free_full (private_data->lessons, g_free);
+		g_list_free_full (private_data->lessons, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_category_parent_class)->finalize (object);
 }
@@ -58,7 +58,7 @@ static void
 canvas_category_class_init (CanvasCategoryClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GObjectClass* parent_class = G_OBJECT_CLASS (klass);
+	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasCategoryPrivate));
 

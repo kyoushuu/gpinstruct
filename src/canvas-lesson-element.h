@@ -36,12 +36,12 @@ typedef struct _CanvasLessonElement CanvasLessonElement;
 
 struct _CanvasLessonElementClass
 {
-	GObjectClass parent_class;
+	CanvasObjectClass parent_class;
 };
 
 struct _CanvasLessonElement
 {
-	GObject parent_instance;
+	CanvasObject parent_instance;
 };
 
 GType canvas_lesson_element_get_type (void) G_GNUC_CONST;

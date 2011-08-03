@@ -53,7 +53,7 @@ static void
 canvas_lesson_reading_class_init (CanvasLessonReadingClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	CanvasLessonElementClass* parent_class = CANVAS_LESSON_ELEMENT_CLASS (klass);
+	/*CanvasLessonElementClass* parent_class = CANVAS_LESSON_ELEMENT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonReadingPrivate));
 
