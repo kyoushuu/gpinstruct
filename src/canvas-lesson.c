@@ -36,22 +36,22 @@ G_DEFINE_TYPE (CanvasLesson, canvas_lesson, CANVAS_TYPE_OBJECT);
 static void
 canvas_lesson_init (CanvasLesson *object)
 {
-	CanvasLessonPrivate* private_data = CANVAS_LESSON_PRIVATE(object);
+	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(object);
 
-	private_data->title = g_strdup ("");
-	private_data->lesson_elements = NULL;
-	private_data->single_score = FALSE;
+	priv->title = g_strdup ("");
+	priv->lesson_elements = NULL;
+	priv->single_score = FALSE;
 }
 
 static void
 canvas_lesson_finalize (GObject *object)
 {
-	CanvasLessonPrivate* private_data = CANVAS_LESSON_PRIVATE(object);
+	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(object);
 
-	if (private_data->title)
-		g_free (private_data->title);
-	if (private_data->lesson_elements)
-		g_list_free_full (private_data->lesson_elements, g_object_unref);
+	if (priv->title)
+		g_free (priv->title);
+	if (priv->lesson_elements)
+		g_list_free_full (priv->lesson_elements, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_lesson_parent_class)->finalize (object);
 }
@@ -84,11 +84,11 @@ void
 canvas_lesson_set_title (CanvasLesson* lesson,
                          const gchar* title)
 {
-	CanvasLessonPrivate* private_data = CANVAS_LESSON_PRIVATE(lesson);
+	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(lesson);
 
-	if (private_data->title)
-		g_free (private_data->title);
-	private_data->title = g_strdup (title);
+	if (priv->title)
+		g_free (priv->title);
+	priv->title = g_strdup (title);
 }
 
 guint
@@ -103,8 +103,8 @@ canvas_lesson_add_lesson_element (CanvasLesson* lesson,
 {
 	g_return_if_fail (CANVAS_IS_LESSON_ELEMENT (element));
 
-	CanvasLessonPrivate* private_data = CANVAS_LESSON_PRIVATE(lesson);
-	private_data->lesson_elements = g_list_append (private_data->lesson_elements, element);
+	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(lesson);
+	priv->lesson_elements = g_list_append (priv->lesson_elements, element);
 }
 
 void
@@ -113,8 +113,8 @@ canvas_lesson_remove_lesson_element (CanvasLesson* lesson,
 {
 	g_return_if_fail (CANVAS_IS_LESSON_ELEMENT (element));
 
-	CanvasLessonPrivate* private_data = CANVAS_LESSON_PRIVATE(lesson);
-	private_data->lesson_elements = g_list_append (private_data->lesson_elements, element);
+	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(lesson);
+	priv->lesson_elements = g_list_append (priv->lesson_elements, element);
 }
 
 GList*

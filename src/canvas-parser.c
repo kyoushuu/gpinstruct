@@ -59,29 +59,29 @@ G_DEFINE_TYPE (CanvasParser, canvas_parser, CANVAS_TYPE_OBJECT);
 static void
 canvas_parser_init (CanvasParser *object)
 {
-	CanvasParserPrivate* private_data = CANVAS_PARSER_PRIVATE (object);
+	CanvasParserPrivate* priv = CANVAS_PARSER_PRIVATE (object);
 
-	private_data->project = NULL;
+	priv->project = NULL;
 
-	private_data->current_project = NULL;
-	private_data->current_category = NULL;
-	private_data->current_lesson = NULL;
+	priv->current_project = NULL;
+	priv->current_category = NULL;
+	priv->current_lesson = NULL;
 
-	private_data->current_lesson_element = NULL;
-	private_data->current_lesson_discussion = NULL;
-	private_data->current_lesson_reading = NULL;
+	priv->current_lesson_element = NULL;
+	priv->current_lesson_discussion = NULL;
+	priv->current_lesson_reading = NULL;
 
-	private_data->current_lesson_test = NULL;
-	private_data->current_lesson_test_multi_choice = NULL;
-	private_data->current_lesson_test_multi_choice_question = NULL;
-	private_data->current_lesson_test_word_pool = NULL;
-	private_data->current_lesson_test_word_pool_question = NULL;
-	private_data->current_lesson_test_order = NULL;
-	private_data->current_lesson_test_order_item = NULL;
+	priv->current_lesson_test = NULL;
+	priv->current_lesson_test_multi_choice = NULL;
+	priv->current_lesson_test_multi_choice_question = NULL;
+	priv->current_lesson_test_word_pool = NULL;
+	priv->current_lesson_test_word_pool_question = NULL;
+	priv->current_lesson_test_order = NULL;
+	priv->current_lesson_test_order_item = NULL;
 
-	private_data->text = FALSE;
-	private_data->directions = FALSE;
-	private_data->choice = FALSE;
+	priv->text = FALSE;
+	priv->directions = FALSE;
+	priv->choice = FALSE;
 }
 
 static void
@@ -111,14 +111,14 @@ void parse_start_element (GMarkupParseContext *context,
                           gpointer             user_data,
                           GError             **error)
 {
-	CanvasParserPrivate* private_data = user_data;
+	CanvasParserPrivate* priv = user_data;
 	if (g_strcmp0 ("canvas-project", element_name) == 0)
 	{
-		if (private_data->current_project == NULL)
+		if (priv->current_project == NULL)
 		{
 			CanvasProject* project = canvas_project_new ();
-			private_data->current_project = project;
-			private_data->project = project;
+			priv->current_project = project;
+			priv->project = project;
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -131,11 +131,11 @@ void parse_start_element (GMarkupParseContext *context,
 	}
 	else if (g_strcmp0 ("category", element_name) == 0)
 	{
-		if (private_data->current_project)
+		if (priv->current_project)
 		{
 			CanvasCategory* category = canvas_category_new ();
-			private_data->current_category = category;
-			canvas_project_add_category (private_data->current_project, category);
+			priv->current_category = category;
+			canvas_project_add_category (priv->current_project, category);
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -148,11 +148,11 @@ void parse_start_element (GMarkupParseContext *context,
 	}
 	else if (g_strcmp0 ("lesson", element_name) == 0)
 	{
-		if (private_data->current_category)
+		if (priv->current_category)
 		{
 			CanvasLesson* lesson = canvas_lesson_new ();
-			private_data->current_lesson = lesson;
-			canvas_category_add_lesson (private_data->current_category, lesson);
+			priv->current_lesson = lesson;
+			canvas_category_add_lesson (priv->current_category, lesson);
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -172,11 +172,11 @@ void parse_start_element (GMarkupParseContext *context,
 	}
 /*	else if (g_strcmp0 ("lesson-element", element_name) == 0)
 	{
-		if (private_data->current_lesson)
+		if (priv->current_lesson)
 		{
 			CanvasLessonElement* lesson_element = canvas_lesson_element_new ();
-			private_data->current_lesson_element = lesson_element;
-			canvas_lesson_add_lesson_element (private_data->current_lesson, lesson_element);
+			priv->current_lesson_element = lesson_element;
+			canvas_lesson_add_lesson_element (priv->current_lesson, lesson_element);
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -189,12 +189,12 @@ void parse_start_element (GMarkupParseContext *context,
 	}*/
 	else if (g_strcmp0 ("discussion", element_name) == 0)
 	{
-		if (private_data->current_lesson)
+		if (priv->current_lesson)
 		{
 			CanvasLessonDiscussion* lesson_discussion = canvas_lesson_discussion_new ();
-			private_data->current_lesson_discussion = lesson_discussion;
-			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_discussion);
-			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_discussion));
+			priv->current_lesson_discussion = lesson_discussion;
+			priv->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_discussion);
+			canvas_lesson_add_lesson_element (priv->current_lesson, CANVAS_LESSON_ELEMENT (lesson_discussion));
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -207,12 +207,12 @@ void parse_start_element (GMarkupParseContext *context,
 	}
 	else if (g_strcmp0 ("reading", element_name) == 0)
 	{
-		if (private_data->current_lesson)
+		if (priv->current_lesson)
 		{
 			CanvasLessonReading* lesson_reading = canvas_lesson_reading_new ();
-			private_data->current_lesson_reading = lesson_reading;
-			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_reading);
-			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_reading));
+			priv->current_lesson_reading = lesson_reading;
+			priv->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_reading);
+			canvas_lesson_add_lesson_element (priv->current_lesson, CANVAS_LESSON_ELEMENT (lesson_reading));
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -225,12 +225,12 @@ void parse_start_element (GMarkupParseContext *context,
 	}
 /*	else if (g_strcmp0 ("test", element_name) == 0)
 	{
-		if (private_data->current_lesson)
+		if (priv->current_lesson)
 		{
 			CanvasLessonTest* lesson_test = canvas_lesson_test_new ();
-			private_data->current_lesson_test = lesson_test;
-			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test);
-			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test));
+			priv->current_lesson_test = lesson_test;
+			priv->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test);
+			canvas_lesson_add_lesson_element (priv->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test));
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -245,13 +245,13 @@ void parse_start_element (GMarkupParseContext *context,
 	}*/
 	else if (g_strcmp0 ("test-multi-choice", element_name) == 0)
 	{
-		if (private_data->current_lesson)
+		if (priv->current_lesson)
 		{
 			CanvasLessonTestMultiChoice* lesson_test_multi_choice = canvas_lesson_test_multi_choice_new ();
-			private_data->current_lesson_test_multi_choice = lesson_test_multi_choice;
-			private_data->current_lesson_test = CANVAS_LESSON_TEST (lesson_test_multi_choice);
-			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test_multi_choice);
-			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test_multi_choice));
+			priv->current_lesson_test_multi_choice = lesson_test_multi_choice;
+			priv->current_lesson_test = CANVAS_LESSON_TEST (lesson_test_multi_choice);
+			priv->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test_multi_choice);
+			canvas_lesson_add_lesson_element (priv->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test_multi_choice));
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -264,13 +264,13 @@ void parse_start_element (GMarkupParseContext *context,
 	}
 	else if (g_strcmp0 ("test-word-pool", element_name) == 0)
 	{
-		if (private_data->current_lesson)
+		if (priv->current_lesson)
 		{
 			CanvasLessonTestWordPool* lesson_test_word_pool = canvas_lesson_test_word_pool_new ();
-			private_data->current_lesson_test_word_pool = lesson_test_word_pool;
-			private_data->current_lesson_test = CANVAS_LESSON_TEST (lesson_test_word_pool);
-			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test_word_pool);
-			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test_word_pool));
+			priv->current_lesson_test_word_pool = lesson_test_word_pool;
+			priv->current_lesson_test = CANVAS_LESSON_TEST (lesson_test_word_pool);
+			priv->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test_word_pool);
+			canvas_lesson_add_lesson_element (priv->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test_word_pool));
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -283,13 +283,13 @@ void parse_start_element (GMarkupParseContext *context,
 	}
 	else if (g_strcmp0 ("test-order", element_name) == 0)
 	{
-		if (private_data->current_lesson)
+		if (priv->current_lesson)
 		{
 			CanvasLessonTestOrder* lesson_test_order = canvas_lesson_test_order_new ();
-			private_data->current_lesson_test_order = lesson_test_order;
-			private_data->current_lesson_test = CANVAS_LESSON_TEST (lesson_test_order);
-			private_data->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test_order);
-			canvas_lesson_add_lesson_element (private_data->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test_order));
+			priv->current_lesson_test_order = lesson_test_order;
+			priv->current_lesson_test = CANVAS_LESSON_TEST (lesson_test_order);
+			priv->current_lesson_element = CANVAS_LESSON_ELEMENT (lesson_test_order);
+			canvas_lesson_add_lesson_element (priv->current_lesson, CANVAS_LESSON_ELEMENT (lesson_test_order));
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -301,16 +301,16 @@ void parse_start_element (GMarkupParseContext *context,
 			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Lesson Test element without Lesson element parent."));
 	}
 	else if (g_strcmp0 ("text", element_name) == 0)
-		private_data->text = TRUE;
+		priv->text = TRUE;
 	else if (g_strcmp0 ("directions", element_name) == 0)
-		private_data->directions = TRUE;
+		priv->directions = TRUE;
 	else if (g_strcmp0 ("question", element_name) == 0)
 	{
-		if (private_data->current_lesson_test_multi_choice)
+		if (priv->current_lesson_test_multi_choice)
 		{
 			CanvasLessonTestMultiChoiceQuestion* lesson_test_multi_choice_question = canvas_lesson_test_multi_choice_question_new ();
-			private_data->current_lesson_test_multi_choice_question = lesson_test_multi_choice_question;
-			canvas_lesson_test_multi_choice_add_question (private_data->current_lesson_test_multi_choice, lesson_test_multi_choice_question);
+			priv->current_lesson_test_multi_choice_question = lesson_test_multi_choice_question;
+			canvas_lesson_test_multi_choice_add_question (priv->current_lesson_test_multi_choice, lesson_test_multi_choice_question);
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -318,11 +318,11 @@ void parse_start_element (GMarkupParseContext *context,
 					canvas_lesson_test_multi_choice_question_set_answer (lesson_test_multi_choice_question, atoi (attribute_values[i]));
 			}
 		}
-		else if (private_data->current_lesson_test_word_pool)
+		else if (priv->current_lesson_test_word_pool)
 		{
 			CanvasLessonTestWordPoolQuestion* lesson_test_word_pool_question = canvas_lesson_test_word_pool_question_new ();
-			private_data->current_lesson_test_word_pool_question = lesson_test_word_pool_question;
-			canvas_lesson_test_word_pool_add_question (private_data->current_lesson_test_word_pool, lesson_test_word_pool_question);
+			priv->current_lesson_test_word_pool_question = lesson_test_word_pool_question;
+			canvas_lesson_test_word_pool_add_question (priv->current_lesson_test_word_pool, lesson_test_word_pool_question);
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -334,14 +334,14 @@ void parse_start_element (GMarkupParseContext *context,
 			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Question element without Lesson Test element parent."));
 	}
 	else if (g_strcmp0 ("choice", element_name) == 0)
-		private_data->choice = TRUE;
+		priv->choice = TRUE;
 	else if (g_strcmp0 ("item", element_name) == 0)
 	{
-		if (private_data->current_lesson_test_order)
+		if (priv->current_lesson_test_order)
 		{
 			CanvasLessonTestOrderItem* lesson_test_order_item = canvas_lesson_test_order_item_new ();
-			private_data->current_lesson_test_order_item = lesson_test_order_item;
-			canvas_lesson_test_order_add_item (private_data->current_lesson_test_order, lesson_test_order_item);
+			priv->current_lesson_test_order_item = lesson_test_order_item;
+			canvas_lesson_test_order_add_item (priv->current_lesson_test_order, lesson_test_order_item);
 			int i;
 			for (i=0; attribute_names[i] != NULL; i++)
 			{
@@ -362,63 +362,63 @@ void parse_end_element (GMarkupParseContext *context,
                         gpointer             user_data,
                         GError             **error)
 {
-	CanvasParserPrivate* private_data = user_data;
+	CanvasParserPrivate* priv = user_data;
 	if (g_strcmp0 ("canvas-project", element_name) == 0)
-		private_data->current_project = NULL;
+		priv->current_project = NULL;
 	else if (g_strcmp0 ("category", element_name) == 0)
-		private_data->current_category = NULL;
+		priv->current_category = NULL;
 	else if (g_strcmp0 ("lesson", element_name) == 0)
-		private_data->current_lesson = NULL;
+		priv->current_lesson = NULL;
 /*	else if (g_strcmp0 ("lesson-element", element_name) == 0)
-		private_data->current_lesson_element = NULL;*/
+		priv->current_lesson_element = NULL;*/
 	else if (g_strcmp0 ("discussion", element_name) == 0)
 	{
-		private_data->current_lesson_element = NULL;
-		private_data->current_lesson_discussion = NULL;
+		priv->current_lesson_element = NULL;
+		priv->current_lesson_discussion = NULL;
 	}
 	else if (g_strcmp0 ("reading", element_name) == 0)
 	{
-		private_data->current_lesson_element = NULL;
-		private_data->current_lesson_reading = NULL;
+		priv->current_lesson_element = NULL;
+		priv->current_lesson_reading = NULL;
 	}
 /*	else if (g_strcmp0 ("test", element_name) == 0)
 	{
-		private_data->current_lesson_element = NULL;
-		private_data->current_lesson_test = NULL;
+		priv->current_lesson_element = NULL;
+		priv->current_lesson_test = NULL;
 	}*/
 	else if (g_strcmp0 ("test-multi-choice", element_name) == 0)
 	{
-		private_data->current_lesson_element = NULL;
-		private_data->current_lesson_test = NULL;
-		private_data->current_lesson_test_multi_choice = NULL;
+		priv->current_lesson_element = NULL;
+		priv->current_lesson_test = NULL;
+		priv->current_lesson_test_multi_choice = NULL;
 	}
 	else if (g_strcmp0 ("test-word-pool", element_name) == 0)
 	{
-		private_data->current_lesson_element = NULL;
-		private_data->current_lesson_test = NULL;
-		private_data->current_lesson_test_word_pool = NULL;
+		priv->current_lesson_element = NULL;
+		priv->current_lesson_test = NULL;
+		priv->current_lesson_test_word_pool = NULL;
 	}
 	else if (g_strcmp0 ("test-order", element_name) == 0)
 	{
-		private_data->current_lesson_element = NULL;
-		private_data->current_lesson_test = NULL;
-		private_data->current_lesson_test_order = NULL;
+		priv->current_lesson_element = NULL;
+		priv->current_lesson_test = NULL;
+		priv->current_lesson_test_order = NULL;
 	}
 	else if (g_strcmp0 ("text", element_name) == 0)
-		private_data->text = FALSE;
+		priv->text = FALSE;
 	else if (g_strcmp0 ("directions", element_name) == 0)
-		private_data->directions = FALSE;
+		priv->directions = FALSE;
 	else if (g_strcmp0 ("question", element_name) == 0)
 	{
-		if (private_data->current_lesson_test_multi_choice_question)
-			private_data->current_lesson_test_multi_choice_question = NULL;
-		else if (private_data->current_lesson_test_word_pool_question)
-			private_data->current_lesson_test_word_pool_question = NULL;
+		if (priv->current_lesson_test_multi_choice_question)
+			priv->current_lesson_test_multi_choice_question = NULL;
+		else if (priv->current_lesson_test_word_pool_question)
+			priv->current_lesson_test_word_pool_question = NULL;
 	}
 	else if (g_strcmp0 ("choice", element_name) == 0)
-		private_data->choice = FALSE;
+		priv->choice = FALSE;
 	else if (g_strcmp0 ("item", element_name) == 0)
-		private_data->current_lesson_test_order_item = NULL;
+		priv->current_lesson_test_order_item = NULL;
 	else
 		g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT, _("Unknown element: %s"), element_name);
 }
@@ -431,42 +431,42 @@ void parse_text (GMarkupParseContext *context,
                  gpointer             user_data,
                  GError             **error)
 {
-	CanvasParserPrivate* private_data = user_data;
+	CanvasParserPrivate* priv = user_data;
 	gchar* text_nul = g_strndup (text, text_len);
 
-	if (private_data->text)
+	if (priv->text)
 	{
-		if (private_data->current_lesson_test_multi_choice_question)
-			canvas_lesson_test_multi_choice_question_set_text (private_data->current_lesson_test_multi_choice_question,
+		if (priv->current_lesson_test_multi_choice_question)
+			canvas_lesson_test_multi_choice_question_set_text (priv->current_lesson_test_multi_choice_question,
 			                                                   text_nul);
-		else if (private_data->current_lesson_test_word_pool_question)
-			canvas_lesson_test_word_pool_question_set_text (private_data->current_lesson_test_word_pool_question,
+		else if (priv->current_lesson_test_word_pool_question)
+			canvas_lesson_test_word_pool_question_set_text (priv->current_lesson_test_word_pool_question,
 			                                                text_nul);
-		else if (private_data->current_lesson_discussion)
-			canvas_lesson_discussion_set_text (private_data->current_lesson_discussion,
+		else if (priv->current_lesson_discussion)
+			canvas_lesson_discussion_set_text (priv->current_lesson_discussion,
 			                                   text_nul);
-		else if (private_data->current_lesson_reading)
-			canvas_lesson_reading_set_text (private_data->current_lesson_reading,
+		else if (priv->current_lesson_reading)
+			canvas_lesson_reading_set_text (priv->current_lesson_reading,
 			                                text_nul);
 	}
-	else if (private_data->directions)
+	else if (priv->directions)
 	{
-		if (private_data->current_lesson_test)
-			canvas_lesson_test_set_directions (private_data->current_lesson_test,
+		if (priv->current_lesson_test)
+			canvas_lesson_test_set_directions (priv->current_lesson_test,
 			                                   text_nul);
 	}
-	else if (private_data->choice)
+	else if (priv->choice)
 	{
-		if (private_data->current_lesson_test_multi_choice_question)
-			canvas_lesson_test_multi_choice_question_add_choice (private_data->current_lesson_test_multi_choice_question,
+		if (priv->current_lesson_test_multi_choice_question)
+			canvas_lesson_test_multi_choice_question_add_choice (priv->current_lesson_test_multi_choice_question,
 			                                                     text_nul);
-		else if (private_data->current_lesson_test_word_pool)
-			canvas_lesson_test_word_pool_add_choice (private_data->current_lesson_test_word_pool,
+		else if (priv->current_lesson_test_word_pool)
+			canvas_lesson_test_word_pool_add_choice (priv->current_lesson_test_word_pool,
 			                                         text_nul);
 	}
-	else if (private_data->current_lesson_test_order_item)
+	else if (priv->current_lesson_test_order_item)
 	{
-		canvas_lesson_test_order_item_set_text (private_data->current_lesson_test_order_item,
+		canvas_lesson_test_order_item_set_text (priv->current_lesson_test_order_item,
 		                                        text_nul);
 	}
 
@@ -492,16 +492,16 @@ canvas_parser_open (CanvasParser* parser, const gchar* text, GError** error)
 		NULL
 	};
 
-	CanvasParserPrivate* private_data = CANVAS_PARSER_PRIVATE (parser);
+	CanvasParserPrivate* priv = CANVAS_PARSER_PRIVATE (parser);
 	GMarkupParseContext* markup_context = 
 		g_markup_parse_context_new (&markup_parser, 
 		                            G_MARKUP_TREAT_CDATA_AS_TEXT | G_MARKUP_PREFIX_ERROR_POSITION, 
-		                            private_data, NULL);
+		                            priv, NULL);
 	g_markup_parse_context_parse (markup_context, text, -1, error);
 
 	g_free (markup_context);
 
-	return private_data->project;
+	return priv->project;
 }
 
 void

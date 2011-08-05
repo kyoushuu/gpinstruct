@@ -34,17 +34,17 @@ G_DEFINE_TYPE (CanvasLessonReading, canvas_lesson_reading, CANVAS_TYPE_LESSON_EL
 static void
 canvas_lesson_reading_init (CanvasLessonReading *object)
 {
-	CanvasLessonReadingPrivate* private_data = CANVAS_LESSON_READING_PRIVATE(object);
-	private_data->text = g_strdup ("");
+	CanvasLessonReadingPrivate* priv = CANVAS_LESSON_READING_PRIVATE(object);
+	priv->text = g_strdup ("");
 }
 
 static void
 canvas_lesson_reading_finalize (GObject *object)
 {
-	CanvasLessonReadingPrivate* private_data = CANVAS_LESSON_READING_PRIVATE(object);
+	CanvasLessonReadingPrivate* priv = CANVAS_LESSON_READING_PRIVATE(object);
 
-	if (private_data->text)
-		g_free (private_data->text);
+	if (priv->text)
+		g_free (priv->text);
 
 	G_OBJECT_CLASS (canvas_lesson_reading_parent_class)->finalize (object);
 }
@@ -76,9 +76,9 @@ canvas_lesson_reading_get_text (CanvasLessonReading* reading)
 void
 canvas_lesson_reading_set_text (CanvasLessonReading* reading, const gchar* text)
 {
-	CanvasLessonReadingPrivate* private_data = CANVAS_LESSON_READING_PRIVATE (reading);
+	CanvasLessonReadingPrivate* priv = CANVAS_LESSON_READING_PRIVATE (reading);
 
-	if (private_data->text)
-		g_free (private_data->text);
-	private_data->text = g_strdup (text);
+	if (priv->text)
+		g_free (priv->text);
+	priv->text = g_strdup (text);
 }

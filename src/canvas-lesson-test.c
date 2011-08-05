@@ -34,17 +34,17 @@ G_DEFINE_TYPE (CanvasLessonTest, canvas_lesson_test, CANVAS_TYPE_LESSON_ELEMENT)
 static void
 canvas_lesson_test_init (CanvasLessonTest *object)
 {
-	CanvasLessonTestPrivate* private_data = CANVAS_LESSON_TEST_PRIVATE(object);
-	private_data->directions = g_strdup ("");
+	CanvasLessonTestPrivate* priv = CANVAS_LESSON_TEST_PRIVATE(object);
+	priv->directions = g_strdup ("");
 }
 
 static void
 canvas_lesson_test_finalize (GObject *object)
 {
-	CanvasLessonTestPrivate* private_data = CANVAS_LESSON_TEST_PRIVATE(object);
+	CanvasLessonTestPrivate* priv = CANVAS_LESSON_TEST_PRIVATE(object);
 
-	if (private_data->directions)
-		g_free (private_data->directions);
+	if (priv->directions)
+		g_free (priv->directions);
 
 	G_OBJECT_CLASS (canvas_lesson_test_parent_class)->finalize (object);
 }
@@ -76,9 +76,9 @@ canvas_lesson_test_get_directions (CanvasLessonTest* test)
 void
 canvas_lesson_test_set_directions (CanvasLessonTest* test, const gchar* directions)
 {
-	CanvasLessonTestPrivate* private_data = CANVAS_LESSON_TEST_PRIVATE(test);
+	CanvasLessonTestPrivate* priv = CANVAS_LESSON_TEST_PRIVATE(test);
 
-	if (private_data->directions)
-		g_free (private_data->directions);
-	private_data->directions = g_strdup (directions);
+	if (priv->directions)
+		g_free (priv->directions);
+	priv->directions = g_strdup (directions);
 }

@@ -34,17 +34,17 @@ G_DEFINE_TYPE (CanvasLessonDiscussion, canvas_lesson_discussion, CANVAS_TYPE_LES
 static void
 canvas_lesson_discussion_init (CanvasLessonDiscussion *object)
 {
-	CanvasLessonDiscussionPrivate* private_data = CANVAS_LESSON_DISCUSSION_PRIVATE(object);
-	private_data->text = g_strdup ("");
+	CanvasLessonDiscussionPrivate* priv = CANVAS_LESSON_DISCUSSION_PRIVATE(object);
+	priv->text = g_strdup ("");
 }
 
 static void
 canvas_lesson_discussion_finalize (GObject *object)
 {
-	CanvasLessonDiscussionPrivate* private_data = CANVAS_LESSON_DISCUSSION_PRIVATE(object);
+	CanvasLessonDiscussionPrivate* priv = CANVAS_LESSON_DISCUSSION_PRIVATE(object);
 
-	if (private_data->text)
-		g_free (private_data->text);
+	if (priv->text)
+		g_free (priv->text);
 
 	G_OBJECT_CLASS (canvas_lesson_discussion_parent_class)->finalize (object);
 }
@@ -76,10 +76,10 @@ canvas_lesson_discussion_get_text (CanvasLessonDiscussion* discussion)
 void
 canvas_lesson_discussion_set_text (CanvasLessonDiscussion* discussion, const gchar* text)
 {
-	CanvasLessonDiscussionPrivate* private_data = CANVAS_LESSON_DISCUSSION_PRIVATE(discussion);
+	CanvasLessonDiscussionPrivate* priv = CANVAS_LESSON_DISCUSSION_PRIVATE(discussion);
 
-	if (private_data->text)
-		g_free (private_data->text);
-	private_data->text = g_strdup (text);
+	if (priv->text)
+		g_free (priv->text);
+	priv->text = g_strdup (text);
 }
 

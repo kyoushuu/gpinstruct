@@ -34,17 +34,17 @@ G_DEFINE_TYPE (CanvasLessonElement, canvas_lesson_element, CANVAS_TYPE_OBJECT);
 static void
 canvas_lesson_element_init (CanvasLessonElement *object)
 {
-	CanvasLessonElementPrivate* private_data = CANVAS_LESSON_ELEMENT_PRIVATE(object);
-	private_data->title = g_strdup ("");
+	CanvasLessonElementPrivate* priv = CANVAS_LESSON_ELEMENT_PRIVATE(object);
+	priv->title = g_strdup ("");
 }
 
 static void
 canvas_lesson_element_finalize (GObject *object)
 {
-	CanvasLessonElementPrivate* private_data = CANVAS_LESSON_ELEMENT_PRIVATE(object);
+	CanvasLessonElementPrivate* priv = CANVAS_LESSON_ELEMENT_PRIVATE(object);
 
-	if (private_data->title)
-		g_free (private_data->title);
+	if (priv->title)
+		g_free (priv->title);
 
 	G_OBJECT_CLASS (canvas_lesson_element_parent_class)->finalize (object);
 }
@@ -76,9 +76,9 @@ canvas_lesson_element_get_title (CanvasLessonElement* element)
 void
 canvas_lesson_element_set_title (CanvasLessonElement* element, const gchar *title)
 {
-	CanvasLessonElementPrivate* private_data = CANVAS_LESSON_ELEMENT_PRIVATE(element);
+	CanvasLessonElementPrivate* priv = CANVAS_LESSON_ELEMENT_PRIVATE(element);
 
-	if (private_data->title)
-		g_free (private_data->title);
-	private_data->title = g_strdup (title);
+	if (priv->title)
+		g_free (priv->title);
+	priv->title = g_strdup (title);
 }

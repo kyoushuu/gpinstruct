@@ -35,18 +35,18 @@ G_DEFINE_TYPE (CanvasLessonTestWordPoolQuestion, canvas_lesson_test_word_pool_qu
 static void
 canvas_lesson_test_word_pool_question_init (CanvasLessonTestWordPoolQuestion *object)
 {
-	CanvasLessonTestWordPoolQuestionPrivate* private_data = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(object);
-	private_data->text = g_strdup ("");
-	private_data->answer = 0;
+	CanvasLessonTestWordPoolQuestionPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(object);
+	priv->text = g_strdup ("");
+	priv->answer = 0;
 }
 
 static void
 canvas_lesson_test_word_pool_question_finalize (GObject *object)
 {
-	CanvasLessonTestWordPoolQuestionPrivate* private_data = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(object);
+	CanvasLessonTestWordPoolQuestionPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(object);
 
-	if (private_data->text)
-		g_free (private_data->text);
+	if (priv->text)
+		g_free (priv->text);
 
 	G_OBJECT_CLASS (canvas_lesson_test_word_pool_question_parent_class)->finalize (object);
 }
@@ -79,11 +79,11 @@ void
 canvas_lesson_test_word_pool_question_set_text (CanvasLessonTestWordPoolQuestion* question,
                                                 const gchar* text)
 {
-	CanvasLessonTestWordPoolQuestionPrivate* private_data = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(question);
+	CanvasLessonTestWordPoolQuestionPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(question);
 
-	if (private_data->text)
-		g_free (private_data->text);
-	private_data->text = g_strdup (text);
+	if (priv->text)
+		g_free (priv->text);
+	priv->text = g_strdup (text);
 }
 
 guint
@@ -96,7 +96,7 @@ void
 canvas_lesson_test_word_pool_question_set_answer (CanvasLessonTestWordPoolQuestion* question,
                                                   guint answer)
 {
-	CanvasLessonTestWordPoolQuestionPrivate* private_data = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(question);
+	CanvasLessonTestWordPoolQuestionPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(question);
 
-	private_data->answer = answer;
+	priv->answer = answer;
 }

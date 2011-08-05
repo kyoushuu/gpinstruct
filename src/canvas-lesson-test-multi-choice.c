@@ -34,17 +34,17 @@ G_DEFINE_TYPE (CanvasLessonTestMultiChoice, canvas_lesson_test_multi_choice, CAN
 static void
 canvas_lesson_test_multi_choice_init (CanvasLessonTestMultiChoice *object)
 {
-	CanvasLessonTestMultiChoicePrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(object);
-	private_data->questions = NULL;
+	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(object);
+	priv->questions = NULL;
 }
 
 static void
 canvas_lesson_test_multi_choice_finalize (GObject *object)
 {
-	CanvasLessonTestMultiChoicePrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(object);
+	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(object);
 
-	if (private_data->questions)
-		g_list_free_full (private_data->questions, g_object_unref);
+	if (priv->questions)
+		g_list_free_full (priv->questions, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_lesson_test_multi_choice_parent_class)->finalize (object);
 }
@@ -73,8 +73,8 @@ canvas_lesson_test_multi_choice_add_question (CanvasLessonTestMultiChoice* test,
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (test));
 
-	CanvasLessonTestMultiChoicePrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test);
-	private_data->questions = g_list_append (private_data->questions, question);
+	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test);
+	priv->questions = g_list_append (priv->questions, question);
 }
 
 void
@@ -83,8 +83,8 @@ canvas_lesson_test_multi_choice_remove_question (CanvasLessonTestMultiChoice* te
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (test));
 
-	CanvasLessonTestMultiChoicePrivate* private_data = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test);
-	private_data->questions = g_list_delete_link (private_data->questions, g_list_nth (private_data->questions, question));
+	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test);
+	priv->questions = g_list_delete_link (priv->questions, g_list_nth (priv->questions, question));
 }
 
 GList*

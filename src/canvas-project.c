@@ -35,20 +35,20 @@ G_DEFINE_TYPE (CanvasProject, canvas_project, CANVAS_TYPE_OBJECT);
 static void
 canvas_project_init (CanvasProject *object)
 {
-	CanvasProjectPrivate* private_data = CANVAS_PROJECT_PRIVATE(object);
-	private_data->title = g_strdup ("");
-	private_data->categories = NULL;
+	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(object);
+	priv->title = g_strdup ("");
+	priv->categories = NULL;
 }
 
 static void
 canvas_project_finalize (GObject *object)
 {
-	CanvasProjectPrivate* private_data = CANVAS_PROJECT_PRIVATE(object);
+	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(object);
 
-	if (private_data->title)
-		g_free (private_data->title);
-	if (private_data->categories)
-		g_list_free_full (private_data->categories, g_object_unref);
+	if (priv->title)
+		g_free (priv->title);
+	if (priv->categories)
+		g_list_free_full (priv->categories, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_project_parent_class)->finalize (object);
 }
@@ -81,11 +81,11 @@ void
 canvas_project_set_title (CanvasProject* project,
                           const gchar *title)
 {
-	CanvasProjectPrivate* private_data = CANVAS_PROJECT_PRIVATE(project);
+	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(project);
 
-	if (private_data->title)
-		g_free (private_data->title);
-	private_data->title = g_strdup (title);
+	if (priv->title)
+		g_free (priv->title);
+	priv->title = g_strdup (title);
 }
 
 guint
@@ -100,8 +100,8 @@ canvas_project_add_category (CanvasProject* project,
 {
 	g_return_if_fail (CANVAS_IS_CATEGORY (category));
 
-	CanvasProjectPrivate* private_data = CANVAS_PROJECT_PRIVATE(project);
-	private_data->categories = g_list_append (private_data->categories, category);
+	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(project);
+	priv->categories = g_list_append (priv->categories, category);
 }
 
 void
@@ -110,8 +110,8 @@ canvas_project_remove_category (CanvasProject* project,
 {
 	g_return_if_fail (CANVAS_IS_CATEGORY (category));
 
-	CanvasProjectPrivate* private_data = CANVAS_PROJECT_PRIVATE(project);
-	private_data->categories = g_list_remove (private_data->categories, category);
+	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(project);
+	priv->categories = g_list_remove (priv->categories, category);
 }
 
 GList*

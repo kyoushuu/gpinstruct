@@ -35,18 +35,18 @@ G_DEFINE_TYPE (CanvasLessonTestOrderItem, canvas_lesson_test_order_item, CANVAS_
 static void
 canvas_lesson_test_order_item_init (CanvasLessonTestOrderItem *object)
 {
-	CanvasLessonTestOrderItemPrivate* private_data = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(object);
-	private_data->text = g_strdup ("");
-	private_data->answer = 0;
+	CanvasLessonTestOrderItemPrivate* priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(object);
+	priv->text = g_strdup ("");
+	priv->answer = 0;
 }
 
 static void
 canvas_lesson_test_order_item_finalize (GObject *object)
 {
-	CanvasLessonTestOrderItemPrivate* private_data = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(object);
+	CanvasLessonTestOrderItemPrivate* priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(object);
 
-	if (private_data->text)
-		g_free (private_data->text);
+	if (priv->text)
+		g_free (priv->text);
 
 	G_OBJECT_CLASS (canvas_lesson_test_order_item_parent_class)->finalize (object);
 }
@@ -78,11 +78,11 @@ canvas_lesson_test_order_item_get_text (CanvasLessonTestOrderItem* item)
 void
 canvas_lesson_test_order_item_set_text (CanvasLessonTestOrderItem* item, const gchar* text)
 {
-	CanvasLessonTestOrderItemPrivate* private_data = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(item);
+	CanvasLessonTestOrderItemPrivate* priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(item);
 
-	if (private_data->text)
-		g_free (private_data->text);
-	private_data->text = g_strdup (text);
+	if (priv->text)
+		g_free (priv->text);
+	priv->text = g_strdup (text);
 }
 
 guint
@@ -94,7 +94,7 @@ canvas_lesson_test_order_item_get_answer (CanvasLessonTestOrderItem* item)
 void
 canvas_lesson_test_order_item_set_answer (CanvasLessonTestOrderItem* item, guint answer)
 {
-	CanvasLessonTestOrderItemPrivate* private_data = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(item);
+	CanvasLessonTestOrderItemPrivate* priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(item);
 
-	private_data->answer = answer;
+	priv->answer = answer;
 }
