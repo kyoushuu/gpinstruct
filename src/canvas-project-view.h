@@ -45,7 +45,7 @@ struct _CanvasProjectView
 };
 
 GType canvas_project_view_get_type (void) G_GNUC_CONST;
-GtkWidget* canvas_project_view_new (CanvasProject* project);
+GtkWidget* canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool);
 
 G_END_DECLS
 

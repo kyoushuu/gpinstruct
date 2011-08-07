@@ -17,7 +17,10 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <gtk/gtk.h>
+
 #include "canvas.h"
+#include "canvas-view.h"
 #include "canvas-private.h"
 #include "canvas-marshalers.h"
 
@@ -28,6 +31,9 @@ struct _CanvasLessonViewPagePrivate
 
 	gboolean next;
 	gboolean back;
+
+	CanvasMessageType message;
+	gchar* explanation;
 };
 
 #define CANVAS_LESSON_VIEW_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_VIEW_PAGE, CanvasLessonViewPagePrivate))
@@ -58,6 +64,9 @@ canvas_lesson_view_page_init (CanvasLessonViewPage *object)
 
 	priv->next = TRUE;
 	priv->back = TRUE;
+
+	priv->message = GTK_MESSAGE_INFO;
+	priv->explanation = g_strdup ("");
 
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (object),
 	                                GTK_POLICY_AUTOMATIC,
@@ -203,4 +212,32 @@ void
 canvas_lesson_view_page_reset (CanvasLessonViewPage* page)
 {
 	g_signal_emit (page, lesson_view_page_signals[RESET], 0);
+}
+
+void
+canvas_lesson_view_page_set_message (CanvasLessonViewPage* page, CanvasMessageType message)
+{
+	CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->message = message;
+}
+
+CanvasMessageType
+canvas_lesson_view_page_get_message (CanvasLessonViewPage* page)
+{
+	return CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->message;
+}
+
+void
+canvas_lesson_view_page_set_explanation (CanvasLessonViewPage* page, const gchar* explanation)
+{
+	CanvasLessonViewPagePrivate* priv = CANVAS_LESSON_VIEW_PAGE_PRIVATE (page);
+
+	if (priv->explanation)
+		g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
+}
+
+const gchar*
+canvas_lesson_view_page_get_explanation (CanvasLessonViewPage* page)
+{
+	return CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->explanation;
 }

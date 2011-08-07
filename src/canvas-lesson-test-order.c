@@ -22,6 +22,7 @@
 typedef struct _CanvasLessonTestOrderPrivate CanvasLessonTestOrderPrivate;
 struct _CanvasLessonTestOrderPrivate
 {
+	gchar* explanation;
 	GList* items;
 };
 
@@ -35,6 +36,8 @@ static void
 canvas_lesson_test_order_init (CanvasLessonTestOrder *object)
 {
 	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(object);
+
+	priv->explanation = g_strdup ("");
 	priv->items = NULL;
 }
 
@@ -42,6 +45,9 @@ static void
 canvas_lesson_test_order_finalize (GObject *object)
 {
 	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(object);
+
+	if (priv->explanation)
+		g_free (priv->explanation);
 
 	if (priv->items)
 		g_list_free_full (priv->items, g_object_unref);
@@ -89,4 +95,21 @@ GList*
 canvas_lesson_test_order_get_items (CanvasLessonTestOrder* test)
 {
 	return g_list_copy (CANVAS_LESSON_TEST_ORDER_PRIVATE(test)->items);
+}
+
+const gchar*
+canvas_lesson_test_order_get_explanation (CanvasLessonTestOrder* test)
+{
+	return CANVAS_LESSON_TEST_ORDER_PRIVATE(test)->explanation;
+}
+
+void
+canvas_lesson_test_order_set_explanation (CanvasLessonTestOrder* test,
+                                          const gchar* explanation)
+{
+	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(test);
+
+	if (priv->explanation)
+		g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }

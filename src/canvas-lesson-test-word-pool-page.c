@@ -17,7 +17,10 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <gtk/gtk.h>
+
 #include "canvas.h"
+#include "canvas-view.h"
 #include "gtktextbuffermarkup.h"
 
 typedef struct _CanvasLessonTestWordPoolPagePrivate CanvasLessonTestWordPoolPagePrivate;
@@ -110,6 +113,9 @@ word_pool_page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data
 	canvas_lesson_score_increase_total (priv->score);
 
 	GList* questions = canvas_lesson_test_word_pool_get_questions (priv->test);
+	CanvasLessonTestWordPoolQuestion* question = CANVAS_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, priv->curr_question));
+	guint questions_num = g_list_length (questions);
+	g_list_free (questions);
 
 	GtkTreeSelection* tsel = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->choices_treeview));
 	GtkTreeIter iter;
@@ -119,20 +125,30 @@ word_pool_page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data
 	if (gtk_tree_selection_get_selected (tsel, &tm, &iter))
 		selected = gtk_tree_path_get_indices (gtk_tree_model_get_path (tm, &iter))[0];
 
-	if (selected == canvas_lesson_test_word_pool_question_get_answer (CANVAS_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, priv->curr_question))))
-		canvas_lesson_score_increase_score (priv->score);
+	gboolean explain = canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (priv->test));
 
-	if (priv->curr_question+1 < g_list_length (questions))
+	if (selected == canvas_lesson_test_word_pool_question_get_answer (question))
+	{
+		canvas_lesson_score_increase_score (priv->score);
+		if (explain)
+			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
+			                                     CANVAS_MESSAGE_TYPE_CORRECT);
+	}
+	else if (explain)
+	{
+		canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
+		                                     CANVAS_MESSAGE_TYPE_WRONG);
+		canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
+		                                         canvas_lesson_test_word_pool_question_get_explanation (question));
+	}
+
+	if (priv->curr_question+1 < questions_num)
 	{
 		word_pool_show_question (page, priv->curr_question+1);
-		g_list_free (questions);
 		return TRUE;
 	}
 	else
-	{
-		g_list_free (questions);
 		return FALSE;
-	}
 }
 
 

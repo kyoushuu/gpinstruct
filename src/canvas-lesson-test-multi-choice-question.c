@@ -23,6 +23,7 @@ typedef struct _CanvasLessonTestMultiChoiceQuestionPrivate CanvasLessonTestMulti
 struct _CanvasLessonTestMultiChoiceQuestionPrivate
 {
 	gchar* text;
+	gchar* explanation;
 	guint answer;
 	GList* choices;
 };
@@ -38,6 +39,7 @@ canvas_lesson_test_multi_choice_question_init (CanvasLessonTestMultiChoiceQuesti
 {
 	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(object);
 	priv->text = g_strdup ("");
+	priv->explanation = g_strdup ("");
 	priv->answer = 0;
 	priv->choices = NULL;
 }
@@ -49,6 +51,9 @@ canvas_lesson_test_multi_choice_question_finalize (GObject *object)
 
 	if (priv->text)
 		g_free (priv->text);
+
+	if (priv->explanation)
+		g_free (priv->explanation);
 
 	if (priv->choices)
 		g_list_free_full (priv->choices, g_free);
@@ -130,4 +135,21 @@ GList*
 canvas_lesson_test_multi_choice_question_get_choices (CanvasLessonTestMultiChoiceQuestion* question)
 {
 	return g_list_copy (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices);
+}
+
+const gchar*
+canvas_lesson_test_multi_choice_question_get_explanation (CanvasLessonTestMultiChoiceQuestion* question)
+{
+	return CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->explanation;
+}
+
+void
+canvas_lesson_test_multi_choice_question_set_explanation (CanvasLessonTestMultiChoiceQuestion* question,
+                                                          const gchar* explanation)
+{
+	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question);
+
+	if (priv->explanation)
+		g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }

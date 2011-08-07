@@ -23,6 +23,7 @@ typedef struct _CanvasLessonTestWordPoolQuestionPrivate CanvasLessonTestWordPool
 struct _CanvasLessonTestWordPoolQuestionPrivate
 {
 	gchar* text;
+	gchar* explanation;
 	guint answer;
 };
 
@@ -37,6 +38,7 @@ canvas_lesson_test_word_pool_question_init (CanvasLessonTestWordPoolQuestion *ob
 {
 	CanvasLessonTestWordPoolQuestionPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(object);
 	priv->text = g_strdup ("");
+	priv->explanation = g_strdup ("");
 	priv->answer = 0;
 }
 
@@ -47,6 +49,9 @@ canvas_lesson_test_word_pool_question_finalize (GObject *object)
 
 	if (priv->text)
 		g_free (priv->text);
+
+	if (priv->explanation)
+		g_free (priv->explanation);
 
 	G_OBJECT_CLASS (canvas_lesson_test_word_pool_question_parent_class)->finalize (object);
 }
@@ -99,4 +104,21 @@ canvas_lesson_test_word_pool_question_set_answer (CanvasLessonTestWordPoolQuesti
 	CanvasLessonTestWordPoolQuestionPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(question);
 
 	priv->answer = answer;
+}
+
+const gchar*
+canvas_lesson_test_word_pool_question_get_explanation (CanvasLessonTestWordPoolQuestion* question)
+{
+	return CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(question)->explanation;
+}
+
+void
+canvas_lesson_test_word_pool_question_set_explanation (CanvasLessonTestWordPoolQuestion* question,
+                                                       const gchar* explanation)
+{
+	CanvasLessonTestWordPoolQuestionPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(question);
+
+	if (priv->explanation)
+		g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }

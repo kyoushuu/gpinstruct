@@ -20,12 +20,13 @@
 #include <gtk/gtk.h>
 
 #include "canvas.h"
-#include "canvas-project-view.h"
+#include "canvas-view.h"
 
 typedef struct _CanvasProjectViewPrivate CanvasProjectViewPrivate;
 struct _CanvasProjectViewPrivate
 {
 	CanvasProject* project;
+	CanvasMessagePool* pool;
 
 	GHashTable* hashtable;
 };
@@ -84,6 +85,12 @@ canvas_project_view_finalize (GObject *object)
 		g_hash_table_destroy (priv->hashtable);
 	}
 
+	if (priv->project)
+		g_object_unref (priv->project);
+
+	if (priv->pool)
+		g_object_unref (priv->pool);
+
 	G_OBJECT_CLASS (canvas_project_view_parent_class)->finalize (object);
 }
 
@@ -100,13 +107,29 @@ canvas_project_view_class_init (CanvasProjectViewClass *klass)
 
 
 GtkWidget*
-canvas_project_view_new (CanvasProject* project)
+canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
 {
 	CanvasProjectView* project_view = g_object_new(CANVAS_TYPE_PROJECT_VIEW, NULL);
 
 	CanvasProjectViewPrivate* priv = CANVAS_PROJECT_VIEW_PRIVATE (project_view);
 
-	priv->project = project;
+	if (pool)
+		priv->pool = g_object_ref (pool);
+	else
+	{
+		priv->pool = canvas_message_pool_new ();
+		canvas_message_pool_add_multiple (priv->pool,
+		                                  CANVAS_MESSAGE_TYPE_CORRECT,		"Your last answer is correct.",
+		                                  CANVAS_MESSAGE_TYPE_CORRECT_ALL,	"All of your answers are correct.",
+		                                  CANVAS_MESSAGE_TYPE_WRONG,		"Your last answer is wrong.",
+		                                  CANVAS_MESSAGE_TYPE_WRONG_SOME,	"Some of your answers are wrong.",
+		                                  CANVAS_MESSAGE_TYPE_WRONG_ALL,	"All of your answers are wrong.",
+		                                  CANVAS_MESSAGE_TYPE_PASS,			"You passed the test.",
+		                                  CANVAS_MESSAGE_TYPE_FAIL,			"You failed the test.",
+		                                  CANVAS_MESSAGE_TYPE_NONE);
+	}
+
+	priv->project = g_object_ref (project);
 	gtk_window_set_default_size (GTK_WINDOW (project_view), 600, 400);
 	gtk_window_set_title (GTK_WINDOW (project_view), canvas_project_get_title (project));
 
@@ -160,7 +183,7 @@ canvas_project_view_new (CanvasProject* project)
 			gtk_box_pack_start (GTK_BOX (category_vbox), lesson_button, FALSE, FALSE, 3);
 			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), project_view);
 
-			CanvasLessonView* view = canvas_lesson_view_new (lesson);
+			CanvasLessonView* view = canvas_lesson_view_new (lesson, priv->pool);
 
 			g_hash_table_insert (priv->hashtable, lesson_button, view);
 

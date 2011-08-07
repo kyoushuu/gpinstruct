@@ -49,6 +49,8 @@ CanvasLessonTestOrder* canvas_lesson_test_order_new (void);
 void canvas_lesson_test_order_add_item (CanvasLessonTestOrder* test, CanvasLessonTestOrderItem* item);
 void canvas_lesson_test_order_remove_item (CanvasLessonTestOrder* test, guint item);
 GList* canvas_lesson_test_order_get_items (CanvasLessonTestOrder* test);
+const gchar* canvas_lesson_test_order_get_explanation (CanvasLessonTestOrder* test);
+void canvas_lesson_test_order_set_explanation (CanvasLessonTestOrder* test, const gchar* explanation);
 
 G_END_DECLS
 

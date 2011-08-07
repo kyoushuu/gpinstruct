@@ -50,6 +50,8 @@ const gchar* canvas_lesson_test_word_pool_question_get_text (CanvasLessonTestWor
 void canvas_lesson_test_word_pool_question_set_text (CanvasLessonTestWordPoolQuestion* question, const gchar* text);
 guint canvas_lesson_test_word_pool_question_get_answer (CanvasLessonTestWordPoolQuestion* question);
 void canvas_lesson_test_word_pool_question_set_answer (CanvasLessonTestWordPoolQuestion* question, guint answer);
+const gchar* canvas_lesson_test_word_pool_question_get_explanation (CanvasLessonTestWordPoolQuestion* question);
+void canvas_lesson_test_word_pool_question_set_explanation (CanvasLessonTestWordPoolQuestion* question, const gchar* explanation);
 
 G_END_DECLS
 

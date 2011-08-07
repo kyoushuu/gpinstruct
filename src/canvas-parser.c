@@ -48,6 +48,7 @@ struct _CanvasParserPrivate
 	gboolean text;
 	gboolean directions;
 	gboolean choice;
+	gboolean explanation;
 };
 
 #define CANVAS_PARSER_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_PARSER, CanvasParserPrivate))
@@ -82,6 +83,7 @@ canvas_parser_init (CanvasParser *object)
 	priv->text = FALSE;
 	priv->directions = FALSE;
 	priv->choice = FALSE;
+	priv->explanation = FALSE;
 }
 
 static void
@@ -257,6 +259,8 @@ void parse_start_element (GMarkupParseContext *context,
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
 					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_test_multi_choice), attribute_values[i]);
+				if (g_strcmp0 ("explain", attribute_names[i]) == 0)
+					canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (lesson_test_multi_choice), (g_ascii_strncasecmp(attribute_values[i], "true", -1) == 0)?TRUE:FALSE);
 			}
 		}
 		else
@@ -276,6 +280,8 @@ void parse_start_element (GMarkupParseContext *context,
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
 					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_test_word_pool), attribute_values[i]);
+				if (g_strcmp0 ("explain", attribute_names[i]) == 0)
+					canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (lesson_test_word_pool), (g_ascii_strncasecmp(attribute_values[i], "true", -1) == 0)?TRUE:FALSE);
 			}
 		}
 		else
@@ -295,6 +301,8 @@ void parse_start_element (GMarkupParseContext *context,
 			{
 				if (g_strcmp0 ("title", attribute_names[i]) == 0)
 					canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (lesson_test_order), attribute_values[i]);
+				if (g_strcmp0 ("explain", attribute_names[i]) == 0)
+					canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (lesson_test_order), (g_ascii_strncasecmp(attribute_values[i], "true", -1) == 0)?TRUE:FALSE);
 			}
 		}
 		else
@@ -352,6 +360,8 @@ void parse_start_element (GMarkupParseContext *context,
 		else
 			g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_INVALID_CONTENT, _("Started a Item element without Lesson Test element parent."));
 	}
+	else if (g_strcmp0 ("explanation", element_name) == 0)
+		priv->explanation = TRUE;
 	else
 		g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT, _("Unknown element: %s"), element_name);
 }
@@ -419,6 +429,8 @@ void parse_end_element (GMarkupParseContext *context,
 		priv->choice = FALSE;
 	else if (g_strcmp0 ("item", element_name) == 0)
 		priv->current_lesson_test_order_item = NULL;
+	else if (g_strcmp0 ("explanation", element_name) == 0)
+		priv->explanation = FALSE;
 	else
 		g_set_error (error, G_MARKUP_ERROR, G_MARKUP_ERROR_UNKNOWN_ELEMENT, _("Unknown element: %s"), element_name);
 }
@@ -468,6 +480,18 @@ void parse_text (GMarkupParseContext *context,
 	{
 		canvas_lesson_test_order_item_set_text (priv->current_lesson_test_order_item,
 		                                        text_nul);
+	}
+	else if (priv->explanation)
+	{
+		if (priv->current_lesson_test_multi_choice_question)
+			canvas_lesson_test_multi_choice_question_set_explanation (priv->current_lesson_test_multi_choice_question,
+			                                                          text_nul);
+		else if (priv->current_lesson_test_word_pool_question)
+			canvas_lesson_test_word_pool_question_set_explanation (priv->current_lesson_test_word_pool_question,
+			                                                       text_nul);
+		else if (priv->current_lesson_test_order)
+			canvas_lesson_test_order_set_explanation (priv->current_lesson_test_order,
+			                                          text_nul);
 	}
 
 	g_free (text_nul);
@@ -636,6 +660,11 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 						g_data_output_stream_put_string (dataout, output, NULL, NULL);
 						g_free (output);
 
+						output = g_markup_printf_escaped ("<explanation>%s</explanation>\n",
+						                                  canvas_lesson_test_multi_choice_question_get_explanation (curr_lesson_test_multi_choice_question));
+						g_data_output_stream_put_string (dataout, output, NULL, NULL);
+						g_free (output);
+
 						choices = canvas_lesson_test_multi_choice_question_get_choices (curr_lesson_test_multi_choice_question);
 						curr_choices = choices;
 
@@ -708,6 +737,11 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 						g_data_output_stream_put_string (dataout, output, NULL, NULL);
 						g_free (output);
 
+						output = g_markup_printf_escaped ("<explanation>%s</explanation>\n",
+						                                  canvas_lesson_test_word_pool_question_get_explanation (curr_lesson_test_word_pool_question));
+						g_data_output_stream_put_string (dataout, output, NULL, NULL);
+						g_free (output);
+
 						g_data_output_stream_put_string (dataout, "</question>\n", NULL, NULL);
 
 						curr_questions = curr_questions->next;
@@ -728,6 +762,11 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 
 					output = g_markup_printf_escaped ("<directions>%s</directions>\n",
 					                                  canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)));
+					g_data_output_stream_put_string (dataout, output, NULL, NULL);
+					g_free (output);
+
+					output = g_markup_printf_escaped ("<explanation>%s</explanation>\n",
+					                                  canvas_lesson_test_order_get_explanation (curr_lesson_test_order));
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 

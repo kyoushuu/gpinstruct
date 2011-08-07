@@ -20,7 +20,10 @@
 #include "config.h"
 #include <glib/gi18n.h>
 
+#include <gtk/gtk.h>
+
 #include "canvas.h"
+#include "canvas-view.h"
 
 
 

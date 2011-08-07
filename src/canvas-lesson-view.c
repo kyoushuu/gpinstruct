@@ -20,23 +20,36 @@
 #include <config.h>
 #include <glib/gi18n.h>
 
+#include <gtk/gtk.h>
+
 #include "canvas.h"
+#include "canvas-view.h"
 #include "canvas-private.h"
 #include "canvas-marshalers.h"
+
+#include "gtktextbuffermarkup.h"
 
 typedef struct _CanvasLessonViewPrivate CanvasLessonViewPrivate;
 struct _CanvasLessonViewPrivate
 {
 	CanvasLesson* lesson;
+	CanvasMessagePool* pool;
 
 	gint current_page;
 	CanvasLessonViewPage* current_page_object;
 
 	GtkWidget* next;
 	GtkWidget* back;
+
 	GtkWidget* contents;
 	GList* pages;
 	GtkSizeGroup* pages_size_group;
+
+	GtkWidget* infobar;
+	GtkWidget* infobar_label;
+	GtkWidget* explain_button;
+
+	gchar* explanation;
 };
 
 #define CANVAS_LESSON_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_VIEW, CanvasLessonViewPrivate))
@@ -118,7 +131,52 @@ view_show (GtkWidget* widget,
 		current_pages = current_pages->next;
 	}
 
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_INFO);
+	gtk_label_set_text (GTK_LABEL (priv->infobar_label), _("Welcome! Click Next to continue."));
+	gtk_widget_hide (priv->explain_button);
+
 	show_page (view, 0);
+}
+
+void
+explanation_show (GtkInfoBar *info_bar,
+                  gint        response_id,
+                  gpointer    user_data)
+{
+	CanvasLessonView* view = CANVAS_LESSON_VIEW (user_data);
+
+	GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Explanation"),
+	                                                 GTK_WINDOW (view),
+	                                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+	                                                 GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
+	                                                 NULL);
+	gtk_window_set_default_size (GTK_WINDOW (dialog), 800, 600);
+	gtk_widget_set_size_request (GTK_WIDGET (dialog), 600, 400);
+
+	GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+
+	GtkWidget* explanation_label = gtk_label_new (NULL);
+	gtk_label_set_markup (GTK_LABEL (explanation_label),
+	                      _("<b><big>Explanation:</big></b>"));
+	gtk_box_pack_start (GTK_BOX (content_area),
+	                    explanation_label, FALSE, TRUE, 3);
+
+	GtkWidget* scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_box_pack_start (GTK_BOX (content_area),
+	                    scrolled_window, TRUE, TRUE, 3);
+
+	GtkWidget* explanation = gtk_text_view_new ();
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (explanation), GTK_WRAP_WORD);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (explanation), FALSE);
+	gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (explanation)),
+	                            CANVAS_LESSON_VIEW_PRIVATE (view)->explanation);
+	gtk_container_add (GTK_CONTAINER (scrolled_window), explanation);
+
+	gtk_widget_show_all (dialog);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
 }
 
 
@@ -130,6 +188,7 @@ canvas_lesson_view_init (CanvasLessonView *object)
 	priv->current_page = 0;
 	priv->current_page_object = NULL;
 	priv->pages = NULL;
+	priv->explanation = g_strdup ("");
 
 	GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
 	GtkWidget* action_area = gtk_dialog_get_action_area (GTK_DIALOG (object));
@@ -138,6 +197,16 @@ canvas_lesson_view_init (CanvasLessonView *object)
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (priv->contents), FALSE);
 	gtk_widget_show_all (priv->contents);
 	gtk_box_pack_start (GTK_BOX (content_area), priv->contents, TRUE, TRUE, 3);
+
+	priv->infobar = gtk_info_bar_new ();
+	priv->infobar_label = gtk_label_new (NULL);
+	gtk_box_pack_start (GTK_BOX (gtk_info_bar_get_content_area (GTK_INFO_BAR (priv->infobar))),
+	                    priv->infobar_label, FALSE, TRUE, 3);
+	g_signal_connect (priv->infobar, "response", G_CALLBACK (explanation_show), object);
+	gtk_widget_show_all (priv->infobar);
+	priv->explain_button = gtk_info_bar_add_button (GTK_INFO_BAR (priv->infobar), _("Explanation"), GTK_RESPONSE_OK);
+	gtk_widget_hide (priv->explain_button);
+	gtk_box_pack_start (GTK_BOX (content_area), priv->infobar, FALSE, FALSE, 3);
 
 	priv->back = gtk_button_new_with_mnemonic (_("_Back"));
 	g_signal_connect (priv->back, "clicked", G_CALLBACK (back_button_clicked), object);
@@ -153,8 +222,8 @@ canvas_lesson_view_init (CanvasLessonView *object)
 	                        _("C_lose"), 0,
 	                        NULL);
 
-	gtk_window_set_default_size (GTK_WINDOW (object), 400, 300);
-	gtk_widget_set_size_request (GTK_WIDGET (object), 400, 300);
+	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
+	gtk_widget_set_size_request (GTK_WIDGET (object), 600, 400);
 
 	g_signal_connect (object, "show", G_CALLBACK (view_show), NULL);
 
@@ -169,6 +238,15 @@ canvas_lesson_view_finalize (GObject *object)
 	if (priv->pages)
 		g_list_free (priv->pages);
 
+	if (priv->explanation)
+		g_free (priv->explanation);
+
+	if (priv->lesson)
+		g_object_unref (priv->lesson);
+
+	if (priv->pool)
+		g_object_unref (priv->pool);	
+
 	G_OBJECT_CLASS (canvas_lesson_view_parent_class)->finalize (object);
 }
 
@@ -176,8 +254,64 @@ static gboolean
 canvas_lesson_view_next (CanvasLessonView* view, gpointer user_data)
 {
 	CanvasLessonViewPrivate* priv = CANVAS_LESSON_VIEW_PRIVATE (view);
+	CanvasLessonViewPage* current_page = priv->current_page_object;
 
-	if (!canvas_lesson_view_page_show_next (priv->current_page_object))
+	gboolean show_next = !canvas_lesson_view_page_show_next (priv->current_page_object);
+
+	CanvasMessageType message = canvas_lesson_view_page_get_message (current_page);
+
+	switch (message)
+	{
+		case CANVAS_MESSAGE_TYPE_CORRECT:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_QUESTION);
+			break;
+		case CANVAS_MESSAGE_TYPE_CORRECT_ALL:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_QUESTION);
+			break;
+		case CANVAS_MESSAGE_TYPE_WRONG:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_ERROR);
+			break;
+		case CANVAS_MESSAGE_TYPE_WRONG_SOME:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_WARNING);
+			break;
+		case CANVAS_MESSAGE_TYPE_WRONG_ALL:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_ERROR);
+			break;
+		case CANVAS_MESSAGE_TYPE_PASS:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_INFO);
+			break;
+		case CANVAS_MESSAGE_TYPE_FAIL:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_ERROR);
+			break;
+		default:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_OTHER);
+			break;
+	}
+
+	gtk_label_set_text (GTK_LABEL (priv->infobar_label),
+	                    canvas_message_pool_get_random (priv->pool, message));
+
+	if (message == CANVAS_MESSAGE_TYPE_WRONG ||
+		message == CANVAS_MESSAGE_TYPE_WRONG_SOME ||
+	    message == CANVAS_MESSAGE_TYPE_WRONG_ALL)
+	{
+		if (priv->explanation)
+			g_free (priv->explanation);
+		priv->explanation = g_strdup (canvas_lesson_view_page_get_explanation (current_page));
+
+		if (priv->explanation == NULL ||
+		    g_strcmp0 (priv->explanation, "") == 0)
+		{
+			g_free (priv->explanation);
+			priv->explanation = g_strdup (_("No explanation available."));
+		}
+
+		gtk_widget_show (priv->explain_button);
+	}
+	else
+		gtk_widget_hide (priv->explain_button);
+
+	if (show_next)
 		show_page (CANVAS_LESSON_VIEW (view), priv->current_page+1);
 
 	return TRUE;
@@ -228,9 +362,10 @@ canvas_lesson_view_class_init (CanvasLessonViewClass *klass)
 
 
 CanvasLessonView*
-canvas_lesson_view_new (CanvasLesson* lesson)
+canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool)
 {
 	CanvasLessonView* view = g_object_new(CANVAS_TYPE_LESSON_VIEW, NULL);
+	CanvasLessonViewPrivate* priv = CANVAS_LESSON_VIEW_PRIVATE (view);
 
 	CanvasLessonElement* curr_element;
 	CanvasLessonDiscussion* curr_discussion;
@@ -242,6 +377,9 @@ canvas_lesson_view_new (CanvasLesson* lesson)
 	CanvasLessonScore* curr_lesson_score;
 
 	gboolean single_score;
+
+	priv->lesson = g_object_ref (lesson);
+	priv->pool = g_object_ref (pool);
 
 	gchar* title;
 	const gchar* lesson_title = canvas_lesson_get_title (lesson);

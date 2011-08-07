@@ -17,7 +17,10 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <gtk/gtk.h>
+
 #include "canvas.h"
+#include "canvas-view.h"
 #include "gtktextbuffermarkup.h"
 
 typedef struct _CanvasLessonTestMultiChoicePagePrivate CanvasLessonTestMultiChoicePagePrivate;
@@ -156,23 +159,34 @@ multi_choice_page_show_next (CanvasLessonTestMultiChoicePage* page, gpointer use
 	canvas_lesson_score_increase_total (priv->score);
 
 	GList* questions = canvas_lesson_test_multi_choice_get_questions (priv->test);
-
 	CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (g_list_nth_data (questions, priv->curr_question));
+	guint questions_num = g_list_length (questions);
+	g_list_free (questions);
+
+	gboolean explain = canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (priv->test));
 
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (g_list_nth_data (priv->choice_buttons, canvas_lesson_test_multi_choice_question_get_answer (question)))))
+	{
 		canvas_lesson_score_increase_score (priv->score);
+		if (explain)
+			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
+			                                     CANVAS_MESSAGE_TYPE_CORRECT);
+	}
+	else if (explain)
+	{
+		canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
+		                                     CANVAS_MESSAGE_TYPE_WRONG);
+		canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
+		                                         canvas_lesson_test_multi_choice_question_get_explanation (question));
+	}
 
-	if (priv->curr_question+1 < g_list_length (questions))
+	if (priv->curr_question+1 < questions_num)
 	{
 		multi_choice_show_question (page, priv->curr_question+1);
-		g_list_free (questions);
 		return TRUE;
 	}
 	else
-	{
-		g_list_free (questions);
 		return FALSE;
-	}
 }
 
 

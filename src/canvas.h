@@ -47,23 +47,3 @@
 #include "canvas-project.h"
 
 #include "canvas-parser.h"
-
-#include <gtk/gtk.h>
-
-#include "canvas-lesson-score.h"
-
-#include "canvas-lesson-view-page.h"
-#include "canvas-lesson-view.h"
-#include "canvas-project-view.h"
-
-#include "canvas-lesson-view-page.h"
-#include "canvas-lesson-discussion-page.h"
-#include "canvas-lesson-reading-page.h"
-#include "canvas-lesson-directions-page.h"
-#include "canvas-lesson-score-page.h"
-#include "canvas-lesson-test-multi-choice-page.h"
-#include "canvas-lesson-test-word-pool-page.h"
-#include "canvas-lesson-test-order-page.h"
-
-#include "canvas-lesson-view.h"
-#include "canvas-project-view.h"

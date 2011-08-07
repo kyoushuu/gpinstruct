@@ -49,11 +49,14 @@ struct _CanvasLessonView
 };
 
 GType canvas_lesson_view_get_type (void) G_GNUC_CONST;
-CanvasLessonView* canvas_lesson_view_new (CanvasLesson* lesson);
+CanvasLessonView* canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool);
 void canvas_lesson_view_append_page (CanvasLessonView* view, CanvasLessonViewPage* page);
 guint canvas_lesson_view_get_current_page (CanvasLessonView* view);
 void canvas_lesson_view_set_current_page (CanvasLessonView* view, guint page);
 CanvasLessonViewPage* canvas_lesson_view_get_current_page_object (CanvasLessonView* view);
+void canvas_lesson_view_set_explanation (CanvasLessonView* view, const gchar* explanation);
+const gchar* canvas_lesson_view_get_explanation (CanvasLessonView* view);
+
 G_END_DECLS
 
 #endif /* _CANVAS_LESSON_VIEW_H_ */

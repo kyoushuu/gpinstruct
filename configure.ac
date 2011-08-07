@@ -28,9 +28,7 @@ AM_PROG_LIBTOOL
 
 
 
-PKG_CHECK_MODULES(CANVAS, [gtk+-3.0 ])
-
-
+[]
 
 ##################################################
 # Check for gtk-doc.
@@ -65,6 +63,15 @@ if test x$enable_gtk_doc = xauto ; then
 fi
 AM_CONDITIONAL(ENABLE_GTK_DOC, test x$enable_gtk_doc = xyes)
 
+
+
+PKG_CHECK_MODULES(GOBJECT,gobject-2.0)
+
+PKG_CHECK_MODULES(GIO,gio-2.0)
+
+PKG_CHECK_MODULES(GLIB,glib-2.0)
+
+PKG_CHECK_MODULES(GTK,gtk+-3.0)
 
 AC_OUTPUT([
 Makefile

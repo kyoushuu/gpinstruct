@@ -18,21 +18,18 @@
  */
 
 #include <config.h>
-#include <gtk/gtk.h>
-
-
 #include <glib/gi18n.h>
 
+#include <gtk/gtk.h>
+
 #include "canvas.h"
+#include "canvas-view.h"
 
 
 
 int
 main (int argc, char *argv[])
 {
- 	GtkWidget *window;
-
-
 #ifdef ENABLE_NLS
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -45,7 +42,7 @@ main (int argc, char *argv[])
 	GError* error = NULL;
 
 	gchar* contents;
-	g_file_get_contents ("english.xml", &contents, NULL, &error);
+	g_file_get_contents ("default-project.xml", &contents, NULL, &error);
 	if (error)
 	{
 		printf(_("Error: %s\n"), error->message);
@@ -62,14 +59,19 @@ main (int argc, char *argv[])
 	}
 	g_free (contents);
 
-	canvas_parser_save (parser, project, "english2.xml", &error);
+	canvas_parser_save (parser, project, "default-project-resave.xml", &error);
 	if (error)
 	{
 		printf(_("Error: %s\n"), error->message);
 		g_error_free (error);
 	}
 
-	window = canvas_project_view_new (project);
+	CanvasMessagePool* message_pool = canvas_message_pool_new ();
+	canvas_message_pool_load_from_file (message_pool, "messages.ini");
+
+	GtkWidget* window = canvas_project_view_new (project, message_pool);
+
+	g_object_unref (message_pool);
 
 	/* Exit when the window is closed */
 	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);

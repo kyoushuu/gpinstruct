@@ -17,7 +17,10 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <gtk/gtk.h>
+
 #include "canvas.h"
+#include "canvas-view.h"
 
 typedef struct _CanvasLessonTestOrderPagePrivate CanvasLessonTestOrderPagePrivate;
 struct _CanvasLessonTestOrderPagePrivate
@@ -69,7 +72,7 @@ order_page_show_next (CanvasLessonTestOrderPage* page, gpointer user_data)
 	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (page);
 
 	GtkTreeIter iter;
-	guint i = 0, position;
+	guint questions_num = 0, wrong = 0, position;
 
 	if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->store), &iter))
 	    do
@@ -77,11 +80,34 @@ order_page_show_next (CanvasLessonTestOrderPage* page, gpointer user_data)
 			canvas_lesson_score_increase_total (priv->score);
 
 			gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter, 1, &position, -1);
-			if (i == position)
+			if (questions_num == position)
 				canvas_lesson_score_increase_score (priv->score);
+			else
+				wrong++;
 
-			i++;
+			questions_num++;
 		} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->store), &iter));
+
+	if (canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (priv->test)))
+	{
+		if (wrong > 0 && wrong == questions_num)
+		{
+			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
+				                                 CANVAS_MESSAGE_TYPE_WRONG_ALL);
+			canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
+				                                     canvas_lesson_test_order_get_explanation (priv->test));
+		}
+		else if (wrong)
+		{
+			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
+				                                 CANVAS_MESSAGE_TYPE_WRONG_SOME);
+			canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
+				                                     canvas_lesson_test_order_get_explanation (priv->test));
+		}
+		else
+			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
+				                                 CANVAS_MESSAGE_TYPE_CORRECT_ALL);
+	}
 
 	return FALSE;
 }

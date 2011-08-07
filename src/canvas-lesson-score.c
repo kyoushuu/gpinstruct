@@ -17,7 +17,10 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <gtk/gtk.h>
+
 #include "canvas.h"
+#include "canvas-view.h"
 
 typedef struct _CanvasLessonScorePrivate CanvasLessonScorePrivate;
 struct _CanvasLessonScorePrivate
