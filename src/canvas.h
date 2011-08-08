@@ -47,3 +47,7 @@
 #include "canvas-project.h"
 
 #include "canvas-parser.h"
+
+#if (GLIB_MAJOR_VERSION < 2) || (GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 28)
+void g_list_free_full (GList *list, GDestroyNotify free_func);
+#endif
