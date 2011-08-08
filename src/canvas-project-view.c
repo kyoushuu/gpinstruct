@@ -109,6 +109,8 @@ canvas_project_view_class_init (CanvasProjectViewClass *klass)
 GtkWidget*
 canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
 {
+	g_return_val_if_fail (project != NULL, NULL);
+
 	CanvasProjectView* project_view = g_object_new(CANVAS_TYPE_PROJECT_VIEW, NULL);
 
 	CanvasProjectViewPrivate* priv = CANVAS_PROJECT_VIEW_PRIVATE (project_view);

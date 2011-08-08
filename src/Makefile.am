@@ -11,7 +11,8 @@ AM_CPPFLAGS = \
 	$(GOBJECT_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
-	$(GTK_CFLAGS)
+	$(GTK_CFLAGS) \
+	$(LIBXML_CFLAGS)
 
 bin_PROGRAMS = canvas \
 	canvas-editor
@@ -77,7 +78,8 @@ libcanvas_la_LDFLAGS = \
 
 libcanvas_la_LIBADD = $(GOBJECT_LIBS) \
 	$(GIO_LIBS) \
-	$(GLIB_LIBS)
+	$(GLIB_LIBS) \
+	$(LIBXML_LIBS)
 
 libcanvas_view_la_SOURCES =  \
 	canvas-view.h \

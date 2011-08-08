@@ -46,8 +46,19 @@ struct _CanvasParser
 
 GType canvas_parser_get_type (void) G_GNUC_CONST;
 CanvasParser* canvas_parser_new (void);
-CanvasProject* canvas_parser_open (CanvasParser* parser, const gchar* text, GError** error);
-void canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* filename, GError** error);
+CanvasProject* canvas_parser_open (CanvasParser* parser, const gchar* file, GError** error);
+void canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* file, GError** error);
+
+typedef enum
+{
+  CANVAS_PARSER_ERROR_PARSE,
+  CANVAS_PARSER_ERROR_UNKNOWN_ELEMENT,
+  CANVAS_PARSER_ERROR_UNKNOWN_ATTRIBUTE
+} CanvasParserError;
+
+#define CANVAS_PARSER_ERROR canvas_parser_error_quark ()
+
+GQuark canvas_parser_error_quark (void);
 
 G_END_DECLS
 

@@ -41,47 +41,49 @@ main (int argc, char *argv[])
 
 	GError* error = NULL;
 
-	gchar* contents;
-	g_file_get_contents ("default-project.xml", &contents, NULL, &error);
-	if (error)
-	{
-		printf(_("Error: %s\n"), error->message);
-		g_error_free (error);
-	}
-
 	CanvasParser* parser = canvas_parser_new ();
 
-	CanvasProject* project = canvas_parser_open (parser, contents, &error);
+	CanvasProject* project = canvas_parser_open (parser, "default-project.xml", &error);
 	if (error)
 	{
 		printf(_("Error: %s\n"), error->message);
 		g_error_free (error);
+		error = NULL;
 	}
-	g_free (contents);
 
 	canvas_parser_save (parser, project, "default-project-resave.xml", &error);
 	if (error)
 	{
 		printf(_("Error: %s\n"), error->message);
 		g_error_free (error);
+		error = NULL;
 	}
 
-	CanvasMessagePool* message_pool = canvas_message_pool_new ();
-	canvas_message_pool_load_from_file (message_pool, "messages.ini");
-
-	GtkWidget* window = canvas_project_view_new (project, message_pool);
-
-	g_object_unref (message_pool);
-
-	/* Exit when the window is closed */
-	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-
-	gtk_widget_show_all (window);
-
-	gtk_main ();
-
-	g_object_unref (project);
 	g_object_unref (parser);
+
+	if (project)
+	{
+		CanvasMessagePool* message_pool = canvas_message_pool_new ();
+
+		if (message_pool)
+			canvas_message_pool_load_from_file (message_pool, "messages.ini");
+
+		GtkWidget* window = canvas_project_view_new (project, message_pool);
+
+		g_object_unref (message_pool);
+
+		if (window)
+		{
+			/* Exit when the window is closed */
+			g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+			gtk_widget_show_all (window);
+
+			gtk_main ();
+		}
+
+		g_object_unref (project);
+	}
 
 	return 0;
 }

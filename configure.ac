@@ -65,6 +65,8 @@ AM_CONDITIONAL(ENABLE_GTK_DOC, test x$enable_gtk_doc = xyes)
 
 
 
+PKG_CHECK_MODULES(LIBXML,libxml-2.0)
+
 PKG_CHECK_MODULES(GOBJECT,gobject-2.0)
 
 PKG_CHECK_MODULES(GIO,gio-2.0)
