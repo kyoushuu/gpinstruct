@@ -92,6 +92,9 @@ canvas_lesson_view_page_finalize (GObject *object)
 	if (priv->title)
 		g_free (priv->title);
 
+	if (priv->explanation)
+		g_free (priv->explanation);
+
 	G_OBJECT_CLASS (canvas_lesson_view_page_parent_class)->finalize (object);
 }
 
