@@ -97,6 +97,12 @@ canvas_lesson_test_order_get_items (CanvasLessonTestOrder* test)
 	return g_list_copy (CANVAS_LESSON_TEST_ORDER_PRIVATE(test)->items);
 }
 
+guint
+canvas_lesson_test_order_get_items_length (CanvasLessonTestOrder* test)
+{
+	return g_list_length (CANVAS_LESSON_TEST_ORDER_PRIVATE(test)->items);
+}
+
 const gchar*
 canvas_lesson_test_order_get_explanation (CanvasLessonTestOrder* test)
 {

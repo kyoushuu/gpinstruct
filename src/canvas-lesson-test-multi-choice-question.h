@@ -53,6 +53,7 @@ void canvas_lesson_test_multi_choice_question_set_answer (CanvasLessonTestMultiC
 void canvas_lesson_test_multi_choice_question_add_choice (CanvasLessonTestMultiChoiceQuestion* question, const gchar* choice);
 void canvas_lesson_test_multi_choice_question_remove_choice (CanvasLessonTestMultiChoiceQuestion* question, guint choice);
 GList* canvas_lesson_test_multi_choice_question_get_choices (CanvasLessonTestMultiChoiceQuestion* question);
+guint canvas_lesson_test_multi_choice_question_get_choices_length (CanvasLessonTestMultiChoiceQuestion* question);
 const gchar* canvas_lesson_test_multi_choice_question_get_explanation (CanvasLessonTestMultiChoiceQuestion* question);
 void canvas_lesson_test_multi_choice_question_set_explanation (CanvasLessonTestMultiChoiceQuestion* question, const gchar* explanation);
 

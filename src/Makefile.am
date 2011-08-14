@@ -87,7 +87,9 @@ libcanvas_la_LIBADD = $(GOBJECT_LIBS) \
 	$(LIBXML_LIBS)
 
 libcanvas_view_la_SOURCES =  \
+	canvas-view.c \
 	canvas-view.h \
+	canvas-view-private.h \
 	canvas-lesson-directions-page.c \
 	canvas-lesson-directions-page.h \
 	canvas-lesson-discussion-page.c \

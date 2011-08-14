@@ -21,6 +21,7 @@
 
 #include "canvas.h"
 #include "canvas-view.h"
+#include "canvas-view-private.h"
 
 typedef struct _CanvasLessonTestOrderPagePrivate CanvasLessonTestOrderPagePrivate;
 struct _CanvasLessonTestOrderPagePrivate
@@ -28,12 +29,38 @@ struct _CanvasLessonTestOrderPagePrivate
 	CanvasLessonTestOrder* test;
 	CanvasLessonScore* score;
 
+	guint* items;
+
 	GtkListStore* store;
 };
 
 #define CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_TEST_ORDER_PAGE, CanvasLessonTestOrderPagePrivate))
 
 
+
+static void
+page_reset (CanvasLessonViewPage* page, gpointer user_data)
+{
+	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (page);
+
+	GList* items = canvas_lesson_test_order_get_items (priv->test);
+	guint length = g_list_length (items);
+
+	if (priv->items)
+		g_free (priv->items);
+	priv->items = random_array (length);
+
+	gtk_list_store_clear (priv->store);
+
+	int i;
+	for (i=0; i<length; i++)
+		gtk_list_store_insert_with_values (priv->store, NULL, -1,
+		                                   0, canvas_lesson_test_order_item_get_text (CANVAS_LESSON_TEST_ORDER_ITEM (g_list_nth_data (items, priv->items[i]))),
+		                                   1, canvas_lesson_test_order_item_get_answer (CANVAS_LESSON_TEST_ORDER_ITEM (g_list_nth_data (items, priv->items[i]))),
+		                                   -1);
+
+	g_list_free (items);
+}
 
 G_DEFINE_TYPE (CanvasLessonTestOrderPage, canvas_lesson_test_order_page, CANVAS_TYPE_LESSON_VIEW_PAGE);
 
@@ -44,12 +71,21 @@ canvas_lesson_test_order_page_init (CanvasLessonTestOrderPage *object)
 
 	priv->test = NULL;
 	priv->score = NULL;
+	priv->items = NULL;
 	priv->store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_UINT);
 }
 
 static void
 canvas_lesson_test_order_page_finalize (GObject *object)
 {
+	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (object);
+
+	if (priv->items)
+		g_free (priv->items);
+
+	if (priv->store)
+		g_object_unref (priv->store);
+
 	G_OBJECT_CLASS (canvas_lesson_test_order_page_parent_class)->finalize (object);
 }
 
@@ -66,8 +102,8 @@ canvas_lesson_test_order_page_class_init (CanvasLessonTestOrderPageClass *klass)
 
 
 
-gboolean
-order_page_show_next (CanvasLessonTestOrderPage* page, gpointer user_data)
+static gboolean
+page_show_next (CanvasLessonTestOrderPage* page, gpointer user_data)
 {
 	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (page);
 
@@ -123,7 +159,8 @@ canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test, CanvasLessonScor
 	                                   canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (test)));
 	canvas_lesson_view_page_set_show_back_button (CANVAS_LESSON_VIEW_PAGE (page), FALSE);
 
-	g_signal_connect (page, "show-next", G_CALLBACK (order_page_show_next), NULL);
+	g_signal_connect (page, "show-next", G_CALLBACK (page_show_next), NULL);
+	g_signal_connect (page, "reset", G_CALLBACK (page_reset), NULL);
 
 	priv->test = test;
 	priv->score = score;
@@ -136,17 +173,6 @@ canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test, CanvasLessonScor
 	GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
 	GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes ("Items", renderer, "text", 0, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
-
-	GList* items = canvas_lesson_test_order_get_items (test);
-	GList* curr_items = items;
-
-	for (; curr_items; curr_items = curr_items->next)
-		gtk_list_store_insert_with_values (priv->store, NULL, -1,
-		                                   0, canvas_lesson_test_order_item_get_text (CANVAS_LESSON_TEST_ORDER_ITEM (curr_items->data)),
-		                                   1, canvas_lesson_test_order_item_get_answer (CANVAS_LESSON_TEST_ORDER_ITEM (curr_items->data)),
-		                                   -1);
-
-	g_list_free (items);
 
 	return page;
 }

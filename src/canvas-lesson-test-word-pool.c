@@ -97,6 +97,12 @@ canvas_lesson_test_word_pool_get_questions (CanvasLessonTestWordPool* test)
 	return g_list_copy (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->questions);
 }
 
+guint
+canvas_lesson_test_word_pool_get_questions_length (CanvasLessonTestWordPool* test)
+{
+	return g_list_length (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->questions);
+}
+
 void
 canvas_lesson_test_word_pool_add_choice (CanvasLessonTestWordPool* test,
                                          const gchar* choice)
@@ -122,4 +128,10 @@ GList*
 canvas_lesson_test_word_pool_get_choices (CanvasLessonTestWordPool* test)
 {
 	return g_list_copy (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->choices);
+}
+
+guint
+canvas_lesson_test_word_pool_get_choices_length (CanvasLessonTestWordPool* test)
+{
+	return g_list_length (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->choices);
 }

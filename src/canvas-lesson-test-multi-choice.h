@@ -49,6 +49,7 @@ CanvasLessonTestMultiChoice* canvas_lesson_test_multi_choice_new (void);
 void canvas_lesson_test_multi_choice_add_question (CanvasLessonTestMultiChoice* test, CanvasLessonTestMultiChoiceQuestion* question);
 void canvas_lesson_test_multi_choice_remove_question (CanvasLessonTestMultiChoice* test, guint question);
 GList* canvas_lesson_test_multi_choice_get_questions (CanvasLessonTestMultiChoice* test);
+guint canvas_lesson_test_multi_choice_get_questions_length (CanvasLessonTestMultiChoice* test);
 
 G_END_DECLS
 

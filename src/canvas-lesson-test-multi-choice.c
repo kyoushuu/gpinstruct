@@ -92,3 +92,9 @@ canvas_lesson_test_multi_choice_get_questions (CanvasLessonTestMultiChoice* test
 {
 	return g_list_copy (CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test)->questions);
 }
+
+guint
+canvas_lesson_test_multi_choice_get_questions_length (CanvasLessonTestMultiChoice* test)
+{
+	return g_list_length (CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test)->questions);
+}

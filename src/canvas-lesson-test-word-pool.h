@@ -49,9 +49,11 @@ CanvasLessonTestWordPool* canvas_lesson_test_word_pool_new (void);
 void canvas_lesson_test_word_pool_add_question (CanvasLessonTestWordPool* test, CanvasLessonTestWordPoolQuestion* question);
 void canvas_lesson_test_word_pool_remove_question (CanvasLessonTestWordPool* test, guint question);
 GList* canvas_lesson_test_word_pool_get_questions (CanvasLessonTestWordPool* test);
+guint canvas_lesson_test_word_pool_get_questions_length (CanvasLessonTestWordPool* test);
 void canvas_lesson_test_word_pool_add_choice (CanvasLessonTestWordPool* test, const gchar* choice);
 void canvas_lesson_test_word_pool_remove_choice (CanvasLessonTestWordPool* test, guint choice);
 GList* canvas_lesson_test_word_pool_get_choices (CanvasLessonTestWordPool* test);
+guint canvas_lesson_test_word_pool_get_choices_length (CanvasLessonTestWordPool* test);
 
 G_END_DECLS
 

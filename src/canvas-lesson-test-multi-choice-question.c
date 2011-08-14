@@ -137,6 +137,12 @@ canvas_lesson_test_multi_choice_question_get_choices (CanvasLessonTestMultiChoic
 	return g_list_copy (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices);
 }
 
+guint
+canvas_lesson_test_multi_choice_question_get_choices_length (CanvasLessonTestMultiChoiceQuestion* question)
+{
+	return g_list_length (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices);
+}
+
 const gchar*
 canvas_lesson_test_multi_choice_question_get_explanation (CanvasLessonTestMultiChoiceQuestion* question)
 {

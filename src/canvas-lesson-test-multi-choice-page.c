@@ -21,6 +21,7 @@
 
 #include "canvas.h"
 #include "canvas-view.h"
+#include "canvas-view-private.h"
 #include "gtktextbuffermarkup.h"
 
 typedef struct _CanvasLessonTestMultiChoicePagePrivate CanvasLessonTestMultiChoicePagePrivate;
@@ -30,6 +31,8 @@ struct _CanvasLessonTestMultiChoicePagePrivate
 	CanvasLessonScore* score;
 
 	guint curr_question;
+	guint* questions;
+	guint* choices;
 	GList* choice_buttons;
 
 	GtkWidget* vbox;
@@ -45,6 +48,7 @@ void
 multi_choice_show_question (CanvasLessonTestMultiChoicePage* page, guint question_num)
 {
 	CanvasLessonTestMultiChoicePagePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (page);
+	
 
 	GList* questions = canvas_lesson_test_multi_choice_get_questions (priv->test);
 	if (question_num < g_list_length (questions))
@@ -54,7 +58,7 @@ multi_choice_show_question (CanvasLessonTestMultiChoicePage* page, guint questio
 		gchar* text;
 		int i;
 
-		CanvasLessonTestMultiChoiceQuestion* question = g_list_nth_data (questions, question_num);
+		CanvasLessonTestMultiChoiceQuestion* question = g_list_nth_data (questions, priv->questions[question_num]);
 
 		text = g_strdup_printf ("%d. %s", 1+question_num, canvas_lesson_test_multi_choice_question_get_text (question));
 		gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->question_textview)), text);
@@ -76,13 +80,17 @@ multi_choice_show_question (CanvasLessonTestMultiChoicePage* page, guint questio
 		}
 
 		GList* choices = canvas_lesson_test_multi_choice_question_get_choices (question);
-		GList* curr_choices = choices;
+		guint length = g_list_length (choices);
 
-		for (i = 0; curr_choices; curr_choices = curr_choices->next, i++)
+		if (priv->choices)
+			g_free (priv->choices);
+		priv->choices = random_array (canvas_lesson_test_multi_choice_question_get_choices_length (question));
+
+		for (i = 0; i<length; i++)
 		{
-			text = g_strdup_printf ("_%c. %s", 'a'+i, (gchar*)curr_choices->data);
+			text = g_strdup_printf ("_%c. %s", 'a'+i, (gchar*)g_list_nth_data (choices, priv->choices[i]));
 			choice_radio_button = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (last_radio_button),
-			                                                                   text);
+			                                                                      text);
 			g_free (text);
 			gtk_box_pack_start (GTK_BOX (priv->choices_vbox), choice_radio_button, FALSE, TRUE, 3);
 
@@ -103,10 +111,16 @@ multi_choice_show_question (CanvasLessonTestMultiChoicePage* page, guint questio
 	
 }
 
-void
-multi_choice_page_reset (CanvasLessonViewPage* view, gpointer user_data)
+static void
+page_reset (CanvasLessonViewPage* page, gpointer user_data)
 {
-	multi_choice_show_question (CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE (view), 0);
+	CanvasLessonTestMultiChoicePagePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (page);
+
+	if (priv->questions)
+		g_free (priv->questions);
+	priv->questions = random_array (canvas_lesson_test_multi_choice_get_questions_length (priv->test));
+
+	multi_choice_show_question (CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE (page), 0);
 }
 
 
@@ -121,6 +135,8 @@ canvas_lesson_test_multi_choice_page_init (CanvasLessonTestMultiChoicePage *obje
 	priv->test = NULL;
 	priv->score = NULL;
 	priv->curr_question = 0;
+	priv->questions = NULL;
+	priv->choices = NULL;
 	priv->choice_buttons = NULL;
 	priv->vbox = NULL;
 	priv->question_textview = NULL;
@@ -131,6 +147,12 @@ static void
 canvas_lesson_test_multi_choice_page_finalize (GObject *object)
 {
 	CanvasLessonTestMultiChoicePagePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (object);
+
+	if (priv->questions)
+		g_free (priv->questions);
+
+	if (priv->choices)
+		g_free (priv->choices);
 
 	if (priv->choice_buttons)
 		g_list_free (priv->choice_buttons);
@@ -150,34 +172,52 @@ canvas_lesson_test_multi_choice_page_class_init (CanvasLessonTestMultiChoicePage
 }
 
 
-gboolean
-multi_choice_page_show_next (CanvasLessonTestMultiChoicePage* page, gpointer user_data)
+static gboolean
+page_show_next (CanvasLessonTestMultiChoicePage* page, gpointer user_data)
 {
 	CanvasLessonTestMultiChoicePagePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (page);
 
 	canvas_lesson_score_increase_total (priv->score);
 
 	GList* questions = canvas_lesson_test_multi_choice_get_questions (priv->test);
-	CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (g_list_nth_data (questions, priv->curr_question));
+	CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (g_list_nth_data (questions, priv->questions[priv->curr_question]));
 	guint questions_num = g_list_length (questions);
 	g_list_free (questions);
 
-	gboolean explain = canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (priv->test));
+	guint correct_choice = -1;
+	guint answer = canvas_lesson_test_multi_choice_question_get_answer (question);
+	guint choices = canvas_lesson_test_multi_choice_question_get_choices_length (question);
+	int i;
+	for (i=0; i<choices; i++)
+	{
+		if (priv->choices[i] == answer)
+		{
+			correct_choice = i;
+			break;
+		}
+	}
 
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (g_list_nth_data (priv->choice_buttons, canvas_lesson_test_multi_choice_question_get_answer (question)))))
+	if (correct_choice >= 0)
 	{
-		canvas_lesson_score_increase_score (priv->score);
-		if (explain)
+		gboolean explain = canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (priv->test));
+
+		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (g_list_nth_data (priv->choice_buttons, correct_choice))))
+		{
+			canvas_lesson_score_increase_score (priv->score);
+			if (explain)
+				canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
+					                                 CANVAS_MESSAGE_TYPE_CORRECT);
+		}
+		else if (explain)
+		{
 			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
-			                                     CANVAS_MESSAGE_TYPE_CORRECT);
+				                                 CANVAS_MESSAGE_TYPE_WRONG);
+			canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
+				                                     canvas_lesson_test_multi_choice_question_get_explanation (question));
+		}
 	}
-	else if (explain)
-	{
-		canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
-		                                     CANVAS_MESSAGE_TYPE_WRONG);
-		canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
-		                                         canvas_lesson_test_multi_choice_question_get_explanation (question));
-	}
+	else
+		g_critical ("Error: Answer not in choices.");
 
 	if (priv->curr_question+1 < questions_num)
 	{
@@ -200,8 +240,8 @@ canvas_lesson_test_multi_choice_page_new (CanvasLessonTestMultiChoice* test,
 	                                   canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (test)));
 	canvas_lesson_view_page_set_show_back_button (CANVAS_LESSON_VIEW_PAGE (page), FALSE);
 
-	g_signal_connect (page, "show-next", G_CALLBACK (multi_choice_page_show_next), NULL);
-	g_signal_connect (page, "reset", G_CALLBACK (multi_choice_page_reset), NULL);
+	g_signal_connect (page, "show-next", G_CALLBACK (page_show_next), NULL);
+	g_signal_connect (page, "reset", G_CALLBACK (page_reset), NULL);
 
 	priv->test = test;
 	priv->score = score;
