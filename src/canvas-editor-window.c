@@ -369,6 +369,12 @@ file_open_action (GtkAction *action,
 	                                      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 	                                      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 	                                      NULL);
+
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("Canvas Project file"));
+	gtk_file_filter_add_pattern (filter, "*.xml");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
 		gchar *filename;
@@ -407,6 +413,11 @@ file_saveas_action (GtkAction *action,
 	                                                 GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	                                                 NULL);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("Canvas Project file"));
+	gtk_file_filter_add_pattern (filter, "*.xml");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled.xml"));
 
@@ -1100,6 +1111,11 @@ canvas_editor_window_save_file (CanvasEditorWindow* window)
 			                                      GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 			                                      NULL);
 			gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+
+			GtkFileFilter *filter = gtk_file_filter_new ();
+			gtk_file_filter_set_name (filter, _("Canvas Project file"));
+			gtk_file_filter_add_pattern (filter, "*.xml");
+			gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
 			gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled.xml"));
 
