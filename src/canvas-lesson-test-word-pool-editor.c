@@ -238,7 +238,7 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 
 	CanvasObject* object;
 	GtkTreeIter iter;
-	GtkWidget *text_entry, *answer_spin;
+	GtkWidget *scrolled_window, *text_view, *answer_spin;
 
 	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->questions_store), &iter, path))
 	{
@@ -257,16 +257,23 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 			                                                 NULL);
 			GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+			gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
 
-			text_entry = gtk_entry_new ();
-			gtk_entry_set_text (GTK_ENTRY (text_entry),
-			                    canvas_lesson_test_word_pool_question_get_text (question));
+			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+			gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+			                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+			text_view = gtk_text_view_new ();
+			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
+			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
+			                          canvas_lesson_test_word_pool_question_get_text (question),
+			                          -1);
+			gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
 			gtk_box_pack_start (GTK_BOX (content_area),
 			                    gtk_label_new (_("Text:")),
 			                    FALSE, TRUE, 0);
 			gtk_box_pack_start (GTK_BOX (content_area),
-			                    text_entry,
-			                    FALSE, TRUE, 0);
+			                    scrolled_window,
+			                    TRUE, TRUE, 0);
 
 			if (choices_num)
 			{
@@ -284,8 +291,13 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 			gtk_widget_show_all (content_area);
 			if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 			{
-				canvas_lesson_test_word_pool_question_set_text (question,
-				                                                gtk_entry_get_text (GTK_ENTRY (text_entry)));
+				GtkTextIter start, end;
+				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
+				                            &start, &end);
+				gchar* text = gtk_text_iter_get_text (&start, &end);
+				canvas_lesson_test_word_pool_question_set_text (question, text);
+				g_free (text);
+
 				if (choices_num)
 					canvas_lesson_test_word_pool_question_set_answer (question,
 					                                                  gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (answer_spin))-1);
@@ -534,7 +546,7 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
 
 	CanvasObject* object;
 	GtkTreeIter iter;
-	GtkWidget *text_entry;
+	GtkWidget *scrolled_window, *text_view;
 
 	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->choices_store), &iter, path))
 	{
@@ -545,29 +557,40 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
 		{
 			guint choice = gtk_tree_path_get_indices(path)[1];
 
-			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Question Properties"),
+			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Choice Properties"),
 			                                                 GTK_WINDOW (priv->window),
 			                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
 			                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 			                                                 NULL);
 			GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+			gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
 
-			text_entry = gtk_entry_new ();
-			gtk_entry_set_text (GTK_ENTRY (text_entry),
-			                    canvas_lesson_test_word_pool_get_choice (priv->test, choice));
+			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+			gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+			                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+			text_view = gtk_text_view_new ();
+			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
+			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
+			                          canvas_lesson_test_word_pool_get_choice (priv->test, choice),
+			                          -1);
+			gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
 			gtk_box_pack_start (GTK_BOX (content_area),
 			                    gtk_label_new (_("Text:")),
 			                    FALSE, TRUE, 0);
 			gtk_box_pack_start (GTK_BOX (content_area),
-			                    text_entry,
-			                    FALSE, TRUE, 0);
+			                    scrolled_window,
+			                    TRUE, TRUE, 0);
 
 			gtk_widget_show_all (content_area);
 			if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 			{
-				canvas_lesson_test_word_pool_set_choice (priv->test, choice,
-				                                         gtk_entry_get_text (GTK_ENTRY (text_entry)));
+				GtkTextIter start, end;
+				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
+				                            &start, &end);
+				gchar* text = gtk_text_iter_get_text (&start, &end);
+				canvas_lesson_test_word_pool_set_choice (priv->test, choice, text);
+				g_free (text);
 
 				update_choices_tree_view (CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data));
 				canvas_editor_window_set_modified (priv->window, TRUE);

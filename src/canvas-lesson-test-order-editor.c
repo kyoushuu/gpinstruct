@@ -231,7 +231,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 
 	CanvasObject* object;
 	GtkTreeIter iter;
-	GtkWidget *text_entry, *answer_spin;
+	GtkWidget *scrolled_window, *text_view, *answer_spin;
 
 	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->store), &iter, path))
 	{
@@ -250,16 +250,23 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 			                                                 NULL);
 			GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+			gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
 
-			text_entry = gtk_entry_new ();
-			gtk_entry_set_text (GTK_ENTRY (text_entry),
-			                    canvas_lesson_test_order_item_get_text (item));
+			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+			gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+			                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+			text_view = gtk_text_view_new ();
+			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
+			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
+			                          canvas_lesson_test_order_item_get_text (item),
+			                          -1);
+			gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
 			gtk_box_pack_start (GTK_BOX (content_area),
 			                    gtk_label_new (_("Text:")),
 			                    FALSE, TRUE, 0);
 			gtk_box_pack_start (GTK_BOX (content_area),
-			                    text_entry,
-			                    FALSE, TRUE, 0);
+			                    scrolled_window,
+			                    TRUE, TRUE, 0);
 
 			answer_spin = gtk_spin_button_new_with_range (1, items_num, 1);
 			gtk_spin_button_set_value (GTK_SPIN_BUTTON (answer_spin),
@@ -274,8 +281,13 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 			gtk_widget_show_all (content_area);
 			if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 			{
-				canvas_lesson_test_order_item_set_text (item,
-				                                        gtk_entry_get_text (GTK_ENTRY (text_entry)));
+				GtkTextIter start, end;
+				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
+				                            &start, &end);
+				gchar* text = gtk_text_iter_get_text (&start, &end);
+				canvas_lesson_test_order_item_set_text (item, text);
+				g_free (text);
+
 				canvas_lesson_test_order_item_set_answer (item,
 				                                          gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (answer_spin))-1);
 
