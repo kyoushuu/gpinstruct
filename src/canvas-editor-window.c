@@ -34,6 +34,7 @@
 
 #include "canvas.h"
 #include "canvas-editor.h"
+#include "canvas-view.h"
 
 typedef struct _CanvasEditorWindowPrivate CanvasEditorWindowPrivate;
 struct _CanvasEditorWindowPrivate
@@ -454,6 +455,31 @@ file_quit_action (GtkAction *action,
 
 
 static void
+view_execute_action (GtkAction *action,
+                     gpointer   user_data)
+{
+	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	CanvasEditorWindowPrivate* priv = CANVAS_EDITOR_WINDOW_PRIVATE (window);
+
+	CanvasMessagePool* message_pool = canvas_message_pool_new ();
+
+	if (message_pool)
+		canvas_message_pool_load_from_file (message_pool, "messages.ini");
+
+	GtkWidget* preview_window = canvas_project_view_new (priv->project, message_pool);
+
+	g_object_unref (message_pool);
+
+	if (preview_window)
+	{
+		gtk_window_set_transient_for (GTK_WINDOW (preview_window), GTK_WINDOW (window));
+		gtk_window_set_modal (GTK_WINDOW (preview_window), TRUE);
+		gtk_widget_show_all (preview_window);
+	}
+}
+
+
+static void
 edit_preferences_action (GtkAction *action,
                          gpointer   user_data)
 {
@@ -696,6 +722,8 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 		{"file-quit", GTK_STOCK_QUIT, NULL, "<Control>Q", NULL, G_CALLBACK (file_quit_action)},
 		{"edit", NULL, _("_Edit")},
 		{"edit-preferences", GTK_STOCK_PREFERENCES, NULL, NULL, NULL, G_CALLBACK (edit_preferences_action)},
+		{"view", NULL, _("_View")},
+		{"view-execute", GTK_STOCK_EXECUTE, NULL, NULL, NULL, G_CALLBACK (view_execute_action)},
 		{"help", NULL, _("_Help")},
 		{"help-about", GTK_STOCK_ABOUT, NULL, "F1", NULL, G_CALLBACK (help_about_action)}
 	};
@@ -720,6 +748,11 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 		"      <separator/>"
 		"      <menuitem name=\"Preferences\" action=\"edit-preferences\"/>"
 		"    </menu>"
+		"    <menu name=\"ViewMenu\" action=\"view\">"
+		"      <placeholder name=\"ViewMenuAdditions\" />"
+		"      <separator/>"
+		"      <menuitem name=\"Execute\" action=\"view-execute\"/>"
+		"    </menu>"
 		"    <menu name=\"HelpMenu\" action=\"help\">"
 		"      <placeholder name=\"HelpMenuAdditions\" />"
 		"      <separator/>"
@@ -732,6 +765,8 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 		"      <toolitem name=\"New\" action=\"file-new\" />"
 		"      <toolitem name=\"Open\" action=\"file-open\" />"
 		"      <toolitem name=\"Save\" action=\"file-save\" />"
+		"      <separator/>"
+		"      <toolitem name=\"Execute\" action=\"view-execute\" />"
 		"      <separator/>"
 		"    </placeholder>"
 		"  </toolbar>"
@@ -758,6 +793,9 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 	                          FALSE);
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "view-execute"),
 	                          FALSE);
 
 	gtk_ui_manager_insert_action_group (priv->manager, priv->action_group, 0);
@@ -991,6 +1029,9 @@ canvas_editor_window_new_file (CanvasEditorWindow* window)
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
 	                          TRUE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "view-execute"),
+	                          TRUE);
 
 	canvas_editor_window_set_filename (window, NULL);
 
@@ -1025,6 +1066,9 @@ canvas_editor_window_open_file (CanvasEditorWindow* window, const gchar* file)
 	                          TRUE);
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
+	                          TRUE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "view-execute"),
 	                          TRUE);
 
 	canvas_editor_window_set_filename (window, file);
@@ -1079,6 +1123,9 @@ canvas_editor_window_close_current_file (CanvasEditorWindow* window)
 	                          FALSE);
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "view-execute"),
 	                          FALSE);
 
 	canvas_editor_window_set_filename (window, NULL);

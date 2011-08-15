@@ -155,4 +155,5 @@ libcanvas_editor_la_CPPFLAGS = -DG_LOG_DOMAIN=\"Canvas-Editor\" \
 libcanvas_editor_la_LDFLAGS = -no-undefined
 
 libcanvas_editor_la_LIBADD = $(GTK_LIBS) \
-	libcanvas.la
+	libcanvas.la \
+	libcanvas-view.la
