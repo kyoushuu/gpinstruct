@@ -41,6 +41,7 @@ struct _CanvasEditorWindowPrivate
 	GtkWidget* main_vbox;
 
 	GtkUIManager* manager;
+	GtkActionGroup* action_group;
 
 	GtkWidget* infobar;
 	GtkWidget* infobarlabel;
@@ -674,10 +675,19 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 	priv->manager = gtk_ui_manager_new ();
 	gtk_window_add_accel_group (GTK_WINDOW (object), gtk_ui_manager_get_accel_group (priv->manager));
 
-	GtkActionGroup* action_group = gtk_action_group_new ("canvas-editor-window");
-	gtk_action_group_add_actions (action_group, actions, G_N_ELEMENTS (actions), object);
+	priv->action_group = gtk_action_group_new ("canvas-editor-window");
+	gtk_action_group_add_actions (priv->action_group, actions, G_N_ELEMENTS (actions), object);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-save"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-saveas"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-close"),
+	                          FALSE);
 
-	gtk_ui_manager_insert_action_group (priv->manager, action_group, 0);
+	gtk_ui_manager_insert_action_group (priv->manager, priv->action_group, 0);
 	gtk_ui_manager_add_ui_from_string (priv->manager, ui, -1, &error);
 
 	if (error)
@@ -794,6 +804,9 @@ canvas_editor_window_finalize (GObject *object)
 {
 	CanvasEditorWindowPrivate* priv = CANVAS_EDITOR_WINDOW_PRIVATE (object);
 
+	if (priv->action_group)
+		g_object_unref (priv->action_group);
+
 	if (priv->store)
 		g_object_unref (priv->store);
 
@@ -874,6 +887,10 @@ canvas_editor_window_set_modified (CanvasEditorWindow* window, gboolean modified
 
 	g_free (title);
 
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-save"),
+	                          modified);
+
 	priv->modified = modified;
 }
 
@@ -889,6 +906,13 @@ canvas_editor_window_new_file (CanvasEditorWindow* window)
 	}
 
 	priv->project = canvas_project_new ();
+
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-saveas"),
+	                          TRUE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-close"),
+	                          TRUE);
 
 	canvas_editor_window_set_filename (window, NULL);
 
@@ -917,6 +941,13 @@ canvas_editor_window_open_file (CanvasEditorWindow* window, const gchar* file)
 		g_error_free (error);
 		return;
 	}
+
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-saveas"),
+	                          TRUE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-close"),
+	                          TRUE);
 
 	canvas_editor_window_set_filename (window, file);
 	canvas_editor_window_set_modified (window, FALSE);
@@ -964,6 +995,13 @@ canvas_editor_window_close_current_file (CanvasEditorWindow* window)
 	if (priv->project)
 		g_object_unref (priv->project);
 	priv->project = NULL;
+
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-saveas"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-close"),
+	                          FALSE);
 
 	canvas_editor_window_set_filename (window, NULL);
 	canvas_editor_window_set_modified (window, FALSE);
