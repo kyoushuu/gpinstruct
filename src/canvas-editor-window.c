@@ -70,6 +70,8 @@ struct _CanvasEditorWindowPrivate
 	GtkWidget* popup_new_test_word_pool_menu_item;
 	GtkWidget* popup_new_test_order_menu_item;
 
+	GtkWidget* popup_remove_menu_item;
+
 
 	CanvasParser* parser;
 	CanvasProject *project;
@@ -233,6 +235,7 @@ tree_view_press_event (GtkWidget *widget,
 		gtk_widget_hide (priv->popup_new_test_multi_choice_menu_item);
 		gtk_widget_hide (priv->popup_new_test_word_pool_menu_item);
 		gtk_widget_hide (priv->popup_new_test_order_menu_item);
+		gtk_widget_hide (priv->popup_remove_menu_item);
 
 		if (CANVAS_IS_PROJECT (object_popup))
 		{
@@ -241,6 +244,7 @@ tree_view_press_event (GtkWidget *widget,
 		else if (CANVAS_IS_CATEGORY (object_popup))
 		{
 			gtk_widget_show (priv->popup_new_lesson_menu_item);
+			gtk_widget_show (priv->popup_remove_menu_item);
 		}
 		else if (CANVAS_IS_LESSON (object_popup))
 		{
@@ -249,6 +253,11 @@ tree_view_press_event (GtkWidget *widget,
 			gtk_widget_show (priv->popup_new_test_multi_choice_menu_item);
 			gtk_widget_show (priv->popup_new_test_word_pool_menu_item);
 			gtk_widget_show (priv->popup_new_test_order_menu_item);
+			gtk_widget_show (priv->popup_remove_menu_item);
+		}
+		else if (CANVAS_IS_LESSON_ELEMENT (object_popup))
+		{
+			gtk_widget_show (priv->popup_remove_menu_item);
 		}
 		else
 			return FALSE;
@@ -595,6 +604,59 @@ new_object_activate (GtkWidget *menuitem,
 	canvas_editor_window_set_modified (window, TRUE);
 }
 
+
+static void
+remove_object_activate (GtkWidget *menuitem,
+                     gpointer   user_data)
+{
+	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	CanvasEditorWindowPrivate* priv = CANVAS_EDITOR_WINDOW_PRIVATE (window);
+
+	CanvasObject* object_popup;
+	GtkTreeIter iter;
+
+	if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (priv->store),
+	                                &iter, &priv->iter_popup))
+	{
+		GtkTreePath* path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->store),
+		                                &priv->iter_popup);
+		gint* indices = gtk_tree_path_get_indices (path);
+
+		gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter,
+			                DATA_COLUMN, &object_popup,
+			                -1);
+
+		gboolean modified = TRUE;
+
+		if (CANVAS_IS_PROJECT (object_popup))
+		{
+			canvas_project_remove_category (CANVAS_PROJECT (object_popup),
+			                                indices[1]);
+		}
+		else if (CANVAS_IS_CATEGORY (object_popup))
+		{
+			canvas_category_remove_lesson (CANVAS_CATEGORY (object_popup),
+			                               indices[2]);
+		}
+		else if (CANVAS_IS_LESSON (object_popup))
+		{
+			canvas_lesson_remove_lesson_element (CANVAS_LESSON (object_popup),
+			                                     indices[3]);
+		}
+		else
+			modified = FALSE;
+
+		if (modified)
+		{
+			canvas_editor_window_set_modified (window, TRUE);
+			gtk_tree_store_remove (GTK_TREE_STORE (priv->store),
+			                       &priv->iter_popup);
+		}
+
+		gtk_tree_path_free (path);
+	}
+}
+
 G_DEFINE_TYPE (CanvasEditorWindow, canvas_editor_window, GTK_TYPE_WINDOW);
 
 static void
@@ -787,6 +849,11 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 	gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), priv->popup_new_test_order_menu_item);
 	g_signal_connect (priv->popup_new_test_order_menu_item, "activate",
 	                  G_CALLBACK (new_object_activate), object);
+
+	priv->popup_remove_menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), priv->popup_remove_menu_item);
+	g_signal_connect (priv->popup_remove_menu_item, "activate",
+	                  G_CALLBACK (remove_object_activate), object);
 
 
 	priv->parser = canvas_parser_new ();

@@ -60,6 +60,8 @@ struct _CanvasLessonTestWordPoolEditorPrivate
 
 	GtkWidget* popup_new_question_menu_item;
 	GtkWidget* popup_new_choice_menu_item;
+	GtkWidget* popup_remove_question_menu_item;
+	GtkWidget* popup_remove_choice_menu_item;
 
 	GtkTreeIter iter_popup;
 };
@@ -203,10 +205,16 @@ questions_tree_view_press_event (GtkWidget *widget,
 
 		gtk_widget_hide (priv->popup_new_question_menu_item);
 		gtk_widget_hide (priv->popup_new_choice_menu_item);
+		gtk_widget_hide (priv->popup_remove_question_menu_item);
+		gtk_widget_hide (priv->popup_remove_choice_menu_item);
 
 		if (CANVAS_IS_LESSON_TEST_WORD_POOL (object_popup))
 		{
 			gtk_widget_show (priv->popup_new_question_menu_item);
+		}
+		else if (CANVAS_IS_LESSON_TEST_WORD_POOL_QUESTION (object_popup))
+		{
+			gtk_widget_show (priv->popup_remove_question_menu_item);
 		}
 		else
 			return FALSE;
@@ -323,6 +331,48 @@ questions_new_object_activate (GtkWidget *menuitem,
 		return;
 
 	canvas_editor_window_set_modified (priv->window, TRUE);
+}
+
+
+static void
+questions_remove_object_activate (GtkWidget *menuitem,
+                     gpointer   user_data)
+{
+	CanvasLessonTestWordPoolEditorPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_EDITOR_PRIVATE (user_data);
+
+	CanvasObject* object_popup;
+	GtkTreeIter iter;
+
+	if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (priv->questions_store),
+	                                &iter, &priv->iter_popup))
+	{
+		GtkTreePath* path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->questions_store),
+		                                &priv->iter_popup);
+		gint* indices = gtk_tree_path_get_indices (path);
+
+		gtk_tree_model_get (GTK_TREE_MODEL (priv->questions_store), &iter,
+			                DATA_COLUMN, &object_popup,
+			                -1);
+
+		gboolean modified = TRUE;
+
+		if (CANVAS_LESSON_TEST_WORD_POOL (object_popup))
+		{
+			canvas_lesson_test_word_pool_remove_question (CANVAS_LESSON_TEST_WORD_POOL (object_popup),
+			                                            indices[1]);
+		}
+		else
+			modified = FALSE;
+
+		if (modified)
+		{
+			canvas_editor_window_set_modified (priv->window, TRUE);
+			gtk_tree_store_remove (GTK_TREE_STORE (priv->questions_store),
+			                       &priv->iter_popup);
+		}
+
+		gtk_tree_path_free (path);
+	}
 }
 
 
@@ -451,10 +501,16 @@ choices_tree_view_press_event (GtkWidget *widget,
 
 		gtk_widget_hide (priv->popup_new_question_menu_item);
 		gtk_widget_hide (priv->popup_new_choice_menu_item);
+		gtk_widget_hide (priv->popup_remove_question_menu_item);
+		gtk_widget_hide (priv->popup_remove_choice_menu_item);
 
 		if (CANVAS_IS_LESSON_TEST_WORD_POOL (object_popup))
 		{
 			gtk_widget_show (priv->popup_new_choice_menu_item);
+		}
+		else if (object_popup == NULL)
+		{
+			gtk_widget_show (priv->popup_remove_choice_menu_item);
 		}
 		else
 			return FALSE;
@@ -552,6 +608,48 @@ choices_new_object_activate (GtkWidget *menuitem,
 		return;
 
 	canvas_editor_window_set_modified (priv->window, TRUE);
+}
+
+
+static void
+choices_remove_object_activate (GtkWidget *menuitem,
+                     gpointer   user_data)
+{
+	CanvasLessonTestWordPoolEditorPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_EDITOR_PRIVATE (user_data);
+
+	CanvasObject* object_popup;
+	GtkTreeIter iter;
+
+	if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (priv->choices_store),
+	                                &iter, &priv->iter_popup))
+	{
+		GtkTreePath* path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->choices_store),
+		                                &priv->iter_popup);
+		gint* indices = gtk_tree_path_get_indices (path);
+
+		gtk_tree_model_get (GTK_TREE_MODEL (priv->choices_store), &iter,
+			                DATA_COLUMN, &object_popup,
+			                -1);
+
+		gboolean modified = TRUE;
+
+		if (CANVAS_LESSON_TEST_WORD_POOL (object_popup))
+		{
+			canvas_lesson_test_word_pool_remove_choice (CANVAS_LESSON_TEST_WORD_POOL (object_popup),
+			                                            indices[1]);
+		}
+		else
+			modified = FALSE;
+
+		if (modified)
+		{
+			canvas_editor_window_set_modified (priv->window, TRUE);
+			gtk_tree_store_remove (GTK_TREE_STORE (priv->choices_store),
+			                       &priv->iter_popup);
+		}
+
+		gtk_tree_path_free (path);
+	}
 }
 
 
@@ -658,6 +756,16 @@ canvas_lesson_test_word_pool_editor_init (CanvasLessonTestWordPoolEditor *object
 	gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), priv->popup_new_choice_menu_item);
 	g_signal_connect (priv->popup_new_choice_menu_item, "activate",
 	                  G_CALLBACK (choices_new_object_activate), object);
+
+	priv->popup_remove_question_menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), priv->popup_remove_question_menu_item);
+	g_signal_connect (priv->popup_remove_question_menu_item, "activate",
+	                  G_CALLBACK (questions_remove_object_activate), object);
+
+	priv->popup_remove_choice_menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), priv->popup_remove_choice_menu_item);
+	g_signal_connect (priv->popup_remove_choice_menu_item, "activate",
+	                  G_CALLBACK (choices_remove_object_activate), object);
 }
 
 static void
