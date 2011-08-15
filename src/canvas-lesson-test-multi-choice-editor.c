@@ -284,11 +284,11 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 				gtk_spin_button_set_value (GTK_SPIN_BUTTON (answer_spin),
 				                           canvas_lesson_test_multi_choice_question_get_answer (question)+1);
 				gtk_box_pack_start (GTK_BOX (content_area),
-					                gtk_label_new (_("Answer:")),
-					                FALSE, TRUE, 0);
+				                    gtk_label_new (_("Answer:")),
+				                    FALSE, TRUE, 0);
 				gtk_box_pack_start (GTK_BOX (content_area),
-					                answer_spin,
-					                FALSE, TRUE, 0);
+				                    answer_spin,
+				                    FALSE, TRUE, 0);
 			}
 
 			gtk_widget_show_all (content_area);
@@ -311,35 +311,35 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 			if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (priv->store), &iter_parent, &iter))
 			{
 				gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter_parent,
-						            DATA_COLUMN, &object,
-						            -1);
+				                    DATA_COLUMN, &object,
+				                    -1);
 
 				guint choice = gtk_tree_path_get_indices (path)[2];
 				CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
 
 				GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Question Properties"),
-					                                             GTK_WINDOW (priv->window),
-					                                             GTK_DIALOG_DESTROY_WITH_PARENT,
-					                                             GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-					                                             GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-					                                             NULL);
+				                                                 GTK_WINDOW (priv->window),
+				                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+				                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+				                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+				                                                 NULL);
 				GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
 				text_entry = gtk_entry_new ();
 				gtk_entry_set_text (GTK_ENTRY (text_entry),
-					                canvas_lesson_test_multi_choice_question_get_choice (question, choice));
+				                    canvas_lesson_test_multi_choice_question_get_choice (question, choice));
 				gtk_box_pack_start (GTK_BOX (content_area),
-					                gtk_label_new (_("Text:")),
-					                FALSE, TRUE, 0);
+				                    gtk_label_new (_("Text:")),
+				                    FALSE, TRUE, 0);
 				gtk_box_pack_start (GTK_BOX (content_area),
-					                text_entry,
-					                FALSE, TRUE, 0);
+				                    text_entry,
+				                    FALSE, TRUE, 0);
 
 				gtk_widget_show_all (content_area);
 				if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 				{
 					canvas_lesson_test_multi_choice_question_set_choice (question, choice,
-						                                               gtk_entry_get_text (GTK_ENTRY (text_entry)));
+					                                                     gtk_entry_get_text (GTK_ENTRY (text_entry)));
 
 					update_tree_view (CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data));
 					canvas_editor_window_set_modified (priv->window, TRUE);
@@ -527,9 +527,12 @@ directions_buffer_changed (GtkTextBuffer *textbuffer,
 	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (editor);
 
 	GtkTextIter start, end;
+	gchar* text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
+	text = gtk_text_iter_get_text (&start, &end);
 	canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (priv->test),
-	                                   gtk_text_iter_get_text (&start, &end));
+	                                   text);
+	g_free (text);
 	canvas_editor_window_set_modified (priv->window, TRUE);
 }
 

@@ -118,9 +118,12 @@ text_buffer_changed (GtkTextBuffer *textbuffer,
 	CanvasLessonDiscussionEditorPrivate* priv = CANVAS_LESSON_DISCUSSION_EDITOR_PRIVATE (editor);
 
 	GtkTextIter start, end;
+	gchar* text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
+	text = gtk_text_iter_get_text (&start, &end);
 	canvas_lesson_discussion_set_text (priv->discussion,
-	                                   gtk_text_iter_get_text (&start, &end));
+	                                   text);
+	g_free (text);
 	canvas_editor_window_set_modified (priv->window, TRUE);
 }
 

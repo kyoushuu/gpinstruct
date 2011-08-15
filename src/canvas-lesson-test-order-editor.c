@@ -444,9 +444,12 @@ directions_buffer_changed (GtkTextBuffer *textbuffer,
 	CanvasLessonTestOrderEditorPrivate* priv = CANVAS_LESSON_TEST_ORDER_EDITOR_PRIVATE (editor);
 
 	GtkTextIter start, end;
+	gchar* text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
+	text = gtk_text_iter_get_text (&start, &end);
 	canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (priv->test),
-	                                   gtk_text_iter_get_text (&start, &end));
+	                                   text);
+	g_free (text);
 	canvas_editor_window_set_modified (priv->window, TRUE);
 }
 
