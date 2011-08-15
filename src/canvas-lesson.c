@@ -109,12 +109,13 @@ canvas_lesson_add_lesson_element (CanvasLesson* lesson,
 
 void
 canvas_lesson_remove_lesson_element (CanvasLesson* lesson,
-                                     CanvasLessonElement* element)
+                                     guint lesson_element)
 {
-	g_return_if_fail (CANVAS_IS_LESSON_ELEMENT (element));
-
 	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(lesson);
-	priv->lesson_elements = g_list_append (priv->lesson_elements, element);
+
+	GList* nth_link = g_list_nth (priv->lesson_elements, lesson_element);
+	g_object_unref (nth_link->data);
+	priv->lesson_elements = g_list_delete_link (priv->lesson_elements, nth_link);
 }
 
 GList*

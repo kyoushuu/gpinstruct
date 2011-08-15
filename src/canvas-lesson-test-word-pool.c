@@ -85,10 +85,11 @@ void
 canvas_lesson_test_word_pool_remove_question (CanvasLessonTestWordPool* test,
                                               guint question)
 {
-	g_return_if_fail (CANVAS_IS_LESSON_TEST_WORD_POOL (test));
-
 	CanvasLessonTestWordPoolPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
-	priv->questions = g_list_remove (priv->questions, g_list_nth (priv->questions, question));
+
+	GList* nth_link = g_list_nth (priv->questions, question);
+	g_object_unref (nth_link->data);
+	priv->questions = g_list_delete_link (priv->questions, nth_link);
 }
 
 GList*
@@ -117,11 +118,11 @@ void
 canvas_lesson_test_word_pool_remove_choice (CanvasLessonTestWordPool* test,
                                             guint choice)
 {
-	g_return_if_fail (CANVAS_IS_LESSON_TEST_WORD_POOL (test));
-
 	CanvasLessonTestWordPoolPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
 	
-	priv->questions = g_list_delete_link (priv->choices, g_list_nth (priv->choices, choice));
+	GList* nth_link = g_list_nth (priv->choices, choice);
+	g_free (nth_link->data);
+	priv->choices = g_list_delete_link (priv->choices, nth_link);
 }
 
 const gchar*

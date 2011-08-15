@@ -81,10 +81,11 @@ void
 canvas_lesson_test_multi_choice_remove_question (CanvasLessonTestMultiChoice* test,
                                                  guint question)
 {
-	g_return_if_fail (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (test));
-
 	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test);
-	priv->questions = g_list_delete_link (priv->questions, g_list_nth (priv->questions, question));
+
+	GList* nth_link = g_list_nth (priv->questions, question);
+	g_object_unref (nth_link->data);
+	priv->questions = g_list_delete_link (priv->questions, nth_link);
 }
 
 GList*

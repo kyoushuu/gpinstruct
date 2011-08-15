@@ -85,10 +85,11 @@ canvas_lesson_test_order_add_item (CanvasLessonTestOrder* test, CanvasLessonTest
 void
 canvas_lesson_test_order_remove_item (CanvasLessonTestOrder* test, guint item)
 {
-	g_return_if_fail (CANVAS_IS_LESSON_TEST_ORDER (test));
-
 	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(test);
-	priv->items = g_list_delete_link (priv->items, g_list_nth (priv->items, item));
+
+	GList* nth_link = g_list_nth (priv->items, item);
+	g_object_unref (nth_link->data);
+	priv->items = g_list_delete_link (priv->items, nth_link);
 }
 
 CanvasLessonTestOrderItem*

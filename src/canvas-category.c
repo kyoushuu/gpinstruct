@@ -107,12 +107,13 @@ canvas_category_add_lesson (CanvasCategory* category,
 
 void
 canvas_category_remove_lesson (CanvasCategory* category,
-                                CanvasLesson* lesson)
+                               guint lesson)
 {
-	g_return_if_fail (CANVAS_IS_LESSON (lesson));
-
 	CanvasCategoryPrivate* priv = CANVAS_CATEGORY_PRIVATE(category);
-	priv->lessons = g_list_remove (priv->lessons, lesson);
+
+	GList* nth_link = g_list_nth (priv->lessons, lesson);
+	g_object_unref (nth_link->data);
+	priv->lessons = g_list_delete_link (priv->lessons, nth_link);
 }
 
 GList*

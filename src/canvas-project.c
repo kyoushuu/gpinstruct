@@ -106,12 +106,13 @@ canvas_project_add_category (CanvasProject* project,
 
 void
 canvas_project_remove_category (CanvasProject* project,
-                                CanvasCategory* category)
+                                guint category)
 {
-	g_return_if_fail (CANVAS_IS_CATEGORY (category));
-
 	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(project);
-	priv->categories = g_list_remove (priv->categories, category);
+
+	GList* nth_link = g_list_nth (priv->categories, category);
+	g_object_unref (nth_link->data);
+	priv->categories = g_list_delete_link (priv->categories, nth_link);
 }
 
 GList*

@@ -50,7 +50,7 @@ const gchar* canvas_lesson_get_title (CanvasLesson* lesson);
 void canvas_lesson_set_title (CanvasLesson* lesson, const gchar* title);
 guint canvas_lesson_get_lesson_elements_length (CanvasLesson* lesson);
 void canvas_lesson_add_lesson_element (CanvasLesson* lesson, CanvasLessonElement* element);
-void canvas_lesson_remove_lesson_element (CanvasLesson* lesson, CanvasLessonElement* element);
+void canvas_lesson_remove_lesson_element (CanvasLesson* lesson, guint lesson_element);
 GList* canvas_lesson_get_lesson_elements (CanvasLesson* lesson);
 gboolean canvas_lesson_get_single_score (CanvasLesson* lesson);
 void canvas_lesson_set_single_score (CanvasLesson* lesson, gboolean single_score);
