@@ -68,7 +68,8 @@ canvas_lesson_editor_init (CanvasLessonEditor *object)
 #if GTK_MAJOR_VERSION >= 3
 	priv->singlescore_switch = gtk_switch_new ();
 #else
-	priv->singlescore_switch = gtk_toggle_button_new_with_label (_("Yes"));
+	priv->singlescore_switch = gtk_toggle_button_new_with_label (GTK_STOCK_NO);
+	gtk_button_set_use_stock (GTK_BUTTON (priv->singlescore_switch), TRUE);
 #endif
 	gtk_table_attach (GTK_TABLE (object), priv->singlescore_switch,
 	                  1, 2, 1, 2,
@@ -127,6 +128,7 @@ singlescore_activate (GtkToggleButton *togglebutton,
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (priv->singlescore_switch));
 #else
 	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->singlescore_switch));
+	gtk_button_set_label (GTK_BUTTON (priv->singlescore_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
 #endif
 
 	if (active != canvas_lesson_get_single_score (priv->lesson))
@@ -159,10 +161,10 @@ canvas_lesson_editor_new (CanvasEditorWindow* window,
 	g_signal_connect (priv->singlescore_switch, "notify::active",
 	                  G_CALLBACK (singlescore_activate), editor);
 #else
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->singlescore_switch),
-	                              canvas_lesson_get_single_score (lesson));
 	g_signal_connect (priv->singlescore_switch, "toggled",
 	                  G_CALLBACK (singlescore_activate), editor);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->singlescore_switch),
+	                              canvas_lesson_get_single_score (lesson));
 #endif
 
 	return editor;

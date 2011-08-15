@@ -698,7 +698,8 @@ canvas_lesson_test_word_pool_editor_init (CanvasLessonTestWordPoolEditor *object
 #if GTK_MAJOR_VERSION >= 3
 	priv->explain_switch = gtk_switch_new ();
 #else
-	priv->explain_switch = gtk_toggle_button_new_with_label (_("Yes"));
+	priv->explain_switch = gtk_toggle_button_new_with_label (GTK_STOCK_NO);
+	gtk_button_set_use_stock (GTK_BUTTON (priv->explain_switch), TRUE);
 #endif
 	gtk_table_attach (GTK_TABLE (object), priv->explain_switch,
 	                  1, 2, 2, 3,
@@ -841,6 +842,7 @@ explain_activate (GtkToggleButton *togglebutton,
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (priv->explain_switch));
 #else
 	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->explain_switch));
+	gtk_button_set_label (GTK_BUTTON (priv->explain_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
 #endif
 
 	if (active != canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (priv->test)))
@@ -878,10 +880,10 @@ canvas_lesson_test_word_pool_editor_new (CanvasEditorWindow* window, CanvasLesso
 	g_signal_connect (priv->explain_switch, "notify::active",
 	                  G_CALLBACK (explain_activate), editor);
 #else
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->explain_switch),
-	                              canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (test)));
 	g_signal_connect (priv->explain_switch, "toggled",
 	                  G_CALLBACK (explain_activate), editor);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->explain_switch),
+	                              canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (test)));
 #endif
 
 	update_questions_tree_view (editor);
