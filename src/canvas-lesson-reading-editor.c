@@ -73,7 +73,7 @@ canvas_lesson_reading_editor_init (CanvasLessonReadingEditor *object)
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->text_view), GTK_WRAP_WORD_CHAR);
 	gtk_table_attach (GTK_TABLE (object), text_view_scrolled_window,
 	                  1, 2, 1, 2,
-	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
+	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
 	                  3, 3);
 }
 

@@ -48,6 +48,7 @@ GType canvas_lesson_test_order_get_type (void) G_GNUC_CONST;
 CanvasLessonTestOrder* canvas_lesson_test_order_new (void);
 void canvas_lesson_test_order_add_item (CanvasLessonTestOrder* test, CanvasLessonTestOrderItem* item);
 void canvas_lesson_test_order_remove_item (CanvasLessonTestOrder* test, guint item);
+CanvasLessonTestOrderItem* canvas_lesson_test_order_get_item (CanvasLessonTestOrder* test, guint item);
 GList* canvas_lesson_test_order_get_items (CanvasLessonTestOrder* test);
 guint canvas_lesson_test_order_get_items_length (CanvasLessonTestOrder* test);
 const gchar* canvas_lesson_test_order_get_explanation (CanvasLessonTestOrder* test);

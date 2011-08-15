@@ -25,6 +25,12 @@
 #ifndef GDK_KEY_Menu
 #define GDK_KEY_Menu GDK_Menu
 #endif
+#ifndef GDK_KEY_Left
+#define GDK_KEY_Left GDK_Left
+#endif
+#ifndef GDK_KEY_Right
+#define GDK_KEY_Right GDK_Right
+#endif
 
 #include "canvas.h"
 #include "canvas-editor.h"
@@ -48,6 +54,9 @@ struct _CanvasEditorWindowPrivate
 
 	GtkWidget *scrolled_window;
 	GtkWidget* object_editor;
+
+
+	GtkWidget* statusbar;
 
 
 	GtkWidget* popup_menu;
@@ -129,15 +138,7 @@ window_delete_event (GtkWidget *widget,
 }
 
 
-static void
-tree_view_realized (GtkWidget *widget,
-                    gpointer   user_data)
-{
-	gdk_window_set_events (gtk_widget_get_window (widget),
-	                       GDK_KEY_RELEASE_MASK);
-}
-
-static gint
+static gboolean
 tree_view_press_event (GtkWidget *widget,
                        GdkEvent *event,
                        gpointer   user_data)
@@ -149,6 +150,7 @@ tree_view_press_event (GtkWidget *widget,
 	GdkEventKey *event_key;
 
 	GtkTreePath* path = NULL;
+	GtkTreeIter iter;
 
 	CanvasObject* object_popup;
 
@@ -169,8 +171,10 @@ tree_view_press_event (GtkWidget *widget,
 			{
 				if (gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->store),
 				                             &priv->iter_popup, path))
+				{
 					show_popup = TRUE;
-				gtk_tree_path_free (path);
+					gtk_tree_path_free (path);
+				}
 			}
 		}
 	}
@@ -178,9 +182,41 @@ tree_view_press_event (GtkWidget *widget,
 	{
 		event_key = (GdkEventKey *) event;
 		if (event_key->state == 0 && event_key->keyval == GDK_KEY_Menu)
+		{
 			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view)),
 			                                     NULL, &priv->iter_popup))
-			show_popup = TRUE;
+				show_popup = TRUE;
+		}
+		else if (event_key->state == 0 && event_key->keyval == GDK_KEY_Left)
+		{
+			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view)),
+			                                     NULL, &iter))
+			{
+				path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->store),
+				                                &iter);
+				if (path)
+				{
+					gtk_tree_view_collapse_row (GTK_TREE_VIEW (priv->tree_view), path);
+					gtk_tree_path_free (path);
+					return TRUE;
+				}
+			}
+		}
+		else if (event_key->state == 0 && event_key->keyval == GDK_KEY_Right)
+		{
+			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view)),
+			                                     NULL, &iter))
+			{
+				path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->store),
+				                                &iter);
+				if (path)
+				{
+					gtk_tree_view_expand_row (GTK_TREE_VIEW (priv->tree_view), path, FALSE);
+					gtk_tree_path_free (path);
+					return TRUE;
+				}
+			}
+		}
 	}
 
 	if (show_popup)
@@ -273,6 +309,21 @@ tree_view_selection_changed (GtkTreeSelection *treeselection,
 		{
 			priv->object_editor = GTK_WIDGET (canvas_lesson_reading_editor_new (window,
 			                                                                    CANVAS_LESSON_READING (object)));
+		}
+		else if (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (object))
+		{
+			priv->object_editor = GTK_WIDGET (canvas_lesson_test_multi_choice_editor_new (window,
+			                                                                              CANVAS_LESSON_TEST_MULTI_CHOICE (object)));
+		}
+		else if (CANVAS_IS_LESSON_TEST_WORD_POOL (object))
+		{
+			priv->object_editor = GTK_WIDGET (canvas_lesson_test_word_pool_editor_new (window,
+			                                                                           CANVAS_LESSON_TEST_WORD_POOL (object)));
+		}
+		else if (CANVAS_IS_LESSON_TEST_ORDER (object))
+		{
+			priv->object_editor = GTK_WIDGET (canvas_lesson_test_order_editor_new (window,
+			                                                                       CANVAS_LESSON_TEST_ORDER (object)));
 		}
 
 		if (priv->object_editor)
@@ -409,20 +460,20 @@ help_about_action (GtkAction *action,
 		"You should have received a copy of the GNU General Public License along "
 		"with this program.  If not, see <http://www.gnu.org/licenses/>.";
 
-	gtk_show_about_dialog (GTK_WINDOW (window),
-	                       "program-name", _("Canvas Editor"),
-	                       "version", PACKAGE_VERSION,
-	                       "title", _("About Canvas Editor"),
-	                       "comments", _("Canvas Project Editor"),
-	                       "website", "http://kyoushuu.users.sourceforge.net/project_canvas",
-	                       "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
+		gtk_show_about_dialog (GTK_WINDOW (window),
+		                       "program-name", _("Canvas Editor"),
+		                       "version", PACKAGE_VERSION,
+		                       "title", _("About Canvas Editor"),
+		                       "comments", _("Canvas Project Editor"),
+		                       "website", "http://kyoushuu.users.sourceforge.net/project_canvas",
+		                       "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
 #if GTK_MAJOR_VERSION >= 3
-	                       "license-type", GTK_LICENSE_GPL_3_0,
+		                       "license-type", GTK_LICENSE_GPL_3_0,
 #endif
-	                       "license", license,
-	                       "wrap-license", TRUE,
-	                       "authors", authors,
-	                       NULL);
+		                       "license", license,
+		                       "wrap-license", TRUE,
+		                       "authors", authors,
+		                       NULL);
 }
 
 
@@ -655,8 +706,8 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 
 
 	priv->hpaned = gtk_hpaned_new ();
-	gtk_paned_set_position (GTK_PANED (priv->hpaned), 400);
-	gtk_box_pack_start (GTK_BOX (priv->main_vbox), priv->hpaned, TRUE, TRUE, 0);
+	gtk_paned_set_position (GTK_PANED (priv->hpaned), 300);
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), priv->hpaned, TRUE, TRUE, 3);
 
 	priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->scrolled_window),
@@ -669,7 +720,7 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 
 	priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->store));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
-	g_signal_connect (priv->tree_view, "realize", G_CALLBACK (tree_view_realized), object);
+	gtk_widget_set_events (priv->tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 	g_signal_connect (priv->tree_view, "button-press-event", G_CALLBACK (tree_view_press_event), object);
 	g_signal_connect (priv->tree_view, "key-press-event", G_CALLBACK (tree_view_press_event), object);
 	g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view)), "changed", G_CALLBACK (tree_view_selection_changed), object);
@@ -684,6 +735,10 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack2 (GTK_PANED (priv->hpaned), priv->scrolled_window, TRUE, TRUE);
+
+	
+	priv->statusbar = gtk_statusbar_new ();
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), priv->statusbar, FALSE, TRUE, 0);
 
 
 	priv->popup_menu = gtk_menu_new ();
@@ -731,7 +786,7 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 
 	g_log_set_handler (G_LOG_DOMAIN,
 	                   G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO | G_LOG_LEVEL_DEBUG,
-	                    canvas_editor_window_log, object);
+	                   canvas_editor_window_log, object);
 }
 
 static void

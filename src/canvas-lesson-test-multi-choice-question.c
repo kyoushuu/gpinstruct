@@ -131,6 +131,22 @@ canvas_lesson_test_multi_choice_question_remove_choice (CanvasLessonTestMultiCho
 	priv->choices = g_list_delete_link (priv->choices, g_list_nth (priv->choices, choice));
 }
 
+const gchar*
+canvas_lesson_test_multi_choice_question_get_choice (CanvasLessonTestMultiChoiceQuestion* question, guint choice)
+{
+	return g_list_nth_data (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices, choice);
+}
+
+void
+canvas_lesson_test_multi_choice_question_set_choice (CanvasLessonTestMultiChoiceQuestion* question, guint choice, const gchar* text)
+{
+	GList* nth_node = g_list_nth (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices, choice);;
+
+	if (nth_node->data)
+		g_free (nth_node->data);
+	nth_node->data = g_strdup (text);
+}
+
 GList*
 canvas_lesson_test_multi_choice_question_get_choices (CanvasLessonTestMultiChoiceQuestion* question)
 {

@@ -25,3 +25,6 @@
 #include "canvas-lesson-editor.h"
 #include "canvas-lesson-discussion-editor.h"
 #include "canvas-lesson-reading-editor.h"
+#include "canvas-lesson-test-multi-choice-editor.h"
+#include "canvas-lesson-test-word-pool-editor.h"
+#include "canvas-lesson-test-order-editor.h"

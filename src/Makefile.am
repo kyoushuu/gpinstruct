@@ -140,6 +140,12 @@ libcanvas_editor_la_SOURCES =  \
 	canvas-lesson-discussion-editor.c \
 	canvas-lesson-reading-editor.h \
 	canvas-lesson-reading-editor.c \
+	canvas-lesson-test-multi-choice-editor.h \
+	canvas-lesson-test-multi-choice-editor.c \
+	canvas-lesson-test-word-pool-editor.h \
+	canvas-lesson-test-word-pool-editor.c \
+	canvas-lesson-test-order-editor.h \
+	canvas-lesson-test-order-editor.c \
 	canvas-editor-window.h \
 	canvas-editor-window.c
 
