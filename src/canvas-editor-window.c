@@ -533,6 +533,7 @@ new_object_activate (GtkWidget *menuitem,
 
 	CanvasObject* object_popup;
 	GtkTreeIter iter;
+	GtkTreePath* path;
 	gchar* title;
 
 	gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &priv->iter_popup,
@@ -637,6 +638,11 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else
 		return;
+
+	path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->store), &priv->iter_popup);
+	gtk_tree_view_expand_row (GTK_TREE_VIEW (priv->tree_view),
+	                          path, FALSE);
+	gtk_tree_path_free (path);
 
 	canvas_editor_window_set_modified (window, TRUE);
 }
