@@ -347,6 +347,35 @@ tree_view_selection_changed (GtkTreeSelection *treeselection,
 }
 
 
+typedef struct {
+	CanvasEditorWindow* window;
+	gpointer data;
+} TreeViewSetCursorObjectData;
+
+static gboolean
+tree_view_set_cursor_object (GtkTreeModel *model,
+                             GtkTreePath *path,
+                             GtkTreeIter *iter,
+                             gpointer data)
+{
+	CanvasEditorWindowPrivate* priv = CANVAS_EDITOR_WINDOW_PRIVATE (((TreeViewSetCursorObjectData*)data)->window);
+
+	gpointer current_data;
+	gtk_tree_model_get (model, iter,
+	                    DATA_COLUMN, &current_data,
+	                    -1);
+
+	if (current_data == ((TreeViewSetCursorObjectData*)data)->data)
+	{
+		gtk_tree_view_set_cursor (GTK_TREE_VIEW (priv->tree_view),
+		                          path, NULL, FALSE);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+
 static void
 file_new_action (GtkAction *action,
                  gpointer   user_data)
@@ -1043,7 +1072,7 @@ canvas_editor_window_new_file (CanvasEditorWindow* window)
 
 	canvas_editor_window_set_modified (window, TRUE);
 
-	canvas_editor_window_update_tree_store (window);
+	canvas_editor_window_update_tree_store (window, (gpointer)priv->project);
 }
 
 void
@@ -1080,7 +1109,7 @@ canvas_editor_window_open_file (CanvasEditorWindow* window, const gchar* file)
 	canvas_editor_window_set_filename (window, file);
 	canvas_editor_window_set_modified (window, FALSE);
 
-	canvas_editor_window_update_tree_store (window);
+	canvas_editor_window_update_tree_store (window, (gpointer)priv->project);
 }
 
 gboolean
@@ -1137,7 +1166,7 @@ canvas_editor_window_close_current_file (CanvasEditorWindow* window)
 	canvas_editor_window_set_filename (window, NULL);
 	canvas_editor_window_set_modified (window, FALSE);
 
-	canvas_editor_window_update_tree_store (window); 
+	canvas_editor_window_update_tree_store (window, NULL); 
 
 	return TRUE;
 }
@@ -1218,7 +1247,8 @@ canvas_editor_window_save_file_as (CanvasEditorWindow* window, const gchar* file
 }
 
 void
-canvas_editor_window_update_tree_store (CanvasEditorWindow* window)
+canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
+                                        CanvasObject* object)
 {
 	CanvasEditorWindowPrivate* priv = CANVAS_EDITOR_WINDOW_PRIVATE (window);
 
@@ -1354,6 +1384,13 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window)
 	g_list_free (categories);
 
 	gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->tree_view));
+
+	if (object)
+	{
+		TreeViewSetCursorObjectData data = {window, object};
+		gtk_tree_model_foreach (GTK_TREE_MODEL (priv->store),
+			                    tree_view_set_cursor_object, &data);
+	}
 }
 
 gboolean

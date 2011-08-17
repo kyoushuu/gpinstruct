@@ -88,7 +88,7 @@ title_entry_activate (GtkEntry *entry,
 	canvas_category_set_title (priv->category,
 	                           gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
 	canvas_editor_window_set_modified (priv->window, TRUE);
-	canvas_editor_window_update_tree_store (priv->window);
+	canvas_editor_window_update_tree_store (priv->window, (gpointer)priv->category);
 }
 
 

@@ -54,7 +54,7 @@ void canvas_editor_window_open_file (CanvasEditorWindow* window, const gchar* fi
 gboolean canvas_editor_window_close_current_file (CanvasEditorWindow* window);
 gboolean canvas_editor_window_save_file (CanvasEditorWindow* window);
 gboolean canvas_editor_window_save_file_as (CanvasEditorWindow* window, const gchar* file);
-void canvas_editor_window_update_tree_store (CanvasEditorWindow* window);
+void canvas_editor_window_update_tree_store (CanvasEditorWindow* window, CanvasObject* object);
 gboolean canvas_editor_window_quit (CanvasEditorWindow* window);
 
 G_END_DECLS
