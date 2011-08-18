@@ -23,7 +23,6 @@
 #include "canvas-view.h"
 #include "canvas-view-private.h"
 
-typedef struct _CanvasLessonTestOrderPagePrivate CanvasLessonTestOrderPagePrivate;
 struct _CanvasLessonTestOrderPagePrivate
 {
 	CanvasLessonTestOrder* test;
@@ -39,24 +38,22 @@ struct _CanvasLessonTestOrderPagePrivate
 
 
 static void
-page_reset (CanvasLessonViewPage* page, gpointer user_data)
+page_reset (CanvasLessonTestOrderPage* page, gpointer user_data)
 {
-	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (page);
-
-	GList* items = canvas_lesson_test_order_get_items (priv->test);
+	GList* items = canvas_lesson_test_order_get_items (page->priv->test);
 	guint length = g_list_length (items);
 
-	if (priv->items)
-		g_free (priv->items);
-	priv->items = random_array (length);
+	if (page->priv->items)
+		g_free (page->priv->items);
+	page->priv->items = random_array (length);
 
-	gtk_list_store_clear (priv->store);
+	gtk_list_store_clear (page->priv->store);
 
 	int i;
 	for (i=0; i<length; i++)
-		gtk_list_store_insert_with_values (priv->store, NULL, -1,
-		                                   0, canvas_lesson_test_order_item_get_text (CANVAS_LESSON_TEST_ORDER_ITEM (g_list_nth_data (items, priv->items[i]))),
-		                                   1, canvas_lesson_test_order_item_get_answer (CANVAS_LESSON_TEST_ORDER_ITEM (g_list_nth_data (items, priv->items[i]))),
+		gtk_list_store_insert_with_values (page->priv->store, NULL, -1,
+		                                   0, canvas_lesson_test_order_item_get_text (CANVAS_LESSON_TEST_ORDER_ITEM (g_list_nth_data (items, page->priv->items[i]))),
+		                                   1, canvas_lesson_test_order_item_get_answer (CANVAS_LESSON_TEST_ORDER_ITEM (g_list_nth_data (items, page->priv->items[i]))),
 		                                   -1);
 
 	g_list_free (items);
@@ -67,24 +64,23 @@ G_DEFINE_TYPE (CanvasLessonTestOrderPage, canvas_lesson_test_order_page, CANVAS_
 static void
 canvas_lesson_test_order_page_init (CanvasLessonTestOrderPage *object)
 {
-	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (object);
+	object->priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (object);
 
-	priv->test = NULL;
-	priv->score = NULL;
-	priv->items = NULL;
-	priv->store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_UINT);
+	object->priv->test = NULL;
+	object->priv->score = NULL;
+	object->priv->items = NULL;
+	object->priv->store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_UINT);
 }
 
 static void
 canvas_lesson_test_order_page_finalize (GObject *object)
 {
-	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (object);
+	CanvasLessonTestOrderPage* page = CANVAS_LESSON_TEST_ORDER_PAGE (object);
+	if (page->priv->items)
+		g_free (page->priv->items);
 
-	if (priv->items)
-		g_free (priv->items);
-
-	if (priv->store)
-		g_object_unref (priv->store);
+	if (page->priv->store)
+		g_object_unref (page->priv->store);
 
 	G_OBJECT_CLASS (canvas_lesson_test_order_page_parent_class)->finalize (object);
 }
@@ -105,44 +101,42 @@ canvas_lesson_test_order_page_class_init (CanvasLessonTestOrderPageClass *klass)
 static gboolean
 page_show_next (CanvasLessonTestOrderPage* page, gpointer user_data)
 {
-	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (page);
-
 	GtkTreeIter iter;
 	guint questions_num = 0, wrong = 0, position;
 
-	if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->store), &iter))
-	    do
-	    {
-			canvas_lesson_score_increase_total (priv->score);
+	if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (page->priv->store), &iter))
+		do
+	{
+		canvas_lesson_score_increase_total (page->priv->score);
 
-			gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter, 1, &position, -1);
-			if (questions_num == position)
-				canvas_lesson_score_increase_score (priv->score);
-			else
-				wrong++;
+		gtk_tree_model_get (GTK_TREE_MODEL (page->priv->store), &iter, 1, &position, -1);
+		if (questions_num == position)
+			canvas_lesson_score_increase_score (page->priv->score);
+		else
+			wrong++;
 
-			questions_num++;
-		} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->store), &iter));
+		questions_num++;
+	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (page->priv->store), &iter));
 
-	if (canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (priv->test)))
+	if (canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (page->priv->test)))
 	{
 		if (wrong > 0 && wrong == questions_num)
 		{
 			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
-				                                 CANVAS_MESSAGE_TYPE_WRONG_ALL);
+			                                     CANVAS_MESSAGE_TYPE_WRONG_ALL);
 			canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
-				                                     canvas_lesson_test_order_get_explanation (priv->test));
+			                                         canvas_lesson_test_order_get_explanation (page->priv->test));
 		}
 		else if (wrong)
 		{
 			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
-				                                 CANVAS_MESSAGE_TYPE_WRONG_SOME);
+			                                     CANVAS_MESSAGE_TYPE_WRONG_SOME);
 			canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
-				                                     canvas_lesson_test_order_get_explanation (priv->test));
+			                                         canvas_lesson_test_order_get_explanation (page->priv->test));
 		}
 		else
 			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
-				                                 CANVAS_MESSAGE_TYPE_CORRECT_ALL);
+			                                     CANVAS_MESSAGE_TYPE_CORRECT_ALL);
 	}
 
 	return FALSE;
@@ -153,7 +147,6 @@ CanvasLessonTestOrderPage*
 canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test, CanvasLessonScore* score)
 {
 	CanvasLessonTestOrderPage* page = g_object_new (CANVAS_TYPE_LESSON_TEST_ORDER_PAGE, NULL);
-	CanvasLessonTestOrderPagePrivate* priv = CANVAS_LESSON_TEST_ORDER_PAGE_PRIVATE (page);
 
 	canvas_lesson_view_page_set_title (CANVAS_LESSON_VIEW_PAGE (page),
 	                                   canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (test)));
@@ -162,10 +155,10 @@ canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test, CanvasLessonScor
 	g_signal_connect (page, "show-next", G_CALLBACK (page_show_next), NULL);
 	g_signal_connect (page, "reset", G_CALLBACK (page_reset), NULL);
 
-	priv->test = test;
-	priv->score = score;
+	page->priv->test = test;
+	page->priv->score = score;
 
-	GtkWidget* treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->store));
+	GtkWidget* treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (page->priv->store));
 	gtk_tree_view_set_reorderable (GTK_TREE_VIEW (treeview), TRUE);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), treeview);

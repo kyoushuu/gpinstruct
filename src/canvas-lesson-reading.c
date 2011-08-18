@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonReadingPrivate CanvasLessonReadingPrivate;
 struct _CanvasLessonReadingPrivate
 {
 	gchar* text;
@@ -34,17 +33,18 @@ G_DEFINE_TYPE (CanvasLessonReading, canvas_lesson_reading, CANVAS_TYPE_LESSON_EL
 static void
 canvas_lesson_reading_init (CanvasLessonReading *object)
 {
-	CanvasLessonReadingPrivate* priv = CANVAS_LESSON_READING_PRIVATE(object);
-	priv->text = g_strdup ("");
+	object->priv = CANVAS_LESSON_READING_PRIVATE (object);
+
+	object->priv->text = g_strdup ("");
 }
 
 static void
 canvas_lesson_reading_finalize (GObject *object)
 {
-	CanvasLessonReadingPrivate* priv = CANVAS_LESSON_READING_PRIVATE(object);
+	CanvasLessonReading* reading = CANVAS_LESSON_READING (object);
 
-	if (priv->text)
-		g_free (priv->text);
+	if (reading->priv->text)
+		g_free (reading->priv->text);
 
 	G_OBJECT_CLASS (canvas_lesson_reading_parent_class)->finalize (object);
 }
@@ -64,21 +64,19 @@ canvas_lesson_reading_class_init (CanvasLessonReadingClass *klass)
 CanvasLessonReading*
 canvas_lesson_reading_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_READING, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_READING, NULL);
 }
 
 const gchar*
 canvas_lesson_reading_get_text (CanvasLessonReading* reading)
 {
-	return CANVAS_LESSON_READING_PRIVATE (reading)->text;
+	return reading->priv->text;
 }
 
 void
 canvas_lesson_reading_set_text (CanvasLessonReading* reading, const gchar* text)
 {
-	CanvasLessonReadingPrivate* priv = CANVAS_LESSON_READING_PRIVATE (reading);
-
-	if (priv->text)
-		g_free (priv->text);
-	priv->text = g_strdup (text);
+	if (reading->priv->text)
+		g_free (reading->priv->text);
+	reading->priv->text = g_strdup (text);
 }

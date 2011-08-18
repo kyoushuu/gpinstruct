@@ -24,7 +24,6 @@
 #include "canvas-private.h"
 #include "canvas-marshalers.h"
 
-typedef struct _CanvasLessonViewPagePrivate CanvasLessonViewPagePrivate;
 struct _CanvasLessonViewPagePrivate
 {
 	gchar* title;
@@ -69,15 +68,15 @@ G_DEFINE_TYPE (CanvasLessonViewPage, canvas_lesson_view_page, GTK_TYPE_SCROLLED_
 static void
 canvas_lesson_view_page_init (CanvasLessonViewPage *object)
 {
-	CanvasLessonViewPagePrivate* priv = CANVAS_LESSON_VIEW_PAGE_PRIVATE (object);
+	object->priv = CANVAS_LESSON_VIEW_PAGE_PRIVATE (object);
 
-	priv->title = NULL;
+	object->priv->title = NULL;
 
-	priv->next = TRUE;
-	priv->back = TRUE;
+	object->priv->next = TRUE;
+	object->priv->back = TRUE;
 
-	priv->message = GTK_MESSAGE_INFO;
-	priv->explanation = g_strdup ("");
+	object->priv->message = GTK_MESSAGE_INFO;
+	object->priv->explanation = g_strdup ("");
 
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (object),
 	                                GTK_POLICY_AUTOMATIC,
@@ -87,13 +86,13 @@ canvas_lesson_view_page_init (CanvasLessonViewPage *object)
 static void
 canvas_lesson_view_page_finalize (GObject *object)
 {
-	CanvasLessonViewPagePrivate* priv = CANVAS_LESSON_VIEW_PAGE_PRIVATE (object);
+	CanvasLessonViewPage* page = CANVAS_LESSON_VIEW_PAGE (object);
 
-	if (priv->title)
-		g_free (priv->title);
+	if (page->priv->title)
+		g_free (page->priv->title);
 
-	if (priv->explanation)
-		g_free (priv->explanation);
+	if (page->priv->explanation)
+		g_free (page->priv->explanation);
 
 	G_OBJECT_CLASS (canvas_lesson_view_page_parent_class)->finalize (object);
 }
@@ -154,50 +153,48 @@ canvas_lesson_view_page_class_init (CanvasLessonViewPageClass *klass)
 CanvasLessonViewPage*
 canvas_lesson_view_page_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_VIEW_PAGE, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_VIEW_PAGE, NULL);
 }
 
 const gchar*
 canvas_lesson_view_page_get_title (CanvasLessonViewPage* page)
 {
-	return CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->title;
+	return page->priv->title;
 }
 
 void
 canvas_lesson_view_page_set_title (CanvasLessonViewPage* page,
                                    const gchar* title)
 {
-	CanvasLessonViewPagePrivate* priv = CANVAS_LESSON_VIEW_PAGE_PRIVATE (page);
-
-	if (priv->title)
-		g_free (priv->title);
-	priv->title = g_strdup (title);
+	if (page->priv->title)
+		g_free (page->priv->title);
+	page->priv->title = g_strdup (title);
 }
 
 gboolean
 canvas_lesson_view_page_get_show_next_button (CanvasLessonViewPage* page)
 {
-	return CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->next;
+	return page->priv->next;
 }
 
 void
 canvas_lesson_view_page_set_show_next_button (CanvasLessonViewPage* page,
                                               gboolean show)
 {
-	CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->next = show;
+	page->priv->next = show;
 }
 
 gboolean
 canvas_lesson_view_page_get_show_back_button (CanvasLessonViewPage* page)
 {
-	return CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->back;
+	return page->priv->back;
 }
 
 void
 canvas_lesson_view_page_set_show_back_button (CanvasLessonViewPage* page,
                                               gboolean show)
 {
-	CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->back = show;
+	page->priv->back = show;
 }
 
 gboolean
@@ -231,27 +228,25 @@ canvas_lesson_view_page_reset (CanvasLessonViewPage* page)
 void
 canvas_lesson_view_page_set_message (CanvasLessonViewPage* page, CanvasMessageType message)
 {
-	CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->message = message;
+	page->priv->message = message;
 }
 
 CanvasMessageType
 canvas_lesson_view_page_get_message (CanvasLessonViewPage* page)
 {
-	return CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->message;
+	return page->priv->message;
 }
 
 void
 canvas_lesson_view_page_set_explanation (CanvasLessonViewPage* page, const gchar* explanation)
 {
-	CanvasLessonViewPagePrivate* priv = CANVAS_LESSON_VIEW_PAGE_PRIVATE (page);
-
-	if (priv->explanation)
-		g_free (priv->explanation);
-	priv->explanation = g_strdup (explanation);
+	if (page->priv->explanation)
+		g_free (page->priv->explanation);
+	page->priv->explanation = g_strdup (explanation);
 }
 
 const gchar*
 canvas_lesson_view_page_get_explanation (CanvasLessonViewPage* page)
 {
-	return CANVAS_LESSON_VIEW_PAGE_PRIVATE (page)->explanation;
+	return page->priv->explanation;
 }

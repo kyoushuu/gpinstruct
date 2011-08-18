@@ -26,7 +26,6 @@
 
 
 
-typedef struct _CanvasMessagePoolPrivate CanvasMessagePoolPrivate;
 struct _CanvasMessagePoolPrivate
 {
 	GList* messages[CANVAS_MESSAGE_TYPE_SIZE];
@@ -41,25 +40,23 @@ G_DEFINE_TYPE (CanvasMessagePool, canvas_message_pool, CANVAS_TYPE_OBJECT);
 static void
 canvas_message_pool_init (CanvasMessagePool *object)
 {
-	CanvasMessagePoolPrivate* priv = CANVAS_MESSAGE_POOL_PRIVATE (object);
+	object->priv = CANVAS_MESSAGE_POOL_PRIVATE (object);
 
 	int i;
 	for (i = 0; i < CANVAS_MESSAGE_TYPE_SIZE; i++)
-	{
-		priv->messages[i] = NULL;
-	}
+		object->priv->messages[i] = NULL;
 }
 
 static void
 canvas_message_pool_finalize (GObject *object)
 {
-	CanvasMessagePoolPrivate* priv = CANVAS_MESSAGE_POOL_PRIVATE (object);
+	CanvasMessagePool* pool = CANVAS_MESSAGE_POOL (object);
 
 	int i;
 	for (i = 0; i < CANVAS_MESSAGE_TYPE_SIZE; i++)
 	{
-		if (priv->messages[i])
-			g_list_free_full (priv->messages[i], g_free);
+		if (pool->priv->messages[i])
+			g_list_free_full (pool->priv->messages[i], g_free);
 	}
 
 	G_OBJECT_CLASS (canvas_message_pool_parent_class)->finalize (object);
@@ -80,13 +77,12 @@ canvas_message_pool_class_init (CanvasMessagePoolClass *klass)
 CanvasMessagePool*
 canvas_message_pool_new (void)
 {
-	return g_object_new(CANVAS_TYPE_MESSAGE_POOL, NULL);
+	return g_object_new (CANVAS_TYPE_MESSAGE_POOL, NULL);
 }
 
 void
 canvas_message_pool_load_from_file (CanvasMessagePool* pool, const gchar *file)
 {
-	CanvasMessagePoolPrivate* priv = CANVAS_MESSAGE_POOL_PRIVATE (pool);
 	GKeyFile* key_file = g_key_file_new ();
 	g_key_file_set_list_separator (key_file, ',');
 	GError* error = NULL;
@@ -122,8 +118,8 @@ canvas_message_pool_load_from_file (CanvasMessagePool* pool, const gchar *file)
 			{
 				for (key = 0; keys[key] != NULL; key++)
 				{
-					priv->messages[type] = g_list_append (priv->messages[type],
-						                                  g_strdup (keys[key]));
+					pool->priv->messages[type] = g_list_append (pool->priv->messages[type],
+					                                            g_strdup (keys[key]));
 				}
 
 				g_strfreev (keys);
@@ -142,12 +138,10 @@ canvas_message_pool_load_from_file (CanvasMessagePool* pool, const gchar *file)
 const gchar*
 canvas_message_pool_get_random (CanvasMessagePool* pool, CanvasMessageType type)
 {
-	CanvasMessagePoolPrivate* priv = CANVAS_MESSAGE_POOL_PRIVATE (pool);
-
 	if (type <= CANVAS_MESSAGE_TYPE_NONE || type >= CANVAS_MESSAGE_TYPE_SIZE)
 		return NULL;
 
-	GList* messages = priv->messages[type];
+	GList* messages = pool->priv->messages[type];
 	guint num_messages = g_list_length (messages);
 
 	if (num_messages == 0)
@@ -155,7 +149,7 @@ canvas_message_pool_get_random (CanvasMessagePool* pool, CanvasMessageType type)
 	else if (num_messages == 1)
 		return messages->data;
 
-	g_random_set_seed (time(NULL));
+	g_random_set_seed (time (NULL));
 
 	return g_list_nth_data (messages, g_random_int_range (0, num_messages));
 }
@@ -164,54 +158,48 @@ void
 canvas_message_pool_add (CanvasMessagePool* pool, CanvasMessageType type, const gchar* message)
 {
 	g_return_if_fail (type > CANVAS_MESSAGE_TYPE_NONE && type < CANVAS_MESSAGE_TYPE_SIZE);
-	CanvasMessagePoolPrivate* priv = CANVAS_MESSAGE_POOL_PRIVATE (pool);
 
-	priv->messages[type] = g_list_append (priv->messages[type],
-	                                      g_strdup (message));
+	pool->priv->messages[type] = g_list_append (pool->priv->messages[type],
+	                                            g_strdup (message));
 }
 
 void
 canvas_message_pool_add_multiple (CanvasMessagePool* pool, ...)
 {
-	CanvasMessagePoolPrivate* priv = CANVAS_MESSAGE_POOL_PRIVATE (pool);
-	
 	CanvasMessageType type;
 
 	va_list args;
-	va_start(args, pool);
+	va_start (args, pool);
 
 	while (TRUE)
 	{
-		type = va_arg(args, CanvasMessageType);
+		type = va_arg (args, CanvasMessageType);
 		if (type <= CANVAS_MESSAGE_TYPE_NONE || type > CANVAS_MESSAGE_TYPE_SIZE)
 			return;
 
-		priv->messages[type] = g_list_append (priv->messages[type],
-		                                      g_strdup (va_arg(args, gchar*)));
+		pool->priv->messages[type] = g_list_append (pool->priv->messages[type],
+		                                            g_strdup (va_arg (args, gchar*)));
 	}
-	va_end(args);
+	va_end (args);
 }
 
 void
 canvas_message_pool_remove (CanvasMessagePool* pool, CanvasMessageType type, guint message)
 {
 	g_return_if_fail (type > CANVAS_MESSAGE_TYPE_NONE && type < CANVAS_MESSAGE_TYPE_SIZE);
-	CanvasMessagePoolPrivate* priv = CANVAS_MESSAGE_POOL_PRIVATE (pool);
 
-	GList* messages = priv->messages[type];
+	GList* messages = pool->priv->messages[type];
 	GList* selected = g_list_nth (messages, message);
 
 	g_free (selected->data);
-	priv->messages[type] = g_list_delete_link (messages, selected);
+	pool->priv->messages[type] = g_list_delete_link (messages, selected);
 }
 
 const gchar*
 canvas_message_pool_get (CanvasMessagePool* pool, CanvasMessageType type, guint message)
 {
-	CanvasMessagePoolPrivate* priv = CANVAS_MESSAGE_POOL_PRIVATE (pool);
-
 	if (type <= CANVAS_MESSAGE_TYPE_NONE || type >= CANVAS_MESSAGE_TYPE_SIZE)
 		return NULL;
 
-	return g_list_nth_data (priv->messages[type], message);
+	return g_list_nth_data (pool->priv->messages[type], message);
 }

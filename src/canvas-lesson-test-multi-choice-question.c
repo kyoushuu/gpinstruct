@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonTestMultiChoiceQuestionPrivate CanvasLessonTestMultiChoiceQuestionPrivate;
 struct _CanvasLessonTestMultiChoiceQuestionPrivate
 {
 	gchar* text;
@@ -37,26 +36,27 @@ G_DEFINE_TYPE (CanvasLessonTestMultiChoiceQuestion, canvas_lesson_test_multi_cho
 static void
 canvas_lesson_test_multi_choice_question_init (CanvasLessonTestMultiChoiceQuestion *object)
 {
-	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(object);
-	priv->text = g_strdup ("");
-	priv->explanation = g_strdup ("");
-	priv->answer = 0;
-	priv->choices = NULL;
+	object->priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE (object);
+
+	object->priv->text = g_strdup ("");
+	object->priv->explanation = g_strdup ("");
+	object->priv->answer = 0;
+	object->priv->choices = NULL;
 }
 
 static void
 canvas_lesson_test_multi_choice_question_finalize (GObject *object)
 {
-	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(object);
+	CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
 
-	if (priv->text)
-		g_free (priv->text);
+	if (question->priv->text)
+		g_free (question->priv->text);
 
-	if (priv->explanation)
-		g_free (priv->explanation);
+	if (question->priv->explanation)
+		g_free (question->priv->explanation);
 
-	if (priv->choices)
-		g_list_free_full (priv->choices, g_free);
+	if (question->priv->choices)
+		g_list_free_full (question->priv->choices, g_free);
 
 	G_OBJECT_CLASS (canvas_lesson_test_multi_choice_question_parent_class)->finalize (object);
 }
@@ -76,39 +76,35 @@ canvas_lesson_test_multi_choice_question_class_init (CanvasLessonTestMultiChoice
 CanvasLessonTestMultiChoiceQuestion*
 canvas_lesson_test_multi_choice_question_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, NULL);
 }
 
 const gchar*
 canvas_lesson_test_multi_choice_question_get_text (CanvasLessonTestMultiChoiceQuestion* question)
 {
-	return CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->text;
+	return question->priv->text;
 }
 
 void
 canvas_lesson_test_multi_choice_question_set_text (CanvasLessonTestMultiChoiceQuestion* question,
                                                    const gchar* text)
 {
-	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question);
-
-	if (priv->text)
-		g_free (priv->text);
-	priv->text = g_strdup (text);
+	if (question->priv->text)
+		g_free (question->priv->text);
+	question->priv->text = g_strdup (text);
 }
 
 guint
 canvas_lesson_test_multi_choice_question_get_answer (CanvasLessonTestMultiChoiceQuestion* question)
 {
-	return CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->answer;
+	return question->priv->answer;
 }
 
 void
 canvas_lesson_test_multi_choice_question_set_answer (CanvasLessonTestMultiChoiceQuestion* question,
                                                      guint answer)
 {
-	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question);
-
-	priv->answer = answer;
+	question->priv->answer = answer;
 }
 
 void
@@ -117,31 +113,28 @@ canvas_lesson_test_multi_choice_question_add_choice (CanvasLessonTestMultiChoice
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_MULTI_CHOICE_QUESTION (question));
 
-	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE (question);
-	priv->choices = g_list_append (priv->choices, g_strdup (choice));
+	question->priv->choices = g_list_append (question->priv->choices, g_strdup (choice));
 }
 
 void
 canvas_lesson_test_multi_choice_question_remove_choice (CanvasLessonTestMultiChoiceQuestion* question,
                                                         guint choice)
 {
-	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE (question);
-
-	GList* nth_link = g_list_nth (priv->choices, choice);
+	GList* nth_link = g_list_nth (question->priv->choices, choice);
 	g_free (nth_link->data);
-	priv->choices = g_list_delete_link (priv->choices, nth_link);
+	question->priv->choices = g_list_delete_link (question->priv->choices, nth_link);
 }
 
 const gchar*
 canvas_lesson_test_multi_choice_question_get_choice (CanvasLessonTestMultiChoiceQuestion* question, guint choice)
 {
-	return g_list_nth_data (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices, choice);
+	return g_list_nth_data (question->priv->choices, choice);
 }
 
 void
 canvas_lesson_test_multi_choice_question_set_choice (CanvasLessonTestMultiChoiceQuestion* question, guint choice, const gchar* text)
 {
-	GList* nth_node = g_list_nth (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices, choice);;
+	GList* nth_node = g_list_nth (question->priv->choices, choice);;
 
 	if (nth_node->data)
 		g_free (nth_node->data);
@@ -151,28 +144,26 @@ canvas_lesson_test_multi_choice_question_set_choice (CanvasLessonTestMultiChoice
 GList*
 canvas_lesson_test_multi_choice_question_get_choices (CanvasLessonTestMultiChoiceQuestion* question)
 {
-	return g_list_copy (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices);
+	return g_list_copy (question->priv->choices);
 }
 
 guint
 canvas_lesson_test_multi_choice_question_get_choices_length (CanvasLessonTestMultiChoiceQuestion* question)
 {
-	return g_list_length (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->choices);
+	return g_list_length (question->priv->choices);
 }
 
 const gchar*
 canvas_lesson_test_multi_choice_question_get_explanation (CanvasLessonTestMultiChoiceQuestion* question)
 {
-	return CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question)->explanation;
+	return question->priv->explanation;
 }
 
 void
 canvas_lesson_test_multi_choice_question_set_explanation (CanvasLessonTestMultiChoiceQuestion* question,
                                                           const gchar* explanation)
 {
-	CanvasLessonTestMultiChoiceQuestionPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_PRIVATE(question);
-
-	if (priv->explanation)
-		g_free (priv->explanation);
-	priv->explanation = g_strdup (explanation);
+	if (question->priv->explanation)
+		g_free (question->priv->explanation);
+	question->priv->explanation = g_strdup (explanation);
 }

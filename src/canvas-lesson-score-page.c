@@ -25,7 +25,6 @@
 #include "canvas.h"
 #include "canvas-view.h"
 
-typedef struct _CanvasLessonScorePagePrivate CanvasLessonScorePagePrivate;
 struct _CanvasLessonScorePagePrivate
 {
 	CanvasLessonScore* score;
@@ -41,7 +40,7 @@ struct _CanvasLessonScorePagePrivate
 void
 score_reset (CanvasLessonViewPage* view, gpointer user_data)
 {
-	canvas_lesson_score_clear (CANVAS_LESSON_SCORE_PAGE_PRIVATE (view)->score);
+	canvas_lesson_score_clear (CANVAS_LESSON_SCORE_PAGE (view)->priv->score);
 }
 
 
@@ -50,16 +49,18 @@ G_DEFINE_TYPE (CanvasLessonScorePage, canvas_lesson_score_page, CANVAS_TYPE_LESS
 static void
 canvas_lesson_score_page_init (CanvasLessonScorePage *object)
 {
-	CANVAS_LESSON_SCORE_PAGE_PRIVATE (object)->score = NULL;
+	object->priv = CANVAS_LESSON_SCORE_PAGE_PRIVATE (object);
+
+	object->priv->score = NULL;
 }
 
 static void
 canvas_lesson_score_page_finalize (GObject *object)
 {
-	CanvasLessonScorePagePrivate* priv = CANVAS_LESSON_SCORE_PAGE_PRIVATE (object);
+	CanvasLessonScorePage* page = CANVAS_LESSON_SCORE_PAGE (object);
 
-	if (priv->score)
-		g_object_unref (priv->score);
+	if (page->priv->score)
+		g_object_unref (page->priv->score);
 
 	G_OBJECT_CLASS (canvas_lesson_score_page_parent_class)->finalize (object);
 }
@@ -80,20 +81,18 @@ canvas_lesson_score_page_class_init (CanvasLessonScorePageClass *klass)
 void
 page_show (CanvasLessonScorePage* page, gpointer user_data)
 {
-	CanvasLessonScorePagePrivate* priv = CANVAS_LESSON_SCORE_PAGE_PRIVATE (page);
-
-	guint score_value = canvas_lesson_score_get_score (priv->score);
-	guint total_value = canvas_lesson_score_get_total (priv->score);
+	guint score_value = canvas_lesson_score_get_score (page->priv->score);
+	guint total_value = canvas_lesson_score_get_total (page->priv->score);
 
 	gchar* score_text = g_strdup_printf ("<span size='xx-large'><big>%d</big>/%d</span>",
 	                                     score_value,
 	                                     total_value);
-	gtk_label_set_markup (GTK_LABEL (priv->score_label), score_text);
+	gtk_label_set_markup (GTK_LABEL (page->priv->score_label), score_text);
 	g_free (score_text);
 
 	gchar* percentage_text = g_strdup_printf ("<span size='xx-large'>%.2f%%</span>",
 	                                          total_value? (double)100 * score_value / total_value : 0);
-	gtk_label_set_markup (GTK_LABEL (priv->percentage_label), percentage_text);
+	gtk_label_set_markup (GTK_LABEL (page->priv->percentage_label), percentage_text);
 	g_free (percentage_text);
 }
 
@@ -101,9 +100,8 @@ CanvasLessonScorePage*
 canvas_lesson_score_page_new (CanvasLessonScore* score)
 {
 	CanvasLessonScorePage* page = g_object_new (CANVAS_TYPE_LESSON_SCORE_PAGE, NULL);
-	CanvasLessonScorePagePrivate* priv = CANVAS_LESSON_SCORE_PAGE_PRIVATE (page);
 
-	priv->score = score;
+	page->priv->score = score;
 
 	guint score_value = canvas_lesson_score_get_score (score);
 	guint total_value = canvas_lesson_score_get_total (score);
@@ -130,7 +128,7 @@ canvas_lesson_score_page_new (CanvasLessonScore* score)
 	gtk_label_set_selectable (GTK_LABEL (score_label_value), TRUE);
 	gtk_misc_set_alignment (GTK_MISC (score_label_value), 0.5, 0.5);
 	gtk_box_pack_start (GTK_BOX (vbox), score_label_value, TRUE, TRUE, 3);
-	priv->score_label = score_label_value;
+	page->priv->score_label = score_label_value;
 
 	GtkWidget* percentage_label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (percentage_label), _("<b>Percentage:</b>"));
@@ -145,7 +143,7 @@ canvas_lesson_score_page_new (CanvasLessonScore* score)
 	gtk_label_set_selectable (GTK_LABEL (percentage_label_value), TRUE);
 	gtk_misc_set_alignment (GTK_MISC (percentage_label_value), 0.5, 0.5);
 	gtk_box_pack_start (GTK_BOX (vbox), percentage_label_value, TRUE, TRUE, 3);
-	priv->percentage_label = percentage_label_value;
+	page->priv->percentage_label = percentage_label_value;
 
 	return page;
 }

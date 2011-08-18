@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_TEST_ORDER_ITEM_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_TEST_ORDER_ITEM))
 #define CANVAS_LESSON_TEST_ORDER_ITEM_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_TEST_ORDER_ITEM, CanvasLessonTestOrderItemClass))
 
+typedef struct _CanvasLessonTestOrderItemPrivate CanvasLessonTestOrderItemPrivate;
 typedef struct _CanvasLessonTestOrderItemClass CanvasLessonTestOrderItemClass;
 typedef struct _CanvasLessonTestOrderItem CanvasLessonTestOrderItem;
 
@@ -42,6 +43,8 @@ struct _CanvasLessonTestOrderItemClass
 struct _CanvasLessonTestOrderItem
 {
 	CanvasObject parent_instance;
+
+	CanvasLessonTestOrderItemPrivate* priv;
 };
 
 GType canvas_lesson_test_order_item_get_type (void) G_GNUC_CONST;

@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_EDITOR_WINDOW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_EDITOR_WINDOW))
 #define CANVAS_EDITOR_WINDOW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_EDITOR_WINDOW, CanvasEditorWindowClass))
 
+typedef struct _CanvasEditorWindowPrivate CanvasEditorWindowPrivate;
 typedef struct _CanvasEditorWindowClass CanvasEditorWindowClass;
 typedef struct _CanvasEditorWindow CanvasEditorWindow;
 
@@ -42,6 +43,8 @@ struct _CanvasEditorWindowClass
 struct _CanvasEditorWindow
 {
 	GtkWindow parent_instance;
+
+	CanvasEditorWindowPrivate* priv;
 };
 
 GType canvas_editor_window_get_type (void) G_GNUC_CONST;

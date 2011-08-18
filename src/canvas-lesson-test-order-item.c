@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonTestOrderItemPrivate CanvasLessonTestOrderItemPrivate;
 struct _CanvasLessonTestOrderItemPrivate
 {
 	gchar* text;
@@ -35,18 +34,19 @@ G_DEFINE_TYPE (CanvasLessonTestOrderItem, canvas_lesson_test_order_item, CANVAS_
 static void
 canvas_lesson_test_order_item_init (CanvasLessonTestOrderItem *object)
 {
-	CanvasLessonTestOrderItemPrivate* priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(object);
-	priv->text = g_strdup ("");
-	priv->answer = 0;
+	object->priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE (object);
+
+	object->priv->text = g_strdup ("");
+	object->priv->answer = 0;
 }
 
 static void
 canvas_lesson_test_order_item_finalize (GObject *object)
 {
-	CanvasLessonTestOrderItemPrivate* priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(object);
+	CanvasLessonTestOrderItem* item = CANVAS_LESSON_TEST_ORDER_ITEM (object);
 
-	if (priv->text)
-		g_free (priv->text);
+	if (item->priv->text)
+		g_free (item->priv->text);
 
 	G_OBJECT_CLASS (canvas_lesson_test_order_item_parent_class)->finalize (object);
 }
@@ -66,35 +66,31 @@ canvas_lesson_test_order_item_class_init (CanvasLessonTestOrderItemClass *klass)
 CanvasLessonTestOrderItem*
 canvas_lesson_test_order_item_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_TEST_ORDER_ITEM, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_TEST_ORDER_ITEM, NULL);
 }
 
 const gchar*
 canvas_lesson_test_order_item_get_text (CanvasLessonTestOrderItem* item)
 {
-	return CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(item)->text;
+	return item->priv->text;
 }
 
 void
 canvas_lesson_test_order_item_set_text (CanvasLessonTestOrderItem* item, const gchar* text)
 {
-	CanvasLessonTestOrderItemPrivate* priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(item);
-
-	if (priv->text)
-		g_free (priv->text);
-	priv->text = g_strdup (text);
+	if (item->priv->text)
+		g_free (item->priv->text);
+	item->priv->text = g_strdup (text);
 }
 
 guint
 canvas_lesson_test_order_item_get_answer (CanvasLessonTestOrderItem* item)
 {
-	return CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(item)->answer;
+	return item->priv->answer;
 }
 
 void
 canvas_lesson_test_order_item_set_answer (CanvasLessonTestOrderItem* item, guint answer)
 {
-	CanvasLessonTestOrderItemPrivate* priv = CANVAS_LESSON_TEST_ORDER_ITEM_PRIVATE(item);
-
-	priv->answer = answer;
+	item->priv->answer = answer;
 }

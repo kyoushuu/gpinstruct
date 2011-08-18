@@ -25,7 +25,6 @@
 #include "canvas.h"
 #include "canvas-editor.h"
 
-typedef struct _CanvasCategoryEditorPrivate CanvasCategoryEditorPrivate;
 struct _CanvasCategoryEditorPrivate
 {
 	CanvasEditorWindow* window;
@@ -44,15 +43,15 @@ G_DEFINE_TYPE (CanvasCategoryEditor, canvas_category_editor, CANVAS_TYPE_OBJECT_
 static void
 canvas_category_editor_init (CanvasCategoryEditor *object)
 {
-	CanvasCategoryEditorPrivate* priv = CANVAS_CATEGORY_EDITOR_PRIVATE (object);
+	object->priv = CANVAS_CATEGORY_EDITOR_PRIVATE (object);
 
-	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), priv->title_label,
+	object->priv->title_label = gtk_label_new (_("Title:"));
+	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
+	object->priv->title_entry = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (object), object->priv->title_entry,
 	                  1, 2, 0, 1,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
@@ -61,8 +60,6 @@ canvas_category_editor_init (CanvasCategoryEditor *object)
 static void
 canvas_category_editor_finalize (GObject *object)
 {
-	/* TODO: Add deinitalization code here */
-
 	G_OBJECT_CLASS (canvas_category_editor_parent_class)->finalize (object);
 }
 
@@ -83,12 +80,11 @@ title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
 	CanvasCategoryEditor* editor = CANVAS_CATEGORY_EDITOR (user_data);
-	CanvasCategoryEditorPrivate* priv = CANVAS_CATEGORY_EDITOR_PRIVATE (editor);
 
-	canvas_category_set_title (priv->category,
-	                           gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
-	canvas_editor_window_set_modified (priv->window, TRUE);
-	canvas_editor_window_update_tree_store (priv->window, (gpointer)priv->category);
+	canvas_category_set_title (editor->priv->category,
+	                           gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
+	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	canvas_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->category);
 }
 
 
@@ -97,14 +93,13 @@ canvas_category_editor_new (CanvasEditorWindow* window,
                             CanvasCategory* category)
 {
 	CanvasCategoryEditor* editor = g_object_new (CANVAS_TYPE_CATEGORY_EDITOR, NULL);
-	CanvasCategoryEditorPrivate* priv = CANVAS_CATEGORY_EDITOR_PRIVATE (editor);
 
-	priv->window = window;
-	priv->category = category;
+	editor->priv->window = window;
+	editor->priv->category = category;
 
-	gtk_entry_set_text (GTK_ENTRY (priv->title_entry),
+	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
 	                    canvas_category_get_title (category));
-	g_signal_connect (priv->title_entry, "activate",
+	g_signal_connect (editor->priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
 	return editor;

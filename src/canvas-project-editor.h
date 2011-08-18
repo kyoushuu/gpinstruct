@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_PROJECT_EDITOR_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_PROJECT_EDITOR))
 #define CANVAS_PROJECT_EDITOR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_PROJECT_EDITOR, CanvasProjectEditorClass))
 
+typedef struct _CanvasProjectEditorPrivate CanvasProjectEditorPrivate;
 typedef struct _CanvasProjectEditorClass CanvasProjectEditorClass;
 typedef struct _CanvasProjectEditor CanvasProjectEditor;
 
@@ -42,6 +43,8 @@ struct _CanvasProjectEditorClass
 struct _CanvasProjectEditor
 {
 	CanvasObjectEditor parent_instance;
+
+	CanvasProjectEditorPrivate* priv;
 };
 
 GType canvas_project_editor_get_type (void) G_GNUC_CONST;

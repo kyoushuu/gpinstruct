@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonTestWordPoolPrivate CanvasLessonTestWordPoolPrivate;
 struct _CanvasLessonTestWordPoolPrivate
 {
 	GList* questions;
@@ -35,20 +34,21 @@ G_DEFINE_TYPE (CanvasLessonTestWordPool, canvas_lesson_test_word_pool, CANVAS_TY
 static void
 canvas_lesson_test_word_pool_init (CanvasLessonTestWordPool *object)
 {
-	CanvasLessonTestWordPoolPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(object);
-	priv->questions = NULL;
-	priv->choices = NULL;
+	object->priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE (object);
+
+	object->priv->questions = NULL;
+	object->priv->choices = NULL;
 }
 
 static void
 canvas_lesson_test_word_pool_finalize (GObject *object)
 {
-	CanvasLessonTestWordPoolPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(object);
+	CanvasLessonTestWordPool* test = CANVAS_LESSON_TEST_WORD_POOL (object);
 
-	if (priv->questions)
-		g_list_free_full (priv->questions, g_object_unref);
-	if (priv->choices)
-		g_list_free_full (priv->choices, g_free);
+	if (test->priv->questions)
+		g_list_free_full (test->priv->questions, g_object_unref);
+	if (test->priv->choices)
+		g_list_free_full (test->priv->choices, g_free);
 
 	G_OBJECT_CLASS (canvas_lesson_test_word_pool_parent_class)->finalize (object);
 }
@@ -68,7 +68,7 @@ canvas_lesson_test_word_pool_class_init (CanvasLessonTestWordPoolClass *klass)
 CanvasLessonTestWordPool*
 canvas_lesson_test_word_pool_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_TEST_WORD_POOL, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_TEST_WORD_POOL, NULL);
 }
 
 void
@@ -77,31 +77,28 @@ canvas_lesson_test_word_pool_add_question (CanvasLessonTestWordPool* test,
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_WORD_POOL (test));
 
-	CanvasLessonTestWordPoolPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
-	priv->questions = g_list_append (priv->questions, question);
+	test->priv->questions = g_list_append (test->priv->questions, question);
 }
 
 void
 canvas_lesson_test_word_pool_remove_question (CanvasLessonTestWordPool* test,
                                               guint question)
 {
-	CanvasLessonTestWordPoolPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
-
-	GList* nth_link = g_list_nth (priv->questions, question);
+	GList* nth_link = g_list_nth (test->priv->questions, question);
 	g_object_unref (nth_link->data);
-	priv->questions = g_list_delete_link (priv->questions, nth_link);
+	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
 }
 
 GList*
 canvas_lesson_test_word_pool_get_questions (CanvasLessonTestWordPool* test)
 {
-	return g_list_copy (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->questions);
+	return g_list_copy (test->priv->questions);
 }
 
 guint
 canvas_lesson_test_word_pool_get_questions_length (CanvasLessonTestWordPool* test)
 {
-	return g_list_length (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->questions);
+	return g_list_length (test->priv->questions);
 }
 
 void
@@ -110,31 +107,28 @@ canvas_lesson_test_word_pool_add_choice (CanvasLessonTestWordPool* test,
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_WORD_POOL (test));
 
-	CanvasLessonTestWordPoolPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
-	priv->choices = g_list_append (priv->choices, g_strdup (choice));
+	test->priv->choices = g_list_append (test->priv->choices, g_strdup (choice));
 }
 
 void
 canvas_lesson_test_word_pool_remove_choice (CanvasLessonTestWordPool* test,
                                             guint choice)
 {
-	CanvasLessonTestWordPoolPrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test);
-	
-	GList* nth_link = g_list_nth (priv->choices, choice);
+	GList* nth_link = g_list_nth (test->priv->choices, choice);
 	g_free (nth_link->data);
-	priv->choices = g_list_delete_link (priv->choices, nth_link);
+	test->priv->choices = g_list_delete_link (test->priv->choices, nth_link);
 }
 
 const gchar*
 canvas_lesson_test_word_pool_get_choice (CanvasLessonTestWordPool* test, guint choice)
 {
-	return g_list_nth_data (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->choices, choice);
+	return g_list_nth_data (test->priv->choices, choice);
 }
 
 void
 canvas_lesson_test_word_pool_set_choice (CanvasLessonTestWordPool* test, guint choice, const gchar* text)
 {
-	GList* nth_node = g_list_nth (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->choices, choice);
+	GList* nth_node = g_list_nth (test->priv->choices, choice);
 
 	if (nth_node->data)
 		g_free (nth_node->data);
@@ -144,11 +138,11 @@ canvas_lesson_test_word_pool_set_choice (CanvasLessonTestWordPool* test, guint c
 GList*
 canvas_lesson_test_word_pool_get_choices (CanvasLessonTestWordPool* test)
 {
-	return g_list_copy (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->choices);
+	return g_list_copy (test->priv->choices);
 }
 
 guint
 canvas_lesson_test_word_pool_get_choices_length (CanvasLessonTestWordPool* test)
 {
-	return g_list_length (CANVAS_LESSON_TEST_WORD_POOL_PRIVATE(test)->choices);
+	return g_list_length (test->priv->choices);
 }

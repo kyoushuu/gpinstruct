@@ -22,7 +22,6 @@
 #include "canvas.h"
 #include "canvas-view.h"
 
-typedef struct _CanvasProjectViewPrivate CanvasProjectViewPrivate;
 struct _CanvasProjectViewPrivate
 {
 	CanvasProject* project;
@@ -39,15 +38,14 @@ void
 lesson_button_clicked (GtkButton *button,
                        gpointer   user_data)
 {
-	CanvasProjectView* project_view = CANVAS_PROJECT_VIEW (user_data);
-	CanvasProjectViewPrivate* priv = CANVAS_PROJECT_VIEW_PRIVATE (project_view);
+	CanvasProjectView* view = CANVAS_PROJECT_VIEW (user_data);
 
-	CanvasLessonView* view = g_hash_table_lookup (priv->hashtable, button);
+	CanvasLessonView* lesson_view = g_hash_table_lookup (view->priv->hashtable, button);
 
-	if (view)
+	if (lesson_view)
 	{
-		gtk_dialog_run (GTK_DIALOG (view));
-		gtk_widget_hide (GTK_WIDGET (view));
+		gtk_dialog_run (GTK_DIALOG (lesson_view));
+		gtk_widget_hide (GTK_WIDGET (lesson_view));
 	}
 }
 
@@ -58,7 +56,9 @@ G_DEFINE_TYPE (CanvasProjectView, canvas_project_view, GTK_TYPE_WINDOW);
 static void
 canvas_project_view_init (CanvasProjectView *object)
 {
-	CANVAS_PROJECT_VIEW_PRIVATE (object)->hashtable = g_hash_table_new (NULL, NULL);
+	object->priv = CANVAS_PROJECT_VIEW_PRIVATE (object);
+
+	object->priv->hashtable = g_hash_table_new (NULL, NULL);
 
 	gtk_widget_set_size_request (GTK_WIDGET (object), 600, 400);
 }
@@ -66,11 +66,11 @@ canvas_project_view_init (CanvasProjectView *object)
 static void
 canvas_project_view_finalize (GObject *object)
 {
-	CanvasProjectViewPrivate* priv = CANVAS_PROJECT_VIEW_PRIVATE (object);
+	CanvasProjectView* view = CANVAS_PROJECT_VIEW (object);
 
-	if (priv->hashtable)
+	if (view->priv->hashtable)
 	{
-		GList* views = g_hash_table_get_values (priv->hashtable);
+		GList* views = g_hash_table_get_values (view->priv->hashtable);
 		GList* current_views = views;
 
 		while (current_views)
@@ -82,14 +82,14 @@ canvas_project_view_finalize (GObject *object)
 
 		g_list_free (views);
 
-		g_hash_table_destroy (priv->hashtable);
+		g_hash_table_destroy (view->priv->hashtable);
 	}
 
-	if (priv->project)
-		g_object_unref (priv->project);
+	if (view->priv->project)
+		g_object_unref (view->priv->project);
 
-	if (priv->pool)
-		g_object_unref (priv->pool);
+	if (view->priv->pool)
+		g_object_unref (view->priv->pool);
 
 	G_OBJECT_CLASS (canvas_project_view_parent_class)->finalize (object);
 }
@@ -111,16 +111,14 @@ canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
 {
 	g_return_val_if_fail (project != NULL, NULL);
 
-	CanvasProjectView* project_view = g_object_new(CANVAS_TYPE_PROJECT_VIEW, NULL);
-
-	CanvasProjectViewPrivate* priv = CANVAS_PROJECT_VIEW_PRIVATE (project_view);
+	CanvasProjectView* view = g_object_new (CANVAS_TYPE_PROJECT_VIEW, NULL);
 
 	if (pool)
-		priv->pool = g_object_ref (pool);
+		view->priv->pool = g_object_ref (pool);
 	else
 	{
-		priv->pool = canvas_message_pool_new ();
-		canvas_message_pool_add_multiple (priv->pool,
+		view->priv->pool = canvas_message_pool_new ();
+		canvas_message_pool_add_multiple (view->priv->pool,
 		                                  CANVAS_MESSAGE_TYPE_CORRECT,		"Your last answer is correct.",
 		                                  CANVAS_MESSAGE_TYPE_CORRECT_ALL,	"All of your answers are correct.",
 		                                  CANVAS_MESSAGE_TYPE_WRONG,		"Your last answer is wrong.",
@@ -131,15 +129,15 @@ canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
 		                                  CANVAS_MESSAGE_TYPE_NONE);
 	}
 
-	priv->project = g_object_ref (project);
-	gtk_window_set_default_size (GTK_WINDOW (project_view), 600, 400);
-	gtk_window_set_title (GTK_WINDOW (project_view), canvas_project_get_title (project));
+	view->priv->project = g_object_ref (project);
+	gtk_window_set_default_size (GTK_WINDOW (view), 600, 400);
+	gtk_window_set_title (GTK_WINDOW (view), canvas_project_get_title (project));
 
 	GtkWidget* scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 	                                GTK_POLICY_AUTOMATIC,
 	                                GTK_POLICY_AUTOMATIC);
-	gtk_container_add (GTK_CONTAINER (project_view), scrolled_window);
+	gtk_container_add (GTK_CONTAINER (view), scrolled_window);
 
 	GtkWidget* main_vbox = gtk_hbox_new (TRUE, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), main_vbox);
@@ -183,11 +181,11 @@ canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
 			lesson_button = gtk_button_new ();
 			gtk_button_set_label (GTK_BUTTON (lesson_button), canvas_lesson_get_title (lesson));
 			gtk_box_pack_start (GTK_BOX (category_vbox), lesson_button, FALSE, FALSE, 3);
-			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), project_view);
+			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), view);
 
-			CanvasLessonView* view = canvas_lesson_view_new (lesson, priv->pool);
+			CanvasLessonView* lesson_view = canvas_lesson_view_new (lesson, view->priv->pool);
 
-			g_hash_table_insert (priv->hashtable, lesson_button, view);
+			g_hash_table_insert (view->priv->hashtable, lesson_button, lesson_view);
 
 			curr_lessons = curr_lessons->next;
 		}
@@ -199,5 +197,5 @@ canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
 
 	g_list_free (categories);
 
-	return (GtkWidget*)project_view;
+	return (GtkWidget*)view;
 }

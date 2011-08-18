@@ -32,6 +32,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_PROJECT_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_PROJECT))
 #define CANVAS_PROJECT_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_PROJECT, CanvasProjectClass))
 
+typedef struct _CanvasProjectPrivate CanvasProjectPrivate;
 typedef struct _CanvasProjectClass CanvasProjectClass;
 typedef struct _CanvasProject CanvasProject;
 
@@ -43,6 +44,8 @@ struct _CanvasProjectClass
 struct _CanvasProject
 {
 	CanvasObject parent_instance;
+
+	CanvasProjectPrivate* priv;
 };
 
 GType canvas_project_get_type (void) G_GNUC_CONST;

@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_READING_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_READING))
 #define CANVAS_LESSON_READING_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_READING, CanvasLessonReadingClass))
 
+typedef struct _CanvasLessonReadingPrivate CanvasLessonReadingPrivate;
 typedef struct _CanvasLessonReadingClass CanvasLessonReadingClass;
 typedef struct _CanvasLessonReading CanvasLessonReading;
 
@@ -42,6 +43,8 @@ struct _CanvasLessonReadingClass
 struct _CanvasLessonReading
 {
 	CanvasLessonElement parent_instance;
+
+	CanvasLessonReadingPrivate* priv;
 };
 
 GType canvas_lesson_reading_get_type (void) G_GNUC_CONST;

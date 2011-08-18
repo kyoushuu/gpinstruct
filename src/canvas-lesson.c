@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonPrivate CanvasLessonPrivate;
 struct _CanvasLessonPrivate
 {
 	gchar* title;
@@ -36,22 +35,22 @@ G_DEFINE_TYPE (CanvasLesson, canvas_lesson, CANVAS_TYPE_OBJECT);
 static void
 canvas_lesson_init (CanvasLesson *object)
 {
-	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(object);
+	object->priv = CANVAS_LESSON_PRIVATE (object);
 
-	priv->title = g_strdup ("");
-	priv->lesson_elements = NULL;
-	priv->single_score = FALSE;
+	object->priv->title = g_strdup ("");
+	object->priv->lesson_elements = NULL;
+	object->priv->single_score = FALSE;
 }
 
 static void
 canvas_lesson_finalize (GObject *object)
 {
-	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(object);
+	CanvasLesson* lesson = CANVAS_LESSON (object);
 
-	if (priv->title)
-		g_free (priv->title);
-	if (priv->lesson_elements)
-		g_list_free_full (priv->lesson_elements, g_object_unref);
+	if (lesson->priv->title)
+		g_free (lesson->priv->title);
+	if (lesson->priv->lesson_elements)
+		g_list_free_full (lesson->priv->lesson_elements, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_lesson_parent_class)->finalize (object);
 }
@@ -77,24 +76,22 @@ canvas_lesson_new (void)
 const gchar*
 canvas_lesson_get_title (CanvasLesson* lesson)
 {
-	return CANVAS_LESSON_PRIVATE (lesson)->title;
+	return lesson->priv->title;
 }
 
 void
 canvas_lesson_set_title (CanvasLesson* lesson,
                          const gchar* title)
 {
-	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(lesson);
-
-	if (priv->title)
-		g_free (priv->title);
-	priv->title = g_strdup (title);
+	if (lesson->priv->title)
+		g_free (lesson->priv->title);
+	lesson->priv->title = g_strdup (title);
 }
 
 guint
 canvas_lesson_get_lesson_elements_length (CanvasLesson* lesson)
 {
-	return g_list_length (CANVAS_LESSON_PRIVATE(lesson)->lesson_elements);
+	return g_list_length (lesson->priv->lesson_elements);
 }
 
 void
@@ -103,33 +100,30 @@ canvas_lesson_add_lesson_element (CanvasLesson* lesson,
 {
 	g_return_if_fail (CANVAS_IS_LESSON_ELEMENT (element));
 
-	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(lesson);
-	priv->lesson_elements = g_list_append (priv->lesson_elements, element);
+	lesson->priv->lesson_elements = g_list_append (lesson->priv->lesson_elements, element);
 }
 
 void
 canvas_lesson_remove_lesson_element (CanvasLesson* lesson,
                                      guint lesson_element)
 {
-	CanvasLessonPrivate* priv = CANVAS_LESSON_PRIVATE(lesson);
-
-	GList* nth_link = g_list_nth (priv->lesson_elements, lesson_element);
+	GList* nth_link = g_list_nth (lesson->priv->lesson_elements, lesson_element);
 	g_object_unref (nth_link->data);
-	priv->lesson_elements = g_list_delete_link (priv->lesson_elements, nth_link);
+	lesson->priv->lesson_elements = g_list_delete_link (lesson->priv->lesson_elements, nth_link);
 }
 
 GList*
 canvas_lesson_get_lesson_elements (CanvasLesson* lesson)
 {
-	return g_list_copy (CANVAS_LESSON_PRIVATE(lesson)->lesson_elements);
+	return g_list_copy (lesson->priv->lesson_elements);
 }
 
 gboolean canvas_lesson_get_single_score (CanvasLesson* lesson)
 {
-	return CANVAS_LESSON_PRIVATE(lesson)->single_score;
+	return lesson->priv->single_score;
 }
 
 void canvas_lesson_set_single_score (CanvasLesson* lesson, gboolean single_score)
 {
-	CANVAS_LESSON_PRIVATE(lesson)->single_score = single_score;
+	lesson->priv->single_score = single_score;
 }

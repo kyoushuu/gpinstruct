@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonDiscussionPrivate CanvasLessonDiscussionPrivate;
 struct _CanvasLessonDiscussionPrivate
 {
 	gchar* text;
@@ -34,17 +33,18 @@ G_DEFINE_TYPE (CanvasLessonDiscussion, canvas_lesson_discussion, CANVAS_TYPE_LES
 static void
 canvas_lesson_discussion_init (CanvasLessonDiscussion *object)
 {
-	CanvasLessonDiscussionPrivate* priv = CANVAS_LESSON_DISCUSSION_PRIVATE(object);
-	priv->text = g_strdup ("");
+	object->priv = CANVAS_LESSON_DISCUSSION_PRIVATE (object);
+
+	object->priv->text = g_strdup ("");
 }
 
 static void
 canvas_lesson_discussion_finalize (GObject *object)
 {
-	CanvasLessonDiscussionPrivate* priv = CANVAS_LESSON_DISCUSSION_PRIVATE(object);
+	CanvasLessonDiscussion* discussion = CANVAS_LESSON_DISCUSSION (object);
 
-	if (priv->text)
-		g_free (priv->text);
+	if (discussion->priv->text)
+		g_free (discussion->priv->text);
 
 	G_OBJECT_CLASS (canvas_lesson_discussion_parent_class)->finalize (object);
 }
@@ -64,22 +64,20 @@ canvas_lesson_discussion_class_init (CanvasLessonDiscussionClass *klass)
 CanvasLessonDiscussion*
 canvas_lesson_discussion_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_DISCUSSION, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_DISCUSSION, NULL);
 }
 
 const gchar*
 canvas_lesson_discussion_get_text (CanvasLessonDiscussion* discussion)
 {
-	return CANVAS_LESSON_DISCUSSION_PRIVATE(discussion)->text;
+	return discussion->priv->text;
 }
 
 void
 canvas_lesson_discussion_set_text (CanvasLessonDiscussion* discussion, const gchar* text)
 {
-	CanvasLessonDiscussionPrivate* priv = CANVAS_LESSON_DISCUSSION_PRIVATE(discussion);
-
-	if (priv->text)
-		g_free (priv->text);
-	priv->text = g_strdup (text);
+	if (discussion->priv->text)
+		g_free (discussion->priv->text);
+	discussion->priv->text = g_strdup (text);
 }
 

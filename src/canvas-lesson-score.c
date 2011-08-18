@@ -22,7 +22,6 @@
 #include "canvas.h"
 #include "canvas-view.h"
 
-typedef struct _CanvasLessonScorePrivate CanvasLessonScorePrivate;
 struct _CanvasLessonScorePrivate
 {
 	guint total;
@@ -38,17 +37,15 @@ G_DEFINE_TYPE (CanvasLessonScore, canvas_lesson_score, CANVAS_TYPE_LESSON_ELEMEN
 static void
 canvas_lesson_score_init (CanvasLessonScore *object)
 {
-	CanvasLessonScorePrivate* priv = CANVAS_LESSON_SCORE_PRIVATE (object);
+	object->priv = CANVAS_LESSON_SCORE_PRIVATE (object);
 
-	priv->total = 0;
-	priv->score = 0;
+	object->priv->total = 0;
+	object->priv->score = 0;
 }
 
 static void
 canvas_lesson_score_finalize (GObject *object)
 {
-	/* TODO: Add deinitalization code here */
-
 	G_OBJECT_CLASS (canvas_lesson_score_parent_class)->finalize (object);
 }
 
@@ -67,36 +64,36 @@ canvas_lesson_score_class_init (CanvasLessonScoreClass *klass)
 CanvasLessonScore*
 canvas_lesson_score_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_SCORE, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_SCORE, NULL);
 }
 
 void
 canvas_lesson_score_increase_total (CanvasLessonScore* score)
 {
-	CANVAS_LESSON_SCORE_PRIVATE (score)->total++;
+	score->priv->total++;
 }
 
 guint
 canvas_lesson_score_get_total (CanvasLessonScore* score)
 {
-	return CANVAS_LESSON_SCORE_PRIVATE (score)->total;
+	return score->priv->total;
 }
 
 void
 canvas_lesson_score_increase_score (CanvasLessonScore* score)
 {
-	CANVAS_LESSON_SCORE_PRIVATE (score)->score++;
+	score->priv->score++;
 }
 
 guint
 canvas_lesson_score_get_score (CanvasLessonScore* score)
 {
-	return CANVAS_LESSON_SCORE_PRIVATE (score)->score;
+	return score->priv->score;
 }
 
 void
 canvas_lesson_score_clear (CanvasLessonScore* score)
 {
-	CANVAS_LESSON_SCORE_PRIVATE (score)->total = 0;
-	CANVAS_LESSON_SCORE_PRIVATE (score)->score = 0;
+	score->priv->total = 0;
+	score->priv->score = 0;
 }

@@ -35,7 +35,6 @@
 #include "canvas.h"
 #include "canvas-editor.h"
 
-typedef struct _CanvasLessonTestMultiChoiceEditorPrivate CanvasLessonTestMultiChoiceEditorPrivate;
 struct _CanvasLessonTestMultiChoiceEditorPrivate
 {
 	CanvasEditorWindow* window;
@@ -75,17 +74,15 @@ enum
 static void
 update_tree_view (CanvasLessonTestMultiChoiceEditor* editor)
 {
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (editor);
-
-	gtk_tree_store_clear (priv->store);
+	gtk_tree_store_clear (editor->priv->store);
 
 	GtkTreeIter iterTest, iterQuestion, iterChoice;
 
-	CanvasLessonTestMultiChoice* test = priv->test;
+	CanvasLessonTestMultiChoice* test = editor->priv->test;
 	const gchar* text;
 
-	gtk_tree_store_append (priv->store, &iterTest, NULL);
-	gtk_tree_store_set (priv->store, &iterTest,
+	gtk_tree_store_append (editor->priv->store, &iterTest, NULL);
+	gtk_tree_store_set (editor->priv->store, &iterTest,
 	                    TITLE_COLUMN, _("Test"),
 	                    DATA_COLUMN, test,
 	                    -1);
@@ -98,8 +95,8 @@ update_tree_view (CanvasLessonTestMultiChoiceEditor* editor)
 		CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (curr_questions->data);
 
 		text = canvas_lesson_test_multi_choice_question_get_text (question);
-		gtk_tree_store_append (priv->store, &iterQuestion, &iterTest);
-		gtk_tree_store_set (priv->store, &iterQuestion,
+		gtk_tree_store_append (editor->priv->store, &iterQuestion, &iterTest);
+		gtk_tree_store_set (editor->priv->store, &iterQuestion,
 		                    TITLE_COLUMN, text,
 		                    DATA_COLUMN, question,
 		                    -1);
@@ -110,8 +107,8 @@ update_tree_view (CanvasLessonTestMultiChoiceEditor* editor)
 		while (curr_choices)
 		{
 			text = curr_choices->data;
-			gtk_tree_store_append (priv->store, &iterChoice, &iterQuestion);
-			gtk_tree_store_set (priv->store, &iterChoice,
+			gtk_tree_store_append (editor->priv->store, &iterChoice, &iterQuestion);
+			gtk_tree_store_set (editor->priv->store, &iterChoice,
 			                    TITLE_COLUMN, text,
 			                    DATA_COLUMN, NULL,
 			                    -1);
@@ -126,7 +123,7 @@ update_tree_view (CanvasLessonTestMultiChoiceEditor* editor)
 
 	g_list_free (questions);
 
-	gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->tree_view));
+	gtk_tree_view_expand_all (GTK_TREE_VIEW (editor->priv->tree_view));
 }
 
 
@@ -135,7 +132,7 @@ tree_view_press_event (GtkWidget *widget,
                        GdkEvent *event,
                        gpointer   user_data)
 {
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (user_data);
+	CanvasLessonTestMultiChoiceEditor* editor = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	GdkEventButton *event_button = NULL;
 	GdkEventKey *event_key;
@@ -157,11 +154,11 @@ tree_view_press_event (GtkWidget *widget,
 		button = event_button->button;
 		if (button == 3)
 		{
-			gtk_tree_view_get_cursor (GTK_TREE_VIEW (priv->tree_view), &path, NULL);
+			gtk_tree_view_get_cursor (GTK_TREE_VIEW (editor->priv->tree_view), &path, NULL);
 			if (path)
 			{
-				if (gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->store),
-				                             &priv->iter_popup, path))
+				if (gtk_tree_model_get_iter (GTK_TREE_MODEL (editor->priv->store),
+				                             &editor->priv->iter_popup, path))
 				{
 					show_popup = TRUE;
 					gtk_tree_path_free (path);
@@ -174,20 +171,20 @@ tree_view_press_event (GtkWidget *widget,
 		event_key = (GdkEventKey *) event;
 		if (event_key->state == 0 && event_key->keyval == GDK_KEY_Menu)
 		{
-			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view)),
-			                                     NULL, &priv->iter_popup))
+			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->tree_view)),
+			                                     NULL, &editor->priv->iter_popup))
 				show_popup = TRUE;
 		}
 		else if (event_key->state == 0 && event_key->keyval == GDK_KEY_Left)
 		{
-			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view)),
+			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->tree_view)),
 			                                     NULL, &iter))
 			{
-				path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->store),
+				path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->store),
 				                                &iter);
 				if (path)
 				{
-					gtk_tree_view_collapse_row (GTK_TREE_VIEW (priv->tree_view), path);
+					gtk_tree_view_collapse_row (GTK_TREE_VIEW (editor->priv->tree_view), path);
 					gtk_tree_path_free (path);
 					return TRUE;
 				}
@@ -195,14 +192,14 @@ tree_view_press_event (GtkWidget *widget,
 		}
 		else if (event_key->state == 0 && event_key->keyval == GDK_KEY_Right)
 		{
-			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view)),
+			if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->tree_view)),
 			                                     NULL, &iter))
 			{
-				path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->store),
+				path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->store),
 				                                &iter);
 				if (path)
 				{
-					gtk_tree_view_expand_row (GTK_TREE_VIEW (priv->tree_view), path, FALSE);
+					gtk_tree_view_expand_row (GTK_TREE_VIEW (editor->priv->tree_view), path, FALSE);
 					gtk_tree_path_free (path);
 					return TRUE;
 				}
@@ -212,31 +209,31 @@ tree_view_press_event (GtkWidget *widget,
 
 	if (show_popup)
 	{
-		gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &priv->iter_popup,
+		gtk_tree_model_get (GTK_TREE_MODEL (editor->priv->store), &editor->priv->iter_popup,
 		                    DATA_COLUMN, &object_popup,
 		                    -1);
 
-		gtk_widget_hide (priv->popup_new_question_menu_item);
-		gtk_widget_hide (priv->popup_new_choice_menu_item);
-		gtk_widget_hide (priv->popup_remove_menu_item);
+		gtk_widget_hide (editor->priv->popup_new_question_menu_item);
+		gtk_widget_hide (editor->priv->popup_new_choice_menu_item);
+		gtk_widget_hide (editor->priv->popup_remove_menu_item);
 
 		if (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (object_popup))
 		{
-			gtk_widget_show (priv->popup_new_question_menu_item);
+			gtk_widget_show (editor->priv->popup_new_question_menu_item);
 		}
 		else if (CANVAS_IS_LESSON_TEST_MULTI_CHOICE_QUESTION (object_popup))
 		{
-			gtk_widget_show (priv->popup_new_choice_menu_item);
-			gtk_widget_show (priv->popup_remove_menu_item);
+			gtk_widget_show (editor->priv->popup_new_choice_menu_item);
+			gtk_widget_show (editor->priv->popup_remove_menu_item);
 		}
 		else if (object_popup == NULL)
 		{
-			gtk_widget_show (priv->popup_remove_menu_item);
+			gtk_widget_show (editor->priv->popup_remove_menu_item);
 		}
 		else
 			return FALSE;
 
-		gtk_menu_popup (GTK_MENU (priv->popup_menu), NULL, NULL, NULL, NULL,
+		gtk_menu_popup (GTK_MENU (editor->priv->popup_menu), NULL, NULL, NULL, NULL,
 		                button, (event_button)? event_button->time : event_key->time);
 		return TRUE;
 	}
@@ -251,15 +248,15 @@ tree_view_row_activated (GtkTreeView       *tree_view,
                          GtkTreeViewColumn *column,
                          gpointer           user_data)
 {
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (user_data);
+	CanvasLessonTestMultiChoiceEditor* editor = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	CanvasObject* object;
 	GtkTreeIter iter, iter_parent;
 	GtkWidget *scrolled_window, *text_view, *answer_spin;
 
-	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->store), &iter, path))
+	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (editor->priv->store), &iter, path))
 	{
-		gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter,
+		gtk_tree_model_get (GTK_TREE_MODEL (editor->priv->store), &iter,
 		                    DATA_COLUMN, &object,
 		                    -1);
 		if (CANVAS_IS_LESSON_TEST_MULTI_CHOICE_QUESTION (object))
@@ -268,7 +265,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 			guint choices_num = canvas_lesson_test_multi_choice_question_get_choices_length (question);
 
 			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Question Properties"),
-			                                                 GTK_WINDOW (priv->window),
+			                                                 GTK_WINDOW (editor->priv->window),
 			                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
 			                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
@@ -320,16 +317,16 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 					                                                     gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (answer_spin))-1);
 
 				update_tree_view (CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data));
-				canvas_editor_window_set_modified (priv->window, TRUE);
+				canvas_editor_window_set_modified (editor->priv->window, TRUE);
 			}
 
 			gtk_widget_destroy (dialog);
 		}
 		else if (object == NULL)
 		{
-			if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (priv->store), &iter_parent, &iter))
+			if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (editor->priv->store), &iter_parent, &iter))
 			{
-				gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter_parent,
+				gtk_tree_model_get (GTK_TREE_MODEL (editor->priv->store), &iter_parent,
 				                    DATA_COLUMN, &object,
 				                    -1);
 
@@ -337,7 +334,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 				CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
 
 				GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Choice Properties"),
-				                                                 GTK_WINDOW (priv->window),
+				                                                 GTK_WINDOW (editor->priv->window),
 				                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
 				                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 				                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
@@ -347,7 +344,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 
 				scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 				gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-					                            GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+				                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 				text_view = gtk_text_view_new ();
 				gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
 				gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
@@ -366,13 +363,13 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 				{
 					GtkTextIter start, end;
 					gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
-						                        &start, &end);
+					                            &start, &end);
 					gchar* text = gtk_text_iter_get_text (&start, &end);
 					canvas_lesson_test_multi_choice_question_set_choice (question, choice, text);
 					g_free (text);
 
 					update_tree_view (CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data));
-					canvas_editor_window_set_modified (priv->window, TRUE);
+					canvas_editor_window_set_modified (editor->priv->window, TRUE);
 				}
 
 				gtk_widget_destroy (dialog);
@@ -386,37 +383,37 @@ static void
 new_object_activate (GtkWidget *menuitem,
                      gpointer   user_data)
 {
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (user_data);
+	CanvasLessonTestMultiChoiceEditor* editor = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	CanvasObject* object_popup;
 	GtkTreeIter iter;
 	GtkTreePath* path;
 	gchar* title;
 
-	gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &priv->iter_popup,
+	gtk_tree_model_get (GTK_TREE_MODEL (editor->priv->store), &editor->priv->iter_popup,
 	                    DATA_COLUMN, &object_popup,
 	                    -1);
 
-	if (menuitem == priv->popup_new_question_menu_item)
+	if (menuitem == editor->priv->popup_new_question_menu_item)
 	{
 		title = _("Empty Question");
 		CanvasLessonTestMultiChoiceQuestion* question = canvas_lesson_test_multi_choice_question_new ();
 		canvas_lesson_test_multi_choice_question_set_text (question, title);
-		canvas_lesson_test_multi_choice_add_question (CANVAS_LESSON_TEST_MULTI_CHOICE (priv->test), question);
+		canvas_lesson_test_multi_choice_add_question (CANVAS_LESSON_TEST_MULTI_CHOICE (editor->priv->test), question);
 
-		gtk_tree_store_append (priv->store, &iter, &priv->iter_popup);
-		gtk_tree_store_set (priv->store, &iter,
+		gtk_tree_store_append (editor->priv->store, &iter, &editor->priv->iter_popup);
+		gtk_tree_store_set (editor->priv->store, &iter,
 		                    TITLE_COLUMN, title,
 		                    DATA_COLUMN, question,
 		                    -1);
 	}
-	else if (menuitem == priv->popup_new_choice_menu_item)
+	else if (menuitem == editor->priv->popup_new_choice_menu_item)
 	{
 		title = _("Empty Choice");
 		canvas_lesson_test_multi_choice_question_add_choice (CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (object_popup), title);
 
-		gtk_tree_store_append (priv->store, &iter, &priv->iter_popup);
-		gtk_tree_store_set (priv->store, &iter,
+		gtk_tree_store_append (editor->priv->store, &iter, &editor->priv->iter_popup);
+		gtk_tree_store_set (editor->priv->store, &iter,
 		                    TITLE_COLUMN, title,
 		                    DATA_COLUMN, NULL,
 		                    -1);
@@ -424,34 +421,34 @@ new_object_activate (GtkWidget *menuitem,
 	else
 		return;
 
-	path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->store), &priv->iter_popup);
-	gtk_tree_view_expand_row (GTK_TREE_VIEW (priv->tree_view),
+	path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->store), &editor->priv->iter_popup);
+	gtk_tree_view_expand_row (GTK_TREE_VIEW (editor->priv->tree_view),
 	                          path, FALSE);
 	gtk_tree_path_free (path);
 
-	canvas_editor_window_set_modified (priv->window, TRUE);
+	canvas_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
 
 static void
 remove_object_activate (GtkWidget *menuitem,
-                     gpointer   user_data)
+                        gpointer   user_data)
 {
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (user_data);
+	CanvasLessonTestMultiChoiceEditor* editor = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	CanvasObject* object_popup;
 	GtkTreeIter iter;
 
-	if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (priv->store),
-	                                &iter, &priv->iter_popup))
+	if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (editor->priv->store),
+	                                &iter, &editor->priv->iter_popup))
 	{
-		GtkTreePath* path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->store),
-		                                &priv->iter_popup);
+		GtkTreePath* path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->store),
+		                                             &editor->priv->iter_popup);
 		gint* indices = gtk_tree_path_get_indices (path);
 
-		gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter,
-			                DATA_COLUMN, &object_popup,
-			                -1);
+		gtk_tree_model_get (GTK_TREE_MODEL (editor->priv->store), &iter,
+		                    DATA_COLUMN, &object_popup,
+		                    -1);
 
 		gboolean modified = TRUE;
 
@@ -470,9 +467,9 @@ remove_object_activate (GtkWidget *menuitem,
 
 		if (modified)
 		{
-			canvas_editor_window_set_modified (priv->window, TRUE);
-			gtk_tree_store_remove (GTK_TREE_STORE (priv->store),
-			                       &priv->iter_popup);
+			canvas_editor_window_set_modified (editor->priv->window, TRUE);
+			gtk_tree_store_remove (GTK_TREE_STORE (editor->priv->store),
+			                       &editor->priv->iter_popup);
 		}
 
 		gtk_tree_path_free (path);
@@ -485,49 +482,49 @@ G_DEFINE_TYPE (CanvasLessonTestMultiChoiceEditor, canvas_lesson_test_multi_choic
 static void
 canvas_lesson_test_multi_choice_editor_init (CanvasLessonTestMultiChoiceEditor *object)
 {
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (object);
+	object->priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (object);
 
-	priv->store = gtk_tree_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
+	object->priv->store = gtk_tree_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
-	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), priv->title_label,
+	object->priv->title_label = gtk_label_new (_("Title:"));
+	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
+	object->priv->title_entry = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (object), object->priv->title_entry,
 	                  1, 2, 0, 1,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	priv->directions_label = gtk_label_new (_("Directions:"));
-	gtk_table_attach (GTK_TABLE (object), priv->directions_label,
+	object->priv->directions_label = gtk_label_new (_("Directions:"));
+	gtk_table_attach (GTK_TABLE (object), object->priv->directions_label,
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 	GtkWidget* directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	priv->directions_view = gtk_text_view_new ();
-	gtk_container_add (GTK_CONTAINER (directions_view_scrolled_window), priv->directions_view);
-	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->directions_view), GTK_WRAP_WORD_CHAR);
+	object->priv->directions_view = gtk_text_view_new ();
+	gtk_container_add (GTK_CONTAINER (directions_view_scrolled_window), object->priv->directions_view);
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (object->priv->directions_view), GTK_WRAP_WORD_CHAR);
 	gtk_table_attach (GTK_TABLE (object), directions_view_scrolled_window,
 	                  1, 2, 1, 2,
 	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
 	                  3, 3);
 
-	priv->explain_label = gtk_label_new (_("Explain:"));
-	gtk_table_attach (GTK_TABLE (object), priv->explain_label,
+	object->priv->explain_label = gtk_label_new (_("Explain:"));
+	gtk_table_attach (GTK_TABLE (object), object->priv->explain_label,
 	                  0, 1, 2, 3,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 #if GTK_MAJOR_VERSION >= 3
-	priv->explain_switch = gtk_switch_new ();
+	object->priv->explain_switch = gtk_switch_new ();
 #else
-	priv->explain_switch = gtk_toggle_button_new_with_label (GTK_STOCK_NO);
-	gtk_button_set_use_stock (GTK_BUTTON (priv->explain_switch), TRUE);
+	object->priv->explain_switch = gtk_toggle_button_new_with_label (GTK_STOCK_NO);
+	gtk_button_set_use_stock (GTK_BUTTON (object->priv->explain_switch), TRUE);
 #endif
-	gtk_table_attach (GTK_TABLE (object), priv->explain_switch,
+	gtk_table_attach (GTK_TABLE (object), object->priv->explain_switch,
 	                  1, 2, 2, 3,
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
@@ -539,46 +536,46 @@ canvas_lesson_test_multi_choice_editor_init (CanvasLessonTestMultiChoiceEditor *
 	                  0, 2, 3, 4,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
 	                  3, 3);
-	priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->store));
-	gtk_widget_set_events (priv->tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
-	g_signal_connect (priv->tree_view, "button-press-event", G_CALLBACK (tree_view_press_event), object);
-	g_signal_connect (priv->tree_view, "key-press-event", G_CALLBACK (tree_view_press_event), object);
-	g_signal_connect (priv->tree_view, "row-activated", G_CALLBACK (tree_view_row_activated), object);
-	gtk_container_add (GTK_CONTAINER (tree_view_scrolled_window), priv->tree_view);
+	object->priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->store));
+	gtk_widget_set_events (object->priv->tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+	g_signal_connect (object->priv->tree_view, "button-press-event", G_CALLBACK (tree_view_press_event), object);
+	g_signal_connect (object->priv->tree_view, "key-press-event", G_CALLBACK (tree_view_press_event), object);
+	g_signal_connect (object->priv->tree_view, "row-activated", G_CALLBACK (tree_view_row_activated), object);
+	gtk_container_add (GTK_CONTAINER (tree_view_scrolled_window), object->priv->tree_view);
 
 	GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes (_("Questions:"), gtk_cell_renderer_text_new (),
 	                                                                      "text", 0,
 	                                                                      NULL);
-	gtk_tree_view_append_column (GTK_TREE_VIEW (priv->tree_view), column);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (object->priv->tree_view), column);
 
 
-	priv->popup_menu = gtk_menu_new ();
+	object->priv->popup_menu = gtk_menu_new ();
 
-	priv->popup_new_question_menu_item = gtk_menu_item_new_with_mnemonic (_("New _Question"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), priv->popup_new_question_menu_item);
-	g_signal_connect (priv->popup_new_question_menu_item, "activate",
+	object->priv->popup_new_question_menu_item = gtk_menu_item_new_with_mnemonic (_("New _Question"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (object->priv->popup_menu), object->priv->popup_new_question_menu_item);
+	g_signal_connect (object->priv->popup_new_question_menu_item, "activate",
 	                  G_CALLBACK (new_object_activate), object);
 
-	priv->popup_new_choice_menu_item = gtk_menu_item_new_with_mnemonic (_("New _Choice"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), priv->popup_new_choice_menu_item);
-	g_signal_connect (priv->popup_new_choice_menu_item, "activate",
+	object->priv->popup_new_choice_menu_item = gtk_menu_item_new_with_mnemonic (_("New _Choice"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (object->priv->popup_menu), object->priv->popup_new_choice_menu_item);
+	g_signal_connect (object->priv->popup_new_choice_menu_item, "activate",
 	                  G_CALLBACK (new_object_activate), object);
 
-	priv->popup_remove_menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (priv->popup_menu), priv->popup_remove_menu_item);
-	g_signal_connect (priv->popup_remove_menu_item, "activate",
+	object->priv->popup_remove_menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (object->priv->popup_menu), object->priv->popup_remove_menu_item);
+	g_signal_connect (object->priv->popup_remove_menu_item, "activate",
 	                  G_CALLBACK (remove_object_activate), object);
 }
 
 static void
 canvas_lesson_test_multi_choice_editor_finalize (GObject *object)
 {
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (object);
+	CanvasLessonTestMultiChoiceEditor* editor = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (object);
 
-	if (priv->store)
-		g_object_unref (priv->store);
+	if (editor->priv->store)
+		g_object_unref (editor->priv->store);
 
-	gtk_widget_destroy (priv->popup_menu);
+	gtk_widget_destroy (editor->priv->popup_menu);
 
 	G_OBJECT_CLASS (canvas_lesson_test_multi_choice_editor_parent_class)->finalize (object);
 }
@@ -600,12 +597,11 @@ title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
 	CanvasLessonTestMultiChoiceEditor* editor = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (editor);
 
-	canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (priv->test),
-	                                 gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
-	canvas_editor_window_set_modified (priv->window, TRUE);
-	canvas_editor_window_update_tree_store (priv->window, (gpointer)priv->test);
+	canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (editor->priv->test),
+	                                 gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
+	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	canvas_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->test);
 }
 
 static void
@@ -613,16 +609,15 @@ directions_buffer_changed (GtkTextBuffer *textbuffer,
                            gpointer       user_data)
 {
 	CanvasLessonTestMultiChoiceEditor* editor = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (editor);
 
 	GtkTextIter start, end;
 	gchar* text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
-	canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (priv->test),
+	canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (editor->priv->test),
 	                                   text);
 	g_free (text);
-	canvas_editor_window_set_modified (priv->window, TRUE);
+	canvas_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
 #if GTK_MAJOR_VERSION >= 3
@@ -637,20 +632,19 @@ explain_activate (GtkToggleButton *togglebutton,
 #endif
 {
 	CanvasLessonTestMultiChoiceEditor* editor = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (editor);
 
 #if GTK_MAJOR_VERSION >= 3
-	gboolean active = gtk_switch_get_active (GTK_SWITCH (priv->explain_switch));
+	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->explain_switch));
 #else
-	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->explain_switch));
-	gtk_button_set_label (GTK_BUTTON (priv->explain_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
+	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (editor->priv->explain_switch));
+	gtk_button_set_label (GTK_BUTTON (editor->priv->explain_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
 #endif
 
-	if (active != canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (priv->test)))
+	if (active != canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (editor->priv->test)))
 	{
-		canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (priv->test),
+		canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (editor->priv->test),
 		                                active);
-		canvas_editor_window_set_modified (priv->window, TRUE);
+		canvas_editor_window_set_modified (editor->priv->window, TRUE);
 	}
 }
 
@@ -659,31 +653,30 @@ CanvasLessonTestMultiChoiceEditor*
 canvas_lesson_test_multi_choice_editor_new (CanvasEditorWindow* window, CanvasLessonTestMultiChoice *test)
 {
 	CanvasLessonTestMultiChoiceEditor* editor = g_object_new (CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_EDITOR, NULL);
-	CanvasLessonTestMultiChoiceEditorPrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (editor);
 
-	priv->window = window;
-	priv->test = test;
+	editor->priv->window = window;
+	editor->priv->test = test;
 
-	gtk_entry_set_text (GTK_ENTRY (priv->title_entry),
+	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
 	                    canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (test)));
-	g_signal_connect (priv->title_entry, "activate",
+	g_signal_connect (editor->priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
-	GtkTextBuffer* buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->directions_view));
+	GtkTextBuffer* buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->directions_view));
 	gtk_text_buffer_set_text (buffer,
 	                          canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (test)), -1);
 	g_signal_connect (buffer, "changed",
 	                  G_CALLBACK (directions_buffer_changed), editor);
 
 #if GTK_MAJOR_VERSION >= 3
-	gtk_switch_set_active (GTK_SWITCH (priv->explain_switch),
+	gtk_switch_set_active (GTK_SWITCH (editor->priv->explain_switch),
 	                       canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (test)));
-	g_signal_connect (priv->explain_switch, "notify::active",
+	g_signal_connect (editor->priv->explain_switch, "notify::active",
 	                  G_CALLBACK (explain_activate), editor);
 #else
-	g_signal_connect (priv->explain_switch, "toggled",
+	g_signal_connect (editor->priv->explain_switch, "toggled",
 	                  G_CALLBACK (explain_activate), editor);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->explain_switch),
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (editor->priv->explain_switch),
 	                              canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (test)));
 #endif
 

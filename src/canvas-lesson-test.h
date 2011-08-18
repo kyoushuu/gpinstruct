@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_TEST_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_TEST))
 #define CANVAS_LESSON_TEST_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_TEST, CanvasLessonTestClass))
 
+typedef struct _CanvasLessonTestPrivate CanvasLessonTestPrivate;
 typedef struct _CanvasLessonTestClass CanvasLessonTestClass;
 typedef struct _CanvasLessonTest CanvasLessonTest;
 
@@ -42,6 +43,8 @@ struct _CanvasLessonTestClass
 struct _CanvasLessonTest
 {
 	CanvasLessonElement parent_instance;
+
+	CanvasLessonTestPrivate* priv;
 };
 
 GType canvas_lesson_test_get_type (void) G_GNUC_CONST;

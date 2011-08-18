@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_CATEGORY_EDITOR_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_CATEGORY_EDITOR))
 #define CANVAS_CATEGORY_EDITOR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_CATEGORY_EDITOR, CanvasCategoryEditorClass))
 
+typedef struct _CanvasCategoryEditorPrivate CanvasCategoryEditorPrivate;
 typedef struct _CanvasCategoryEditorClass CanvasCategoryEditorClass;
 typedef struct _CanvasCategoryEditor CanvasCategoryEditor;
 
@@ -42,6 +43,8 @@ struct _CanvasCategoryEditorClass
 struct _CanvasCategoryEditor
 {
 	CanvasObjectEditor parent_instance;
+
+	CanvasCategoryEditorPrivate* priv;
 };
 
 GType canvas_category_editor_get_type (void) G_GNUC_CONST;

@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasCategoryPrivate CanvasCategoryPrivate;
 struct _CanvasCategoryPrivate
 {
 	gchar* title;
@@ -35,21 +34,21 @@ G_DEFINE_TYPE (CanvasCategory, canvas_category, CANVAS_TYPE_OBJECT);
 static void
 canvas_category_init (CanvasCategory *object)
 {
-	CanvasCategoryPrivate* priv = CANVAS_CATEGORY_PRIVATE(object);
+	object->priv = CANVAS_CATEGORY_PRIVATE (object);
 
-	priv->title = g_strdup ("");
-	priv->lessons = NULL;
+	object->priv->title = g_strdup ("");
+	object->priv->lessons = NULL;
 }
 
 static void
 canvas_category_finalize (GObject *object)
 {
-	CanvasCategoryPrivate* priv = CANVAS_CATEGORY_PRIVATE(object);
+	CanvasCategory* category = CANVAS_CATEGORY (object);
 
-	if (priv->title)
-		g_free (priv->title);
-	if (priv->lessons)
-		g_list_free_full (priv->lessons, g_object_unref);
+	if (category->priv->title)
+		g_free (category->priv->title);
+	if (category->priv->lessons)
+		g_list_free_full (category->priv->lessons, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_category_parent_class)->finalize (object);
 }
@@ -75,49 +74,44 @@ canvas_category_new (void)
 const gchar*
 canvas_category_get_title (CanvasCategory* category)
 {
-	return CANVAS_CATEGORY_PRIVATE(category)->title;
+	return category->priv->title;
 }
 
 void
 canvas_category_set_title (CanvasCategory* category,
                            const gchar *title)
 {
-	CanvasCategoryPrivate* priv = CANVAS_CATEGORY_PRIVATE(category);
-
-	if (priv->title)
-		g_free (priv->title);
-	priv->title = g_strdup (title);
+	if (category->priv->title)
+		g_free (category->priv->title);
+	category->priv->title = g_strdup (title);
 }
 
 guint
 canvas_category_get_lessons_length (CanvasCategory* category)
 {
-	return g_list_length (CANVAS_CATEGORY_PRIVATE(category)->lessons);
+	return g_list_length (category->priv->lessons);
 }
 
 void
 canvas_category_add_lesson (CanvasCategory* category,
-                             CanvasLesson* lesson)
+                            CanvasLesson* lesson)
 {
 	g_return_if_fail (CANVAS_IS_LESSON (lesson));
 
-	CanvasCategoryPrivate* priv = CANVAS_CATEGORY_PRIVATE(category);
-	priv->lessons = g_list_append (priv->lessons, lesson);
+	category->priv->lessons = g_list_append (category->priv->lessons, lesson);
 }
 
 void
 canvas_category_remove_lesson (CanvasCategory* category,
                                guint lesson)
 {
-	CanvasCategoryPrivate* priv = CANVAS_CATEGORY_PRIVATE(category);
-
-	GList* nth_link = g_list_nth (priv->lessons, lesson);
+	GList* nth_link = g_list_nth (category->priv->lessons, lesson);
 	g_object_unref (nth_link->data);
-	priv->lessons = g_list_delete_link (priv->lessons, nth_link);
+	category->priv->lessons = g_list_delete_link (category->priv->lessons, nth_link);
 }
 
 GList*
 canvas_category_get_lessons (CanvasCategory* category)
 {
-	return g_list_copy (CANVAS_CATEGORY_PRIVATE(category)->lessons);
+	return g_list_copy (category->priv->lessons);
 }

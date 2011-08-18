@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonTestPrivate CanvasLessonTestPrivate;
 struct _CanvasLessonTestPrivate
 {
 	gchar* directions;
@@ -35,18 +34,19 @@ G_DEFINE_TYPE (CanvasLessonTest, canvas_lesson_test, CANVAS_TYPE_LESSON_ELEMENT)
 static void
 canvas_lesson_test_init (CanvasLessonTest *object)
 {
-	CanvasLessonTestPrivate* priv = CANVAS_LESSON_TEST_PRIVATE(object);
-	priv->directions = g_strdup ("");
-	priv->explain = FALSE;
+	object->priv = CANVAS_LESSON_TEST_PRIVATE (object);
+
+	object->priv->directions = g_strdup ("");
+	object->priv->explain = FALSE;
 }
 
 static void
 canvas_lesson_test_finalize (GObject *object)
 {
-	CanvasLessonTestPrivate* priv = CANVAS_LESSON_TEST_PRIVATE(object);
+	CanvasLessonTest* test = CANVAS_LESSON_TEST (object);
 
-	if (priv->directions)
-		g_free (priv->directions);
+	if (test->priv->directions)
+		g_free (test->priv->directions);
 
 	G_OBJECT_CLASS (canvas_lesson_test_parent_class)->finalize (object);
 }
@@ -66,33 +66,31 @@ canvas_lesson_test_class_init (CanvasLessonTestClass *klass)
 CanvasLessonTest*
 canvas_lesson_test_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_TEST, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_TEST, NULL);
 }
 
 const gchar*
 canvas_lesson_test_get_directions (CanvasLessonTest* test)
 {
-	return CANVAS_LESSON_TEST_PRIVATE(test)->directions;
+	return test->priv->directions;
 }
 
 void
 canvas_lesson_test_set_directions (CanvasLessonTest* test, const gchar* directions)
 {
-	CanvasLessonTestPrivate* priv = CANVAS_LESSON_TEST_PRIVATE(test);
-
-	if (priv->directions)
-		g_free (priv->directions);
-	priv->directions = g_strdup (directions);
+	if (test->priv->directions)
+		g_free (test->priv->directions);
+	test->priv->directions = g_strdup (directions);
 }
 
 gboolean
 canvas_lesson_test_get_explain (CanvasLessonTest* test)
 {
-	return CANVAS_LESSON_TEST_PRIVATE(test)->explain;
+	return test->priv->explain;
 }
 
 void
 canvas_lesson_test_set_explain (CanvasLessonTest* test, gboolean explain)
 {
-	CANVAS_LESSON_TEST_PRIVATE(test)->explain = explain;
+	test->priv->explain = explain;
 }

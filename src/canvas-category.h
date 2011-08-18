@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_CATEGORY_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_CATEGORY))
 #define CANVAS_CATEGORY_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_CATEGORY, CanvasCategoryClass))
 
+typedef struct _CanvasCategoryPrivate CanvasCategoryPrivate;
 typedef struct _CanvasCategoryClass CanvasCategoryClass;
 typedef struct _CanvasCategory CanvasCategory;
 
@@ -42,6 +43,8 @@ struct _CanvasCategoryClass
 struct _CanvasCategory
 {
 	CanvasObject parent_instance;
+
+	CanvasCategoryPrivate* priv;
 };
 
 GType canvas_category_get_type (void) G_GNUC_CONST;

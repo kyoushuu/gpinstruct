@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_TEST_MULTI_CHOICE_PAGE_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_PAGE))
 #define CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_PAGE, CanvasLessonTestMultiChoicePageClass))
 
+typedef struct _CanvasLessonTestMultiChoicePagePrivate CanvasLessonTestMultiChoicePagePrivate;
 typedef struct _CanvasLessonTestMultiChoicePageClass CanvasLessonTestMultiChoicePageClass;
 typedef struct _CanvasLessonTestMultiChoicePage CanvasLessonTestMultiChoicePage;
 
@@ -42,6 +43,8 @@ struct _CanvasLessonTestMultiChoicePageClass
 struct _CanvasLessonTestMultiChoicePage
 {
 	CanvasLessonViewPage parent_instance;
+
+	CanvasLessonTestMultiChoicePagePrivate* priv;
 };
 
 GType canvas_lesson_test_multi_choice_page_get_type (void) G_GNUC_CONST;

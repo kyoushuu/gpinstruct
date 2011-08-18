@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_VIEW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_VIEW))
 #define CANVAS_LESSON_VIEW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_VIEW, CanvasLessonViewClass))
 
+typedef struct _CanvasLessonViewPrivate CanvasLessonViewPrivate;
 typedef struct _CanvasLessonViewClass CanvasLessonViewClass;
 typedef struct _CanvasLessonView CanvasLessonView;
 
@@ -46,6 +47,8 @@ struct _CanvasLessonViewClass
 struct _CanvasLessonView
 {
 	GtkDialog parent_instance;
+
+	CanvasLessonViewPrivate* priv;
 };
 
 GType canvas_lesson_view_get_type (void) G_GNUC_CONST;

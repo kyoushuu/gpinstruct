@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonTestOrderPrivate CanvasLessonTestOrderPrivate;
 struct _CanvasLessonTestOrderPrivate
 {
 	gchar* explanation;
@@ -35,22 +34,22 @@ G_DEFINE_TYPE (CanvasLessonTestOrder, canvas_lesson_test_order, CANVAS_TYPE_LESS
 static void
 canvas_lesson_test_order_init (CanvasLessonTestOrder *object)
 {
-	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(object);
+	object->priv = CANVAS_LESSON_TEST_ORDER_PRIVATE (object);
 
-	priv->explanation = g_strdup ("");
-	priv->items = NULL;
+	object->priv->explanation = g_strdup ("");
+	object->priv->items = NULL;
 }
 
 static void
 canvas_lesson_test_order_finalize (GObject *object)
 {
-	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(object);
+	CanvasLessonTestOrder* test = CANVAS_LESSON_TEST_ORDER (object);
 
-	if (priv->explanation)
-		g_free (priv->explanation);
+	if (test->priv->explanation)
+		g_free (test->priv->explanation);
 
-	if (priv->items)
-		g_list_free_full (priv->items, g_object_unref);
+	if (test->priv->items)
+		g_list_free_full (test->priv->items, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_lesson_test_order_parent_class)->finalize (object);
 }
@@ -70,7 +69,7 @@ canvas_lesson_test_order_class_init (CanvasLessonTestOrderClass *klass)
 CanvasLessonTestOrder*
 canvas_lesson_test_order_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_TEST_ORDER, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_TEST_ORDER, NULL);
 }
 
 void
@@ -78,51 +77,46 @@ canvas_lesson_test_order_add_item (CanvasLessonTestOrder* test, CanvasLessonTest
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_ORDER (test));
 
-	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(test);
-	priv->items = g_list_append (priv->items, item);
+	test->priv->items = g_list_append (test->priv->items, item);
 }
 
 void
 canvas_lesson_test_order_remove_item (CanvasLessonTestOrder* test, guint item)
 {
-	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(test);
-
-	GList* nth_link = g_list_nth (priv->items, item);
+	GList* nth_link = g_list_nth (test->priv->items, item);
 	g_object_unref (nth_link->data);
-	priv->items = g_list_delete_link (priv->items, nth_link);
+	test->priv->items = g_list_delete_link (test->priv->items, nth_link);
 }
 
 CanvasLessonTestOrderItem*
 canvas_lesson_test_order_get_item (CanvasLessonTestOrder* test, guint item)
 {
-	return g_list_nth_data (CANVAS_LESSON_TEST_ORDER_PRIVATE(test)->items, item);
+	return g_list_nth_data (test->priv->items, item);
 }
 
 GList*
 canvas_lesson_test_order_get_items (CanvasLessonTestOrder* test)
 {
-	return g_list_copy (CANVAS_LESSON_TEST_ORDER_PRIVATE(test)->items);
+	return g_list_copy (test->priv->items);
 }
 
 guint
 canvas_lesson_test_order_get_items_length (CanvasLessonTestOrder* test)
 {
-	return g_list_length (CANVAS_LESSON_TEST_ORDER_PRIVATE(test)->items);
+	return g_list_length (test->priv->items);
 }
 
 const gchar*
 canvas_lesson_test_order_get_explanation (CanvasLessonTestOrder* test)
 {
-	return CANVAS_LESSON_TEST_ORDER_PRIVATE(test)->explanation;
+	return test->priv->explanation;
 }
 
 void
 canvas_lesson_test_order_set_explanation (CanvasLessonTestOrder* test,
                                           const gchar* explanation)
 {
-	CanvasLessonTestOrderPrivate* priv = CANVAS_LESSON_TEST_ORDER_PRIVATE(test);
-
-	if (priv->explanation)
-		g_free (priv->explanation);
-	priv->explanation = g_strdup (explanation);
+	if (test->priv->explanation)
+		g_free (test->priv->explanation);
+	test->priv->explanation = g_strdup (explanation);
 }

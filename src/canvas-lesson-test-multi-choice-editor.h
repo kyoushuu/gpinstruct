@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_TEST_MULTI_CHOICE_EDITOR_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_EDITOR))
 #define CANVAS_LESSON_TEST_MULTI_CHOICE_EDITOR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_EDITOR, CanvasLessonTestMultiChoiceEditorClass))
 
+typedef struct _CanvasLessonTestMultiChoiceEditorPrivate CanvasLessonTestMultiChoiceEditorPrivate;
 typedef struct _CanvasLessonTestMultiChoiceEditorClass CanvasLessonTestMultiChoiceEditorClass;
 typedef struct _CanvasLessonTestMultiChoiceEditor CanvasLessonTestMultiChoiceEditor;
 
@@ -42,6 +43,8 @@ struct _CanvasLessonTestMultiChoiceEditorClass
 struct _CanvasLessonTestMultiChoiceEditor
 {
 	CanvasObjectEditor parent_instance;
+
+	CanvasLessonTestMultiChoiceEditorPrivate* priv;
 };
 
 GType canvas_lesson_test_multi_choice_editor_get_type (void) G_GNUC_CONST;

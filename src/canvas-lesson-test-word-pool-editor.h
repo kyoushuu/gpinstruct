@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_TEST_WORD_POOL_EDITOR_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_TEST_WORD_POOL_EDITOR))
 #define CANVAS_LESSON_TEST_WORD_POOL_EDITOR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_TEST_WORD_POOL_EDITOR, CanvasLessonTestWordPoolEditorClass))
 
+typedef struct _CanvasLessonTestWordPoolEditorPrivate CanvasLessonTestWordPoolEditorPrivate;
 typedef struct _CanvasLessonTestWordPoolEditorClass CanvasLessonTestWordPoolEditorClass;
 typedef struct _CanvasLessonTestWordPoolEditor CanvasLessonTestWordPoolEditor;
 
@@ -42,6 +43,8 @@ struct _CanvasLessonTestWordPoolEditorClass
 struct _CanvasLessonTestWordPoolEditor
 {
 	CanvasObjectEditor parent_instance;
+
+	CanvasLessonTestWordPoolEditorPrivate* priv;
 };
 
 GType canvas_lesson_test_word_pool_editor_get_type (void) G_GNUC_CONST;

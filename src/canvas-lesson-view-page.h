@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_VIEW_PAGE_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_VIEW_PAGE))
 #define CANVAS_LESSON_VIEW_PAGE_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_VIEW_PAGE, CanvasLessonViewPageClass))
 
+typedef struct _CanvasLessonViewPagePrivate CanvasLessonViewPagePrivate;
 typedef struct _CanvasLessonViewPageClass CanvasLessonViewPageClass;
 typedef struct _CanvasLessonViewPage CanvasLessonViewPage;
 
@@ -48,6 +49,8 @@ struct _CanvasLessonViewPageClass
 struct _CanvasLessonViewPage
 {
 	GtkScrolledWindow parent_instance;
+
+	CanvasLessonViewPagePrivate* priv;
 };
 
 GType canvas_lesson_view_page_get_type (void) G_GNUC_CONST;

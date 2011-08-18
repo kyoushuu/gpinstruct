@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasProjectPrivate CanvasProjectPrivate;
 struct _CanvasProjectPrivate
 {
 	gchar* title;
@@ -35,20 +34,21 @@ G_DEFINE_TYPE (CanvasProject, canvas_project, CANVAS_TYPE_OBJECT);
 static void
 canvas_project_init (CanvasProject *object)
 {
-	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(object);
-	priv->title = g_strdup ("");
-	priv->categories = NULL;
+	object->priv = CANVAS_PROJECT_PRIVATE (object);
+
+	object->priv->title = g_strdup ("");
+	object->priv->categories = NULL;
 }
 
 static void
 canvas_project_finalize (GObject *object)
 {
-	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(object);
+	CanvasProject* project = CANVAS_PROJECT (object);
 
-	if (priv->title)
-		g_free (priv->title);
-	if (priv->categories)
-		g_list_free_full (priv->categories, g_object_unref);
+	if (project->priv->title)
+		g_free (project->priv->title);
+	if (project->priv->categories)
+		g_list_free_full (project->priv->categories, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_project_parent_class)->finalize (object);
 }
@@ -68,30 +68,28 @@ canvas_project_class_init (CanvasProjectClass *klass)
 CanvasProject*
 canvas_project_new (void)
 {
-	return g_object_new(CANVAS_TYPE_PROJECT, NULL);
+	return g_object_new (CANVAS_TYPE_PROJECT, NULL);
 }
 
 const gchar*
 canvas_project_get_title (CanvasProject* project)
 {
-	return CANVAS_PROJECT_PRIVATE(project)->title;
+	return project->priv->title;
 }
 
 void
 canvas_project_set_title (CanvasProject* project,
                           const gchar *title)
 {
-	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(project);
-
-	if (priv->title)
-		g_free (priv->title);
-	priv->title = g_strdup (title);
+	if (project->priv->title)
+		g_free (project->priv->title);
+	project->priv->title = g_strdup (title);
 }
 
 guint
 canvas_project_get_categories_length (CanvasProject* project)
 {
-	return g_list_length (CANVAS_PROJECT_PRIVATE(project)->categories);
+	return g_list_length (project->priv->categories);
 }
 
 void
@@ -100,23 +98,20 @@ canvas_project_add_category (CanvasProject* project,
 {
 	g_return_if_fail (CANVAS_IS_CATEGORY (category));
 
-	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(project);
-	priv->categories = g_list_append (priv->categories, category);
+	project->priv->categories = g_list_append (project->priv->categories, category);
 }
 
 void
 canvas_project_remove_category (CanvasProject* project,
                                 guint category)
 {
-	CanvasProjectPrivate* priv = CANVAS_PROJECT_PRIVATE(project);
-
-	GList* nth_link = g_list_nth (priv->categories, category);
+	GList* nth_link = g_list_nth (project->priv->categories, category);
 	g_object_unref (nth_link->data);
-	priv->categories = g_list_delete_link (priv->categories, nth_link);
+	project->priv->categories = g_list_delete_link (project->priv->categories, nth_link);
 }
 
 GList*
 canvas_project_get_categories (CanvasProject* project)
 {
-	return g_list_copy (CANVAS_PROJECT_PRIVATE(project)->categories);
+	return g_list_copy (project->priv->categories);
 }

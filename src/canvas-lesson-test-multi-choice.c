@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonTestMultiChoicePrivate CanvasLessonTestMultiChoicePrivate;
 struct _CanvasLessonTestMultiChoicePrivate
 {
 	GList* questions;
@@ -34,17 +33,18 @@ G_DEFINE_TYPE (CanvasLessonTestMultiChoice, canvas_lesson_test_multi_choice, CAN
 static void
 canvas_lesson_test_multi_choice_init (CanvasLessonTestMultiChoice *object)
 {
-	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(object);
-	priv->questions = NULL;
+	object->priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE (object);
+
+	object->priv->questions = NULL;
 }
 
 static void
 canvas_lesson_test_multi_choice_finalize (GObject *object)
 {
-	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(object);
+	CanvasLessonTestMultiChoice* test = CANVAS_LESSON_TEST_MULTI_CHOICE (object);
 
-	if (priv->questions)
-		g_list_free_full (priv->questions, g_object_unref);
+	if (test->priv->questions)
+		g_list_free_full (test->priv->questions, g_object_unref);
 
 	G_OBJECT_CLASS (canvas_lesson_test_multi_choice_parent_class)->finalize (object);
 }
@@ -64,7 +64,7 @@ canvas_lesson_test_multi_choice_class_init (CanvasLessonTestMultiChoiceClass *kl
 CanvasLessonTestMultiChoice*
 canvas_lesson_test_multi_choice_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE, NULL);
 }
 
 void
@@ -73,29 +73,26 @@ canvas_lesson_test_multi_choice_add_question (CanvasLessonTestMultiChoice* test,
 {
 	g_return_if_fail (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (test));
 
-	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test);
-	priv->questions = g_list_append (priv->questions, question);
+	test->priv->questions = g_list_append (test->priv->questions, question);
 }
 
 void
 canvas_lesson_test_multi_choice_remove_question (CanvasLessonTestMultiChoice* test,
                                                  guint question)
 {
-	CanvasLessonTestMultiChoicePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test);
-
-	GList* nth_link = g_list_nth (priv->questions, question);
+	GList* nth_link = g_list_nth (test->priv->questions, question);
 	g_object_unref (nth_link->data);
-	priv->questions = g_list_delete_link (priv->questions, nth_link);
+	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
 }
 
 GList*
 canvas_lesson_test_multi_choice_get_questions (CanvasLessonTestMultiChoice* test)
 {
-	return g_list_copy (CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test)->questions);
+	return g_list_copy (test->priv->questions);
 }
 
 guint
 canvas_lesson_test_multi_choice_get_questions_length (CanvasLessonTestMultiChoice* test)
 {
-	return g_list_length (CANVAS_LESSON_TEST_MULTI_CHOICE_PRIVATE(test)->questions);
+	return g_list_length (test->priv->questions);
 }

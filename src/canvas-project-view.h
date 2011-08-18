@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_PROJECT_VIEW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_PROJECT_VIEW))
 #define CANVAS_PROJECT_VIEW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_PROJECT_VIEW, CanvasProjectViewClass))
 
+typedef struct _CanvasProjectViewPrivate CanvasProjectViewPrivate;
 typedef struct _CanvasProjectViewClass CanvasProjectViewClass;
 typedef struct _CanvasProjectView CanvasProjectView;
 
@@ -42,6 +43,8 @@ struct _CanvasProjectViewClass
 struct _CanvasProjectView
 {
 	GtkWindow parent_instance;
+
+	CanvasProjectViewPrivate* priv;
 };
 
 GType canvas_project_view_get_type (void) G_GNUC_CONST;

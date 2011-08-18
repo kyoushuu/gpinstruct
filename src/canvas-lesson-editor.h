@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_EDITOR_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_EDITOR))
 #define CANVAS_LESSON_EDITOR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_EDITOR, CanvasLessonEditorClass))
 
+typedef struct _CanvasLessonEditorPrivate CanvasLessonEditorPrivate;
 typedef struct _CanvasLessonEditorClass CanvasLessonEditorClass;
 typedef struct _CanvasLessonEditor CanvasLessonEditor;
 
@@ -42,6 +43,8 @@ struct _CanvasLessonEditorClass
 struct _CanvasLessonEditor
 {
 	CanvasObjectEditor parent_instance;
+
+	CanvasLessonEditorPrivate* priv;
 };
 
 GType canvas_lesson_editor_get_type (void) G_GNUC_CONST;

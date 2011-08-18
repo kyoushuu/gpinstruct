@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_MESSAGE_POOL_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_MESSAGE_POOL))
 #define CANVAS_MESSAGE_POOL_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_MESSAGE_POOL, CanvasMessagePoolClass))
 
+typedef struct _CanvasMessagePoolPrivate CanvasMessagePoolPrivate;
 typedef struct _CanvasMessagePoolClass CanvasMessagePoolClass;
 typedef struct _CanvasMessagePool CanvasMessagePool;
 
@@ -42,6 +43,8 @@ struct _CanvasMessagePoolClass
 struct _CanvasMessagePool
 {
 	CanvasObject parent_instance;
+
+	CanvasMessagePoolPrivate* priv;
 };
 
 typedef enum

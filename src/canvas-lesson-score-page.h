@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 #define CANVAS_IS_LESSON_SCORE_PAGE_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_SCORE_PAGE))
 #define CANVAS_LESSON_SCORE_PAGE_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_SCORE_PAGE, CanvasLessonScorePageClass))
 
+typedef struct _CanvasLessonScorePagePrivate CanvasLessonScorePagePrivate;
 typedef struct _CanvasLessonScorePageClass CanvasLessonScorePageClass;
 typedef struct _CanvasLessonScorePage CanvasLessonScorePage;
 
@@ -42,6 +43,8 @@ struct _CanvasLessonScorePageClass
 struct _CanvasLessonScorePage
 {
 	CanvasLessonViewPage parent_instance;
+
+	CanvasLessonScorePagePrivate* priv;
 };
 
 GType canvas_lesson_score_page_get_type (void) G_GNUC_CONST;

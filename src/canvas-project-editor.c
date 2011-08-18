@@ -25,7 +25,6 @@
 #include "canvas.h"
 #include "canvas-editor.h"
 
-typedef struct _CanvasProjectEditorPrivate CanvasProjectEditorPrivate;
 struct _CanvasProjectEditorPrivate
 {
 	CanvasEditorWindow* window;
@@ -44,15 +43,15 @@ G_DEFINE_TYPE (CanvasProjectEditor, canvas_project_editor, CANVAS_TYPE_OBJECT_ED
 static void
 canvas_project_editor_init (CanvasProjectEditor *object)
 {
-	CanvasProjectEditorPrivate* priv = CANVAS_PROJECT_EDITOR_PRIVATE (object);
+	object->priv = CANVAS_PROJECT_EDITOR_PRIVATE (object);
 
-	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), priv->title_label,
+	object->priv->title_label = gtk_label_new (_("Title:"));
+	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
+	object->priv->title_entry = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (object), object->priv->title_entry,
 	                  1, 2, 0, 1,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
@@ -83,12 +82,11 @@ title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
 	CanvasProjectEditor* editor = CANVAS_PROJECT_EDITOR (user_data);
-	CanvasProjectEditorPrivate* priv = CANVAS_PROJECT_EDITOR_PRIVATE (editor);
 
-	canvas_project_set_title (priv->project,
-	                          gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
-	canvas_editor_window_set_modified (priv->window, TRUE);
-	canvas_editor_window_update_tree_store (priv->window, (gpointer)priv->project);
+	canvas_project_set_title (editor->priv->project,
+	                          gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
+	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	canvas_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->project);
 }
 
 
@@ -97,14 +95,13 @@ canvas_project_editor_new (CanvasEditorWindow* window,
                            CanvasProject* project)
 {
 	CanvasProjectEditor* editor = g_object_new (CANVAS_TYPE_PROJECT_EDITOR, NULL);
-	CanvasProjectEditorPrivate* priv = CANVAS_PROJECT_EDITOR_PRIVATE (editor);
 
-	priv->window = window;
-	priv->project = project;
+	editor->priv->window = window;
+	editor->priv->project = project;
 
-	gtk_entry_set_text (GTK_ENTRY (priv->title_entry),
+	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
 	                    canvas_project_get_title (project));
-	g_signal_connect (priv->title_entry, "activate",
+	g_signal_connect (editor->priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
 	return editor;

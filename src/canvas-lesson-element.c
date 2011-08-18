@@ -19,7 +19,6 @@
 
 #include "canvas.h"
 
-typedef struct _CanvasLessonElementPrivate CanvasLessonElementPrivate;
 struct _CanvasLessonElementPrivate
 {
 	gchar* title;
@@ -34,17 +33,18 @@ G_DEFINE_TYPE (CanvasLessonElement, canvas_lesson_element, CANVAS_TYPE_OBJECT);
 static void
 canvas_lesson_element_init (CanvasLessonElement *object)
 {
-	CanvasLessonElementPrivate* priv = CANVAS_LESSON_ELEMENT_PRIVATE(object);
-	priv->title = g_strdup ("");
+	object->priv = CANVAS_LESSON_ELEMENT_PRIVATE (object);
+
+	object->priv->title = g_strdup ("");
 }
 
 static void
 canvas_lesson_element_finalize (GObject *object)
 {
-	CanvasLessonElementPrivate* priv = CANVAS_LESSON_ELEMENT_PRIVATE(object);
+	CanvasLessonElement* element = CANVAS_LESSON_ELEMENT (object);
 
-	if (priv->title)
-		g_free (priv->title);
+	if (element->priv->title)
+		g_free (element->priv->title);
 
 	G_OBJECT_CLASS (canvas_lesson_element_parent_class)->finalize (object);
 }
@@ -64,21 +64,19 @@ canvas_lesson_element_class_init (CanvasLessonElementClass *klass)
 CanvasLessonElement*
 canvas_lesson_element_new (void)
 {
-	return g_object_new(CANVAS_TYPE_LESSON_ELEMENT, NULL);
+	return g_object_new (CANVAS_TYPE_LESSON_ELEMENT, NULL);
 }
 
 const gchar*
 canvas_lesson_element_get_title (CanvasLessonElement* element)
 {
-	return CANVAS_LESSON_ELEMENT_PRIVATE(element)->title;
+	return element->priv->title;
 }
 
 void
 canvas_lesson_element_set_title (CanvasLessonElement* element, const gchar *title)
 {
-	CanvasLessonElementPrivate* priv = CANVAS_LESSON_ELEMENT_PRIVATE(element);
-
-	if (priv->title)
-		g_free (priv->title);
-	priv->title = g_strdup (title);
+	if (element->priv->title)
+		g_free (element->priv->title);
+	element->priv->title = g_strdup (title);
 }
