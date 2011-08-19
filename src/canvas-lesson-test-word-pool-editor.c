@@ -107,7 +107,7 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 
 	CanvasObject* object;
 	GtkTreeIter iter;
-	GtkWidget *scrolled_window, *text_view, *explanation_view, *answer_spin;
+	GtkWidget *scrolled_window, *text_view, *explanation_view, *answer_combobox;
 
 	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (editor->priv->questions_store), &iter, path))
 	{
@@ -162,14 +162,19 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 
 			if (choices_num)
 			{
-				answer_spin = gtk_spin_button_new_with_range (1, choices_num, 1);
-				gtk_spin_button_set_value (GTK_SPIN_BUTTON (answer_spin),
-				                           canvas_lesson_test_word_pool_question_get_answer (question)+1);
+				answer_combobox = gtk_combo_box_new_with_model (GTK_TREE_MODEL (editor->priv->choices_store));
+				GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
+				gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (answer_combobox), renderer, TRUE);
+				gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (answer_combobox), renderer,
+				                                "text", TITLE_COLUMN,
+				                                NULL);
+				gtk_combo_box_set_active (GTK_COMBO_BOX (answer_combobox),
+				                          canvas_lesson_test_word_pool_question_get_answer (question));
 				gtk_box_pack_start (GTK_BOX (content_area),
 				                    gtk_label_new (_("Answer:")),
 				                    FALSE, TRUE, 0);
 				gtk_box_pack_start (GTK_BOX (content_area),
-				                    answer_spin,
+				                    answer_combobox,
 				                    FALSE, TRUE, 0);
 			}
 
@@ -192,7 +197,7 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 
 				if (choices_num)
 					canvas_lesson_test_word_pool_question_set_answer (question,
-					                                                  gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (answer_spin))-1);
+					                                                  gtk_combo_box_get_active (GTK_COMBO_BOX (answer_combobox)));
 
 				update_questions_tree_view (CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data));
 				canvas_editor_window_set_modified (editor->priv->window, TRUE);
