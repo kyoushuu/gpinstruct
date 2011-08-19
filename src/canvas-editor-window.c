@@ -1092,7 +1092,6 @@ canvas_editor_window_close_current_file (CanvasEditorWindow* window)
 	if (window->priv->project == NULL)
 		return FALSE;
 
-	gboolean save = TRUE;
 	if (canvas_editor_window_get_modified (window))
 	{
 		GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW (window),
@@ -1109,15 +1108,12 @@ canvas_editor_window_close_current_file (CanvasEditorWindow* window)
 		gint response = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
 
-		if (response == GTK_RESPONSE_NO)
-			save = FALSE;
+		if (response == GTK_RESPONSE_YES)
+		{
+			if (canvas_editor_window_save_file (window) == FALSE)
+				return FALSE;
+		}
 		else if (response == GTK_RESPONSE_CANCEL)
-			return FALSE;
-	}
-
-	if (save)
-	{
-		if (canvas_editor_window_save_file (window) == FALSE)
 			return FALSE;
 	}
 
