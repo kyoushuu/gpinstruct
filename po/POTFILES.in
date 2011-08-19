@@ -1,3 +1,53 @@
 # List of source files containing translatable strings.
 
+# Canvas Library
+src/canvas.c
+src/canvas-category.c
+src/canvas-lesson.c
+src/canvas-lesson-discussion.c
+src/canvas-lesson-element.c
+src/canvas-lesson-reading.c
+src/canvas-lesson-test.c
+src/canvas-lesson-test-multi-choice.c
+src/canvas-lesson-test-multi-choice-question.c
+src/canvas-lesson-test-order.c
+src/canvas-lesson-test-order-item.c
+src/canvas-lesson-test-word-pool.c
+src/canvas-lesson-test-word-pool-question.c
+src/canvas-object.c
+src/canvas-parser.c
+src/canvas-project.c
+
+# Canvas Viewer
 src/main.c
+
+# Canvas Viewer Library
+src/canvas-lesson-directions-page.c
+src/canvas-lesson-discussion-page.c
+src/canvas-lesson-reading-page.c
+src/canvas-lesson-score.c
+src/canvas-lesson-score-page.c
+src/canvas-lesson-test-multi-choice-page.c
+src/canvas-lesson-test-order-page.c
+src/canvas-lesson-test-word-pool-page.c
+src/canvas-lesson-view.c
+src/canvas-lesson-view-page.c
+src/canvas-message-pool.c
+src/canvas-project-view.c
+src/canvas-view.c
+
+# Canvas Editor
+src/canvas-editor.c
+
+# Canvas Editor Library
+src/canvas-editor-window.c
+src/canvas-category-editor.c
+src/canvas-lesson-discussion-editor.c
+src/canvas-lesson-editor.c
+src/canvas-lesson-reading-editor.c
+src/canvas-lesson-test-multi-choice-editor.c
+src/canvas-lesson-test-order-editor.c
+src/canvas-lesson-test-word-pool-editor.c
+src/canvas-object-editor.c
+src/canvas-project-editor.c
+
