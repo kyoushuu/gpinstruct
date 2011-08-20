@@ -133,7 +133,8 @@ canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool, Canvas
 		                                  CANVAS_MESSAGE_TYPE_NONE);
 	}
 
-	view->priv->log = g_object_ref (log);
+	if (log)
+		view->priv->log = g_object_ref (log);
 
 	view->priv->project = g_object_ref (project);
 	gtk_window_set_default_size (GTK_WINDOW (view), 600, 400);

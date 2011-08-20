@@ -255,11 +255,13 @@ canvas_lesson_view_next (CanvasLessonView* view, gpointer user_data)
 {
 	CanvasLessonViewPage* current_page = view->priv->current_page_object;
 
-	canvas_log_timer_stop (view->priv->log);
+	if (view->priv->log)
+		canvas_log_timer_stop (view->priv->log);
 
 	gboolean show_next = !canvas_lesson_view_page_show_next (view->priv->current_page_object);
 
-	canvas_log_timer_start (view->priv->log);
+	if (view->priv->log)
+		canvas_log_timer_start (view->priv->log);
 
 	CanvasMessageType message = canvas_lesson_view_page_get_message (current_page);
 
@@ -379,8 +381,10 @@ canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool, CanvasLog
 	gboolean single_score;
 
 	view->priv->lesson = g_object_ref (lesson);
-	view->priv->pool = g_object_ref (pool);
-	view->priv->log = g_object_ref (log);
+	if (pool)
+		view->priv->pool = g_object_ref (pool);
+	if (log)
+		view->priv->log = g_object_ref (log);
 
 	gchar* title;
 	const gchar* lesson_title = canvas_lesson_get_title (lesson);
