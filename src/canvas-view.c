@@ -32,7 +32,6 @@ random_array (guint length)
 	for (i=0; i<length; i++)
 		array_temp[i] = i;
 
-	g_random_set_seed (time (NULL));
 	for (i=0; i<length; i++)
 	{
 		curr_length = length-i;
