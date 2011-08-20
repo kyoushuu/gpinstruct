@@ -77,6 +77,7 @@ PKG_CHECK_MODULES(GTK,gtk+-3.0,,[PKG_CHECK_MODULES(GTK,gtk+-2.0)])
 
 AC_OUTPUT([
 Makefile
-src/Makefile
-po/Makefile.in
-])
+canvas/Makefile
+canvas-view/Makefile
+canvas-editor/Makefile
+po/Makefile.in])
