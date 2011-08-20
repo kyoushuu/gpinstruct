@@ -88,7 +88,7 @@ canvas_parser_open (CanvasParser* parser,
 
 		if (current_node &&
 		    current_node->name &&
-		    xmlStrEqual (current_node->name, BAD_CAST "canvas-project"))
+		    xmlStrEqual (current_node->name, BAD_CAST "project"))
 		{
 			CanvasProject* project = canvas_project_new ();
 
@@ -508,8 +508,12 @@ canvas_parser_save (CanvasParser* parser,
 
 	xmlNodePtr current_node;
 
-	current_node = xmlNewNode (NULL, BAD_CAST "canvas-project");
+	current_node = xmlNewNode (NULL, BAD_CAST "project");
 	xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_project_get_title (project));
+
+	xmlSetNs (current_node, xmlNewNs (current_node,
+	                                  BAD_CAST "http://kyoushuu.users.sourceforge.net/project_canvas",
+	                                  BAD_CAST "canvas"));
 
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
 	xmlDocSetRootElement (doc, current_node);
