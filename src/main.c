@@ -68,7 +68,9 @@ main (int argc, char *argv[])
 		if (message_pool)
 			canvas_message_pool_load_from_file (message_pool, "messages.ini");
 
-		GtkWidget* window = canvas_project_view_new (project, message_pool);
+		CanvasLog* log = canvas_log_new ();
+
+		GtkWidget* window = canvas_project_view_new (project, message_pool, log);
 
 		g_object_unref (message_pool);
 
@@ -81,6 +83,11 @@ main (int argc, char *argv[])
 
 			gtk_main ();
 		}
+
+		if (log)
+			canvas_log_save (log, "default-project-log.xml", NULL);
+
+		g_object_unref (log);
 
 		g_object_unref (project);
 	}

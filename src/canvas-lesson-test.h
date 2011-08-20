@@ -53,6 +53,8 @@ const gchar* canvas_lesson_test_get_directions (CanvasLessonTest* test);
 void canvas_lesson_test_set_directions (CanvasLessonTest* test, const gchar* directions);
 gboolean canvas_lesson_test_get_explain (CanvasLessonTest* test);
 void canvas_lesson_test_set_explain (CanvasLessonTest* test, gboolean explain);
+const gchar* canvas_lesson_test_get_id (CanvasLessonTest* test);
+void canvas_lesson_test_set_id (CanvasLessonTest* test, const gchar* id);
 
 G_END_DECLS
 

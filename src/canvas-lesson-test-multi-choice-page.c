@@ -28,6 +28,7 @@ struct _CanvasLessonTestMultiChoicePagePrivate
 {
 	CanvasLessonTestMultiChoice* test;
 	CanvasLessonScore* score;
+	CanvasLog* log;
 
 	guint curr_question;
 	guint* questions;
@@ -128,6 +129,7 @@ canvas_lesson_test_multi_choice_page_init (CanvasLessonTestMultiChoicePage *obje
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;
+	object->priv->log = NULL;
 	object->priv->curr_question = 0;
 	object->priv->questions = NULL;
 	object->priv->choices = NULL;
@@ -172,7 +174,8 @@ page_show_next (CanvasLessonTestMultiChoicePage* page, gpointer user_data)
 	canvas_lesson_score_increase_total (page->priv->score);
 
 	GList* questions = canvas_lesson_test_multi_choice_get_questions (page->priv->test);
-	CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (g_list_nth_data (questions, page->priv->questions[page->priv->curr_question]));
+	guint question_id = page->priv->questions[page->priv->curr_question];
+	CanvasLessonTestMultiChoiceQuestion* question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (g_list_nth_data (questions, question_id));
 	guint questions_num = g_list_length (questions);
 	g_list_free (questions);
 
@@ -189,11 +192,28 @@ page_show_next (CanvasLessonTestMultiChoicePage* page, gpointer user_data)
 		}
 	}
 
+	GList* choice_buttons = page->priv->choice_buttons;
+	guint choice = -1;
+
+	for (i=0; choice_buttons; i++, choice_buttons = choice_buttons->next)
+	{
+		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (choice_buttons->data)))
+		{
+			choice = i;
+			break;
+		}
+	}
+
 	if (correct_choice >= 0)
 	{
 		gboolean explain = canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (page->priv->test));
 
-		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (g_list_nth_data (page->priv->choice_buttons, correct_choice))))
+		if (page->priv->log)
+			canvas_log_add (page->priv->log,
+			                CANVAS_LESSON_TEST (page->priv->test),
+			                question_id, page->priv->choices[choice]);
+
+		if (choice == correct_choice)
 		{
 			canvas_lesson_score_increase_score (page->priv->score);
 			if (explain)
@@ -223,7 +243,8 @@ page_show_next (CanvasLessonTestMultiChoicePage* page, gpointer user_data)
 
 CanvasLessonTestMultiChoicePage*
 canvas_lesson_test_multi_choice_page_new (CanvasLessonTestMultiChoice* test,
-                                          CanvasLessonScore* score)
+                                          CanvasLessonScore* score,
+                                          CanvasLog* log)
 {
 	CanvasLessonTestMultiChoicePage* page = g_object_new (CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_PAGE, NULL);
 
@@ -236,6 +257,7 @@ canvas_lesson_test_multi_choice_page_new (CanvasLessonTestMultiChoice* test,
 
 	page->priv->test = test;
 	page->priv->score = score;
+	page->priv->log = log;
 
 	page->priv->vbox = gtk_vbox_new (FALSE, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), page->priv->vbox);

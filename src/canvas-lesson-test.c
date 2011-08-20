@@ -23,9 +23,29 @@ struct _CanvasLessonTestPrivate
 {
 	gchar* directions;
 	gboolean explain;
+	gchar* id;
 };
 
 #define CANVAS_LESSON_TEST_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_TEST, CanvasLessonTestPrivate))
+
+
+
+gchar*
+create_id ()
+{
+	static const gint length = 8;
+	static const char lookup_table[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+	static const gint lookup_table_elements = G_N_ELEMENTS (lookup_table);
+
+	gchar* id = g_new (gchar, length+1);
+	id[length] = 0;
+
+    int i;
+    for (i=0; i<length; i++)
+		id[i] = lookup_table[g_random_int_range (0, lookup_table_elements)];
+
+	return id;
+}
 
 
 
@@ -38,6 +58,7 @@ canvas_lesson_test_init (CanvasLessonTest *object)
 
 	object->priv->directions = g_strdup ("");
 	object->priv->explain = FALSE;
+	object->priv->id = NULL;
 }
 
 static void
@@ -47,6 +68,9 @@ canvas_lesson_test_finalize (GObject *object)
 
 	if (test->priv->directions)
 		g_free (test->priv->directions);
+
+	if (test->priv->id)
+		g_free (test->priv->id);
 
 	G_OBJECT_CLASS (canvas_lesson_test_parent_class)->finalize (object);
 }
@@ -93,4 +117,20 @@ void
 canvas_lesson_test_set_explain (CanvasLessonTest* test, gboolean explain)
 {
 	test->priv->explain = explain;
+}
+
+const gchar*
+canvas_lesson_test_get_id (CanvasLessonTest* test)
+{
+	if (test->priv->id == NULL)
+		test->priv->id = create_id ();
+	return test->priv->id;
+}
+
+void
+canvas_lesson_test_set_id (CanvasLessonTest* test, const gchar* id)
+{
+	if (test->priv->id)
+		g_free (test->priv->id);
+	test->priv->id = g_strdup (id);
 }

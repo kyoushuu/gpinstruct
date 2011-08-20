@@ -20,6 +20,7 @@
 #include "canvas-lesson-score.h"
 
 #include "canvas-message-pool.h"
+#include "canvas-log.h"
 
 #include "canvas-lesson-view-page.h"
 #include "canvas-lesson-view.h"

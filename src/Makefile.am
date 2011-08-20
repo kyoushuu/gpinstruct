@@ -110,6 +110,8 @@ libcanvas_view_la_SOURCES =  \
 	canvas-lesson-view.h \
 	canvas-lesson-view-page.c \
 	canvas-lesson-view-page.h \
+	canvas-log.h \
+	canvas-log.c \
 	canvas-message-pool.c \
 	canvas-message-pool.h \
 	canvas-project-view.c \

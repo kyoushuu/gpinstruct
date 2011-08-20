@@ -163,6 +163,13 @@ canvas_parser_open (CanvasParser* parser,
 													xmlFree (temp);
 												}
 
+												temp = xmlGetProp (current_node, BAD_CAST "id");
+												if (temp)
+												{
+													canvas_lesson_test_set_id (CANVAS_LESSON_TEST (test), (gchar*)temp);
+													xmlFree (temp);
+												}
+
 												temp = xmlGetProp (current_node, BAD_CAST "explain");
 												if (temp)
 												{
@@ -256,6 +263,13 @@ canvas_parser_open (CanvasParser* parser,
 													xmlFree (temp);
 												}
 
+												temp = xmlGetProp (current_node, BAD_CAST "id");
+												if (temp)
+												{
+													canvas_lesson_test_set_id (CANVAS_LESSON_TEST (test), (gchar*)temp);
+													xmlFree (temp);
+												}
+
 												temp = xmlGetProp (current_node, BAD_CAST "explain");
 												if (temp)
 												{
@@ -346,6 +360,13 @@ canvas_parser_open (CanvasParser* parser,
 												if (temp)
 												{
 													canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (test), (gchar*)temp);
+													xmlFree (temp);
+												}
+
+												temp = xmlGetProp (current_node, BAD_CAST "id");
+												if (temp)
+												{
+													canvas_lesson_test_set_id (CANVAS_LESSON_TEST (test), (gchar*)temp);
 													xmlFree (temp);
 												}
 
@@ -574,6 +595,7 @@ canvas_parser_save (CanvasParser* parser,
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "test-multi-choice", NULL);
 					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_element_get_title (curr_lesson_element));
+					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST canvas_lesson_test_get_id (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)));
 					xmlSetProp (current_node, BAD_CAST "explain", canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice))?BAD_CAST "true":BAD_CAST "false");
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "directions",
@@ -640,6 +662,7 @@ canvas_parser_save (CanvasParser* parser,
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "test-word-pool", NULL);
 					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_element_get_title (curr_lesson_element));
+					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST canvas_lesson_test_get_id (CANVAS_LESSON_TEST (curr_lesson_test_word_pool)));
 					xmlSetProp (current_node, BAD_CAST "explain", canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_word_pool))?BAD_CAST "true":BAD_CAST "false");
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "directions",
@@ -706,6 +729,7 @@ canvas_parser_save (CanvasParser* parser,
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "test-order", NULL);
 					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_element_get_title (curr_lesson_element));
+					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST canvas_lesson_test_get_id (CANVAS_LESSON_TEST (curr_lesson_test_order)));
 					xmlSetProp (current_node, BAD_CAST "explain", canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_order))?BAD_CAST "true":BAD_CAST "false");
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "directions",

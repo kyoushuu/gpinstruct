@@ -27,6 +27,7 @@ struct _CanvasLessonTestOrderPagePrivate
 {
 	CanvasLessonTestOrder* test;
 	CanvasLessonScore* score;
+	CanvasLog* log;
 
 	guint* items;
 
@@ -68,6 +69,7 @@ canvas_lesson_test_order_page_init (CanvasLessonTestOrderPage *object)
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;
+	object->priv->log = NULL;
 	object->priv->items = NULL;
 	object->priv->store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_UINT);
 }
@@ -105,18 +107,26 @@ page_show_next (CanvasLessonTestOrderPage* page, gpointer user_data)
 	guint questions_num = 0, wrong = 0, position;
 
 	if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (page->priv->store), &iter))
-		do
 	{
-		canvas_lesson_score_increase_total (page->priv->score);
+		do
+		{
+			canvas_lesson_score_increase_total (page->priv->score);
 
-		gtk_tree_model_get (GTK_TREE_MODEL (page->priv->store), &iter, 1, &position, -1);
-		if (questions_num == position)
-			canvas_lesson_score_increase_score (page->priv->score);
-		else
-			wrong++;
+			gtk_tree_model_get (GTK_TREE_MODEL (page->priv->store), &iter, 1, &position, -1);
 
-		questions_num++;
-	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (page->priv->store), &iter));
+			if (page->priv->log)
+				canvas_log_add (page->priv->log,
+					            CANVAS_LESSON_TEST (page->priv->test),
+					            position, questions_num);
+
+			if (questions_num == position)
+				canvas_lesson_score_increase_score (page->priv->score);
+			else
+				wrong++;
+
+			questions_num++;
+		} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (page->priv->store), &iter));
+	}
 
 	if (canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (page->priv->test)))
 	{
@@ -144,7 +154,9 @@ page_show_next (CanvasLessonTestOrderPage* page, gpointer user_data)
 
 
 CanvasLessonTestOrderPage*
-canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test, CanvasLessonScore* score)
+canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test,
+                                   CanvasLessonScore* score,
+                                   CanvasLog* log)
 {
 	CanvasLessonTestOrderPage* page = g_object_new (CANVAS_TYPE_LESSON_TEST_ORDER_PAGE, NULL);
 
@@ -157,6 +169,7 @@ canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test, CanvasLessonScor
 
 	page->priv->test = test;
 	page->priv->score = score;
+	page->priv->log = log;
 
 	GtkWidget* treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (page->priv->store));
 	gtk_tree_view_set_reorderable (GTK_TREE_VIEW (treeview), TRUE);

@@ -485,7 +485,7 @@ view_execute_action (GtkAction *action,
 	if (message_pool)
 		canvas_message_pool_load_from_file (message_pool, "messages.ini");
 
-	GtkWidget* preview_window = canvas_project_view_new (window->priv->project, message_pool);
+	GtkWidget* preview_window = canvas_project_view_new (window->priv->project, message_pool, NULL);
 
 	g_object_unref (message_pool);
 

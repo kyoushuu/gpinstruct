@@ -33,6 +33,7 @@ struct _CanvasLessonViewPrivate
 {
 	CanvasLesson* lesson;
 	CanvasMessagePool* pool;
+	CanvasLog* log;
 
 	gint current_page;
 	CanvasLessonViewPage* current_page_object;
@@ -241,7 +242,10 @@ canvas_lesson_view_finalize (GObject *object)
 		g_object_unref (view->priv->lesson);
 
 	if (view->priv->pool)
-		g_object_unref (view->priv->pool);	
+		g_object_unref (view->priv->pool);
+
+	if (view->priv->log)
+		g_object_unref (view->priv->log);	
 
 	G_OBJECT_CLASS (canvas_lesson_view_parent_class)->finalize (object);
 }
@@ -251,7 +255,11 @@ canvas_lesson_view_next (CanvasLessonView* view, gpointer user_data)
 {
 	CanvasLessonViewPage* current_page = view->priv->current_page_object;
 
+	canvas_log_timer_stop (view->priv->log);
+
 	gboolean show_next = !canvas_lesson_view_page_show_next (view->priv->current_page_object);
+
+	canvas_log_timer_start (view->priv->log);
 
 	CanvasMessageType message = canvas_lesson_view_page_get_message (current_page);
 
@@ -355,7 +363,7 @@ canvas_lesson_view_class_init (CanvasLessonViewClass *klass)
 
 
 CanvasLessonView*
-canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool)
+canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool, CanvasLog* log)
 {
 	CanvasLessonView* view = g_object_new (CANVAS_TYPE_LESSON_VIEW, NULL);
 
@@ -372,6 +380,7 @@ canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool)
 
 	view->priv->lesson = g_object_ref (lesson);
 	view->priv->pool = g_object_ref (pool);
+	view->priv->log = g_object_ref (log);
 
 	gchar* title;
 	const gchar* lesson_title = canvas_lesson_get_title (lesson);
@@ -438,7 +447,7 @@ canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool)
 					                                   canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_element)));
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (directions_page));
 
-				CanvasLessonTestMultiChoicePage* question_page = canvas_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score);
+				CanvasLessonTestMultiChoicePage* question_page = canvas_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, view->priv->log);
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (CANVAS_IS_LESSON_TEST_WORD_POOL (curr_element))
@@ -450,7 +459,7 @@ canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool)
 					                                   canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_element)));
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (directions_page));
 
-				CanvasLessonTestWordPoolPage* question_page = canvas_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score);
+				CanvasLessonTestWordPoolPage* question_page = canvas_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, view->priv->log);
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (CANVAS_IS_LESSON_TEST_ORDER (curr_element))
@@ -462,7 +471,7 @@ canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool)
 					                                   canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_element)));
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (directions_page));
 
-				CanvasLessonTestOrderPage* question_page = canvas_lesson_test_order_page_new (curr_test_order, curr_score);
+				CanvasLessonTestOrderPage* question_page = canvas_lesson_test_order_page_new (curr_test_order, curr_score, view->priv->log);
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (question_page));
 			}
 

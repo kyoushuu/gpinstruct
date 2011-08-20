@@ -26,6 +26,7 @@ struct _CanvasProjectViewPrivate
 {
 	CanvasProject* project;
 	CanvasMessagePool* pool;
+	CanvasLog* log;
 
 	GHashTable* hashtable;
 };
@@ -91,6 +92,9 @@ canvas_project_view_finalize (GObject *object)
 	if (view->priv->pool)
 		g_object_unref (view->priv->pool);
 
+	if (view->priv->log)
+		g_object_unref (view->priv->log);
+
 	G_OBJECT_CLASS (canvas_project_view_parent_class)->finalize (object);
 }
 
@@ -107,7 +111,7 @@ canvas_project_view_class_init (CanvasProjectViewClass *klass)
 
 
 GtkWidget*
-canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
+canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool, CanvasLog* log)
 {
 	g_return_val_if_fail (project != NULL, NULL);
 
@@ -128,6 +132,8 @@ canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
 		                                  CANVAS_MESSAGE_TYPE_FAIL,			"You failed the test.",
 		                                  CANVAS_MESSAGE_TYPE_NONE);
 	}
+
+	view->priv->log = g_object_ref (log);
 
 	view->priv->project = g_object_ref (project);
 	gtk_window_set_default_size (GTK_WINDOW (view), 600, 400);
@@ -183,7 +189,7 @@ canvas_project_view_new (CanvasProject* project, CanvasMessagePool* pool)
 			gtk_box_pack_start (GTK_BOX (category_vbox), lesson_button, FALSE, FALSE, 3);
 			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), view);
 
-			CanvasLessonView* lesson_view = canvas_lesson_view_new (lesson, view->priv->pool);
+			CanvasLessonView* lesson_view = canvas_lesson_view_new (lesson, view->priv->pool, view->priv->log);
 
 			g_hash_table_insert (view->priv->hashtable, lesson_button, lesson_view);
 

@@ -52,7 +52,7 @@ struct _CanvasLessonView
 };
 
 GType canvas_lesson_view_get_type (void) G_GNUC_CONST;
-CanvasLessonView* canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool);
+CanvasLessonView* canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool, CanvasLog* log);
 void canvas_lesson_view_append_page (CanvasLessonView* view, CanvasLessonViewPage* page);
 guint canvas_lesson_view_get_current_page (CanvasLessonView* view);
 void canvas_lesson_view_set_current_page (CanvasLessonView* view, guint page);

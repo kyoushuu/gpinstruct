@@ -48,7 +48,7 @@ struct _CanvasLessonTestMultiChoicePage
 };
 
 GType canvas_lesson_test_multi_choice_page_get_type (void) G_GNUC_CONST;
-CanvasLessonTestMultiChoicePage* canvas_lesson_test_multi_choice_page_new (CanvasLessonTestMultiChoice* test, CanvasLessonScore* score);
+CanvasLessonTestMultiChoicePage* canvas_lesson_test_multi_choice_page_new (CanvasLessonTestMultiChoice* test, CanvasLessonScore* score, CanvasLog* log);
 
 G_END_DECLS
 

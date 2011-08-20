@@ -28,6 +28,7 @@ struct _CanvasLessonTestWordPoolPagePrivate
 {
 	CanvasLessonTestWordPool* test;
 	CanvasLessonScore* score;
+	CanvasLog* log;
 
 	guint curr_question;
 	guint* questions;
@@ -106,6 +107,7 @@ canvas_lesson_test_word_pool_page_init (CanvasLessonTestWordPoolPage *object)
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;
+	object->priv->log = NULL;
 	object->priv->curr_question = 0;
 	object->priv->questions = NULL;
 	object->priv->choices = NULL;
@@ -150,7 +152,8 @@ page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data)
 	canvas_lesson_score_increase_total (page->priv->score);
 
 	GList* questions = canvas_lesson_test_word_pool_get_questions (page->priv->test);
-	CanvasLessonTestWordPoolQuestion* question = CANVAS_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, page->priv->questions[page->priv->curr_question]));
+	guint question_id = page->priv->questions[page->priv->curr_question];
+	CanvasLessonTestWordPoolQuestion* question = CANVAS_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, question_id));
 	guint questions_num = g_list_length (questions);
 	g_list_free (questions);
 
@@ -178,6 +181,11 @@ page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data)
 	if (correct_choice >= 0)
 	{
 		gboolean explain = canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (page->priv->test));
+
+		if (page->priv->log)
+			canvas_log_add (page->priv->log,
+				            CANVAS_LESSON_TEST (page->priv->test),
+				            question_id, page->priv->choices[selected]);
 
 		if (selected == correct_choice)
 		{
@@ -209,7 +217,8 @@ page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data)
 
 CanvasLessonTestWordPoolPage*
 canvas_lesson_test_word_pool_page_new (CanvasLessonTestWordPool* test,
-                                       CanvasLessonScore* score)
+                                       CanvasLessonScore* score,
+                                       CanvasLog* log)
 {
 	CanvasLessonTestWordPoolPage* page = g_object_new (CANVAS_TYPE_LESSON_TEST_WORD_POOL_PAGE, NULL);
 
@@ -222,6 +231,7 @@ canvas_lesson_test_word_pool_page_new (CanvasLessonTestWordPool* test,
 
 	page->priv->test = test;
 	page->priv->score = score;
+	page->priv->log = log;
 
 	page->priv->vbox = gtk_vbox_new (FALSE, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), page->priv->vbox);

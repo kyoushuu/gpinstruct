@@ -48,7 +48,7 @@ struct _CanvasLessonTestOrderPage
 };
 
 GType canvas_lesson_test_order_page_get_type (void) G_GNUC_CONST;
-CanvasLessonTestOrderPage* canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test, CanvasLessonScore* score);
+CanvasLessonTestOrderPage* canvas_lesson_test_order_page_new (CanvasLessonTestOrder* test, CanvasLessonScore* score, CanvasLog* log);
 
 G_END_DECLS
 

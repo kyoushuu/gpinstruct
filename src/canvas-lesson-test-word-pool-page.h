@@ -48,7 +48,7 @@ struct _CanvasLessonTestWordPoolPage
 };
 
 GType canvas_lesson_test_word_pool_page_get_type (void) G_GNUC_CONST;
-CanvasLessonTestWordPoolPage* canvas_lesson_test_word_pool_page_new (CanvasLessonTestWordPool* test, CanvasLessonScore* score);
+CanvasLessonTestWordPoolPage* canvas_lesson_test_word_pool_page_new (CanvasLessonTestWordPool* test, CanvasLessonScore* score, CanvasLog* log);
 
 G_END_DECLS
 
