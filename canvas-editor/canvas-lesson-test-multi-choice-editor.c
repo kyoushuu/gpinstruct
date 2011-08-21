@@ -21,16 +21,6 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-#ifndef GDK_KEY_Menu
-#define GDK_KEY_Menu GDK_Menu
-#endif
-#ifndef GDK_KEY_Left
-#define GDK_KEY_Left GDK_Left
-#endif
-#ifndef GDK_KEY_Right
-#define GDK_KEY_Right GDK_Right
-#endif
 
 #include "canvas/canvas.h"
 #include "canvas-editor/canvas-editor.h"
