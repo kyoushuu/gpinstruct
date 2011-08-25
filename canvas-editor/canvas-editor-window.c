@@ -512,7 +512,7 @@ help_about_action (GtkAction *action,
 	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
 
 	static gchar* authors[] = {"Arnel A. Borja <galeon@ymail.com>", NULL};
-	static gchar* license =
+	gchar* license = _(
 		"This program is free software; you can redistribute it and/or modify "
 		"it under the terms of the GNU General Public License as published by "
 		"the Free Software Foundation; either version 3 of the License, or "
@@ -524,7 +524,7 @@ help_about_action (GtkAction *action,
 		"GNU General Public License for more details.\n"
 		"\n"
 		"You should have received a copy of the GNU General Public License along "
-		"with this program.  If not, see <http://www.gnu.org/licenses/>.";
+		"with this program.  If not, see <http://www.gnu.org/licenses/>.");
 
 		gtk_show_about_dialog (GTK_WINDOW (window),
 		                       "program-name", _("Canvas Editor"),

@@ -53,7 +53,7 @@ typedef struct {
 } CanvasLogTest;
 
 typedef struct {
-	guint question_id;
+	guint item_id;
 	guint answer_id;
 	gdouble time_spent;
 } CanvasLogAnswer;
@@ -64,11 +64,28 @@ typedef void            (*CanvasLogForeachFunc) (const gchar* test_id,
 
 GType canvas_log_get_type (void) G_GNUC_CONST;
 CanvasLog* canvas_log_new (void);
-void canvas_log_add (CanvasLog* log, CanvasLessonTest* test, guint question_id, guint answer_id);
+void canvas_log_set_last_name (CanvasLog* log, const gchar* last_name);
+const gchar* canvas_log_get_last_name (CanvasLog* log);
+void canvas_log_set_first_name (CanvasLog* log, const gchar* first_name);
+const gchar* canvas_log_get_first_name (CanvasLog* log);
+void canvas_log_set_group (CanvasLog* log, guint elements);
+void canvas_log_add (CanvasLog* log, CanvasLessonTest* test, guint item_id, guint answer_id);
 void canvas_log_timer_start (CanvasLog* log);
 void canvas_log_timer_stop (CanvasLog* log);
-void canvas_log_foreach (CanvasLog* log, CanvasLogForeachFunc func, gpointer user_data);
+GList* canvas_log_get_tests (CanvasLog* log);
+gboolean canvas_log_open (CanvasLog* log, const gchar* file, GError** error);
 void canvas_log_save (CanvasLog* log, const gchar* file, GError** error);
+
+typedef enum
+{
+  CANVAS_LOG_ERROR_PARSE,
+  CANVAS_LOG_ERROR_UNKNOWN_ELEMENT,
+  CANVAS_LOG_ERROR_UNKNOWN_ATTRIBUTE
+} CanvasLogError;
+
+#define CANVAS_LOG_ERROR canvas_log_error_quark ()
+
+GQuark canvas_log_error_quark (void);
 
 G_END_DECLS
 

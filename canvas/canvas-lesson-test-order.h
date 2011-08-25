@@ -56,6 +56,7 @@ GList* canvas_lesson_test_order_get_items (CanvasLessonTestOrder* test);
 guint canvas_lesson_test_order_get_items_length (CanvasLessonTestOrder* test);
 const gchar* canvas_lesson_test_order_get_explanation (CanvasLessonTestOrder* test);
 void canvas_lesson_test_order_set_explanation (CanvasLessonTestOrder* test, const gchar* explanation);
+gboolean canvas_lesson_test_order_is_correct (CanvasLessonTestOrder* test, guint item, guint answer);
 
 G_END_DECLS
 

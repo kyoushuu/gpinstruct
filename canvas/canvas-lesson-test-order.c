@@ -29,6 +29,57 @@ struct _CanvasLessonTestOrderPrivate
 
 
 
+static gchar*
+get_item (CanvasLessonTest* test, guint item)
+{
+	CanvasLessonTestOrderItem* oitem =
+		canvas_lesson_test_order_get_item (CANVAS_LESSON_TEST_ORDER (test),
+		                                   item);
+
+	if (oitem)
+		return g_strdup (canvas_lesson_test_order_item_get_text (oitem));
+	else
+		return NULL;
+}
+
+
+static gchar*
+get_choice (CanvasLessonTest* test, guint item, guint choice)
+{
+	if (choice < canvas_lesson_test_order_get_items_length (CANVAS_LESSON_TEST_ORDER (test)))
+		return g_strdup_printf ("%d", choice);
+	else
+		return NULL;
+}
+
+
+static guint
+get_items_length (CanvasLessonTest* test)
+{
+	return canvas_lesson_test_order_get_items_length (CANVAS_LESSON_TEST_ORDER (test));
+}
+
+
+static guint
+get_choices_length (CanvasLessonTest* test, guint item)
+{
+	return canvas_lesson_test_order_get_items_length (CANVAS_LESSON_TEST_ORDER (test));
+}
+
+
+static guint
+get_item_correct_choice (CanvasLessonTest* test, guint item)
+{
+	CanvasLessonTestOrderItem* oitem =
+		canvas_lesson_test_order_get_item (CANVAS_LESSON_TEST_ORDER (test), item);
+	if (oitem)
+		return canvas_lesson_test_order_item_get_answer (oitem);
+	else
+		return 0;
+}
+
+
+
 G_DEFINE_TYPE (CanvasLessonTestOrder, canvas_lesson_test_order, CANVAS_TYPE_LESSON_TEST);
 
 static void
@@ -58,7 +109,13 @@ static void
 canvas_lesson_test_order_class_init (CanvasLessonTestOrderClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasLessonTestClass* parent_class = CANVAS_LESSON_TEST_CLASS (klass);*/
+	CanvasLessonTestClass* parent_class = CANVAS_LESSON_TEST_CLASS (klass);
+
+	parent_class->get_item = get_item;
+	parent_class->get_choice = get_choice;
+	parent_class->get_items_length = get_items_length;
+	parent_class->get_choices_length = get_choices_length;
+	parent_class->get_item_correct_choice = get_item_correct_choice;
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestOrderPrivate));
 
@@ -119,4 +176,18 @@ canvas_lesson_test_order_set_explanation (CanvasLessonTestOrder* test,
 	if (test->priv->explanation)
 		g_free (test->priv->explanation);
 	test->priv->explanation = g_strdup (explanation);
+}
+
+gboolean
+canvas_lesson_test_order_is_correct (CanvasLessonTestOrder* test, guint item, guint answer)
+{
+	CanvasLessonTestOrderItem* order_item = canvas_lesson_test_order_get_item (test, item);
+
+	if (order_item == NULL)
+		return FALSE;
+
+	if (answer == canvas_lesson_test_order_item_get_answer (order_item))
+		return TRUE;
+	else
+		return FALSE;
 }

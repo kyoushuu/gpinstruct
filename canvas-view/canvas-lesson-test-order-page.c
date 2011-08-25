@@ -106,6 +106,10 @@ page_show_next (CanvasLessonTestOrderPage* page, gpointer user_data)
 	GtkTreeIter iter;
 	guint questions_num = 0, wrong = 0, position;
 
+	if (page->priv->log)
+		canvas_log_set_group (page->priv->log,
+		                      gtk_tree_model_iter_n_children (GTK_TREE_MODEL (page->priv->store), NULL));
+
 	if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (page->priv->store), &iter))
 	{
 		do

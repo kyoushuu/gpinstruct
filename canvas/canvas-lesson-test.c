@@ -81,6 +81,12 @@ canvas_lesson_test_class_init (CanvasLessonTestClass *klass)
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
 	/*CanvasLessonElementClass* parent_class = CANVAS_LESSON_ELEMENT_CLASS (klass);*/
 
+	klass->get_item = NULL;
+	klass->get_choice = NULL;
+	klass->get_items_length = NULL;
+	klass->get_choices_length = NULL;
+	klass->get_item_correct_choice = NULL;
+
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestPrivate));
 
 	object_class->finalize = canvas_lesson_test_finalize;
@@ -133,4 +139,59 @@ canvas_lesson_test_set_id (CanvasLessonTest* test, const gchar* id)
 	if (test->priv->id)
 		g_free (test->priv->id);
 	test->priv->id = g_strdup (id);
+}
+
+gchar*
+canvas_lesson_test_get_item (CanvasLessonTest* test, guint item)
+{
+	gchar*(* get_item) (CanvasLessonTest* test, guint item) =
+		CANVAS_LESSON_TEST_GET_CLASS (test)->get_item;
+	if (get_item)
+		return get_item (test, item);
+	else
+		return NULL;
+}
+
+gchar*
+canvas_lesson_test_get_choice (CanvasLessonTest* test, guint item, guint choice)
+{
+	gchar*(* get_choice) (CanvasLessonTest* test, guint item, guint choice) =
+		CANVAS_LESSON_TEST_GET_CLASS (test)->get_choice;
+	if (get_choice)
+		return get_choice (test, item, choice);
+	else
+		return NULL;
+}
+
+guint
+canvas_lesson_test_get_items_length (CanvasLessonTest* test)
+{
+	guint(* get_items_length) (CanvasLessonTest* test) =
+		CANVAS_LESSON_TEST_GET_CLASS (test)->get_items_length;
+	if (get_items_length)
+		return get_items_length (test);
+	else
+		return FALSE;
+}
+
+guint
+canvas_lesson_test_get_choices_length (CanvasLessonTest* test, guint item)
+{
+	guint(* get_choices_length) (CanvasLessonTest* test, guint item) =
+		CANVAS_LESSON_TEST_GET_CLASS (test)->get_choices_length;
+	if (get_choices_length)
+		return get_choices_length (test, item);
+	else
+		return 0;
+}
+
+guint
+canvas_lesson_test_get_item_correct_choice (CanvasLessonTest* test, guint item)
+{
+	guint(* get_item_correct_choice) (CanvasLessonTest* test, guint item) =
+		CANVAS_LESSON_TEST_GET_CLASS (test)->get_item_correct_choice;
+	if (get_item_correct_choice)
+		return get_item_correct_choice (test, item);
+	else
+		return 0;
 }

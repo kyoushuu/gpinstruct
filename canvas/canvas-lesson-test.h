@@ -38,6 +38,12 @@ typedef struct _CanvasLessonTest CanvasLessonTest;
 struct _CanvasLessonTestClass
 {
 	CanvasLessonElementClass parent_class;
+
+	gchar*(* get_item) (CanvasLessonTest* test, guint item);
+	gchar*(* get_choice) (CanvasLessonTest* test, guint item, guint choice);
+	guint(* get_items_length) (CanvasLessonTest* test);
+	guint(* get_choices_length) (CanvasLessonTest* test, guint item);
+	guint(* get_item_correct_choice) (CanvasLessonTest* test, guint item);
 };
 
 struct _CanvasLessonTest
@@ -55,6 +61,11 @@ gboolean canvas_lesson_test_get_explain (CanvasLessonTest* test);
 void canvas_lesson_test_set_explain (CanvasLessonTest* test, gboolean explain);
 const gchar* canvas_lesson_test_get_id (CanvasLessonTest* test);
 void canvas_lesson_test_set_id (CanvasLessonTest* test, const gchar* id);
+gchar* canvas_lesson_test_get_item (CanvasLessonTest* test, guint item);
+gchar* canvas_lesson_test_get_choice (CanvasLessonTest* test, guint item, guint choice);
+guint canvas_lesson_test_get_items_length (CanvasLessonTest* test);
+guint canvas_lesson_test_get_choices_length (CanvasLessonTest* test, guint item);
+guint canvas_lesson_test_get_item_correct_choice (CanvasLessonTest* test, guint item);
 
 G_END_DECLS
 

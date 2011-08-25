@@ -28,6 +28,68 @@ struct _CanvasLessonTestMultiChoicePrivate
 
 
 
+static gchar*
+get_item (CanvasLessonTest* test, guint item)
+{
+	CanvasLessonTestMultiChoiceQuestion* question =
+		canvas_lesson_test_multi_choice_get_question (CANVAS_LESSON_TEST_MULTI_CHOICE (test),
+		                                              item);
+
+	if (question)
+		return g_strdup (canvas_lesson_test_multi_choice_question_get_text (question));
+	else
+		return NULL;
+}
+
+
+static gchar*
+get_choice (CanvasLessonTest* test, guint item, guint choice)
+{
+	CanvasLessonTestMultiChoiceQuestion* question =
+		canvas_lesson_test_multi_choice_get_question (CANVAS_LESSON_TEST_MULTI_CHOICE (test),
+		                                              item);
+
+	if (question)
+		return g_strdup (canvas_lesson_test_multi_choice_question_get_choice (question, choice));
+	else
+		return NULL;
+}
+
+
+static guint
+get_items_length (CanvasLessonTest* test)
+{
+	return canvas_lesson_test_multi_choice_get_questions_length (CANVAS_LESSON_TEST_MULTI_CHOICE (test));
+}
+
+
+static guint
+get_choices_length (CanvasLessonTest* test, guint item)
+{
+	CanvasLessonTestMultiChoiceQuestion* question =
+		canvas_lesson_test_multi_choice_get_question (CANVAS_LESSON_TEST_MULTI_CHOICE (test),
+		                                              item);
+
+	if (question)
+		return canvas_lesson_test_multi_choice_question_get_choices_length (question);
+	else
+		return 0;
+}
+
+
+static guint
+get_item_correct_choice (CanvasLessonTest* test, guint item)
+{
+	CanvasLessonTestMultiChoiceQuestion* question =
+		canvas_lesson_test_multi_choice_get_question (CANVAS_LESSON_TEST_MULTI_CHOICE (test), item);
+	if (question)
+		return canvas_lesson_test_multi_choice_question_get_answer (question);
+	else
+		return 0;
+}
+
+
+
 G_DEFINE_TYPE (CanvasLessonTestMultiChoice, canvas_lesson_test_multi_choice, CANVAS_TYPE_LESSON_TEST);
 
 static void
@@ -53,7 +115,13 @@ static void
 canvas_lesson_test_multi_choice_class_init (CanvasLessonTestMultiChoiceClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasLessonTestClass* parent_class = CANVAS_LESSON_TEST_CLASS (klass);*/
+	CanvasLessonTestClass* parent_class = CANVAS_LESSON_TEST_CLASS (klass);
+
+	parent_class->get_item = get_item;
+	parent_class->get_choice = get_choice;
+	parent_class->get_items_length = get_items_length;
+	parent_class->get_choices_length = get_choices_length;
+	parent_class->get_item_correct_choice = get_item_correct_choice;
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestMultiChoicePrivate));
 
@@ -85,6 +153,13 @@ canvas_lesson_test_multi_choice_remove_question (CanvasLessonTestMultiChoice* te
 	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
 }
 
+CanvasLessonTestMultiChoiceQuestion*
+canvas_lesson_test_multi_choice_get_question (CanvasLessonTestMultiChoice* test,
+                                              guint question)
+{
+	return g_list_nth_data (test->priv->questions, question);
+}
+
 GList*
 canvas_lesson_test_multi_choice_get_questions (CanvasLessonTestMultiChoice* test)
 {
@@ -95,4 +170,18 @@ guint
 canvas_lesson_test_multi_choice_get_questions_length (CanvasLessonTestMultiChoice* test)
 {
 	return g_list_length (test->priv->questions);
+}
+
+gboolean
+canvas_lesson_test_multi_choice_is_correct (CanvasLessonTestMultiChoice* test, guint item, guint answer)
+{
+	CanvasLessonTestMultiChoiceQuestion* question = canvas_lesson_test_multi_choice_get_question (test, item);
+
+	if (question == NULL)
+		return FALSE;
+
+	if (answer == canvas_lesson_test_multi_choice_question_get_answer (question))
+		return TRUE;
+	else
+		return FALSE;
 }

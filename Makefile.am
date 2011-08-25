@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 ## Created by Anjuta
 
-SUBDIRS = canvas canvas-view canvas-editor po
+SUBDIRS = canvas canvas-view canvas-editor canvas-analyzer po
 
 canvasdocdir = ${prefix}/doc/canvas
 canvasdoc_DATA = \

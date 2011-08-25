@@ -1,0 +1,497 @@
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
+/*
+ * canvas
+ * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
+ * 
+ * canvas is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * canvas is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <config.h>
+#include <glib/gi18n.h>
+
+#include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
+#ifndef GDK_KEY_Menu
+#define GDK_KEY_Menu GDK_Menu
+#endif
+#ifndef GDK_KEY_Left
+#define GDK_KEY_Left GDK_Left
+#endif
+#ifndef GDK_KEY_Right
+#define GDK_KEY_Right GDK_Right
+#endif
+
+#include "canvas/canvas.h"
+#include "canvas-view/canvas-view.h"
+#include "canvas-analyzer/canvas-analyzer.h"
+
+struct _CanvasAnalyzerWindowPrivate
+{
+	GtkWidget* main_vbox;
+
+	GtkUIManager* manager;
+	GtkActionGroup* action_group;
+
+	GtkWidget* view_combobox;
+
+	GtkWidget* view;
+
+	GtkWidget* statusbar;
+
+	CanvasLogAnalyzer* analyzer;
+};
+
+#define CANVAS_ANALYZER_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_ANALYZER_WINDOW, CanvasAnalyzerWindowPrivate))
+
+
+static gboolean
+window_delete_event (GtkWidget *widget,
+                     GdkEvent  *event,
+                     gpointer   user_data)
+{
+	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (widget);
+
+	if (canvas_analyzer_window_quit (window))
+		return FALSE;
+	else
+		return TRUE;
+}
+
+static void
+view_combobox_changed (GtkComboBox *widget,
+                       gpointer     user_data)
+{
+	gint active = gtk_combo_box_get_active (widget);
+
+	if (active < 0)
+		return;
+
+	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+
+	if (window->priv->analyzer == NULL)
+		return;
+
+	if (window->priv->view)
+		gtk_widget_destroy (window->priv->view);
+	window->priv->view = NULL;
+
+	switch (active)
+	{
+		case 0:
+			window->priv->view = canvas_analyzer_project_view_new (window->priv->analyzer);
+			gtk_box_pack_start (GTK_BOX (window->priv->main_vbox), window->priv->view, TRUE, TRUE, 0);
+			gtk_widget_show_all (window->priv->view);
+			break;
+		case 1:
+			window->priv->view = canvas_analyzer_examinee_view_new (window->priv->analyzer);
+			gtk_box_pack_start (GTK_BOX (window->priv->main_vbox), window->priv->view, TRUE, TRUE, 0);
+			gtk_widget_show_all (window->priv->view);
+			break;
+	}
+}
+
+
+static void
+file_new_action (GtkAction *action,
+                 gpointer   user_data)
+{
+	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+
+	canvas_analyzer_window_new_session (window);
+}
+
+
+static void
+file_add_action (GtkAction *action,
+                 gpointer   user_data)
+{
+	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+
+	GtkWidget* dialog = gtk_file_chooser_dialog_new (_("Choose Log Files"),
+	                                                 GTK_WINDOW (window),
+	                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
+	                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	                                                 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+	                                                 NULL);
+	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
+
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("Canvas Log file"));
+	gtk_file_filter_add_pattern (filter, "*.xml");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		GSList* log_files = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
+		GSList* current_log_files = log_files;
+
+		while (current_log_files)
+		{
+			canvas_analyzer_window_add_log_file (window, current_log_files->data);
+
+			current_log_files = current_log_files->next;
+		}
+
+		g_slist_foreach (log_files, (GFunc)g_free, NULL);
+		g_slist_free (log_files);
+	}
+	else
+	{
+		g_object_unref (window->priv->analyzer);
+		window->priv->analyzer = NULL;
+	}
+
+	gtk_widget_destroy (dialog);
+}
+
+
+static void
+file_close_action (GtkAction *action,
+                   gpointer   user_data)
+{
+	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+
+	canvas_analyzer_window_close_session (window);
+}
+
+
+static void
+file_quit_action (GtkAction *action,
+                  gpointer   user_data)
+{
+	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+
+	if (canvas_analyzer_window_quit (window))
+		gtk_widget_destroy (GTK_WIDGET (window));
+}
+
+
+static void
+edit_preferences_action (GtkAction *action,
+                         gpointer   user_data)
+{
+}
+
+
+static void
+help_about_action (GtkAction *action,
+                   gpointer   user_data)
+{
+	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+
+	static gchar* authors[] = {"Arnel A. Borja <galeon@ymail.com>", NULL};
+	gchar* license = _(
+		"This program is free software; you can redistribute it and/or modify "
+		"it under the terms of the GNU General Public License as published by "
+		"the Free Software Foundation; either version 3 of the License, or "
+		"(at your option) any later version.\n"
+		"\n"
+		"This program is distributed in the hope that it will be useful, "
+		"but WITHOUT ANY WARRANTY; without even the implied warranty of "
+		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+		"GNU General Public License for more details.\n"
+		"\n"
+		"You should have received a copy of the GNU General Public License along "
+		"with this program.  If not, see <http://www.gnu.org/licenses/>.");
+
+		gtk_show_about_dialog (GTK_WINDOW (window),
+		                       "program-name", _("Canvas Analyzer"),
+		                       "version", PACKAGE_VERSION,
+		                       "title", _("About Canvas Analyzer"),
+		                       "comments", _("Canvas Project Analyzer"),
+		                       "website", "http://kyoushuu.users.sourceforge.net/project_canvas",
+		                       "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
+#if GTK_MAJOR_VERSION >= 3
+		                       "license-type", GTK_LICENSE_GPL_3_0,
+#endif
+		                       "license", license,
+		                       "wrap-license", TRUE,
+		                       "authors", authors,
+		                       NULL);
+}
+
+
+
+G_DEFINE_TYPE (CanvasAnalyzerWindow, canvas_analyzer_window, GTK_TYPE_WINDOW);
+
+static void
+canvas_analyzer_window_init (CanvasAnalyzerWindow *object)
+{
+	object->priv = CANVAS_ANALYZER_WINDOW_PRIVATE (object);
+
+	object->priv->analyzer = NULL;
+
+	GError* error = NULL;
+
+	GtkActionEntry actions[] = 
+	{
+		{"file", NULL, _("_File")},
+		{"file-new", GTK_STOCK_NEW, NULL, "<Control>N", NULL, G_CALLBACK (file_new_action)},
+		{"file-add", GTK_STOCK_ADD, _("Add Log File"), "<Control>A", NULL, G_CALLBACK (file_add_action)},
+		{"file-close", GTK_STOCK_CLOSE, NULL, "<Control>W", NULL, G_CALLBACK (file_close_action)},
+		{"file-quit", GTK_STOCK_QUIT, NULL, "<Control>Q", NULL, G_CALLBACK (file_quit_action)},
+		{"edit", NULL, _("_Edit")},
+		{"edit-preferences", GTK_STOCK_PREFERENCES, NULL, NULL, NULL, G_CALLBACK (edit_preferences_action)},
+		{"help", NULL, _("_Help")},
+		{"help-about", GTK_STOCK_ABOUT, NULL, "F1", NULL, G_CALLBACK (help_about_action)}
+	};
+
+	gchar* ui = 
+		"<ui>"
+		"  <menubar name=\"menubar\">"
+		"    <menu name=\"FileMenu\" action=\"file\">"
+		"      <menuitem name=\"New\" action=\"file-new\" />"
+		"      <menuitem name=\"Add Log File\" action=\"file-add\" />"
+		"      <separator/>"
+		"      <menuitem name=\"Close\" action=\"file-close\" />"
+		"      <separator/>"
+		"      <menuitem name=\"Quit\" action=\"file-quit\" />"
+		"      <placeholder name=\"FileMenuAdditions\" />"
+		"    </menu>"
+		"    <menu name=\"EditMenu\" action=\"edit\">"
+		"      <placeholder name=\"EditMenuAdditions\" />"
+		"      <separator/>"
+		"      <menuitem name=\"Preferences\" action=\"edit-preferences\"/>"
+		"    </menu>"
+		"    <menu name=\"HelpMenu\" action=\"help\">"
+		"      <placeholder name=\"HelpMenuAdditions\" />"
+		"      <separator/>"
+		"      <menuitem name=\"About\" action=\"help-about\"/>"
+		"    </menu>"
+		"  </menubar>"
+		"  <toolbar action=\"toolbar\">"
+		"    <placeholder name=\"FileToolItems\">"
+		"      <separator/>"
+		"      <toolitem name=\"New\" action=\"file-new\" />"
+		"      <toolitem name=\"Add Log File\" action=\"file-add\" />"
+		"      <separator/>"
+		"    </placeholder>"
+		"  </toolbar>"
+		"</ui>";
+
+	gtk_window_set_title (GTK_WINDOW (object), _("Canvas Analyzer"));
+	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
+
+	object->priv->main_vbox = gtk_vbox_new (FALSE, 3);
+	gtk_container_add (GTK_CONTAINER (object), object->priv->main_vbox);
+
+
+	object->priv->manager = gtk_ui_manager_new ();
+	gtk_window_add_accel_group (GTK_WINDOW (object), gtk_ui_manager_get_accel_group (object->priv->manager));
+
+	object->priv->action_group = gtk_action_group_new ("canvas-analyzer-window");
+	gtk_action_group_add_actions (object->priv->action_group, actions, G_N_ELEMENTS (actions), object);
+	gtk_action_set_sensitive (gtk_action_group_get_action (object->priv->action_group,
+	                                                       "file-add"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (object->priv->action_group,
+	                                                       "file-close"),
+	                          FALSE);
+
+	gtk_ui_manager_insert_action_group (object->priv->manager, object->priv->action_group, 0);
+	gtk_ui_manager_add_ui_from_string (object->priv->manager, ui, -1, &error);
+
+	if (error)
+	{
+		g_critical ("%s", error->message);
+		g_error_free (error);
+	}
+
+	GtkWidget* main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
+	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), main_menu, FALSE, TRUE, 0);
+
+	GtkWidget* toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
+	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), toolbar, FALSE, TRUE, 0);
+
+	GtkWidget* view_hbox = gtk_hbox_new (FALSE, 3);
+	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), view_hbox, FALSE, TRUE, 0);
+
+	GtkWidget* view_label = gtk_label_new (_("Select View"));
+	gtk_box_pack_start (GTK_BOX (view_hbox), view_label, FALSE, TRUE, 0);
+
+	GtkTreeIter view_iter;
+	GtkListStore* view_store = gtk_list_store_new (1, G_TYPE_STRING);
+
+	gtk_list_store_append (view_store, &view_iter);
+	gtk_list_store_set (view_store, &view_iter, 0, "Whole Project", -1);
+	gtk_list_store_append (view_store, &view_iter);
+	gtk_list_store_set (view_store, &view_iter, 0, "Examinee", -1);
+
+	GtkWidget* view_combobox = gtk_combo_box_new_with_model (GTK_TREE_MODEL (view_store));
+	gtk_widget_set_sensitive (view_combobox, FALSE);
+	g_signal_connect (view_combobox, "changed", G_CALLBACK (view_combobox_changed), object);
+	gtk_box_pack_start (GTK_BOX (view_hbox), view_combobox, TRUE, TRUE, 0);
+	object->priv->view_combobox = view_combobox;
+
+	g_object_unref (view_store);
+
+	GtkCellRenderer* view_textrenderer = gtk_cell_renderer_text_new ();
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (view_combobox), view_textrenderer, TRUE);
+	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (view_combobox), view_textrenderer, "text", 0);
+
+	object->priv->view = NULL;
+
+	object->priv->statusbar = gtk_statusbar_new ();
+	gtk_box_pack_end (GTK_BOX (object->priv->main_vbox), object->priv->statusbar, FALSE, TRUE, 0);
+
+
+	g_signal_connect (object, "delete-event", G_CALLBACK (window_delete_event), NULL);
+}
+
+static void
+canvas_analyzer_window_finalize (GObject *object)
+{
+	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (object);
+
+	if (window->priv->action_group)
+		g_object_unref (window->priv->action_group);
+
+	G_OBJECT_CLASS (canvas_analyzer_window_parent_class)->finalize (object);
+}
+
+static void
+canvas_analyzer_window_class_init (CanvasAnalyzerWindowClass *klass)
+{
+	GObjectClass* object_class = G_OBJECT_CLASS (klass);
+	/*GtkWindowClass* parent_class = GTK_WINDOW_CLASS (klass);*/
+
+	g_type_class_add_private (klass, sizeof (CanvasAnalyzerWindowPrivate));
+
+	object_class->finalize = canvas_analyzer_window_finalize;
+}
+
+
+GtkWidget*
+canvas_analyzer_window_new (void)
+{
+	return g_object_new (CANVAS_TYPE_ANALYZER_WINDOW, NULL);
+}
+
+void
+canvas_analyzer_window_new_session (CanvasAnalyzerWindow* window)
+{
+	if (window->priv->analyzer)
+	{
+		if (canvas_analyzer_window_close_session (window) == FALSE)
+		return;
+	}
+
+	GtkWidget* dialog = gtk_file_chooser_dialog_new (_("Choose Project File"),
+	                                                 GTK_WINDOW (window),
+	                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
+	                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	                                                 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+	                                                 NULL);
+	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
+
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("Canvas Project file"));
+	gtk_file_filter_add_pattern (filter, "*.xml");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		GError* error = NULL;
+
+		CanvasParser* parser = canvas_parser_new ();
+
+		gchar* project_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		CanvasProject* project = canvas_parser_open (parser, project_file, &error);
+		if (error)
+		{
+			g_critical(_("Error: %s\n"), error->message);
+			g_error_free (error);
+			error = NULL;
+		}
+		g_free (project_file);
+
+		if (project == NULL)
+			return;
+
+		window->priv->analyzer = canvas_log_analyzer_new (project);
+
+		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+				                                               "file-add"),
+				                  TRUE);
+		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+				                                               "file-close"),
+				                  TRUE);
+
+		gtk_widget_set_sensitive (window->priv->view_combobox, TRUE);
+
+		gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), -1);
+		gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), 0);
+	}
+	gtk_widget_destroy (dialog);
+}
+
+gboolean
+canvas_analyzer_window_close_session (CanvasAnalyzerWindow* window)
+{
+	if (window->priv->analyzer == NULL)
+		return FALSE;
+
+	gtk_widget_destroy (window->priv->view);
+
+	g_object_unref (window->priv->analyzer);
+
+	window->priv->analyzer = NULL;
+
+	gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+	                                                       "file-add"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+	                                                       "file-close"),
+	                          FALSE);
+
+	gtk_widget_set_sensitive (window->priv->view_combobox, FALSE);
+
+	return TRUE;
+}
+
+
+gboolean
+canvas_analyzer_window_add_log_file (CanvasAnalyzerWindow* window, const gchar* file)
+{
+	if (window->priv->analyzer == NULL)
+		return FALSE;
+
+	CanvasLog* log = canvas_log_new ();
+	if (canvas_log_open (log, file, NULL) == FALSE)
+	{
+		g_object_unref (log);
+		return FALSE;
+	}
+
+	canvas_log_analyzer_add_log (window->priv->analyzer, log);
+
+	g_object_unref (log);
+
+	gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), -1);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), 0);
+
+	return TRUE;
+}
+
+gboolean
+canvas_analyzer_window_quit (CanvasAnalyzerWindow* window)
+{
+	if (window->priv->analyzer)
+	{
+		if (canvas_analyzer_window_close_session (window) == FALSE)
+			return FALSE;
+	}
+
+	return TRUE;
+}

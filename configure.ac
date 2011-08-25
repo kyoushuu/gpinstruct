@@ -80,4 +80,5 @@ Makefile
 canvas/Makefile
 canvas-view/Makefile
 canvas-editor/Makefile
+canvas-analyzer/Makefile
 po/Makefile.in])
