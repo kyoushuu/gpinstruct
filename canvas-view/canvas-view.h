@@ -1,6 +1,5 @@
 /*
- * canvas-view.h
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,23 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <canvas-view/canvas-lesson-score.h>
+#include <gpinstruct-view/gpinstruct-lesson-score.h>
 
-#include <canvas-view/canvas-message-pool.h>
-#include <canvas-view/canvas-log.h>
+#include <gpinstruct-view/gpinstruct-message-pool.h>
+#include <gpinstruct-view/gpinstruct-log.h>
 
-#include <canvas-view/canvas-lesson-view-page.h>
-#include <canvas-view/canvas-lesson-view.h>
-#include <canvas-view/canvas-project-view.h>
+#include <gpinstruct-view/gpinstruct-lesson-view-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-view.h>
+#include <gpinstruct-view/gpinstruct-project-view.h>
 
-#include <canvas-view/canvas-lesson-view-page.h>
-#include <canvas-view/canvas-lesson-discussion-page.h>
-#include <canvas-view/canvas-lesson-reading-page.h>
-#include <canvas-view/canvas-lesson-directions-page.h>
-#include <canvas-view/canvas-lesson-score-page.h>
-#include <canvas-view/canvas-lesson-test-multi-choice-page.h>
-#include <canvas-view/canvas-lesson-test-word-pool-page.h>
-#include <canvas-view/canvas-lesson-test-order-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-view-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-discussion-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-reading-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-directions-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-score-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-test-multi-choice-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-test-word-pool-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-test-order-page.h>
 
-#include <canvas-view/canvas-lesson-view.h>
-#include <canvas-view/canvas-project-view.h>
+#include <gpinstruct-view/gpinstruct-lesson-view.h>
+#include <gpinstruct-view/gpinstruct-project-view.h>

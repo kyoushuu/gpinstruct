@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -22,67 +21,69 @@
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
 
-struct _CanvasLessonScorePagePrivate
+struct _GPInstructLessonScorePagePrivate
 {
-	CanvasLessonScore* score;
+	GPInstructLessonScore* score;
 
 	GtkWidget* score_label;
 	GtkWidget* percentage_label;
 };
 
-#define CANVAS_LESSON_SCORE_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_SCORE_PAGE, CanvasLessonScorePagePrivate))
+#define GPINSTRUCT_LESSON_SCORE_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_SCORE_PAGE, GPInstructLessonScorePagePrivate))
 
 
 
 void
-score_reset (CanvasLessonViewPage* view, gpointer user_data)
+score_reset (GPInstructLessonViewPage* view,
+             gpointer user_data)
 {
-	canvas_lesson_score_clear (CANVAS_LESSON_SCORE_PAGE (view)->priv->score);
+	gpinstruct_lesson_score_clear (GPINSTRUCT_LESSON_SCORE_PAGE (view)->priv->score);
 }
 
 
-G_DEFINE_TYPE (CanvasLessonScorePage, canvas_lesson_score_page, CANVAS_TYPE_LESSON_VIEW_PAGE);
+G_DEFINE_TYPE (GPInstructLessonScorePage, gpinstruct_lesson_score_page, GPINSTRUCT_TYPE_LESSON_VIEW_PAGE);
 
 static void
-canvas_lesson_score_page_init (CanvasLessonScorePage *object)
+gpinstruct_lesson_score_page_init (GPInstructLessonScorePage *object)
 {
-	object->priv = CANVAS_LESSON_SCORE_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_SCORE_PAGE_PRIVATE (object);
 
 	object->priv->score = NULL;
 }
 
 static void
-canvas_lesson_score_page_finalize (GObject *object)
+gpinstruct_lesson_score_page_finalize (GObject *object)
 {
-	CanvasLessonScorePage* page = CANVAS_LESSON_SCORE_PAGE (object);
+	GPInstructLessonScorePage* page = GPINSTRUCT_LESSON_SCORE_PAGE (object);
 
 	if (page->priv->score)
 		g_object_unref (page->priv->score);
 
-	G_OBJECT_CLASS (canvas_lesson_score_page_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_lesson_score_page_parent_class)->finalize (object);
 }
 
 static void
-canvas_lesson_score_page_class_init (CanvasLessonScorePageClass *klass)
+gpinstruct_lesson_score_page_class_init (GPInstructLessonScorePageClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);
+	GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);
 
-	g_type_class_add_private (klass, sizeof (CanvasLessonScorePagePrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLessonScorePagePrivate));
 
-	object_class->finalize = canvas_lesson_score_page_finalize;
+	object_class->finalize = gpinstruct_lesson_score_page_finalize;
 	parent_class->reset = score_reset;
 }
 
 
 void
-page_show (CanvasLessonScorePage* page, gpointer user_data)
+page_show (GPInstructLessonScorePage* page,
+           gpointer user_data)
 {
-	guint score_value = canvas_lesson_score_get_score (page->priv->score);
-	guint total_value = canvas_lesson_score_get_total (page->priv->score);
+	guint score_value = gpinstruct_lesson_score_get_score (page->priv->score);
+	guint total_value = gpinstruct_lesson_score_get_total (page->priv->score);
 
 	gchar* score_text = g_strdup_printf ("<span size='xx-large'><big>%d</big>/%d</span>",
 	                                     score_value,
@@ -96,20 +97,20 @@ page_show (CanvasLessonScorePage* page, gpointer user_data)
 	g_free (percentage_text);
 }
 
-CanvasLessonScorePage*
-canvas_lesson_score_page_new (CanvasLessonScore* score)
+GPInstructLessonScorePage*
+gpinstruct_lesson_score_page_new (GPInstructLessonScore* score)
 {
-	CanvasLessonScorePage* page = g_object_new (CANVAS_TYPE_LESSON_SCORE_PAGE, NULL);
+	GPInstructLessonScorePage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_SCORE_PAGE, NULL);
 
 	page->priv->score = score;
 
-	guint score_value = canvas_lesson_score_get_score (score);
-	guint total_value = canvas_lesson_score_get_total (score);
+	guint score_value = gpinstruct_lesson_score_get_score (score);
+	guint total_value = gpinstruct_lesson_score_get_total (score);
 
-	g_signal_connect (CANVAS_LESSON_VIEW_PAGE (page), "show-current", G_CALLBACK (page_show), NULL);
+	g_signal_connect (GPINSTRUCT_LESSON_VIEW_PAGE (page), "show-current", G_CALLBACK (page_show), NULL);
 
-	canvas_lesson_view_page_set_title (CANVAS_LESSON_VIEW_PAGE (page), canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (score)));
-	canvas_lesson_view_page_set_show_back_button (CANVAS_LESSON_VIEW_PAGE (page), FALSE);
+	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page), gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (score)));
+	gpinstruct_lesson_view_page_set_show_back_button (GPINSTRUCT_LESSON_VIEW_PAGE (page), FALSE);
 
 	GtkWidget* vbox = gtk_vbox_new (FALSE, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), vbox);

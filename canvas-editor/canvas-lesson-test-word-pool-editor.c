@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -22,13 +21,13 @@
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas-editor/canvas-editor.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-editor/gpinstruct-editor.h"
 
-struct _CanvasLessonTestWordPoolEditorPrivate
+struct _GPInstructLessonTestWordPoolEditorPrivate
 {
-	CanvasEditorWindow* window;
-	CanvasLessonTestWordPool* test;
+	GPInstructEditorWindow* window;
+	GPInstructLessonTestWordPool* test;
 
 	GtkWidget* title_label;
 	GtkWidget* title_entry;
@@ -46,7 +45,7 @@ struct _CanvasLessonTestWordPoolEditorPrivate
 	GtkListStore* choices_store;
 };
 
-#define CANVAS_LESSON_TEST_WORD_POOL_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_TEST_WORD_POOL_EDITOR, CanvasLessonTestWordPoolEditorPrivate))
+#define GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_EDITOR, GPInstructLessonTestWordPoolEditorPrivate))
 
 
 enum
@@ -57,21 +56,21 @@ enum
 };
 
 static void
-update_questions_tree_view (CanvasLessonTestWordPoolEditor* editor)
+update_questions_tree_view (GPInstructLessonTestWordPoolEditor* editor)
 {
 	gtk_list_store_clear (editor->priv->questions_store);
 
 	GtkTreeIter iterQuestion;
 	const gchar* text;
 
-	GList* questions = canvas_lesson_test_word_pool_get_questions (editor->priv->test);
+	GList* questions = gpinstruct_lesson_test_word_pool_get_questions (editor->priv->test);
 	GList* curr_questions = questions;
 
 	while (curr_questions)
 	{
-		CanvasLessonTestWordPoolQuestion* question = CANVAS_LESSON_TEST_WORD_POOL_QUESTION (curr_questions->data);
+		GPInstructLessonTestWordPoolQuestion* question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (curr_questions->data);
 
-		text = canvas_lesson_test_word_pool_question_get_text (question);
+		text = gpinstruct_lesson_test_word_pool_question_get_text (question);
 		gtk_list_store_append (editor->priv->questions_store, &iterQuestion);
 		gtk_list_store_set (editor->priv->questions_store, &iterQuestion,
 		                    TITLE_COLUMN, text,
@@ -93,9 +92,9 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
                                    GtkTreeViewColumn *column,
                                    gpointer           user_data)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
-	CanvasObject* object;
+	GPInstructObject* object;
 	GtkTreeIter iter;
 	GtkWidget *scrolled_window, *text_view, *explanation_view, *answer_combobox;
 
@@ -104,10 +103,10 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 		gtk_tree_model_get (GTK_TREE_MODEL (editor->priv->questions_store), &iter,
 		                    DATA_COLUMN, &object,
 		                    -1);
-		if (CANVAS_IS_LESSON_TEST_WORD_POOL_QUESTION (object))
+		if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL_QUESTION (object))
 		{
-			CanvasLessonTestWordPoolQuestion* question = CANVAS_LESSON_TEST_WORD_POOL_QUESTION (object);
-			guint choices_num = canvas_lesson_test_word_pool_get_choices_length (editor->priv->test);
+			GPInstructLessonTestWordPoolQuestion* question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (object);
+			guint choices_num = gpinstruct_lesson_test_word_pool_get_choices_length (editor->priv->test);
 
 			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Question Properties"),
 			                                                 GTK_WINDOW (editor->priv->window),
@@ -124,7 +123,7 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 			text_view = gtk_text_view_new ();
 			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
 			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
-			                          canvas_lesson_test_word_pool_question_get_text (question),
+			                          gpinstruct_lesson_test_word_pool_question_get_text (question),
 			                          -1);
 			gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
 			gtk_box_pack_start (GTK_BOX (content_area),
@@ -140,7 +139,7 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 			explanation_view = gtk_text_view_new ();
 			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (explanation_view), GTK_WRAP_WORD_CHAR);
 			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (explanation_view)),
-			                          canvas_lesson_test_word_pool_question_get_explanation (question),
+			                          gpinstruct_lesson_test_word_pool_question_get_explanation (question),
 			                          -1);
 			gtk_container_add (GTK_CONTAINER (scrolled_window), explanation_view);
 			gtk_box_pack_start (GTK_BOX (content_area),
@@ -159,7 +158,7 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 				                                "text", TITLE_COLUMN,
 				                                NULL);
 				gtk_combo_box_set_active (GTK_COMBO_BOX (answer_combobox),
-				                          canvas_lesson_test_word_pool_question_get_answer (question));
+				                          gpinstruct_lesson_test_word_pool_question_get_answer (question));
 				gtk_box_pack_start (GTK_BOX (content_area),
 				                    gtk_label_new (_("Answer:")),
 				                    FALSE, TRUE, 0);
@@ -176,21 +175,21 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
 				                            &start, &end);
 				gchar* text = gtk_text_iter_get_text (&start, &end);
-				canvas_lesson_test_word_pool_question_set_text (question, text);
+				gpinstruct_lesson_test_word_pool_question_set_text (question, text);
 				g_free (text);
 
 				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (explanation_view)),
 				                            &start, &end);
 				text = gtk_text_iter_get_text (&start, &end);
-				canvas_lesson_test_word_pool_question_set_explanation (question, text);
+				gpinstruct_lesson_test_word_pool_question_set_explanation (question, text);
 				g_free (text);
 
 				if (choices_num)
-					canvas_lesson_test_word_pool_question_set_answer (question,
-					                                                  gtk_combo_box_get_active (GTK_COMBO_BOX (answer_combobox)));
+					gpinstruct_lesson_test_word_pool_question_set_answer (question,
+					                                                      gtk_combo_box_get_active (GTK_COMBO_BOX (answer_combobox)));
 
-				update_questions_tree_view (CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data));
-				canvas_editor_window_set_modified (editor->priv->window, TRUE);
+				update_questions_tree_view (GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data));
+				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 			}
 
 			gtk_widget_destroy (dialog);
@@ -201,18 +200,18 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 
 static void
 questions_add_button_clicked (GtkButton *button,
-                            gpointer   user_data)
+                              gpointer   user_data)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
-	CanvasLessonTestWordPoolQuestion* question;
+	GPInstructLessonTestWordPoolQuestion* question;
 	GtkTreeIter iter;
 	gchar* title;
 
 	title = _("Empty Question");
-	question = canvas_lesson_test_word_pool_question_new ();
-	canvas_lesson_test_word_pool_question_set_text (question, title);
-	canvas_lesson_test_word_pool_add_question (editor->priv->test, question);
+	question = gpinstruct_lesson_test_word_pool_question_new ();
+	gpinstruct_lesson_test_word_pool_question_set_text (question, title);
+	gpinstruct_lesson_test_word_pool_add_question (editor->priv->test, question);
 
 	gtk_list_store_append (editor->priv->questions_store, &iter);
 	gtk_list_store_set (editor->priv->questions_store, &iter,
@@ -220,15 +219,15 @@ questions_add_button_clicked (GtkButton *button,
 	                    DATA_COLUMN, question,
 	                    -1);
 
-	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
 
 static void
 questions_remove_button_clicked (GtkButton *button,
-                               gpointer   user_data)
+                                 gpointer   user_data)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
@@ -239,25 +238,25 @@ questions_remove_button_clicked (GtkButton *button,
 	{
 		path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->questions_store), &iter);
 
-		canvas_lesson_test_word_pool_remove_question (editor->priv->test, gtk_tree_path_get_indices (path)[0]);
+		gpinstruct_lesson_test_word_pool_remove_question (editor->priv->test, gtk_tree_path_get_indices (path)[0]);
 
 		gtk_list_store_remove (editor->priv->questions_store, &iter);
 
 		gtk_tree_path_free (path);
 
-		canvas_editor_window_set_modified (editor->priv->window, TRUE);
+		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 	}
 }
 
 
 static void
-update_choices_tree_view (CanvasLessonTestWordPoolEditor* editor)
+update_choices_tree_view (GPInstructLessonTestWordPoolEditor* editor)
 {
 	gtk_list_store_clear (editor->priv->choices_store);
 
 	GtkTreeIter iterChoices;
 
-	GList* choices = canvas_lesson_test_word_pool_get_choices (editor->priv->test);
+	GList* choices = gpinstruct_lesson_test_word_pool_get_choices (editor->priv->test);
 	GList* curr_choices = choices;
 
 	while (curr_choices)
@@ -283,9 +282,9 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
                                  GtkTreeViewColumn *column,
                                  gpointer           user_data)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
-	CanvasObject* object;
+	GPInstructObject* object;
 	GtkTreeIter iter;
 	GtkWidget *scrolled_window, *text_view;
 
@@ -313,7 +312,7 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
 			text_view = gtk_text_view_new ();
 			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
 			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
-			                          canvas_lesson_test_word_pool_get_choice (editor->priv->test, choice),
+			                          gpinstruct_lesson_test_word_pool_get_choice (editor->priv->test, choice),
 			                          -1);
 			gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
 			gtk_box_pack_start (GTK_BOX (content_area),
@@ -330,11 +329,11 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
 				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
 				                            &start, &end);
 				gchar* text = gtk_text_iter_get_text (&start, &end);
-				canvas_lesson_test_word_pool_set_choice (editor->priv->test, choice, text);
+				gpinstruct_lesson_test_word_pool_set_choice (editor->priv->test, choice, text);
 				g_free (text);
 
-				update_choices_tree_view (CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data));
-				canvas_editor_window_set_modified (editor->priv->window, TRUE);
+				update_choices_tree_view (GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data));
+				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 			}
 
 			gtk_widget_destroy (dialog);
@@ -347,13 +346,13 @@ static void
 choices_add_button_clicked (GtkButton *button,
                             gpointer   user_data)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
 	GtkTreeIter iter;
 	gchar* title;
 
 	title = _("Empty Choice");
-	canvas_lesson_test_word_pool_add_choice (editor->priv->test, title);
+	gpinstruct_lesson_test_word_pool_add_choice (editor->priv->test, title);
 
 	gtk_list_store_append (editor->priv->choices_store, &iter);
 	gtk_list_store_set (editor->priv->choices_store, &iter,
@@ -361,7 +360,7 @@ choices_add_button_clicked (GtkButton *button,
 	                    DATA_COLUMN, title,
 	                    -1);
 
-	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
 
@@ -369,7 +368,7 @@ static void
 choices_remove_button_clicked (GtkButton *button,
                                gpointer   user_data)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
@@ -380,23 +379,23 @@ choices_remove_button_clicked (GtkButton *button,
 	{
 		path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->choices_store), &iter);
 
-		canvas_lesson_test_word_pool_remove_choice (editor->priv->test, gtk_tree_path_get_indices (path)[0]);
+		gpinstruct_lesson_test_word_pool_remove_choice (editor->priv->test, gtk_tree_path_get_indices (path)[0]);
 
 		gtk_list_store_remove (editor->priv->choices_store, &iter);
 
 		gtk_tree_path_free (path);
 
-		canvas_editor_window_set_modified (editor->priv->window, TRUE);
+		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 	}
 }
 
 
-G_DEFINE_TYPE (CanvasLessonTestWordPoolEditor, canvas_lesson_test_word_pool_editor, CANVAS_TYPE_OBJECT_EDITOR);
+G_DEFINE_TYPE (GPInstructLessonTestWordPoolEditor, gpinstruct_lesson_test_word_pool_editor, GPINSTRUCT_TYPE_OBJECT_EDITOR);
 
 static void
-canvas_lesson_test_word_pool_editor_init (CanvasLessonTestWordPoolEditor *object)
+gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor *object)
 {
-	object->priv = CANVAS_LESSON_TEST_WORD_POOL_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR_PRIVATE (object);
 
 	object->priv->questions_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 	object->priv->choices_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
@@ -469,13 +468,11 @@ canvas_lesson_test_word_pool_editor_init (CanvasLessonTestWordPoolEditor *object
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (questions_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_buttonbox, FALSE, TRUE, 0);
 
-	GtkWidget* questions_add_button = gtk_button_new_with_label (GTK_STOCK_ADD);
-	gtk_button_set_use_stock (GTK_BUTTON (questions_add_button), TRUE);
+	GtkWidget* questions_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (questions_add_button, "clicked", G_CALLBACK (questions_add_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (questions_buttonbox), questions_add_button, FALSE, TRUE, 0);
 
-	GtkWidget* questions_remove_button = gtk_button_new_with_label (GTK_STOCK_REMOVE);
-	gtk_button_set_use_stock (GTK_BUTTON (questions_remove_button), TRUE);
+	GtkWidget* questions_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
 	g_signal_connect (questions_remove_button, "clicked", G_CALLBACK (questions_remove_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (questions_buttonbox), questions_remove_button, FALSE, TRUE, 0);
 
@@ -505,21 +502,19 @@ canvas_lesson_test_word_pool_editor_init (CanvasLessonTestWordPoolEditor *object
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (choices_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (choices_hbox), choices_buttonbox, FALSE, TRUE, 0);
 
-	GtkWidget* choices_add_button = gtk_button_new_with_label (GTK_STOCK_ADD);
-	gtk_button_set_use_stock (GTK_BUTTON (choices_add_button), TRUE);
+	GtkWidget* choices_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (choices_add_button, "clicked", G_CALLBACK (choices_add_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (choices_buttonbox), choices_add_button, FALSE, TRUE, 0);
 
-	GtkWidget* choices_remove_button = gtk_button_new_with_label (GTK_STOCK_REMOVE);
-	gtk_button_set_use_stock (GTK_BUTTON (choices_remove_button), TRUE);
+	GtkWidget* choices_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
 	g_signal_connect (choices_remove_button, "clicked", G_CALLBACK (choices_remove_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (choices_buttonbox), choices_remove_button, FALSE, TRUE, 0);
 }
 
 static void
-canvas_lesson_test_word_pool_editor_finalize (GObject *object)
+gpinstruct_lesson_test_word_pool_editor_finalize (GObject *object)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (object);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (object);
 
 	if (editor->priv->questions_store)
 		g_object_unref (editor->priv->questions_store);
@@ -527,18 +522,18 @@ canvas_lesson_test_word_pool_editor_finalize (GObject *object)
 	if (editor->priv->choices_store)
 		g_object_unref (editor->priv->choices_store);
 
-	G_OBJECT_CLASS (canvas_lesson_test_word_pool_editor_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_lesson_test_word_pool_editor_parent_class)->finalize (object);
 }
 
 static void
-canvas_lesson_test_word_pool_editor_class_init (CanvasLessonTestWordPoolEditorClass *klass)
+gpinstruct_lesson_test_word_pool_editor_class_init (GPInstructLessonTestWordPoolEditorClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasObjectEditorClass* parent_class = CANVAS_OBJECT_EDITOR_CLASS (klass);*/
+	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasLessonTestWordPoolEditorPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLessonTestWordPoolEditorPrivate));
 
-	object_class->finalize = canvas_lesson_test_word_pool_editor_finalize;
+	object_class->finalize = gpinstruct_lesson_test_word_pool_editor_finalize;
 }
 
 
@@ -546,28 +541,28 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
-	canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (editor->priv->test),
-	                                 gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
-	canvas_editor_window_set_modified (editor->priv->window, TRUE);
-	canvas_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->test);
+	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (editor->priv->test),
+	                                     gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
+	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->test);
 }
 
 static void
 directions_buffer_changed (GtkTextBuffer *textbuffer,
                            gpointer       user_data)
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
 	GtkTextIter start, end;
 	gchar* text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
-	canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (editor->priv->test),
-	                                   text);
+	gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (editor->priv->test),
+	                                       text);
 	g_free (text);
-	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
 #if GTK_MAJOR_VERSION >= 3
@@ -581,7 +576,7 @@ explain_activate (GtkToggleButton *togglebutton,
                   gpointer         user_data)
 #endif
 {
-	CanvasLessonTestWordPoolEditor* editor = CANVAS_LESSON_TEST_WORD_POOL_EDITOR (user_data);
+	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
 #if GTK_MAJOR_VERSION >= 3
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->explain_switch));
@@ -590,44 +585,45 @@ explain_activate (GtkToggleButton *togglebutton,
 	gtk_button_set_label (GTK_BUTTON (editor->priv->explain_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
 #endif
 
-	if (active != canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (editor->priv->test)))
+	if (active != gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (editor->priv->test)))
 	{
-		canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (editor->priv->test),
-		                                active);
-		canvas_editor_window_set_modified (editor->priv->window, TRUE);
+		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (editor->priv->test),
+		                                    active);
+		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 	}
 }
 
 
-CanvasLessonTestWordPoolEditor*
-canvas_lesson_test_word_pool_editor_new (CanvasEditorWindow* window, CanvasLessonTestWordPool *test)
+GPInstructLessonTestWordPoolEditor*
+gpinstruct_lesson_test_word_pool_editor_new (GPInstructEditorWindow* window,
+                                             GPInstructLessonTestWordPool *test)
 {
-	CanvasLessonTestWordPoolEditor* editor = g_object_new (CANVAS_TYPE_LESSON_TEST_WORD_POOL_EDITOR, NULL);
+	GPInstructLessonTestWordPoolEditor* editor = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_EDITOR, NULL);
 
 	editor->priv->window = window;
 	editor->priv->test = test;
 
 	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
-	                    canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (test)));
+	                    gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
 	g_signal_connect (editor->priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
 	GtkTextBuffer* buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->directions_view));
 	gtk_text_buffer_set_text (buffer,
-	                          canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (test)), -1);
+	                          gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)), -1);
 	g_signal_connect (buffer, "changed",
 	                  G_CALLBACK (directions_buffer_changed), editor);
 
 #if GTK_MAJOR_VERSION >= 3
 	gtk_switch_set_active (GTK_SWITCH (editor->priv->explain_switch),
-	                       canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (test)));
+	                       gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test)));
 	g_signal_connect (editor->priv->explain_switch, "notify::active",
 	                  G_CALLBACK (explain_activate), editor);
 #else
 	g_signal_connect (editor->priv->explain_switch, "toggled",
 	                  G_CALLBACK (explain_activate), editor);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (editor->priv->explain_switch),
-	                              canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (test)));
+	                              gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test)));
 #endif
 
 	update_questions_tree_view (editor);

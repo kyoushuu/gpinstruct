@@ -1,13 +1,5 @@
-/***************************************************************************
- *            canvas-private.h
- *
- *  Sun July 31 09:15:41 2011
- *  Copyright  2011  Arnel A. Borja
- *  <galeon@ymail.com>
- ****************************************************************************/
 /*
- * canvas-private.h
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,5 +16,5 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-gboolean _canvas_boolean_handled_accumulator (GSignalInvocationHint *ihint, GValue *return_accu, const GValue *handler_return, gpointer dummy);
+gboolean _gpinstruct_boolean_handled_accumulator (GSignalInvocationHint *ihint, GValue *return_accu, const GValue *handler_return, gpointer dummy);
 

@@ -15,53 +15,53 @@ AM_CPPFLAGS = \
 	$(LIBXML_CFLAGS)
 
 lib_LTLIBRARIES =  \
-	libcanvas.la
+	libgpinstruct.la
 
-libcanvas_la_SOURCES =  \
-	canvas.c \
-	canvas.h \
-	canvas-category.c \
-	canvas-category.h \
-	canvas-lesson.c \
-	canvas-lesson.h \
-	canvas-lesson-discussion.c \
-	canvas-lesson-discussion.h \
-	canvas-lesson-element.c \
-	canvas-lesson-element.h \
-	canvas-lesson-reading.c \
-	canvas-lesson-reading.h \
-	canvas-lesson-test.c \
-	canvas-lesson-test.h \
-	canvas-lesson-test-multi-choice.c \
-	canvas-lesson-test-multi-choice.h \
-	canvas-lesson-test-multi-choice-question.c \
-	canvas-lesson-test-multi-choice-question.h \
-	canvas-lesson-test-order.c \
-	canvas-lesson-test-order.h \
-	canvas-lesson-test-order-item.c \
-	canvas-lesson-test-order-item.h \
-	canvas-lesson-test-word-pool.c \
-	canvas-lesson-test-word-pool.h \
-	canvas-lesson-test-word-pool-question.c \
-	canvas-lesson-test-word-pool-question.h \
-	canvas-marshalers.c \
-	canvas-marshalers.h \
-	canvas-marshalers.list \
-	canvas-object.c \
-	canvas-object.h \
-	canvas-parser.c \
-	canvas-parser.h \
-	canvas-private.h \
-	canvas-project.c \
-	canvas-project.h
+libgpinstruct_la_SOURCES =  \
+	gpinstruct.c \
+	gpinstruct.h \
+	gpinstruct-category.c \
+	gpinstruct-category.h \
+	gpinstruct-lesson.c \
+	gpinstruct-lesson.h \
+	gpinstruct-lesson-discussion.c \
+	gpinstruct-lesson-discussion.h \
+	gpinstruct-lesson-element.c \
+	gpinstruct-lesson-element.h \
+	gpinstruct-lesson-reading.c \
+	gpinstruct-lesson-reading.h \
+	gpinstruct-lesson-test.c \
+	gpinstruct-lesson-test.h \
+	gpinstruct-lesson-test-multi-choice.c \
+	gpinstruct-lesson-test-multi-choice.h \
+	gpinstruct-lesson-test-multi-choice-question.c \
+	gpinstruct-lesson-test-multi-choice-question.h \
+	gpinstruct-lesson-test-order.c \
+	gpinstruct-lesson-test-order.h \
+	gpinstruct-lesson-test-order-item.c \
+	gpinstruct-lesson-test-order-item.h \
+	gpinstruct-lesson-test-word-pool.c \
+	gpinstruct-lesson-test-word-pool.h \
+	gpinstruct-lesson-test-word-pool-question.c \
+	gpinstruct-lesson-test-word-pool-question.h \
+	gpinstruct-marshalers.c \
+	gpinstruct-marshalers.h \
+	gpinstruct-marshalers.list \
+	gpinstruct-object.c \
+	gpinstruct-object.h \
+	gpinstruct-parser.c \
+	gpinstruct-parser.h \
+	gpinstruct-private.h \
+	gpinstruct-project.c \
+	gpinstruct-project.h
 
-libcanvas_la_CPPFLAGS = -DG_LOG_DOMAIN=\"Canvas\" \
+libgpinstruct_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct\" \
 	$(AM_CPPFLAGS)
 
-libcanvas_la_LDFLAGS = \
+libgpinstruct_la_LDFLAGS = \
 	-no-undefined
 
-libcanvas_la_LIBADD = $(GOBJECT_LIBS) \
+libgpinstruct_la_LIBADD = $(GOBJECT_LIBS) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(LIBXML_LIBS)

@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -22,13 +21,13 @@
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas-editor/canvas-editor.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-editor/gpinstruct-editor.h"
 
-struct _CanvasLessonTestOrderEditorPrivate
+struct _GPInstructLessonTestOrderEditorPrivate
 {
-	CanvasEditorWindow* window;
-	CanvasLessonTestOrder* test;
+	GPInstructEditorWindow* window;
+	GPInstructLessonTestOrder* test;
 
 	GtkWidget* title_label;
 	GtkWidget* title_entry;
@@ -46,7 +45,7 @@ struct _CanvasLessonTestOrderEditorPrivate
 	GtkListStore* store;
 };
 
-#define CANVAS_LESSON_TEST_ORDER_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_TEST_ORDER_EDITOR, CanvasLessonTestOrderEditorPrivate))
+#define GPINSTRUCT_LESSON_TEST_ORDER_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_EDITOR, GPInstructLessonTestOrderEditorPrivate))
 
 
 enum
@@ -57,21 +56,21 @@ enum
 };
 
 static void
-update_tree_view (CanvasLessonTestOrderEditor* editor)
+update_tree_view (GPInstructLessonTestOrderEditor* editor)
 {
 	gtk_list_store_clear (editor->priv->store);
 
 	GtkTreeIter iterItem;
 	const gchar* text;
 
-	GList* items = canvas_lesson_test_order_get_items (editor->priv->test);
+	GList* items = gpinstruct_lesson_test_order_get_items (editor->priv->test);
 	GList* curr_items = items;
 
 	while (curr_items)
 	{
-		CanvasLessonTestOrderItem* item = CANVAS_LESSON_TEST_ORDER_ITEM (curr_items->data);
+		GPInstructLessonTestOrderItem* item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (curr_items->data);
 
-		text = canvas_lesson_test_order_item_get_text (item);
+		text = gpinstruct_lesson_test_order_item_get_text (item);
 		gtk_list_store_append (editor->priv->store, &iterItem);
 		gtk_list_store_set (editor->priv->store, &iterItem,
 		                    TITLE_COLUMN, text,
@@ -93,9 +92,9 @@ tree_view_row_activated (GtkTreeView       *tree_view,
                          GtkTreeViewColumn *column,
                          gpointer           user_data)
 {
-	CanvasLessonTestOrderEditor* editor = CANVAS_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
-	CanvasObject* object;
+	GPInstructObject* object;
 	GtkTreeIter iter;
 	GtkWidget *scrolled_window, *text_view, *answer_spin;
 
@@ -104,10 +103,10 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 		gtk_tree_model_get (GTK_TREE_MODEL (editor->priv->store), &iter,
 		                    DATA_COLUMN, &object,
 		                    -1);
-		if (CANVAS_IS_LESSON_TEST_ORDER_ITEM (object))
+		if (GPINSTRUCT_IS_LESSON_TEST_ORDER_ITEM (object))
 		{
-			CanvasLessonTestOrderItem* item = CANVAS_LESSON_TEST_ORDER_ITEM (object);
-			guint items_num = canvas_lesson_test_order_get_items_length (editor->priv->test);
+			GPInstructLessonTestOrderItem* item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (object);
+			guint items_num = gpinstruct_lesson_test_order_get_items_length (editor->priv->test);
 
 			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Item Properties"),
 			                                                 GTK_WINDOW (editor->priv->window),
@@ -124,7 +123,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 			text_view = gtk_text_view_new ();
 			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
 			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
-			                          canvas_lesson_test_order_item_get_text (item),
+			                          gpinstruct_lesson_test_order_item_get_text (item),
 			                          -1);
 			gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
 			gtk_box_pack_start (GTK_BOX (content_area),
@@ -136,7 +135,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 
 			answer_spin = gtk_spin_button_new_with_range (1, items_num, 1);
 			gtk_spin_button_set_value (GTK_SPIN_BUTTON (answer_spin),
-			                           canvas_lesson_test_order_item_get_answer (item)+1);
+			                           gpinstruct_lesson_test_order_item_get_answer (item)+1);
 			gtk_box_pack_start (GTK_BOX (content_area),
 			                    gtk_label_new (_("Answer:")),
 			                    FALSE, TRUE, 0);
@@ -151,14 +150,14 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
 				                            &start, &end);
 				gchar* text = gtk_text_iter_get_text (&start, &end);
-				canvas_lesson_test_order_item_set_text (item, text);
+				gpinstruct_lesson_test_order_item_set_text (item, text);
 				g_free (text);
 
-				canvas_lesson_test_order_item_set_answer (item,
-				                                          gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (answer_spin))-1);
+				gpinstruct_lesson_test_order_item_set_answer (item,
+				                                              gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (answer_spin))-1);
 
-				update_tree_view (CANVAS_LESSON_TEST_ORDER_EDITOR (user_data));
-				canvas_editor_window_set_modified (editor->priv->window, TRUE);
+				update_tree_view (GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data));
+				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 			}
 
 			gtk_widget_destroy (dialog);
@@ -169,20 +168,20 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 
 static void
 items_add_button_clicked (GtkButton *button,
-                            gpointer   user_data)
+                          gpointer   user_data)
 {
-	CanvasLessonTestOrderEditor* editor = CANVAS_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
-	CanvasLessonTestOrderItem* item;
+	GPInstructLessonTestOrderItem* item;
 	GtkTreeIter iter;
 	gchar* title;
 
 	title = _("Empty Item");
-	item = canvas_lesson_test_order_item_new ();
-	canvas_lesson_test_order_item_set_text (item, title);
-	canvas_lesson_test_order_item_set_answer (item,
-	                                          gtk_tree_model_iter_n_children (GTK_TREE_MODEL (editor->priv->store), NULL));
-	canvas_lesson_test_order_add_item (editor->priv->test, item);
+	item = gpinstruct_lesson_test_order_item_new ();
+	gpinstruct_lesson_test_order_item_set_text (item, title);
+	gpinstruct_lesson_test_order_item_set_answer (item,
+	                                              gtk_tree_model_iter_n_children (GTK_TREE_MODEL (editor->priv->store), NULL));
+	gpinstruct_lesson_test_order_add_item (editor->priv->test, item);
 
 	gtk_list_store_append (editor->priv->store, &iter);
 	gtk_list_store_set (editor->priv->store, &iter,
@@ -190,15 +189,15 @@ items_add_button_clicked (GtkButton *button,
 	                    DATA_COLUMN, item,
 	                    -1);
 
-	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
 
 static void
 items_remove_button_clicked (GtkButton *button,
-                               gpointer   user_data)
+                             gpointer   user_data)
 {
-	CanvasLessonTestOrderEditor* editor = CANVAS_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
@@ -209,23 +208,23 @@ items_remove_button_clicked (GtkButton *button,
 	{
 		path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->store), &iter);
 
-		canvas_lesson_test_order_remove_item (editor->priv->test, gtk_tree_path_get_indices (path)[0]);
+		gpinstruct_lesson_test_order_remove_item (editor->priv->test, gtk_tree_path_get_indices (path)[0]);
 
 		gtk_list_store_remove (editor->priv->store, &iter);
 
 		gtk_tree_path_free (path);
 
-		canvas_editor_window_set_modified (editor->priv->window, TRUE);
+		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 	}
 }
 
 
-G_DEFINE_TYPE (CanvasLessonTestOrderEditor, canvas_lesson_test_order_editor, CANVAS_TYPE_OBJECT_EDITOR);
+G_DEFINE_TYPE (GPInstructLessonTestOrderEditor, gpinstruct_lesson_test_order_editor, GPINSTRUCT_TYPE_OBJECT_EDITOR);
 
 static void
-canvas_lesson_test_order_editor_init (CanvasLessonTestOrderEditor *object)
+gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *object)
 {
-	object->priv = CANVAS_LESSON_TEST_ORDER_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR_PRIVATE (object);
 
 	object->priv->store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
@@ -314,37 +313,35 @@ canvas_lesson_test_order_editor_init (CanvasLessonTestOrderEditor *object)
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (items_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (items_hbox), items_buttonbox, FALSE, TRUE, 0);
 
-	GtkWidget* items_add_button = gtk_button_new_with_label (GTK_STOCK_ADD);
-	gtk_button_set_use_stock (GTK_BUTTON (items_add_button), TRUE);
+	GtkWidget* items_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (items_add_button, "clicked", G_CALLBACK (items_add_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (items_buttonbox), items_add_button, FALSE, TRUE, 0);
 
-	GtkWidget* items_remove_button = gtk_button_new_with_label (GTK_STOCK_REMOVE);
-	gtk_button_set_use_stock (GTK_BUTTON (items_remove_button), TRUE);
+	GtkWidget* items_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
 	g_signal_connect (items_remove_button, "clicked", G_CALLBACK (items_remove_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (items_buttonbox), items_remove_button, FALSE, TRUE, 0);
 }
 
 static void
-canvas_lesson_test_order_editor_finalize (GObject *object)
+gpinstruct_lesson_test_order_editor_finalize (GObject *object)
 {
-	CanvasLessonTestOrderEditor* editor = CANVAS_LESSON_TEST_ORDER_EDITOR (object);
+	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (object);
 
 	if (editor->priv->store)
 		g_object_unref (editor->priv->store);
 
-	G_OBJECT_CLASS (canvas_lesson_test_order_editor_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_lesson_test_order_editor_parent_class)->finalize (object);
 }
 
 static void
-canvas_lesson_test_order_editor_class_init (CanvasLessonTestOrderEditorClass *klass)
+gpinstruct_lesson_test_order_editor_class_init (GPInstructLessonTestOrderEditorClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasObjectEditorClass* parent_class = CANVAS_OBJECT_EDITOR_CLASS (klass);*/
+	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasLessonTestOrderEditorPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLessonTestOrderEditorPrivate));
 
-	object_class->finalize = canvas_lesson_test_order_editor_finalize;
+	object_class->finalize = gpinstruct_lesson_test_order_editor_finalize;
 }
 
 
@@ -352,28 +349,28 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	CanvasLessonTestOrderEditor* editor = CANVAS_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
-	canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (editor->priv->test),
-	                                 gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
-	canvas_editor_window_set_modified (editor->priv->window, TRUE);
-	canvas_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->test);
+	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (editor->priv->test),
+	                                     gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
+	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->test);
 }
 
 static void
 directions_buffer_changed (GtkTextBuffer *textbuffer,
                            gpointer       user_data)
 {
-	CanvasLessonTestOrderEditor* editor = CANVAS_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	GtkTextIter start, end;
 	gchar* text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
-	canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (editor->priv->test),
-	                                   text);
+	gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (editor->priv->test),
+	                                       text);
 	g_free (text);
-	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
 #if GTK_MAJOR_VERSION >= 3
@@ -387,7 +384,7 @@ explain_activate (GtkToggleButton *togglebutton,
                   gpointer         user_data)
 #endif
 {
-	CanvasLessonTestOrderEditor* editor = CANVAS_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 #if GTK_MAJOR_VERSION >= 3
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->explain_switch));
@@ -396,11 +393,11 @@ explain_activate (GtkToggleButton *togglebutton,
 	gtk_button_set_label (GTK_BUTTON (editor->priv->explain_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
 #endif
 
-	if (active != canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (editor->priv->test)))
+	if (active != gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (editor->priv->test)))
 	{
-		canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (editor->priv->test),
-		                                active);
-		canvas_editor_window_set_modified (editor->priv->window, TRUE);
+		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (editor->priv->test),
+		                                    active);
+		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 	}
 }
 
@@ -408,23 +405,24 @@ static void
 explanation_buffer_changed (GtkTextBuffer *textbuffer,
                             gpointer       user_data)
 {
-	CanvasLessonTestOrderEditor* editor = CANVAS_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	GtkTextIter start, end;
 	gchar* text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
-	canvas_lesson_test_order_set_explanation (editor->priv->test,
-	                                          text);
+	gpinstruct_lesson_test_order_set_explanation (editor->priv->test,
+	                                              text);
 	g_free (text);
-	canvas_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
 
-CanvasLessonTestOrderEditor*
-canvas_lesson_test_order_editor_new (CanvasEditorWindow* window, CanvasLessonTestOrder *test)
+GPInstructLessonTestOrderEditor*
+gpinstruct_lesson_test_order_editor_new (GPInstructEditorWindow* window,
+                                         GPInstructLessonTestOrder *test)
 {
-	CanvasLessonTestOrderEditor* editor = g_object_new (CANVAS_TYPE_LESSON_TEST_ORDER_EDITOR, NULL);
+	GPInstructLessonTestOrderEditor* editor = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_ORDER_EDITOR, NULL);
 
 	GtkTextBuffer* buffer;
 
@@ -432,31 +430,31 @@ canvas_lesson_test_order_editor_new (CanvasEditorWindow* window, CanvasLessonTes
 	editor->priv->test = test;
 
 	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
-	                    canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (test)));
+	                    gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
 	g_signal_connect (editor->priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->directions_view));
 	gtk_text_buffer_set_text (buffer,
-	                          canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (test)), -1);
+	                          gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)), -1);
 	g_signal_connect (buffer, "changed",
 	                  G_CALLBACK (directions_buffer_changed), editor);
 
 #if GTK_MAJOR_VERSION >= 3
 	gtk_switch_set_active (GTK_SWITCH (editor->priv->explain_switch),
-	                       canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (test)));
+	                       gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test)));
 	g_signal_connect (editor->priv->explain_switch, "notify::active",
 	                  G_CALLBACK (explain_activate), editor);
 #else
 	g_signal_connect (editor->priv->explain_switch, "toggled",
 	                  G_CALLBACK (explain_activate), editor);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (editor->priv->explain_switch),
-	                              canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (test)));
+	                              gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test)));
 #endif
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->explanation_view));
 	gtk_text_buffer_set_text (buffer,
-	                          canvas_lesson_test_order_get_explanation (test), -1);
+	                          gpinstruct_lesson_test_order_get_explanation (test), -1);
 	g_signal_connect (buffer, "changed",
 	                  G_CALLBACK (explanation_buffer_changed), editor);
 

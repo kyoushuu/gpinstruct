@@ -3,12 +3,12 @@
  * main.c
  * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
  * 
- * canvas is free software: you can redistribute it and/or modify it
+ * gpinstruct is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * canvas is distributed in the hope that it will be useful, but
+ * gpinstruct is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
@@ -22,13 +22,14 @@
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
 
 
 
 int
-main (int argc, char *argv[])
+main (int argc,
+      char *argv[])
 {
 #ifdef ENABLE_NLS
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -36,14 +37,14 @@ main (int argc, char *argv[])
 	textdomain (GETTEXT_PACKAGE);
 #endif
 
-	
+
 	gtk_init (&argc, &argv);
 
 	GError* error = NULL;
 
-	CanvasParser* parser = canvas_parser_new ();
+	GPInstructParser* parser = gpinstruct_parser_new ();
 
-	CanvasProject* project = canvas_parser_open (parser, "default-project.xml", &error);
+	GPInstructProject* project = gpinstruct_parser_open (parser, "default-project.gpinstruct-project", &error);
 	if (error)
 	{
 		printf(_("Error: %s\n"), error->message);
@@ -51,7 +52,7 @@ main (int argc, char *argv[])
 		error = NULL;
 	}
 
-	canvas_parser_save (parser, project, "default-project-resave.xml", &error);
+	gpinstruct_parser_save (parser, project, "default-project-resave.gpinstruct-project", &error);
 	if (error)
 	{
 		printf(_("Error: %s\n"), error->message);
@@ -63,14 +64,14 @@ main (int argc, char *argv[])
 
 	if (project)
 	{
-		CanvasMessagePool* message_pool = canvas_message_pool_new ();
+		GPInstructMessagePool* message_pool = gpinstruct_message_pool_new ();
 
 		if (message_pool)
-			canvas_message_pool_load_from_file (message_pool, "messages.ini");
+			gpinstruct_message_pool_load_from_file (message_pool, "messages.ini");
 
-		CanvasLog* log = canvas_log_new ();
+		GPInstructLog* log = gpinstruct_log_new ();
 
-		GtkWidget* window = canvas_project_view_new (project, message_pool, log);
+		GtkWidget* window = gpinstruct_project_view_new (project, message_pool, log);
 
 		g_object_unref (message_pool);
 
@@ -85,7 +86,7 @@ main (int argc, char *argv[])
 		}
 
 		if (log)
-			canvas_log_save (log, "default-project-log.xml", NULL);
+			gpinstruct_log_save (log, "default-project-log.gpinstruct-log", NULL);
 
 		g_object_unref (log);
 

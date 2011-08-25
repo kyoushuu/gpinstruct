@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
-	 * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
-	 * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -32,11 +31,11 @@
 #define GDK_KEY_Right GDK_Right
 #endif
 
-#include "canvas/canvas.h"
-#include "canvas-editor/canvas-editor.h"
-#include "canvas-view/canvas-view.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-editor/gpinstruct-editor.h"
+#include "gpinstruct-view/gpinstruct-view.h"
 
-struct _CanvasEditorWindowPrivate
+struct _GPInstructEditorWindowPrivate
 {
 	GtkWidget* main_vbox;
 
@@ -73,15 +72,15 @@ struct _CanvasEditorWindowPrivate
 	GtkWidget* popup_remove_menu_item;
 
 
-	CanvasParser* parser;
-	CanvasProject *project;
+	GPInstructParser* parser;
+	GPInstructProject *project;
 	gchar* project_file;
 	gboolean modified;
 
 	GtkTreeIter iter_popup;
 };
 
-#define CANVAS_EDITOR_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_EDITOR_WINDOW, CanvasEditorWindowPrivate))
+#define GPINSTRUCT_EDITOR_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_EDITOR_WINDOW, GPInstructEditorWindowPrivate))
 
 
 
@@ -92,12 +91,12 @@ enum
 	N_COLUMNS
 };
 
-static void canvas_editor_window_log (const gchar *log_domain,
-                                      GLogLevelFlags log_level,
-                                      const gchar *message,
-                                      gpointer user_data)
+static void gpinstruct_editor_window_log (const gchar *log_domain,
+                                          GLogLevelFlags log_level,
+                                          const gchar *message,
+                                          gpointer user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	GtkMessageType type = GTK_MESSAGE_INFO;
 	if (log_level & G_LOG_LEVEL_CRITICAL)
@@ -131,9 +130,9 @@ window_delete_event (GtkWidget *widget,
                      GdkEvent  *event,
                      gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (widget);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (widget);
 
-	if (canvas_editor_window_quit (window))
+	if (gpinstruct_editor_window_quit (window))
 		return FALSE;
 	else
 		return TRUE;
@@ -145,14 +144,14 @@ tree_view_press_event (GtkWidget *widget,
                        GdkEvent *event,
                        gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 	GdkEventButton *event_button = NULL;
 	GdkEventKey *event_key;
 
 	GtkTreePath* path = NULL;
 	GtkTreeIter iter;
 
-	CanvasObject* object_popup;
+	GPInstructObject* object_popup;
 
 	gboolean show_popup = FALSE;
 	guint button = 0;
@@ -234,16 +233,16 @@ tree_view_press_event (GtkWidget *widget,
 		gtk_widget_hide (window->priv->popup_new_test_order_menu_item);
 		gtk_widget_hide (window->priv->popup_remove_menu_item);
 
-		if (CANVAS_IS_PROJECT (object_popup))
+		if (GPINSTRUCT_IS_PROJECT (object_popup))
 		{
 			gtk_widget_show (window->priv->popup_new_category_menu_item);
 		}
-		else if (CANVAS_IS_CATEGORY (object_popup))
+		else if (GPINSTRUCT_IS_CATEGORY (object_popup))
 		{
 			gtk_widget_show (window->priv->popup_new_lesson_menu_item);
 			gtk_widget_show (window->priv->popup_remove_menu_item);
 		}
-		else if (CANVAS_IS_LESSON (object_popup))
+		else if (GPINSTRUCT_IS_LESSON (object_popup))
 		{
 			gtk_widget_show (window->priv->popup_new_discussion_menu_item);
 			gtk_widget_show (window->priv->popup_new_reading_menu_item);
@@ -252,7 +251,7 @@ tree_view_press_event (GtkWidget *widget,
 			gtk_widget_show (window->priv->popup_new_test_order_menu_item);
 			gtk_widget_show (window->priv->popup_remove_menu_item);
 		}
-		else if (CANVAS_IS_LESSON_ELEMENT (object_popup))
+		else if (GPINSTRUCT_IS_LESSON_ELEMENT (object_popup))
 		{
 			gtk_widget_show (window->priv->popup_remove_menu_item);
 		}
@@ -272,10 +271,10 @@ static void
 tree_view_selection_changed (GtkTreeSelection *treeselection,
                              gpointer          user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	CanvasObject *object;
+	GPInstructObject *object;
 
 	if (window->priv->object_editor)
 	{
@@ -290,45 +289,45 @@ tree_view_selection_changed (GtkTreeSelection *treeselection,
 		                    DATA_COLUMN, &object,
 		                    -1);
 
-		if (CANVAS_IS_PROJECT (object))
+		if (GPINSTRUCT_IS_PROJECT (object))
 		{
-			window->priv->object_editor = GTK_WIDGET (canvas_project_editor_new (window,
-			                                                                     CANVAS_PROJECT (object)));
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_project_editor_new (window,
+			                                                                         GPINSTRUCT_PROJECT (object)));
 		}
-		else if (CANVAS_IS_CATEGORY (object))
+		else if (GPINSTRUCT_IS_CATEGORY (object))
 		{
-			window->priv->object_editor = GTK_WIDGET (canvas_category_editor_new (window,
-			                                                                      CANVAS_CATEGORY (object)));
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_category_editor_new (window,
+			                                                                          GPINSTRUCT_CATEGORY (object)));
 		}
-		else if (CANVAS_IS_LESSON (object))
+		else if (GPINSTRUCT_IS_LESSON (object))
 		{
-			window->priv->object_editor = GTK_WIDGET (canvas_lesson_editor_new (window,
-			                                                                    CANVAS_LESSON (object)));
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_lesson_editor_new (window,
+			                                                                        GPINSTRUCT_LESSON (object)));
 		}
-		else if (CANVAS_IS_LESSON_DISCUSSION (object))
+		else if (GPINSTRUCT_IS_LESSON_DISCUSSION (object))
 		{
-			window->priv->object_editor = GTK_WIDGET (canvas_lesson_discussion_editor_new (window,
-			                                                                               CANVAS_LESSON_DISCUSSION (object)));
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_lesson_discussion_editor_new (window,
+			                                                                                   GPINSTRUCT_LESSON_DISCUSSION (object)));
 		}
-		else if (CANVAS_IS_LESSON_READING (object))
+		else if (GPINSTRUCT_IS_LESSON_READING (object))
 		{
-			window->priv->object_editor = GTK_WIDGET (canvas_lesson_reading_editor_new (window,
-			                                                                            CANVAS_LESSON_READING (object)));
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_lesson_reading_editor_new (window,
+			                                                                                GPINSTRUCT_LESSON_READING (object)));
 		}
-		else if (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (object))
+		else if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (object))
 		{
-			window->priv->object_editor = GTK_WIDGET (canvas_lesson_test_multi_choice_editor_new (window,
-			                                                                                      CANVAS_LESSON_TEST_MULTI_CHOICE (object)));
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_lesson_test_multi_choice_editor_new (window,
+			                                                                                          GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (object)));
 		}
-		else if (CANVAS_IS_LESSON_TEST_WORD_POOL (object))
+		else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (object))
 		{
-			window->priv->object_editor = GTK_WIDGET (canvas_lesson_test_word_pool_editor_new (window,
-			                                                                                   CANVAS_LESSON_TEST_WORD_POOL (object)));
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_lesson_test_word_pool_editor_new (window,
+			                                                                                       GPINSTRUCT_LESSON_TEST_WORD_POOL (object)));
 		}
-		else if (CANVAS_IS_LESSON_TEST_ORDER (object))
+		else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (object))
 		{
-			window->priv->object_editor = GTK_WIDGET (canvas_lesson_test_order_editor_new (window,
-			                                                                               CANVAS_LESSON_TEST_ORDER (object)));
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_lesson_test_order_editor_new (window,
+			                                                                                   GPINSTRUCT_LESSON_TEST_ORDER (object)));
 		}
 
 		if (window->priv->object_editor)
@@ -342,7 +341,7 @@ tree_view_selection_changed (GtkTreeSelection *treeselection,
 
 
 typedef struct {
-	CanvasEditorWindow* window;
+	GPInstructEditorWindow* window;
 	gpointer data;
 } TreeViewSetCursorObjectData;
 
@@ -352,7 +351,7 @@ tree_view_set_cursor_object (GtkTreeModel *model,
                              GtkTreeIter *iter,
                              gpointer data)
 {
-	CanvasEditorWindow* window = ((TreeViewSetCursorObjectData*)data)->window;
+	GPInstructEditorWindow* window = ((TreeViewSetCursorObjectData*)data)->window;
 
 	gpointer current_data;
 	gtk_tree_model_get (model, iter,
@@ -374,9 +373,9 @@ static void
 file_new_action (GtkAction *action,
                  gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
-	canvas_editor_window_new_file (window);
+	gpinstruct_editor_window_new_file (window);
 }
 
 
@@ -384,7 +383,7 @@ static void
 file_open_action (GtkAction *action,
                   gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	GtkWidget *dialog;
 	dialog = gtk_file_chooser_dialog_new (_("Open File"),
@@ -395,15 +394,15 @@ file_open_action (GtkAction *action,
 	                                      NULL);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("Canvas Project file"));
-	gtk_file_filter_add_pattern (filter, "*.xml");
+	gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
 		gchar *filename;
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		canvas_editor_window_open_file (window, filename);
+		gpinstruct_editor_window_open_file (window, filename);
 		g_free (filename);
 	}
 	gtk_widget_destroy (dialog);
@@ -414,9 +413,9 @@ static void
 file_save_action (GtkAction *action,
                   gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
-	canvas_editor_window_save_file (window);
+	gpinstruct_editor_window_save_file (window);
 }
 
 
@@ -424,7 +423,7 @@ static void
 file_saveas_action (GtkAction *action,
                     gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 	if (window->priv->project == NULL)
 		return;
 
@@ -437,16 +436,16 @@ file_saveas_action (GtkAction *action,
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("Canvas Project file"));
-	gtk_file_filter_add_pattern (filter, "*.xml");
+	gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled.xml"));
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled.gpinstruct-project"));
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
 		gchar* filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		canvas_editor_window_save_file_as (window, filename);
+		gpinstruct_editor_window_save_file_as (window, filename);
 		g_free (filename);
 	}
 
@@ -458,9 +457,9 @@ static void
 file_close_action (GtkAction *action,
                    gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
-	canvas_editor_window_close_current_file (window);
+	gpinstruct_editor_window_close_current_file (window);
 }
 
 
@@ -468,9 +467,9 @@ static void
 file_quit_action (GtkAction *action,
                   gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
-	if (canvas_editor_window_quit (window))
+	if (gpinstruct_editor_window_quit (window))
 		gtk_widget_destroy (GTK_WIDGET (window));
 }
 
@@ -479,13 +478,13 @@ static void
 view_execute_action (GtkAction *action,
                      gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
-	CanvasMessagePool* message_pool = canvas_message_pool_new ();
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructMessagePool* message_pool = gpinstruct_message_pool_new ();
 
 	if (message_pool)
-		canvas_message_pool_load_from_file (message_pool, "messages.ini");
+		gpinstruct_message_pool_load_from_file (message_pool, "messages.ini");
 
-	GtkWidget* preview_window = canvas_project_view_new (window->priv->project, message_pool, NULL);
+	GtkWidget* preview_window = gpinstruct_project_view_new (window->priv->project, message_pool, NULL);
 
 	g_object_unref (message_pool);
 
@@ -509,46 +508,46 @@ static void
 help_about_action (GtkAction *action,
                    gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	static gchar* authors[] = {"Arnel A. Borja <galeon@ymail.com>", NULL};
 	gchar* license = _(
-		"This program is free software; you can redistribute it and/or modify "
-		"it under the terms of the GNU General Public License as published by "
-		"the Free Software Foundation; either version 3 of the License, or "
-		"(at your option) any later version.\n"
-		"\n"
-		"This program is distributed in the hope that it will be useful, "
-		"but WITHOUT ANY WARRANTY; without even the implied warranty of "
-		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-		"GNU General Public License for more details.\n"
-		"\n"
-		"You should have received a copy of the GNU General Public License along "
-		"with this program.  If not, see <http://www.gnu.org/licenses/>.");
+	                   "This program is free software; you can redistribute it and/or modify "
+	                   "it under the terms of the GNU General Public License as published by "
+	                   "the Free Software Foundation; either version 3 of the License, or "
+	                   "(at your option) any later version.\n"
+	                   "\n"
+	                   "This program is distributed in the hope that it will be useful, "
+	                   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+	                   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+	                   "GNU General Public License for more details.\n"
+	                   "\n"
+	                   "You should have received a copy of the GNU General Public License along "
+	                   "with this program.  If not, see <http://www.gnu.org/licenses/>.");
 
-		gtk_show_about_dialog (GTK_WINDOW (window),
-		                       "program-name", _("Canvas Editor"),
-		                       "version", PACKAGE_VERSION,
-		                       "title", _("About Canvas Editor"),
-		                       "comments", _("Canvas Project Editor"),
-		                       "website", "http://kyoushuu.users.sourceforge.net/project_canvas",
-		                       "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
+	                   gtk_show_about_dialog (GTK_WINDOW (window),
+	                                          "program-name", _("GPInstruct Editor"),
+	                                          "version", PACKAGE_VERSION,
+	                                          "title", _("About GPInstruct Editor"),
+	                                          "comments", _("GPInstruct Project Editor"),
+	                                          "website", "http://gpinstruct.sourceforge.net",
+	                                          "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
 #if GTK_MAJOR_VERSION >= 3
-		                       "license-type", GTK_LICENSE_GPL_3_0,
+	                                          "license-type", GTK_LICENSE_GPL_3_0,
 #endif
-		                       "license", license,
-		                       "wrap-license", TRUE,
-		                       "authors", authors,
-		                       NULL);
-}
+	                                          "license", license,
+	                                          "wrap-license", TRUE,
+	                                          "authors", authors,
+	                                          NULL);
+                   }
 
 
 static void
 new_object_activate (GtkWidget *menuitem,
                      gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
-	CanvasObject* object_popup;
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructObject* object_popup;
 	GtkTreeIter iter;
 	GtkTreePath* path;
 	gchar* title;
@@ -559,8 +558,8 @@ new_object_activate (GtkWidget *menuitem,
 
 	if (menuitem == window->priv->popup_new_category_menu_item)
 	{
-		CanvasCategory* category = canvas_category_new ();
-		canvas_project_add_category (CANVAS_PROJECT (object_popup), category);
+		GPInstructCategory* category = gpinstruct_category_new ();
+		gpinstruct_project_add_category (GPINSTRUCT_PROJECT (object_popup), category);
 
 		title = g_strdup_printf (_("Category: \"%s\""), _("Untitled"));
 		gtk_tree_store_append (window->priv->store, &iter, &window->priv->iter_popup);
@@ -572,8 +571,8 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_lesson_menu_item)
 	{
-		CanvasLesson* lesson = canvas_lesson_new ();
-		canvas_category_add_lesson (CANVAS_CATEGORY (object_popup), lesson);
+		GPInstructLesson* lesson = gpinstruct_lesson_new ();
+		gpinstruct_category_add_lesson (GPINSTRUCT_CATEGORY (object_popup), lesson);
 
 		title = g_strdup_printf (_("Lesson: \"%s\""), _("Untitled"));
 		gtk_tree_store_append (window->priv->store, &iter, &window->priv->iter_popup);
@@ -585,9 +584,9 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_discussion_menu_item)
 	{
-		CanvasLessonDiscussion* discussion = canvas_lesson_discussion_new ();
-		canvas_lesson_add_lesson_element (CANVAS_LESSON (object_popup),
-		                                  CANVAS_LESSON_ELEMENT (discussion));
+		GPInstructLessonDiscussion* discussion = gpinstruct_lesson_discussion_new ();
+		gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
+		                                      GPINSTRUCT_LESSON_ELEMENT (discussion));
 
 		title = g_strdup_printf (_("Lesson Discussion: \"%s\""), _("Untitled"));
 		gtk_tree_store_append (window->priv->store, &iter, &window->priv->iter_popup);
@@ -599,9 +598,9 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_reading_menu_item)
 	{
-		CanvasLessonReading* reading = canvas_lesson_reading_new ();
-		canvas_lesson_add_lesson_element (CANVAS_LESSON (object_popup),
-		                                  CANVAS_LESSON_ELEMENT (reading));
+		GPInstructLessonReading* reading = gpinstruct_lesson_reading_new ();
+		gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
+		                                      GPINSTRUCT_LESSON_ELEMENT (reading));
 
 		title = g_strdup_printf (_("Lesson Reading: \"%s\""), _("Untitled"));
 		gtk_tree_store_append (window->priv->store, &iter, &window->priv->iter_popup);
@@ -613,9 +612,9 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_test_multi_choice_menu_item)
 	{
-		CanvasLessonTestMultiChoice* test = canvas_lesson_test_multi_choice_new ();
-		canvas_lesson_add_lesson_element (CANVAS_LESSON (object_popup),
-		                                  CANVAS_LESSON_ELEMENT (test));
+		GPInstructLessonTestMultiChoice* test = gpinstruct_lesson_test_multi_choice_new ();
+		gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
+		                                      GPINSTRUCT_LESSON_ELEMENT (test));
 
 		title = g_strdup_printf (_("Lesson Test (Multi-Choice): \"%s\""), _("Untitled"));
 		gtk_tree_store_append (window->priv->store, &iter, &window->priv->iter_popup);
@@ -627,9 +626,9 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_test_word_pool_menu_item)
 	{
-		CanvasLessonTestWordPool* test = canvas_lesson_test_word_pool_new ();
-		canvas_lesson_add_lesson_element (CANVAS_LESSON (object_popup),
-		                                  CANVAS_LESSON_ELEMENT (test));
+		GPInstructLessonTestWordPool* test = gpinstruct_lesson_test_word_pool_new ();
+		gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
+		                                      GPINSTRUCT_LESSON_ELEMENT (test));
 
 		title = g_strdup_printf (_("Lesson Test (Word Pool): \"%s\""), _("Untitled"));
 		gtk_tree_store_append (window->priv->store, &iter, &window->priv->iter_popup);
@@ -641,9 +640,9 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_test_order_menu_item)
 	{
-		CanvasLessonTestOrder* test = canvas_lesson_test_order_new ();
-		canvas_lesson_add_lesson_element (CANVAS_LESSON (object_popup),
-		                                  CANVAS_LESSON_ELEMENT (test));
+		GPInstructLessonTestOrder* test = gpinstruct_lesson_test_order_new ();
+		gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
+		                                      GPINSTRUCT_LESSON_ELEMENT (test));
 
 		title = g_strdup_printf (_("Lesson Test (Order): \"%s\""), _("Untitled"));
 		gtk_tree_store_append (window->priv->store, &iter, &window->priv->iter_popup);
@@ -661,7 +660,7 @@ new_object_activate (GtkWidget *menuitem,
 	                          path, FALSE);
 	gtk_tree_path_free (path);
 
-	canvas_editor_window_set_modified (window, TRUE);
+	gpinstruct_editor_window_set_modified (window, TRUE);
 }
 
 
@@ -669,8 +668,8 @@ static void
 remove_object_activate (GtkWidget *menuitem,
                         gpointer   user_data)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (user_data);
-	CanvasObject* object_popup;
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructObject* object_popup;
 	GtkTreeIter iter;
 
 	if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (window->priv->store),
@@ -686,27 +685,27 @@ remove_object_activate (GtkWidget *menuitem,
 
 		gboolean modified = TRUE;
 
-		if (CANVAS_IS_PROJECT (object_popup))
+		if (GPINSTRUCT_IS_PROJECT (object_popup))
 		{
-			canvas_project_remove_category (CANVAS_PROJECT (object_popup),
-			                                indices[1]);
+			gpinstruct_project_remove_category (GPINSTRUCT_PROJECT (object_popup),
+			                                    indices[1]);
 		}
-		else if (CANVAS_IS_CATEGORY (object_popup))
+		else if (GPINSTRUCT_IS_CATEGORY (object_popup))
 		{
-			canvas_category_remove_lesson (CANVAS_CATEGORY (object_popup),
-			                               indices[2]);
+			gpinstruct_category_remove_lesson (GPINSTRUCT_CATEGORY (object_popup),
+			                                   indices[2]);
 		}
-		else if (CANVAS_IS_LESSON (object_popup))
+		else if (GPINSTRUCT_IS_LESSON (object_popup))
 		{
-			canvas_lesson_remove_lesson_element (CANVAS_LESSON (object_popup),
-			                                     indices[3]);
+			gpinstruct_lesson_remove_lesson_element (GPINSTRUCT_LESSON (object_popup),
+			                                         indices[3]);
 		}
 		else
 			modified = FALSE;
 
 		if (modified)
 		{
-			canvas_editor_window_set_modified (window, TRUE);
+			gpinstruct_editor_window_set_modified (window, TRUE);
 			gtk_tree_store_remove (GTK_TREE_STORE (window->priv->store),
 			                       &window->priv->iter_popup);
 		}
@@ -715,12 +714,12 @@ remove_object_activate (GtkWidget *menuitem,
 	}
 }
 
-G_DEFINE_TYPE (CanvasEditorWindow, canvas_editor_window, GTK_TYPE_WINDOW);
+G_DEFINE_TYPE (GPInstructEditorWindow, gpinstruct_editor_window, GTK_TYPE_WINDOW);
 
 static void
-canvas_editor_window_init (CanvasEditorWindow *object)
+gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 {
-	object->priv = CANVAS_EDITOR_WINDOW_PRIVATE (object);
+	object->priv = GPINSTRUCT_EDITOR_WINDOW_PRIVATE (object);
 
 	object->priv->store = NULL;
 	object->priv->object_editor = NULL;
@@ -794,7 +793,7 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 		"</ui>";
 
 
-	gtk_window_set_title (GTK_WINDOW (object), _("Canvas Editor"));
+	gtk_window_set_title (GTK_WINDOW (object), _("GPInstruct Editor"));
 	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
 
 	object->priv->main_vbox = gtk_vbox_new (FALSE, 3);
@@ -804,7 +803,7 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 	object->priv->manager = gtk_ui_manager_new ();
 	gtk_window_add_accel_group (GTK_WINDOW (object), gtk_ui_manager_get_accel_group (object->priv->manager));
 
-	object->priv->action_group = gtk_action_group_new ("canvas-editor-window");
+	object->priv->action_group = gtk_action_group_new ("gpinstruct-editor-window");
 	gtk_action_group_add_actions (object->priv->action_group, actions, G_N_ELEMENTS (actions), object);
 	gtk_action_set_sensitive (gtk_action_group_get_action (object->priv->action_group,
 	                                                       "file-save"),
@@ -926,20 +925,20 @@ canvas_editor_window_init (CanvasEditorWindow *object)
 	                  G_CALLBACK (remove_object_activate), object);
 
 
-	object->priv->parser = canvas_parser_new ();
+	object->priv->parser = gpinstruct_parser_new ();
 
 
 	g_signal_connect (object, "delete-event", G_CALLBACK (window_delete_event), NULL);
 
 	g_log_set_handler (G_LOG_DOMAIN,
 	                   G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO | G_LOG_LEVEL_DEBUG,
-	                   canvas_editor_window_log, object);
+	                   gpinstruct_editor_window_log, object);
 }
 
 static void
-canvas_editor_window_finalize (GObject *object)
+gpinstruct_editor_window_finalize (GObject *object)
 {
-	CanvasEditorWindow* window = CANVAS_EDITOR_WINDOW (object);
+	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (object);
 
 	if (window->priv->action_group)
 		g_object_unref (window->priv->action_group);
@@ -952,35 +951,36 @@ canvas_editor_window_finalize (GObject *object)
 
 	gtk_widget_destroy (window->priv->popup_menu);
 
-	G_OBJECT_CLASS (canvas_editor_window_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_editor_window_parent_class)->finalize (object);
 }
 
 static void
-canvas_editor_window_class_init (CanvasEditorWindowClass *klass)
+gpinstruct_editor_window_class_init (GPInstructEditorWindowClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
 	/*GtkWindowClass* parent_class = GTK_WINDOW_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasEditorWindowPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructEditorWindowPrivate));
 
-	object_class->finalize = canvas_editor_window_finalize;
+	object_class->finalize = gpinstruct_editor_window_finalize;
 }
 
 
 GtkWidget*
-canvas_editor_window_new (void)
+gpinstruct_editor_window_new (void)
 {
-	return g_object_new(CANVAS_TYPE_EDITOR_WINDOW, NULL);
+	return g_object_new(GPINSTRUCT_TYPE_EDITOR_WINDOW, NULL);
 }
 
 const gchar*
-canvas_editor_window_get_filename (CanvasEditorWindow* window)
+gpinstruct_editor_window_get_filename (GPInstructEditorWindow* window)
 {
 	return window->priv->project_file;
 }
 
 static void
-canvas_editor_window_set_filename (CanvasEditorWindow* window, const gchar* file)
+gpinstruct_editor_window_set_filename (GPInstructEditorWindow* window,
+                                       const gchar* file)
 {
 	if (window->priv->project_file)
 		g_free (window->priv->project_file);
@@ -988,13 +988,14 @@ canvas_editor_window_set_filename (CanvasEditorWindow* window, const gchar* file
 }
 
 gboolean
-canvas_editor_window_get_modified (CanvasEditorWindow* window)
+gpinstruct_editor_window_get_modified (GPInstructEditorWindow* window)
 {
 	return window->priv->modified;
 }
 
 void
-canvas_editor_window_set_modified (CanvasEditorWindow* window, gboolean modified)
+gpinstruct_editor_window_set_modified (GPInstructEditorWindow* window,
+                                       gboolean modified)
 {
 	gchar* title;
 
@@ -1006,11 +1007,11 @@ canvas_editor_window_set_modified (CanvasEditorWindow* window, gboolean modified
 		else
 			file = g_strdup ("New File");
 
-		title = g_strdup_printf ("%s - %s%s", _("Canvas Editor"), file, modified?"*":"");
+		title = g_strdup_printf ("%s - %s%s", _("GPInstruct Editor"), file, modified?"*":"");
 		g_free (file);
 	}
 	else
-		title = g_strdup (_("Canvas Editor"));
+		title = g_strdup (_("GPInstruct Editor"));
 
 	gtk_window_set_title (GTK_WINDOW (window), title);
 
@@ -1024,15 +1025,15 @@ canvas_editor_window_set_modified (CanvasEditorWindow* window, gboolean modified
 }
 
 void
-canvas_editor_window_new_file (CanvasEditorWindow* window)
+gpinstruct_editor_window_new_file (GPInstructEditorWindow* window)
 {
 	if (window->priv->project)
 	{
-		if (canvas_editor_window_close_current_file (window) == FALSE)
+		if (gpinstruct_editor_window_close_current_file (window) == FALSE)
 			return;
 	}
 
-	window->priv->project = canvas_project_new ();
+	window->priv->project = gpinstruct_project_new ();
 
 	gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
 	                                                       "file-saveas"),
@@ -1044,25 +1045,26 @@ canvas_editor_window_new_file (CanvasEditorWindow* window)
 	                                                       "view-execute"),
 	                          TRUE);
 
-	canvas_editor_window_set_filename (window, NULL);
+	gpinstruct_editor_window_set_filename (window, NULL);
 
-	canvas_editor_window_set_modified (window, TRUE);
+	gpinstruct_editor_window_set_modified (window, TRUE);
 
-	canvas_editor_window_update_tree_store (window, (gpointer)window->priv->project);
+	gpinstruct_editor_window_update_tree_store (window, (gpointer)window->priv->project);
 }
 
 void
-canvas_editor_window_open_file (CanvasEditorWindow* window, const gchar* file)
+gpinstruct_editor_window_open_file (GPInstructEditorWindow* window,
+                                    const gchar* file)
 {
 	GError* error = NULL;
 
 	if (window->priv->project)
 	{
-		if (canvas_editor_window_close_current_file (window) == FALSE)
+		if (gpinstruct_editor_window_close_current_file (window) == FALSE)
 			return;
 	}
 
-	window->priv->project = canvas_parser_open (window->priv->parser, file, &error);
+	window->priv->project = gpinstruct_parser_open (window->priv->parser, file, &error);
 	if (error)
 	{
 		g_critical (_("Parsing file error: %s"), error->message);
@@ -1080,19 +1082,19 @@ canvas_editor_window_open_file (CanvasEditorWindow* window, const gchar* file)
 	                                                       "view-execute"),
 	                          TRUE);
 
-	canvas_editor_window_set_filename (window, file);
-	canvas_editor_window_set_modified (window, FALSE);
+	gpinstruct_editor_window_set_filename (window, file);
+	gpinstruct_editor_window_set_modified (window, FALSE);
 
-	canvas_editor_window_update_tree_store (window, (gpointer)window->priv->project);
+	gpinstruct_editor_window_update_tree_store (window, (gpointer)window->priv->project);
 }
 
 gboolean
-canvas_editor_window_close_current_file (CanvasEditorWindow* window)
+gpinstruct_editor_window_close_current_file (GPInstructEditorWindow* window)
 {
 	if (window->priv->project == NULL)
 		return FALSE;
 
-	if (canvas_editor_window_get_modified (window))
+	if (gpinstruct_editor_window_get_modified (window))
 	{
 		GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW (window),
 		                                            GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1110,7 +1112,7 @@ canvas_editor_window_close_current_file (CanvasEditorWindow* window)
 
 		if (response == GTK_RESPONSE_YES)
 		{
-			if (canvas_editor_window_save_file (window) == FALSE)
+			if (gpinstruct_editor_window_save_file (window) == FALSE)
 				return FALSE;
 		}
 		else if (response == GTK_RESPONSE_CANCEL)
@@ -1131,16 +1133,16 @@ canvas_editor_window_close_current_file (CanvasEditorWindow* window)
 	                                                       "view-execute"),
 	                          FALSE);
 
-	canvas_editor_window_set_filename (window, NULL);
-	canvas_editor_window_set_modified (window, FALSE);
+	gpinstruct_editor_window_set_filename (window, NULL);
+	gpinstruct_editor_window_set_modified (window, FALSE);
 
-	canvas_editor_window_update_tree_store (window, NULL); 
+	gpinstruct_editor_window_update_tree_store (window, NULL); 
 
 	return TRUE;
 }
 
 gboolean
-canvas_editor_window_save_file (CanvasEditorWindow* window)
+gpinstruct_editor_window_save_file (GPInstructEditorWindow* window)
 {
 	if (window->priv->project == NULL)
 		return FALSE;
@@ -1149,7 +1151,7 @@ canvas_editor_window_save_file (CanvasEditorWindow* window)
 
 	if (window->priv->project_file == NULL)
 	{
-		if (canvas_editor_window_get_filename (window) == NULL)
+		if (gpinstruct_editor_window_get_filename (window) == NULL)
 		{
 			GtkWidget *dialog;
 			dialog = gtk_file_chooser_dialog_new (_("Save File"),
@@ -1161,11 +1163,11 @@ canvas_editor_window_save_file (CanvasEditorWindow* window)
 			gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
 
 			GtkFileFilter *filter = gtk_file_filter_new ();
-			gtk_file_filter_set_name (filter, _("Canvas Project file"));
-			gtk_file_filter_add_pattern (filter, "*.xml");
+			gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+			gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 			gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
-			gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled.xml"));
+			gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), _("Untitled.gpinstruct-project"));
 
 			gint response = gtk_dialog_run (GTK_DIALOG (dialog));
 
@@ -1182,7 +1184,7 @@ canvas_editor_window_save_file (CanvasEditorWindow* window)
 
 	GError* error = NULL;
 
-	canvas_parser_save (window->priv->parser, window->priv->project, filename, &error);
+	gpinstruct_parser_save (window->priv->parser, window->priv->project, filename, &error);
 
 	if (error)
 	{
@@ -1192,8 +1194,8 @@ canvas_editor_window_save_file (CanvasEditorWindow* window)
 	else
 	{
 		if (window->priv->project_file == NULL)
-			canvas_editor_window_set_filename (window, filename);
-		canvas_editor_window_set_modified (window, FALSE);
+			gpinstruct_editor_window_set_filename (window, filename);
+		gpinstruct_editor_window_set_modified (window, FALSE);
 	}
 
 	g_free (filename);
@@ -1205,16 +1207,17 @@ canvas_editor_window_save_file (CanvasEditorWindow* window)
 }
 
 gboolean
-canvas_editor_window_save_file_as (CanvasEditorWindow* window, const gchar* file)
+gpinstruct_editor_window_save_file_as (GPInstructEditorWindow* window,
+                                       const gchar* file)
 {
-	canvas_editor_window_set_filename (window, file);
+	gpinstruct_editor_window_set_filename (window, file);
 
-	return canvas_editor_window_save_file (window);
+	return gpinstruct_editor_window_save_file (window);
 }
 
 void
-canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
-                                        CanvasObject* object)
+gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
+                                            GPInstructObject* object)
 {
 	gtk_tree_store_clear (window->priv->store);
 
@@ -1224,9 +1227,9 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 	GtkTreeIter iterProject, iterCategory, iterLesson, iterLessonElement;
 	gchar* title;
 
-	CanvasProject* project = window->priv->project;
+	GPInstructProject* project = window->priv->project;
 
-	title = g_strdup_printf (_("Project: \"%s\""), canvas_project_get_title (project));
+	title = g_strdup_printf (_("Project: \"%s\""), gpinstruct_project_get_title (project));
 	gtk_tree_store_append (window->priv->store, &iterProject, NULL);
 	gtk_tree_store_set (window->priv->store, &iterProject,
 	                    TITLE_COLUMN, title,
@@ -1234,14 +1237,14 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 	                    -1);
 	g_free (title);
 
-	GList *categories = canvas_project_get_categories (window->priv->project);
+	GList *categories = gpinstruct_project_get_categories (window->priv->project);
 	GList *curr_categories = categories;
 
 	while (curr_categories)
 	{
-		CanvasCategory* category = CANVAS_CATEGORY (curr_categories->data);
+		GPInstructCategory* category = GPINSTRUCT_CATEGORY (curr_categories->data);
 
-		title = g_strdup_printf (_("Category: \"%s\""), canvas_category_get_title (category));
+		title = g_strdup_printf (_("Category: \"%s\""), gpinstruct_category_get_title (category));
 		gtk_tree_store_append (window->priv->store, &iterCategory, &iterProject);
 		gtk_tree_store_set (window->priv->store, &iterCategory,
 		                    TITLE_COLUMN, title,
@@ -1249,14 +1252,14 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 		                    -1);
 		g_free (title);
 
-		GList *lessons = canvas_category_get_lessons (category);
+		GList *lessons = gpinstruct_category_get_lessons (category);
 		GList *curr_lessons = lessons;
 
 		while (curr_lessons)
 		{
-			CanvasLesson* lesson = CANVAS_LESSON (curr_lessons->data);
+			GPInstructLesson* lesson = GPINSTRUCT_LESSON (curr_lessons->data);
 
-			title = g_strdup_printf (_("Lesson: \"%s\""), canvas_lesson_get_title (lesson));
+			title = g_strdup_printf (_("Lesson: \"%s\""), gpinstruct_lesson_get_title (lesson));
 			gtk_tree_store_append (window->priv->store, &iterLesson, &iterCategory);
 			gtk_tree_store_set (window->priv->store, &iterLesson,
 			                    TITLE_COLUMN, title,
@@ -1264,18 +1267,18 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 			                    -1);
 			g_free (title);
 
-			GList *lesson_elements = canvas_lesson_get_lesson_elements (lesson);
+			GList *lesson_elements = gpinstruct_lesson_get_lesson_elements (lesson);
 			GList *curr_lesson_elements = lesson_elements;
 
 			while (curr_lesson_elements)
 			{
-				CanvasLessonElement* lesson_element = CANVAS_LESSON_ELEMENT (curr_lesson_elements->data);
+				GPInstructLessonElement* lesson_element = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements->data);
 
-				if (CANVAS_IS_LESSON_DISCUSSION (lesson_element))
+				if (GPINSTRUCT_IS_LESSON_DISCUSSION (lesson_element))
 				{
-					/*CanvasLessonDiscussion* lesson_discussion = CANVAS_LESSON_DISCUSSION (lesson_element);*/
+					/*GPInstructLessonDiscussion* lesson_discussion = GPINSTRUCT_LESSON_DISCUSSION (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Discussion: \"%s\""), canvas_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Lesson Discussion: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (window->priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1283,11 +1286,11 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 					                    -1);
 					g_free (title);
 				}
-				else if (CANVAS_IS_LESSON_READING (lesson_element))
+				else if (GPINSTRUCT_IS_LESSON_READING (lesson_element))
 				{
-					/*CanvasLessonReading* lesson_reading = CANVAS_LESSON_READING (lesson_element);*/
+					/*GPInstructLessonReading* lesson_reading = GPINSTRUCT_LESSON_READING (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Reading: \"%s\""), canvas_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Lesson Reading: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (window->priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1295,11 +1298,11 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 					                    -1);
 					g_free (title);
 				}
-				else if (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (lesson_element))
+				else if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (lesson_element))
 				{
-					/*CanvasLessonTestMultiChoice* lesson_test_multi_choice = CANVAS_LESSON_TEST_MULTI_CHOICE (lesson_element);*/
+					/*GPInstructLessonTestMultiChoice* lesson_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Test (Multi-Choice): \"%s\""), canvas_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Lesson Test (Multi-Choice): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (window->priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1307,11 +1310,11 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 					                    -1);
 					g_free (title);
 				}
-				else if (CANVAS_IS_LESSON_TEST_WORD_POOL (lesson_element))
+				else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (lesson_element))
 				{
-					/*CanvasLessonTestWordPool* lesson_test_word_pool = CANVAS_LESSON_TEST_WORD_POOL (lesson_element);*/
+					/*GPInstructLessonTestWordPool* lesson_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Test (Word Pool): \"%s\""), canvas_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Lesson Test (Word Pool): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (window->priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1319,11 +1322,11 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 					                    -1);
 					g_free (title);
 				}
-				else if (CANVAS_IS_LESSON_TEST_ORDER (lesson_element))
+				else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (lesson_element))
 				{
-					/*CanvasLessonTestOrder* lesson_test_order = CANVAS_LESSON_TEST_ORDER (lesson_element);*/
+					/*GPInstructLessonTestOrder* lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Test (Order): \"%s\""), canvas_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Lesson Test (Order): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (window->priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1358,11 +1361,11 @@ canvas_editor_window_update_tree_store (CanvasEditorWindow* window,
 }
 
 gboolean
-canvas_editor_window_quit (CanvasEditorWindow* window)
+gpinstruct_editor_window_quit (GPInstructEditorWindow* window)
 {
 	if (window->priv->project)
 	{
-		if (canvas_editor_window_close_current_file (window) == FALSE)
+		if (gpinstruct_editor_window_close_current_file (window) == FALSE)
 			return FALSE;
 	}
 

@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -23,59 +22,59 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#include "canvas/canvas.h"
+#include "gpinstruct/gpinstruct.h"
 
 #define GCHAR_TO_GBOOLEAN(a) (g_ascii_strncasecmp(a, "true", -1) == 0)?TRUE:FALSE
 
 
 GQuark
-canvas_parser_error_quark (void)
+gpinstruct_parser_error_quark (void)
 {
-  return g_quark_from_static_string ("canvas-parser-error-quark");
+	return g_quark_from_static_string ("gpinstruct-parser-error-quark");
 }
 
 
-G_DEFINE_TYPE (CanvasParser, canvas_parser, CANVAS_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructParser, gpinstruct_parser, GPINSTRUCT_TYPE_OBJECT);
 
 static void
-canvas_parser_init (CanvasParser *object)
+gpinstruct_parser_init (GPInstructParser *object)
 {
 }
 
 static void
-canvas_parser_finalize (GObject *object)
+gpinstruct_parser_finalize (GObject *object)
 {
 
-	G_OBJECT_CLASS (canvas_parser_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_parser_parent_class)->finalize (object);
 
 	xmlCleanupParser ();
 }
 
 static void
-canvas_parser_class_init (CanvasParserClass *klass)
+gpinstruct_parser_class_init (GPInstructParserClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
+	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
 
-	object_class->finalize = canvas_parser_finalize;
+	object_class->finalize = gpinstruct_parser_finalize;
 
 	xmlInitParser ();
 }
 
 
-CanvasParser*
-canvas_parser_new (void)
+GPInstructParser*
+gpinstruct_parser_new (void)
 {
-	CanvasParser* parser = g_object_new(CANVAS_TYPE_PARSER, NULL);
+	GPInstructParser* parser = g_object_new(GPINSTRUCT_TYPE_PARSER, NULL);
 	return parser;
 }
 
-CanvasProject*
-canvas_parser_open (CanvasParser* parser,
-                    const gchar* file,
-                    GError** error)
+GPInstructProject*
+gpinstruct_parser_open (GPInstructParser* parser,
+                        const gchar* file,
+                        GError** error)
 {
-	CanvasProject* curr_project = NULL;
+	GPInstructProject* curr_project = NULL;
 
 	xmlNode *current_node, *parent_node;
 	xmlChar *temp;
@@ -90,12 +89,12 @@ canvas_parser_open (CanvasParser* parser,
 		    current_node->name &&
 		    xmlStrEqual (current_node->name, BAD_CAST "project"))
 		{
-			CanvasProject* project = canvas_project_new ();
+			GPInstructProject* project = gpinstruct_project_new ();
 
 			temp = xmlGetProp (current_node, BAD_CAST "title");
 			if (temp)
 			{
-				canvas_project_set_title (project, (gchar*)temp);
+				gpinstruct_project_set_title (project, (gchar*)temp);
 				xmlFree (temp);
 			}
 
@@ -108,79 +107,79 @@ canvas_parser_open (CanvasParser* parser,
 				{
 					if (xmlStrEqual (current_node->name, BAD_CAST "category"))
 					{
-						CanvasCategory* category = canvas_category_new ();
-						canvas_project_add_category (project, category);
+						GPInstructCategory* category = gpinstruct_category_new ();
+						gpinstruct_project_add_category (project, category);
 
 						temp = xmlGetProp (current_node, BAD_CAST "title");
 						if (temp)
 						{
-							canvas_category_set_title (category, (gchar*)temp);
+							gpinstruct_category_set_title (category, (gchar*)temp);
 							xmlFree (temp);
 						}
 
 						for (parent_node = current_node,
 						     current_node = current_node->children;
-							 current_node != NULL;
-							 current_node = current_node->next)
+						     current_node != NULL;
+						     current_node = current_node->next)
 						{
 							if (current_node->type == XML_ELEMENT_NODE)
 							{
 								if (xmlStrEqual (current_node->name, BAD_CAST "lesson"))
 								{
-									CanvasLesson* lesson = canvas_lesson_new ();
-									canvas_category_add_lesson (category, lesson);
+									GPInstructLesson* lesson = gpinstruct_lesson_new ();
+									gpinstruct_category_add_lesson (category, lesson);
 
 									temp = xmlGetProp (current_node, BAD_CAST "title");
 									if (temp)
 									{
-										canvas_lesson_set_title (lesson, (gchar*)temp);
+										gpinstruct_lesson_set_title (lesson, (gchar*)temp);
 										xmlFree (temp);
 									}
 
 									temp = xmlGetProp (current_node, BAD_CAST "single-score");
 									if (temp)
 									{
-										canvas_lesson_set_single_score (lesson, GCHAR_TO_GBOOLEAN ((gchar*)temp));
+										gpinstruct_lesson_set_single_score (lesson, GCHAR_TO_GBOOLEAN ((gchar*)temp));
 										xmlFree (temp);
 									}
 
 									for (parent_node = current_node,
-										 current_node = current_node->children;
-										 current_node != NULL;
-										 current_node = current_node->next)
+									     current_node = current_node->children;
+									     current_node != NULL;
+									     current_node = current_node->next)
 									{
 										if (current_node->type == XML_ELEMENT_NODE)
 										{
 											if (xmlStrEqual (current_node->name, BAD_CAST "test-multi-choice"))
 											{
-												CanvasLessonTestMultiChoice* test = canvas_lesson_test_multi_choice_new ();
-												canvas_lesson_add_lesson_element (lesson, CANVAS_LESSON_ELEMENT (test));
+												GPInstructLessonTestMultiChoice* test = gpinstruct_lesson_test_multi_choice_new ();
+												gpinstruct_lesson_add_lesson_element (lesson, GPINSTRUCT_LESSON_ELEMENT (test));
 
 												temp = xmlGetProp (current_node, BAD_CAST "title");
 												if (temp)
 												{
-													canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (test), (gchar*)temp);
+													gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
 													xmlFree (temp);
 												}
 
 												temp = xmlGetProp (current_node, BAD_CAST "id");
 												if (temp)
 												{
-													canvas_lesson_test_set_id (CANVAS_LESSON_TEST (test), (gchar*)temp);
+													gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
 													xmlFree (temp);
 												}
 
 												temp = xmlGetProp (current_node, BAD_CAST "explain");
 												if (temp)
 												{
-													canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+													gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
 													xmlFree (temp);
 												}
 
 												for (parent_node = current_node,
-													 current_node = current_node->children;
-													 current_node != NULL;
-													 current_node = current_node->next)
+												     current_node = current_node->children;
+												     current_node != NULL;
+												     current_node = current_node->next)
 												{
 													if (current_node->type == XML_ELEMENT_NODE)
 													{
@@ -189,26 +188,26 @@ canvas_parser_open (CanvasParser* parser,
 															temp = xmlNodeGetContent (current_node);
 															if (temp)
 															{
-																canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (test), (gchar*)temp);
+																gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
 																xmlFree (temp);
 															}
 														}
 														else if (xmlStrEqual (current_node->name, BAD_CAST "question"))
 														{
-															CanvasLessonTestMultiChoiceQuestion* question = canvas_lesson_test_multi_choice_question_new ();
-															canvas_lesson_test_multi_choice_add_question (test, question);
+															GPInstructLessonTestMultiChoiceQuestion* question = gpinstruct_lesson_test_multi_choice_question_new ();
+															gpinstruct_lesson_test_multi_choice_add_question (test, question);
 
 															temp = xmlGetProp (current_node, BAD_CAST "answer");
 															if (temp)
 															{
-																canvas_lesson_test_multi_choice_question_set_answer (question, atoi((gchar*)temp));
+																gpinstruct_lesson_test_multi_choice_question_set_answer (question, atoi((gchar*)temp));
 																xmlFree (temp);
 															}
 
 															for (parent_node = current_node,
-																 current_node = current_node->children;
-																 current_node != NULL;
-																 current_node = current_node->next)
+															     current_node = current_node->children;
+															     current_node != NULL;
+															     current_node = current_node->next)
 															{
 																if (current_node->type == XML_ELEMENT_NODE)
 																{
@@ -217,7 +216,7 @@ canvas_parser_open (CanvasParser* parser,
 																		temp = xmlNodeGetContent (current_node);
 																		if (temp)
 																		{
-																			canvas_lesson_test_multi_choice_question_set_text (question, (gchar*)temp);
+																			gpinstruct_lesson_test_multi_choice_question_set_text (question, (gchar*)temp);
 																			xmlFree (temp);
 																		}
 																	}
@@ -226,7 +225,7 @@ canvas_parser_open (CanvasParser* parser,
 																		temp = xmlNodeGetContent (current_node);
 																		if (temp)
 																		{
-																			canvas_lesson_test_multi_choice_question_set_explanation (question, (gchar*)temp);
+																			gpinstruct_lesson_test_multi_choice_question_set_explanation (question, (gchar*)temp);
 																			xmlFree (temp);
 																		}
 																	}
@@ -235,7 +234,7 @@ canvas_parser_open (CanvasParser* parser,
 																		temp = xmlNodeGetContent (current_node);
 																		if (temp)
 																		{
-																			canvas_lesson_test_multi_choice_question_add_choice (question, (gchar*)temp);
+																			gpinstruct_lesson_test_multi_choice_question_add_choice (question, (gchar*)temp);
 																			xmlFree (temp);
 																		}
 																	}
@@ -253,34 +252,34 @@ canvas_parser_open (CanvasParser* parser,
 											}
 											else if (xmlStrEqual (current_node->name, BAD_CAST "test-word-pool"))
 											{
-												CanvasLessonTestWordPool* test = canvas_lesson_test_word_pool_new ();
-												canvas_lesson_add_lesson_element (lesson, CANVAS_LESSON_ELEMENT (test));
+												GPInstructLessonTestWordPool* test = gpinstruct_lesson_test_word_pool_new ();
+												gpinstruct_lesson_add_lesson_element (lesson, GPINSTRUCT_LESSON_ELEMENT (test));
 
 												temp = xmlGetProp (current_node, BAD_CAST "title");
 												if (temp)
 												{
-													canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (test), (gchar*)temp);
+													gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
 													xmlFree (temp);
 												}
 
 												temp = xmlGetProp (current_node, BAD_CAST "id");
 												if (temp)
 												{
-													canvas_lesson_test_set_id (CANVAS_LESSON_TEST (test), (gchar*)temp);
+													gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
 													xmlFree (temp);
 												}
 
 												temp = xmlGetProp (current_node, BAD_CAST "explain");
 												if (temp)
 												{
-													canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+													gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
 													xmlFree (temp);
 												}
 
 												for (parent_node = current_node,
-													 current_node = current_node->children;
-													 current_node != NULL;
-													 current_node = current_node->next)
+												     current_node = current_node->children;
+												     current_node != NULL;
+												     current_node = current_node->next)
 												{
 													if (current_node->type == XML_ELEMENT_NODE)
 													{
@@ -289,7 +288,7 @@ canvas_parser_open (CanvasParser* parser,
 															temp = xmlNodeGetContent (current_node);
 															if (temp)
 															{
-																canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (test), (gchar*)temp);
+																gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
 																xmlFree (temp);
 															}
 														}
@@ -298,26 +297,26 @@ canvas_parser_open (CanvasParser* parser,
 															temp = xmlNodeGetContent (current_node);
 															if (temp)
 															{
-																canvas_lesson_test_word_pool_add_choice (test, (gchar*)temp);
+																gpinstruct_lesson_test_word_pool_add_choice (test, (gchar*)temp);
 																xmlFree (temp);
 															}
 														}
 														else if (xmlStrEqual (current_node->name, BAD_CAST "question"))
 														{
-															CanvasLessonTestWordPoolQuestion* question = canvas_lesson_test_word_pool_question_new ();
-															canvas_lesson_test_word_pool_add_question (test, question);
+															GPInstructLessonTestWordPoolQuestion* question = gpinstruct_lesson_test_word_pool_question_new ();
+															gpinstruct_lesson_test_word_pool_add_question (test, question);
 
 															temp = xmlGetProp (current_node, BAD_CAST "answer");
 															if (temp)
 															{
-																canvas_lesson_test_word_pool_question_set_answer (question, atoi((gchar*)temp));
+																gpinstruct_lesson_test_word_pool_question_set_answer (question, atoi((gchar*)temp));
 																xmlFree (temp);
 															}
 
 															for (parent_node = current_node,
-																 current_node = current_node->children;
-																 current_node != NULL;
-																 current_node = current_node->next)
+															     current_node = current_node->children;
+															     current_node != NULL;
+															     current_node = current_node->next)
 															{
 																if (current_node->type == XML_ELEMENT_NODE)
 																{
@@ -326,7 +325,7 @@ canvas_parser_open (CanvasParser* parser,
 																		temp = xmlNodeGetContent (current_node);
 																		if (temp)
 																		{
-																			canvas_lesson_test_word_pool_question_set_text (question, (gchar*)temp);
+																			gpinstruct_lesson_test_word_pool_question_set_text (question, (gchar*)temp);
 																			xmlFree (temp);
 																		}
 																	}
@@ -335,7 +334,7 @@ canvas_parser_open (CanvasParser* parser,
 																		temp = xmlNodeGetContent (current_node);
 																		if (temp)
 																		{
-																			canvas_lesson_test_word_pool_question_set_explanation (question, (gchar*)temp);
+																			gpinstruct_lesson_test_word_pool_question_set_explanation (question, (gchar*)temp);
 																			xmlFree (temp);
 																		}
 																	}
@@ -353,34 +352,34 @@ canvas_parser_open (CanvasParser* parser,
 											}
 											else if (xmlStrEqual (current_node->name, BAD_CAST "test-order"))
 											{
-												CanvasLessonTestOrder* test = canvas_lesson_test_order_new ();
-												canvas_lesson_add_lesson_element (lesson, CANVAS_LESSON_ELEMENT (test));
+												GPInstructLessonTestOrder* test = gpinstruct_lesson_test_order_new ();
+												gpinstruct_lesson_add_lesson_element (lesson, GPINSTRUCT_LESSON_ELEMENT (test));
 
 												temp = xmlGetProp (current_node, BAD_CAST "title");
 												if (temp)
 												{
-													canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (test), (gchar*)temp);
+													gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
 													xmlFree (temp);
 												}
 
 												temp = xmlGetProp (current_node, BAD_CAST "id");
 												if (temp)
 												{
-													canvas_lesson_test_set_id (CANVAS_LESSON_TEST (test), (gchar*)temp);
+													gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
 													xmlFree (temp);
 												}
 
 												temp = xmlGetProp (current_node, BAD_CAST "explain");
 												if (temp)
 												{
-													canvas_lesson_test_set_explain (CANVAS_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+													gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
 													xmlFree (temp);
 												}
 
 												for (parent_node = current_node,
-													 current_node = current_node->children;
-													 current_node != NULL;
-													 current_node = current_node->next)
+												     current_node = current_node->children;
+												     current_node != NULL;
+												     current_node = current_node->next)
 												{
 													if (current_node->type == XML_ELEMENT_NODE)
 													{
@@ -389,26 +388,26 @@ canvas_parser_open (CanvasParser* parser,
 															temp = xmlNodeGetContent (current_node);
 															if (temp)
 															{
-																canvas_lesson_test_set_directions (CANVAS_LESSON_TEST (test), (gchar*)temp);
+																gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
 																xmlFree (temp);
 															}
 														}
 														else if (xmlStrEqual (current_node->name, BAD_CAST "item"))
 														{
-															CanvasLessonTestOrderItem* item = canvas_lesson_test_order_item_new ();
-															canvas_lesson_test_order_add_item (test, item);
+															GPInstructLessonTestOrderItem* item = gpinstruct_lesson_test_order_item_new ();
+															gpinstruct_lesson_test_order_add_item (test, item);
 
 															temp = xmlGetProp (current_node, BAD_CAST "answer");
 															if (temp)
 															{
-																canvas_lesson_test_order_item_set_answer (item, atoi ((gchar*)temp));
+																gpinstruct_lesson_test_order_item_set_answer (item, atoi ((gchar*)temp));
 																xmlFree (temp);
 															}
 
 															temp = xmlNodeGetContent (current_node);
 															if (temp)
 															{
-																canvas_lesson_test_order_item_set_text (item, (gchar*)temp);
+																gpinstruct_lesson_test_order_item_set_text (item, (gchar*)temp);
 																xmlFree (temp);
 															}
 														}
@@ -417,7 +416,7 @@ canvas_parser_open (CanvasParser* parser,
 															temp = xmlNodeGetContent (current_node);
 															if (temp)
 															{
-																canvas_lesson_test_order_set_explanation (test, (gchar*)temp);
+																gpinstruct_lesson_test_order_set_explanation (test, (gchar*)temp);
 																xmlFree (temp);
 															}
 														}
@@ -429,39 +428,39 @@ canvas_parser_open (CanvasParser* parser,
 											}
 											else if (xmlStrEqual (current_node->name, BAD_CAST "discussion"))
 											{
-												CanvasLessonDiscussion* discussion = canvas_lesson_discussion_new ();
-												canvas_lesson_add_lesson_element (lesson, CANVAS_LESSON_ELEMENT (discussion));
+												GPInstructLessonDiscussion* discussion = gpinstruct_lesson_discussion_new ();
+												gpinstruct_lesson_add_lesson_element (lesson, GPINSTRUCT_LESSON_ELEMENT (discussion));
 
 												temp = xmlGetProp (current_node, BAD_CAST "title");
 												if (temp)
 												{
-													canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (discussion), (gchar*)temp);
+													gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (discussion), (gchar*)temp);
 													xmlFree (temp);
 												}
 
 												temp = xmlNodeGetContent (current_node);
 												if (temp)
 												{
-													canvas_lesson_discussion_set_text (discussion, (gchar*)temp);
+													gpinstruct_lesson_discussion_set_text (discussion, (gchar*)temp);
 													xmlFree (temp);
 												}
 											}
 											else if (xmlStrEqual (current_node->name, BAD_CAST "reading"))
 											{
-												CanvasLessonReading* reading = canvas_lesson_reading_new ();
-												canvas_lesson_add_lesson_element (lesson, CANVAS_LESSON_ELEMENT (reading));
+												GPInstructLessonReading* reading = gpinstruct_lesson_reading_new ();
+												gpinstruct_lesson_add_lesson_element (lesson, GPINSTRUCT_LESSON_ELEMENT (reading));
 
 												temp = xmlGetProp (current_node, BAD_CAST "title");
 												if (temp)
 												{
-													canvas_lesson_element_set_title (CANVAS_LESSON_ELEMENT (reading), (gchar*)temp);
+													gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (reading), (gchar*)temp);
 													xmlFree (temp);
 												}
 
 												temp = xmlNodeGetContent (current_node);
 												if (temp)
 												{
-													canvas_lesson_reading_set_text (reading, (gchar*)temp);
+													gpinstruct_lesson_reading_set_text (reading, (gchar*)temp);
 													xmlFree (temp);
 												}
 											}
@@ -487,8 +486,8 @@ canvas_parser_open (CanvasParser* parser,
 		}
 		else
 		{
-			g_set_error (error, CANVAS_PARSER_ERROR, CANVAS_PARSER_ERROR_PARSE,
-				         _("Failed to parse file."));
+			g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
+			             _("Failed to parse file."));
 			return NULL;
 		}
 
@@ -496,7 +495,7 @@ canvas_parser_open (CanvasParser* parser,
 	}
 	else
 	{
-		g_set_error (error, CANVAS_PARSER_ERROR, CANVAS_PARSER_ERROR_PARSE,
+		g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
 		             _("Failed to parse file."));
 		return NULL;
 	}
@@ -505,22 +504,22 @@ canvas_parser_open (CanvasParser* parser,
 }
 
 void
-canvas_parser_save (CanvasParser* parser,
-                    CanvasProject* project,
-                    const gchar* file,
-                    GError** error)
+gpinstruct_parser_save (GPInstructParser* parser,
+                        GPInstructProject* project,
+                        const gchar* file,
+                        GError** error)
 {
-	CanvasCategory*							curr_category;
-	CanvasLesson*							curr_lesson;
-	CanvasLessonElement*					curr_lesson_element;
-	CanvasLessonDiscussion*					curr_lesson_discussion;
-	CanvasLessonReading*					curr_lesson_reading;
-	CanvasLessonTestMultiChoice*			curr_lesson_test_multi_choice;
-	CanvasLessonTestWordPool*				curr_lesson_test_word_pool;
-	CanvasLessonTestOrder*					curr_lesson_test_order;
-	CanvasLessonTestMultiChoiceQuestion*	curr_lesson_test_multi_choice_question;
-	CanvasLessonTestWordPoolQuestion*		curr_lesson_test_word_pool_question;
-	CanvasLessonTestOrderItem*				curr_lesson_test_order_item;
+	GPInstructCategory*							curr_category;
+	GPInstructLesson*							curr_lesson;
+	GPInstructLessonElement*					curr_lesson_element;
+	GPInstructLessonDiscussion*					curr_lesson_discussion;
+	GPInstructLessonReading*					curr_lesson_reading;
+	GPInstructLessonTestMultiChoice*			curr_lesson_test_multi_choice;
+	GPInstructLessonTestWordPool*				curr_lesson_test_word_pool;
+	GPInstructLessonTestOrder*					curr_lesson_test_order;
+	GPInstructLessonTestMultiChoiceQuestion*	curr_lesson_test_multi_choice_question;
+	GPInstructLessonTestWordPoolQuestion*		curr_lesson_test_word_pool_question;
+	GPInstructLessonTestOrderItem*				curr_lesson_test_order_item;
 	gchar*									curr_choice;
 
 	GList *categories, *lessons, *lesson_elements, *questions, *choices, *items;
@@ -530,105 +529,105 @@ canvas_parser_save (CanvasParser* parser,
 	xmlNodePtr current_node;
 
 	current_node = xmlNewNode (NULL, BAD_CAST "project");
-	xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_project_get_title (project));
+	xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_project_get_title (project));
 
 	xmlSetNs (current_node, xmlNewNs (current_node,
-	                                  BAD_CAST "http://kyoushuu.users.sourceforge.net/project_canvas",
-	                                  BAD_CAST "canvas"));
+	                                  BAD_CAST "http://gpinstruct.sourceforge.net",
+	                                  BAD_CAST "gpinstruct"));
 
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
 	xmlDocSetRootElement (doc, current_node);
 
-	categories = canvas_project_get_categories (project);
+	categories = gpinstruct_project_get_categories (project);
 	curr_categories = categories;
 
 	while (curr_categories)
 	{
-		curr_category = CANVAS_CATEGORY (curr_categories->data);
+		curr_category = GPINSTRUCT_CATEGORY (curr_categories->data);
 
 		current_node = xmlNewChild (current_node, NULL, BAD_CAST "category", NULL);
-		xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_category_get_title (curr_category));
+		xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_category_get_title (curr_category));
 
-		lessons = canvas_category_get_lessons (curr_category);
+		lessons = gpinstruct_category_get_lessons (curr_category);
 		curr_lessons = lessons;
 
 		while (curr_lessons)
 		{
-			curr_lesson = CANVAS_LESSON (curr_lessons->data);
+			curr_lesson = GPINSTRUCT_LESSON (curr_lessons->data);
 
 			current_node = xmlNewChild (current_node, NULL, BAD_CAST "lesson", NULL);
-			xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_get_title (curr_lesson));
-			xmlSetProp (current_node, BAD_CAST "single-score", canvas_lesson_get_single_score (curr_lesson)?BAD_CAST "true":BAD_CAST "false");
+			xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_lesson_get_title (curr_lesson));
+			xmlSetProp (current_node, BAD_CAST "single-score", gpinstruct_lesson_get_single_score (curr_lesson)?BAD_CAST "true":BAD_CAST "false");
 
-			lesson_elements = canvas_lesson_get_lesson_elements (curr_lesson);
+			lesson_elements = gpinstruct_lesson_get_lesson_elements (curr_lesson);
 			curr_lesson_elements = lesson_elements;
 
 			while (curr_lesson_elements)
 			{
-				curr_lesson_element = CANVAS_LESSON_ELEMENT (curr_lesson_elements->data);
+				curr_lesson_element = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements->data);
 
-				if (CANVAS_IS_LESSON_DISCUSSION (curr_lesson_element))
+				if (GPINSTRUCT_IS_LESSON_DISCUSSION (curr_lesson_element))
 				{
-					curr_lesson_discussion = CANVAS_LESSON_DISCUSSION (curr_lesson_element);
+					curr_lesson_discussion = GPINSTRUCT_LESSON_DISCUSSION (curr_lesson_element);
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "discussion",
-					                            BAD_CAST canvas_lesson_discussion_get_text (curr_lesson_discussion));
-					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_element_get_title (curr_lesson_element));
+					                            BAD_CAST gpinstruct_lesson_discussion_get_text (curr_lesson_discussion));
+					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_lesson_element_get_title (curr_lesson_element));
 
 					/* Currently in a "discussion" type element, go back to "lesson" element */
 					current_node = current_node->parent;
 				}
-				else if (CANVAS_IS_LESSON_READING (curr_lesson_element))
+				else if (GPINSTRUCT_IS_LESSON_READING (curr_lesson_element))
 				{
-					curr_lesson_reading = CANVAS_LESSON_READING (curr_lesson_element);
+					curr_lesson_reading = GPINSTRUCT_LESSON_READING (curr_lesson_element);
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "reading",
-					                            BAD_CAST canvas_lesson_reading_get_text (curr_lesson_reading));
-					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_element_get_title (curr_lesson_element));
+					                            BAD_CAST gpinstruct_lesson_reading_get_text (curr_lesson_reading));
+					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_lesson_element_get_title (curr_lesson_element));
 
 					/* Currently in a "reading" type element, go back to "lesson" element */
 					current_node = current_node->parent;
 				}
-				else if (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (curr_lesson_element))
+				else if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (curr_lesson_element))
 				{
-					curr_lesson_test_multi_choice = CANVAS_LESSON_TEST_MULTI_CHOICE (curr_lesson_element);
+					curr_lesson_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (curr_lesson_element);
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "test-multi-choice", NULL);
-					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_element_get_title (curr_lesson_element));
-					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST canvas_lesson_test_get_id (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)));
-					xmlSetProp (current_node, BAD_CAST "explain", canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice))?BAD_CAST "true":BAD_CAST "false");
+					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_lesson_element_get_title (curr_lesson_element));
+					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST gpinstruct_lesson_test_get_id (GPINSTRUCT_LESSON_TEST (curr_lesson_test_multi_choice)));
+					xmlSetProp (current_node, BAD_CAST "explain", gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (curr_lesson_test_multi_choice))?BAD_CAST "true":BAD_CAST "false");
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "directions",
-					                            BAD_CAST canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)));
+					                            BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_lesson_test_multi_choice)));
 
 					/* Currently in a "directions" element, go back to "test-multi-choice" element */
 					current_node = current_node->parent;
 
-					questions = canvas_lesson_test_multi_choice_get_questions (curr_lesson_test_multi_choice);
+					questions = gpinstruct_lesson_test_multi_choice_get_questions (curr_lesson_test_multi_choice);
 					curr_questions = questions;
 
 					while (curr_questions)
 					{
-						curr_lesson_test_multi_choice_question = CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION (curr_questions->data);
+						curr_lesson_test_multi_choice_question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (curr_questions->data);
 
 						current_node = xmlNewChild (current_node, NULL, BAD_CAST "question", NULL);
-						temp = g_strdup_printf ("%d", canvas_lesson_test_multi_choice_question_get_answer (curr_lesson_test_multi_choice_question));
+						temp = g_strdup_printf ("%d", gpinstruct_lesson_test_multi_choice_question_get_answer (curr_lesson_test_multi_choice_question));
 						xmlSetProp (current_node, BAD_CAST "answer", BAD_CAST temp);
 						g_free (temp);
 
 						current_node = xmlNewChild (current_node, NULL, BAD_CAST "text",
-						                            BAD_CAST canvas_lesson_test_multi_choice_question_get_text (curr_lesson_test_multi_choice_question));
+						                            BAD_CAST gpinstruct_lesson_test_multi_choice_question_get_text (curr_lesson_test_multi_choice_question));
 
 						/* Currently in a "text" element, go back to "question" element */
 						current_node = current_node->parent;
 
 						current_node = xmlNewChild (current_node, NULL, BAD_CAST "explanation",
-						                            BAD_CAST canvas_lesson_test_multi_choice_question_get_explanation (curr_lesson_test_multi_choice_question));
+						                            BAD_CAST gpinstruct_lesson_test_multi_choice_question_get_explanation (curr_lesson_test_multi_choice_question));
 
 						/* Currently in a "explanation" element, go back to "question" element */
 						current_node = current_node->parent;
 
-						choices = canvas_lesson_test_multi_choice_question_get_choices (curr_lesson_test_multi_choice_question);
+						choices = gpinstruct_lesson_test_multi_choice_question_get_choices (curr_lesson_test_multi_choice_question);
 						curr_choices = choices;
 
 						while (curr_choices)
@@ -656,22 +655,22 @@ canvas_parser_save (CanvasParser* parser,
 
 					g_list_free (questions);
 				}
-				else if (CANVAS_IS_LESSON_TEST_WORD_POOL (curr_lesson_element))
+				else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (curr_lesson_element))
 				{
-					curr_lesson_test_word_pool = CANVAS_LESSON_TEST_WORD_POOL (curr_lesson_element);
+					curr_lesson_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (curr_lesson_element);
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "test-word-pool", NULL);
-					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_element_get_title (curr_lesson_element));
-					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST canvas_lesson_test_get_id (CANVAS_LESSON_TEST (curr_lesson_test_word_pool)));
-					xmlSetProp (current_node, BAD_CAST "explain", canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_word_pool))?BAD_CAST "true":BAD_CAST "false");
+					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_lesson_element_get_title (curr_lesson_element));
+					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST gpinstruct_lesson_test_get_id (GPINSTRUCT_LESSON_TEST (curr_lesson_test_word_pool)));
+					xmlSetProp (current_node, BAD_CAST "explain", gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (curr_lesson_test_word_pool))?BAD_CAST "true":BAD_CAST "false");
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "directions",
-					                            BAD_CAST canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_word_pool)));
+					                            BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_lesson_test_word_pool)));
 
 					/* Currently in a "directions" element, go back to "test-word-pool" element */
 					current_node = current_node->parent;
 
-					choices = canvas_lesson_test_word_pool_get_choices (curr_lesson_test_word_pool);
+					choices = gpinstruct_lesson_test_word_pool_get_choices (curr_lesson_test_word_pool);
 					curr_choices = choices;
 
 					while (curr_choices)
@@ -688,26 +687,26 @@ canvas_parser_save (CanvasParser* parser,
 
 					g_list_free (curr_choices);
 
-					questions = canvas_lesson_test_word_pool_get_questions (curr_lesson_test_word_pool);
+					questions = gpinstruct_lesson_test_word_pool_get_questions (curr_lesson_test_word_pool);
 					curr_questions = questions;
 
 					while (curr_questions)
 					{
-						curr_lesson_test_word_pool_question = CANVAS_LESSON_TEST_WORD_POOL_QUESTION (curr_questions->data);
+						curr_lesson_test_word_pool_question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (curr_questions->data);
 
 						current_node = xmlNewChild (current_node, NULL, BAD_CAST "question", NULL);
-						temp = g_strdup_printf ("%d", canvas_lesson_test_word_pool_question_get_answer (curr_lesson_test_word_pool_question));
+						temp = g_strdup_printf ("%d", gpinstruct_lesson_test_word_pool_question_get_answer (curr_lesson_test_word_pool_question));
 						xmlSetProp (current_node, BAD_CAST "answer", BAD_CAST temp);
 						g_free (temp);
 
 						current_node = xmlNewChild (current_node, NULL, BAD_CAST "text",
-						                            BAD_CAST canvas_lesson_test_word_pool_question_get_text (curr_lesson_test_word_pool_question));
+						                            BAD_CAST gpinstruct_lesson_test_word_pool_question_get_text (curr_lesson_test_word_pool_question));
 
 						/* Currently in a "text" element, go back to "question" element */
 						current_node = current_node->parent;
 
 						current_node = xmlNewChild (current_node, NULL, BAD_CAST "explanation",
-						                            BAD_CAST canvas_lesson_test_word_pool_question_get_explanation (curr_lesson_test_word_pool_question));
+						                            BAD_CAST gpinstruct_lesson_test_word_pool_question_get_explanation (curr_lesson_test_word_pool_question));
 
 						/* Currently in a "explanation" element, go back to "question" element */
 						current_node = current_node->parent;
@@ -723,36 +722,36 @@ canvas_parser_save (CanvasParser* parser,
 
 					g_list_free (curr_questions);
 				}
-				else if (CANVAS_IS_LESSON_TEST_ORDER (curr_lesson_element))
+				else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (curr_lesson_element))
 				{
-					curr_lesson_test_order = CANVAS_LESSON_TEST_ORDER (curr_lesson_element);
+					curr_lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (curr_lesson_element);
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "test-order", NULL);
-					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST canvas_lesson_element_get_title (curr_lesson_element));
-					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST canvas_lesson_test_get_id (CANVAS_LESSON_TEST (curr_lesson_test_order)));
-					xmlSetProp (current_node, BAD_CAST "explain", canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_order))?BAD_CAST "true":BAD_CAST "false");
+					xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_lesson_element_get_title (curr_lesson_element));
+					xmlSetProp (current_node, BAD_CAST "id", BAD_CAST gpinstruct_lesson_test_get_id (GPINSTRUCT_LESSON_TEST (curr_lesson_test_order)));
+					xmlSetProp (current_node, BAD_CAST "explain", gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (curr_lesson_test_order))?BAD_CAST "true":BAD_CAST "false");
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "directions",
-					                            BAD_CAST canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_order)));
+					                            BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_lesson_test_order)));
 
 					/* Currently in a "directions" element, go back to "test-order" element */
 					current_node = current_node->parent;
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "explanation",
-					                            BAD_CAST canvas_lesson_test_order_get_explanation (curr_lesson_test_order));
+					                            BAD_CAST gpinstruct_lesson_test_order_get_explanation (curr_lesson_test_order));
 
 					/* Currently in a "explanation" element, go back to "test-order" element */
 					current_node = current_node->parent;
 
-					items = canvas_lesson_test_order_get_items (curr_lesson_test_order);
+					items = gpinstruct_lesson_test_order_get_items (curr_lesson_test_order);
 					curr_items = items;
 
 					while (curr_items)
 					{
-						curr_lesson_test_order_item = CANVAS_LESSON_TEST_ORDER_ITEM (curr_items->data);
+						curr_lesson_test_order_item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (curr_items->data);
 
-						current_node = xmlNewChild (current_node, NULL, BAD_CAST "item", BAD_CAST canvas_lesson_test_order_item_get_text (curr_lesson_test_order_item));
-						temp = g_strdup_printf ("%d", canvas_lesson_test_order_item_get_answer (curr_lesson_test_order_item));
+						current_node = xmlNewChild (current_node, NULL, BAD_CAST "item", BAD_CAST gpinstruct_lesson_test_order_item_get_text (curr_lesson_test_order_item));
+						temp = g_strdup_printf ("%d", gpinstruct_lesson_test_order_item_get_answer (curr_lesson_test_order_item));
 						xmlSetProp (current_node, BAD_CAST "answer", BAD_CAST temp);
 						g_free (temp);
 
@@ -786,7 +785,7 @@ canvas_parser_save (CanvasParser* parser,
 
 		curr_categories = curr_categories->next;
 	}
-	
+
 	g_list_free (categories);
 
 	xmlIndentTreeOutput = 1;

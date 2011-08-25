@@ -1,6 +1,5 @@
 /*
- * canvas.c
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "canvas/canvas.h"
-#include "canvas-private.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-private.h"
 
 gboolean
-_canvas_boolean_handled_accumulator (GSignalInvocationHint *ihint,
-                                  GValue                *return_accu,
-                                  const GValue          *handler_return,
-                                  gpointer               dummy)
+_gpinstruct_boolean_handled_accumulator (GSignalInvocationHint *ihint,
+                                         GValue                *return_accu,
+                                         const GValue          *handler_return,
+                                         gpointer               dummy)
 {
 	gboolean signal_handled;
 
@@ -40,7 +39,7 @@ _canvas_boolean_handled_accumulator (GSignalInvocationHint *ihint,
 void
 g_list_free_full (GList *list, GDestroyNotify free_func)
 {
-  g_list_foreach (list, (GFunc) free_func, NULL);
-  g_list_free (list);
+	g_list_foreach (list, (GFunc) free_func, NULL);
+	g_list_free (list);
 }
 #endif

@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -25,10 +24,10 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
 
-struct _CanvasLogPrivate
+struct _GPInstructLogPrivate
 {
 	GList* tests_list;
 	GTimer* timer;
@@ -41,25 +40,25 @@ struct _CanvasLogPrivate
 	guint curr_group_element;
 };
 
-#define CANVAS_LOG_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LOG, CanvasLogPrivate))
+#define GPINSTRUCT_LOG_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LOG, GPInstructLogPrivate))
 
 
 GQuark
-canvas_log_error_quark (void)
+gpinstruct_log_error_quark (void)
 {
-  return g_quark_from_static_string ("canvas-log-error-quark");
+	return g_quark_from_static_string ("gpinstruct-log-error-quark");
 }
 
 
 
 typedef struct {
-	CanvasLog* log;
-	CanvasLogForeachFunc func;
+	GPInstructLog* log;
+	GPInstructLogForeachFunc func;
 	gpointer user_data;
-} CanvasLogForeachFuncData;
+} GPInstructLogForeachFuncData;
 
 static void
-add_answer_node (CanvasLogAnswer* answer,
+add_answer_node (GPInstructLogAnswer* answer,
                  xmlNodePtr test_node)
 {
 	gchar *item_id = g_strdup_printf ("%d", answer->item_id);
@@ -77,8 +76,8 @@ add_answer_node (CanvasLogAnswer* answer,
 }
 
 static void
-add_test_node (CanvasLogTest* test,
-                 xmlNodePtr log_node)
+add_test_node (GPInstructLogTest* test,
+               xmlNodePtr log_node)
 {
 	xmlNodePtr current_node = xmlNewChild (log_node, NULL, BAD_CAST "test", NULL);
 	xmlSetProp (current_node, BAD_CAST "id", BAD_CAST g_quark_to_string (test->id));
@@ -87,7 +86,7 @@ add_test_node (CanvasLogTest* test,
 }
 
 static void
-free_answers_foreach (CanvasLogTest* test)
+free_answers_foreach (GPInstructLogTest* test)
 {
 	g_list_free_full (test->answers, g_free);
 	g_free (test);
@@ -95,12 +94,12 @@ free_answers_foreach (CanvasLogTest* test)
 
 
 
-G_DEFINE_TYPE (CanvasLog, canvas_log, CANVAS_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructLog, gpinstruct_log, GPINSTRUCT_TYPE_OBJECT);
 
 static void
-canvas_log_init (CanvasLog *object)
+gpinstruct_log_init (GPInstructLog *object)
 {
-	object->priv = CANVAS_LOG_PRIVATE (object);
+	object->priv = GPINSTRUCT_LOG_PRIVATE (object);
 
 	object->priv->tests_list = NULL;
 
@@ -116,9 +115,9 @@ canvas_log_init (CanvasLog *object)
 }
 
 static void
-canvas_log_finalize (GObject *object)
+gpinstruct_log_finalize (GObject *object)
 {
-	CanvasLog* log = CANVAS_LOG (object);
+	GPInstructLog* log = GPINSTRUCT_LOG (object);
 
 	g_list_free_full (log->priv->tests_list, (GDestroyNotify)free_answers_foreach);
 
@@ -127,29 +126,30 @@ canvas_log_finalize (GObject *object)
 	g_free (log->priv->last_name);
 	g_free (log->priv->first_name);
 
-	G_OBJECT_CLASS (canvas_log_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_log_parent_class)->finalize (object);
 }
 
 static void
-canvas_log_class_init (CanvasLogClass *klass)
+gpinstruct_log_class_init (GPInstructLogClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
+	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasLogPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLogPrivate));
 
-	object_class->finalize = canvas_log_finalize;
+	object_class->finalize = gpinstruct_log_finalize;
 }
 
 
-CanvasLog*
-canvas_log_new (void)
+GPInstructLog*
+gpinstruct_log_new (void)
 {
-	return g_object_new (CANVAS_TYPE_LOG, NULL);
+	return g_object_new (GPINSTRUCT_TYPE_LOG, NULL);
 }
 
 void
-canvas_log_set_last_name (CanvasLog* log, const gchar* last_name)
+gpinstruct_log_set_last_name (GPInstructLog* log,
+                              const gchar* last_name)
 {
 	if (log->priv->last_name)
 		g_free (log->priv->last_name);
@@ -157,13 +157,14 @@ canvas_log_set_last_name (CanvasLog* log, const gchar* last_name)
 }
 
 const gchar*
-canvas_log_get_last_name (CanvasLog* log)
+gpinstruct_log_get_last_name (GPInstructLog* log)
 {
 	return log->priv->last_name;
 }
 
 void
-canvas_log_set_first_name (CanvasLog* log, const gchar* first_name)
+gpinstruct_log_set_first_name (GPInstructLog* log,
+                               const gchar* first_name)
 {
 	if (log->priv->first_name)
 		g_free (log->priv->first_name);
@@ -171,13 +172,14 @@ canvas_log_set_first_name (CanvasLog* log, const gchar* first_name)
 }
 
 const gchar*
-canvas_log_get_first_name (CanvasLog* log)
+gpinstruct_log_get_first_name (GPInstructLog* log)
 {
 	return log->priv->first_name;
 }
 
 void
-canvas_log_set_group (CanvasLog* log, guint elements)
+gpinstruct_log_set_group (GPInstructLog* log,
+                          guint elements)
 {
 	if (elements == 0)
 		return;
@@ -187,11 +189,13 @@ canvas_log_set_group (CanvasLog* log, guint elements)
 }
 
 void
-canvas_log_add (CanvasLog* log, CanvasLessonTest* test, guint item_id, guint answer_id)
+gpinstruct_log_add (GPInstructLog* log,
+                    GPInstructLessonTest* test,
+                    guint item_id, guint answer_id)
 {
-	GQuark test_quark = g_quark_from_string (canvas_lesson_test_get_id (test));
+	GQuark test_quark = g_quark_from_string (gpinstruct_lesson_test_get_id (test));
 
-	CanvasLogAnswer* answer = g_new (CanvasLogAnswer, 1);
+	GPInstructLogAnswer* answer = g_new (GPInstructLogAnswer, 1);
 	answer->item_id = item_id;
 	answer->answer_id = answer_id;
 	answer->time_spent = g_timer_elapsed (log->priv->timer, NULL);
@@ -210,7 +214,7 @@ canvas_log_add (CanvasLog* log, CanvasLessonTest* test, guint item_id, guint ans
 	else
 	{
 		GList* answers_list = g_list_append (NULL, answer);
-		CanvasLogTest* test = g_new (CanvasLogTest, 1);
+		GPInstructLogTest* test = g_new (GPInstructLogTest, 1);
 		test->id = test_quark;
 		test->answers = answers_list;
 		log->priv->tests_list = g_list_append (log->priv->tests_list, test);
@@ -219,27 +223,27 @@ canvas_log_add (CanvasLog* log, CanvasLessonTest* test, guint item_id, guint ans
 }
 
 void
-canvas_log_timer_start (CanvasLog* log)
+gpinstruct_log_timer_start (GPInstructLog* log)
 {
 	g_timer_start (log->priv->timer);
 }
 
 void
-canvas_log_timer_stop (CanvasLog* log)
+gpinstruct_log_timer_stop (GPInstructLog* log)
 {
 	g_timer_stop (log->priv->timer);
 }
 
 GList*
-canvas_log_get_tests (CanvasLog* log)
+gpinstruct_log_get_tests (GPInstructLog* log)
 {
 	return g_list_copy (log->priv->tests_list);
 }
 
 gboolean
-canvas_log_open (CanvasLog* log,
-                 const gchar* file,
-                 GError** error)
+gpinstruct_log_open (GPInstructLog* log,
+                     const gchar* file,
+                     GError** error)
 {
 	xmlNode *current_node, *parent_node;
 	xmlChar *temp;
@@ -257,14 +261,14 @@ canvas_log_open (CanvasLog* log,
 			temp = xmlGetProp (current_node, BAD_CAST "last-name");
 			if (temp)
 			{
-				canvas_log_set_last_name (log, (gchar*)temp);
+				gpinstruct_log_set_last_name (log, (gchar*)temp);
 				xmlFree (temp);
 			}
 
 			temp = xmlGetProp (current_node, BAD_CAST "first-name");
 			if (temp)
 			{
-				canvas_log_set_first_name (log, (gchar*)temp);
+				gpinstruct_log_set_first_name (log, (gchar*)temp);
 				xmlFree (temp);
 			}
 
@@ -276,7 +280,7 @@ canvas_log_open (CanvasLog* log,
 				if (current_node->type == XML_ELEMENT_NODE && 
 				    xmlStrEqual (current_node->name, BAD_CAST "test"))
 				{
-					CanvasLogTest* test = g_new0 (CanvasLogTest, 1);
+					GPInstructLogTest* test = g_new0 (GPInstructLogTest, 1);
 					log->priv->tests_list = g_list_append (log->priv->tests_list, test);
 
 					temp = xmlGetProp (current_node, BAD_CAST "id");
@@ -287,14 +291,14 @@ canvas_log_open (CanvasLog* log,
 					}
 
 					for (parent_node = current_node,
-						 current_node = current_node->children;
-						 current_node != NULL;
-						 current_node = current_node->next)
+					     current_node = current_node->children;
+					     current_node != NULL;
+					     current_node = current_node->next)
 					{
 						if (current_node->type == XML_ELEMENT_NODE && 
-							xmlStrEqual (current_node->name, BAD_CAST "item"))
+						    xmlStrEqual (current_node->name, BAD_CAST "item"))
 						{
-							CanvasLogAnswer* answer = g_new0 (CanvasLogAnswer, 1);
+							GPInstructLogAnswer* answer = g_new0 (GPInstructLogAnswer, 1);
 							test->answers = g_list_append (test->answers, answer);
 
 							temp = xmlGetProp (current_node, BAD_CAST "id");
@@ -320,8 +324,8 @@ canvas_log_open (CanvasLog* log,
 						}
 					}
 
-						current_node = parent_node;
-						parent_node = current_node->parent;
+					current_node = parent_node;
+					parent_node = current_node->parent;
 				}
 			}
 
@@ -330,8 +334,8 @@ canvas_log_open (CanvasLog* log,
 		}
 		else
 		{
-			g_set_error (error, CANVAS_LOG_ERROR, CANVAS_LOG_ERROR_PARSE,
-				         _("Failed to parse file."));
+			g_set_error (error, GPINSTRUCT_LOG_ERROR, GPINSTRUCT_LOG_ERROR_PARSE,
+			             _("Failed to parse file."));
 			return FALSE;
 		}
 
@@ -339,7 +343,7 @@ canvas_log_open (CanvasLog* log,
 	}
 	else
 	{
-		g_set_error (error, CANVAS_LOG_ERROR, CANVAS_LOG_ERROR_PARSE,
+		g_set_error (error, GPINSTRUCT_LOG_ERROR, GPINSTRUCT_LOG_ERROR_PARSE,
 		             _("Failed to parse file."));
 		return FALSE;
 	}
@@ -348,9 +352,9 @@ canvas_log_open (CanvasLog* log,
 }
 
 void
-canvas_log_save (CanvasLog* log,
-                 const gchar* file,
-                 GError** error)
+gpinstruct_log_save (GPInstructLog* log,
+                     const gchar* file,
+                     GError** error)
 {
 	xmlNodePtr current_node;
 
@@ -359,8 +363,8 @@ canvas_log_save (CanvasLog* log,
 	xmlSetProp (current_node, BAD_CAST "first-name", BAD_CAST log->priv->first_name);
 
 	xmlSetNs (current_node, xmlNewNs (current_node,
-	                                  BAD_CAST "http://kyoushuu.users.sourceforge.net/project_canvas",
-	                                  BAD_CAST "canvas"));
+	                                  BAD_CAST "http://gpinstruct.sourceforge.net",
+	                                  BAD_CAST "gpinstruct"));
 
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
 	xmlDocSetRootElement (doc, current_node);

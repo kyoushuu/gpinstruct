@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -32,11 +31,11 @@
 #define GDK_KEY_Right GDK_Right
 #endif
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
-#include "canvas-analyzer/canvas-analyzer.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
+#include "gpinstruct-analyzer/gpinstruct-analyzer.h"
 
-struct _CanvasAnalyzerWindowPrivate
+struct _GPInstructAnalyzerWindowPrivate
 {
 	GtkWidget* main_vbox;
 
@@ -49,10 +48,10 @@ struct _CanvasAnalyzerWindowPrivate
 
 	GtkWidget* statusbar;
 
-	CanvasLogAnalyzer* analyzer;
+	GPInstructLogAnalyzer* analyzer;
 };
 
-#define CANVAS_ANALYZER_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_ANALYZER_WINDOW, CanvasAnalyzerWindowPrivate))
+#define GPINSTRUCT_ANALYZER_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_WINDOW, GPInstructAnalyzerWindowPrivate))
 
 
 static gboolean
@@ -60,9 +59,9 @@ window_delete_event (GtkWidget *widget,
                      GdkEvent  *event,
                      gpointer   user_data)
 {
-	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (widget);
+	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (widget);
 
-	if (canvas_analyzer_window_quit (window))
+	if (gpinstruct_analyzer_window_quit (window))
 		return FALSE;
 	else
 		return TRUE;
@@ -77,7 +76,7 @@ view_combobox_changed (GtkComboBox *widget,
 	if (active < 0)
 		return;
 
-	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
 	if (window->priv->analyzer == NULL)
 		return;
@@ -89,12 +88,12 @@ view_combobox_changed (GtkComboBox *widget,
 	switch (active)
 	{
 		case 0:
-			window->priv->view = canvas_analyzer_project_view_new (window->priv->analyzer);
+			window->priv->view = gpinstruct_analyzer_project_view_new (window->priv->analyzer);
 			gtk_box_pack_start (GTK_BOX (window->priv->main_vbox), window->priv->view, TRUE, TRUE, 0);
 			gtk_widget_show_all (window->priv->view);
 			break;
 		case 1:
-			window->priv->view = canvas_analyzer_examinee_view_new (window->priv->analyzer);
+			window->priv->view = gpinstruct_analyzer_examinee_view_new (window->priv->analyzer);
 			gtk_box_pack_start (GTK_BOX (window->priv->main_vbox), window->priv->view, TRUE, TRUE, 0);
 			gtk_widget_show_all (window->priv->view);
 			break;
@@ -106,9 +105,9 @@ static void
 file_new_action (GtkAction *action,
                  gpointer   user_data)
 {
-	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
-	canvas_analyzer_window_new_session (window);
+	gpinstruct_analyzer_window_new_session (window);
 }
 
 
@@ -116,7 +115,7 @@ static void
 file_add_action (GtkAction *action,
                  gpointer   user_data)
 {
-	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
 	GtkWidget* dialog = gtk_file_chooser_dialog_new (_("Choose Log Files"),
 	                                                 GTK_WINDOW (window),
@@ -127,8 +126,8 @@ file_add_action (GtkAction *action,
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("Canvas Log file"));
-	gtk_file_filter_add_pattern (filter, "*.xml");
+	gtk_file_filter_set_name (filter, _("GPI Log file"));
+	gtk_file_filter_add_pattern (filter, "*.gpinstruct-log");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
@@ -138,7 +137,7 @@ file_add_action (GtkAction *action,
 
 		while (current_log_files)
 		{
-			canvas_analyzer_window_add_log_file (window, current_log_files->data);
+			gpinstruct_analyzer_window_add_log_file (window, current_log_files->data);
 
 			current_log_files = current_log_files->next;
 		}
@@ -160,9 +159,9 @@ static void
 file_close_action (GtkAction *action,
                    gpointer   user_data)
 {
-	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
-	canvas_analyzer_window_close_session (window);
+	gpinstruct_analyzer_window_close_session (window);
 }
 
 
@@ -170,9 +169,9 @@ static void
 file_quit_action (GtkAction *action,
                   gpointer   user_data)
 {
-	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
-	if (canvas_analyzer_window_quit (window))
+	if (gpinstruct_analyzer_window_quit (window))
 		gtk_widget_destroy (GTK_WIDGET (window));
 }
 
@@ -188,47 +187,47 @@ static void
 help_about_action (GtkAction *action,
                    gpointer   user_data)
 {
-	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
 	static gchar* authors[] = {"Arnel A. Borja <galeon@ymail.com>", NULL};
 	gchar* license = _(
-		"This program is free software; you can redistribute it and/or modify "
-		"it under the terms of the GNU General Public License as published by "
-		"the Free Software Foundation; either version 3 of the License, or "
-		"(at your option) any later version.\n"
-		"\n"
-		"This program is distributed in the hope that it will be useful, "
-		"but WITHOUT ANY WARRANTY; without even the implied warranty of "
-		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-		"GNU General Public License for more details.\n"
-		"\n"
-		"You should have received a copy of the GNU General Public License along "
-		"with this program.  If not, see <http://www.gnu.org/licenses/>.");
+	                   "This program is free software; you can redistribute it and/or modify "
+	                   "it under the terms of the GNU General Public License as published by "
+	                   "the Free Software Foundation; either version 3 of the License, or "
+	                   "(at your option) any later version.\n"
+	                   "\n"
+	                   "This program is distributed in the hope that it will be useful, "
+	                   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+	                   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+	                   "GNU General Public License for more details.\n"
+	                   "\n"
+	                   "You should have received a copy of the GNU General Public License along "
+	                   "with this program.  If not, see <http://www.gnu.org/licenses/>.");
 
-		gtk_show_about_dialog (GTK_WINDOW (window),
-		                       "program-name", _("Canvas Analyzer"),
-		                       "version", PACKAGE_VERSION,
-		                       "title", _("About Canvas Analyzer"),
-		                       "comments", _("Canvas Project Analyzer"),
-		                       "website", "http://kyoushuu.users.sourceforge.net/project_canvas",
-		                       "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
+	                   gtk_show_about_dialog (GTK_WINDOW (window),
+	                                          "program-name", _("GPInstruct Analyzer"),
+	                                          "version", PACKAGE_VERSION,
+	                                          "title", _("About GPInstruct Analyzer"),
+	                                          "comments", _("GPInstruct Project Analyzer"),
+	                                          "website", "http://gpinstruct.sourceforge.net",
+	                                          "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
 #if GTK_MAJOR_VERSION >= 3
-		                       "license-type", GTK_LICENSE_GPL_3_0,
+	                                          "license-type", GTK_LICENSE_GPL_3_0,
 #endif
-		                       "license", license,
-		                       "wrap-license", TRUE,
-		                       "authors", authors,
-		                       NULL);
-}
+	                                          "license", license,
+	                                          "wrap-license", TRUE,
+	                                          "authors", authors,
+	                                          NULL);
+                   }
 
 
 
-G_DEFINE_TYPE (CanvasAnalyzerWindow, canvas_analyzer_window, GTK_TYPE_WINDOW);
+G_DEFINE_TYPE (GPInstructAnalyzerWindow, gpinstruct_analyzer_window, GTK_TYPE_WINDOW);
 
 static void
-canvas_analyzer_window_init (CanvasAnalyzerWindow *object)
+gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 {
-	object->priv = CANVAS_ANALYZER_WINDOW_PRIVATE (object);
+	object->priv = GPINSTRUCT_ANALYZER_WINDOW_PRIVATE (object);
 
 	object->priv->analyzer = NULL;
 
@@ -280,7 +279,7 @@ canvas_analyzer_window_init (CanvasAnalyzerWindow *object)
 		"  </toolbar>"
 		"</ui>";
 
-	gtk_window_set_title (GTK_WINDOW (object), _("Canvas Analyzer"));
+	gtk_window_set_title (GTK_WINDOW (object), _("GPInstruct Analyzer"));
 	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
 
 	object->priv->main_vbox = gtk_vbox_new (FALSE, 3);
@@ -290,7 +289,7 @@ canvas_analyzer_window_init (CanvasAnalyzerWindow *object)
 	object->priv->manager = gtk_ui_manager_new ();
 	gtk_window_add_accel_group (GTK_WINDOW (object), gtk_ui_manager_get_accel_group (object->priv->manager));
 
-	object->priv->action_group = gtk_action_group_new ("canvas-analyzer-window");
+	object->priv->action_group = gtk_action_group_new ("gpinstruct-analyzer-window");
 	gtk_action_group_add_actions (object->priv->action_group, actions, G_N_ELEMENTS (actions), object);
 	gtk_action_set_sensitive (gtk_action_group_get_action (object->priv->action_group,
 	                                                       "file-add"),
@@ -350,41 +349,41 @@ canvas_analyzer_window_init (CanvasAnalyzerWindow *object)
 }
 
 static void
-canvas_analyzer_window_finalize (GObject *object)
+gpinstruct_analyzer_window_finalize (GObject *object)
 {
-	CanvasAnalyzerWindow* window = CANVAS_ANALYZER_WINDOW (object);
+	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (object);
 
 	if (window->priv->action_group)
 		g_object_unref (window->priv->action_group);
 
-	G_OBJECT_CLASS (canvas_analyzer_window_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_analyzer_window_parent_class)->finalize (object);
 }
 
 static void
-canvas_analyzer_window_class_init (CanvasAnalyzerWindowClass *klass)
+gpinstruct_analyzer_window_class_init (GPInstructAnalyzerWindowClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
 	/*GtkWindowClass* parent_class = GTK_WINDOW_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasAnalyzerWindowPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructAnalyzerWindowPrivate));
 
-	object_class->finalize = canvas_analyzer_window_finalize;
+	object_class->finalize = gpinstruct_analyzer_window_finalize;
 }
 
 
 GtkWidget*
-canvas_analyzer_window_new (void)
+gpinstruct_analyzer_window_new (void)
 {
-	return g_object_new (CANVAS_TYPE_ANALYZER_WINDOW, NULL);
+	return g_object_new (GPINSTRUCT_TYPE_ANALYZER_WINDOW, NULL);
 }
 
 void
-canvas_analyzer_window_new_session (CanvasAnalyzerWindow* window)
+gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
 {
 	if (window->priv->analyzer)
 	{
-		if (canvas_analyzer_window_close_session (window) == FALSE)
-		return;
+		if (gpinstruct_analyzer_window_close_session (window) == FALSE)
+			return;
 	}
 
 	GtkWidget* dialog = gtk_file_chooser_dialog_new (_("Choose Project File"),
@@ -396,18 +395,18 @@ canvas_analyzer_window_new_session (CanvasAnalyzerWindow* window)
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("Canvas Project file"));
-	gtk_file_filter_add_pattern (filter, "*.xml");
+	gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
 		GError* error = NULL;
 
-		CanvasParser* parser = canvas_parser_new ();
+		GPInstructParser* parser = gpinstruct_parser_new ();
 
 		gchar* project_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		CanvasProject* project = canvas_parser_open (parser, project_file, &error);
+		GPInstructProject* project = gpinstruct_parser_open (parser, project_file, &error);
 		if (error)
 		{
 			g_critical(_("Error: %s\n"), error->message);
@@ -419,14 +418,14 @@ canvas_analyzer_window_new_session (CanvasAnalyzerWindow* window)
 		if (project == NULL)
 			return;
 
-		window->priv->analyzer = canvas_log_analyzer_new (project);
+		window->priv->analyzer = gpinstruct_log_analyzer_new (project);
 
 		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
-				                                               "file-add"),
-				                  TRUE);
+		                                                       "file-add"),
+		                          TRUE);
 		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
-				                                               "file-close"),
-				                  TRUE);
+		                                                       "file-close"),
+		                          TRUE);
 
 		gtk_widget_set_sensitive (window->priv->view_combobox, TRUE);
 
@@ -437,7 +436,7 @@ canvas_analyzer_window_new_session (CanvasAnalyzerWindow* window)
 }
 
 gboolean
-canvas_analyzer_window_close_session (CanvasAnalyzerWindow* window)
+gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow* window)
 {
 	if (window->priv->analyzer == NULL)
 		return FALSE;
@@ -462,19 +461,20 @@ canvas_analyzer_window_close_session (CanvasAnalyzerWindow* window)
 
 
 gboolean
-canvas_analyzer_window_add_log_file (CanvasAnalyzerWindow* window, const gchar* file)
+gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow* window,
+                                         const gchar* file)
 {
 	if (window->priv->analyzer == NULL)
 		return FALSE;
 
-	CanvasLog* log = canvas_log_new ();
-	if (canvas_log_open (log, file, NULL) == FALSE)
+	GPInstructLog* log = gpinstruct_log_new ();
+	if (gpinstruct_log_open (log, file, NULL) == FALSE)
 	{
 		g_object_unref (log);
 		return FALSE;
 	}
 
-	canvas_log_analyzer_add_log (window->priv->analyzer, log);
+	gpinstruct_log_analyzer_add_log (window->priv->analyzer, log);
 
 	g_object_unref (log);
 
@@ -485,11 +485,11 @@ canvas_analyzer_window_add_log_file (CanvasAnalyzerWindow* window, const gchar* 
 }
 
 gboolean
-canvas_analyzer_window_quit (CanvasAnalyzerWindow* window)
+gpinstruct_analyzer_window_quit (GPInstructAnalyzerWindow* window)
 {
 	if (window->priv->analyzer)
 	{
-		if (canvas_analyzer_window_close_session (window) == FALSE)
+		if (gpinstruct_analyzer_window_close_session (window) == FALSE)
 			return FALSE;
 	}
 

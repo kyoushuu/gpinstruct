@@ -1,80 +1,80 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "canvas/canvas.h"
+#include "gpinstruct/gpinstruct.h"
 
-struct _CanvasLessonReadingPrivate
+struct _GPInstructLessonReadingPrivate
 {
 	gchar* text;
 };
 
-#define CANVAS_LESSON_READING_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_READING, CanvasLessonReadingPrivate))
+#define GPINSTRUCT_LESSON_READING_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_READING, GPInstructLessonReadingPrivate))
 
 
 
-G_DEFINE_TYPE (CanvasLessonReading, canvas_lesson_reading, CANVAS_TYPE_LESSON_ELEMENT);
+G_DEFINE_TYPE (GPInstructLessonReading, gpinstruct_lesson_reading, GPINSTRUCT_TYPE_LESSON_ELEMENT);
 
 static void
-canvas_lesson_reading_init (CanvasLessonReading *object)
+gpinstruct_lesson_reading_init (GPInstructLessonReading *object)
 {
-	object->priv = CANVAS_LESSON_READING_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_READING_PRIVATE (object);
 
 	object->priv->text = g_strdup ("");
 }
 
 static void
-canvas_lesson_reading_finalize (GObject *object)
+gpinstruct_lesson_reading_finalize (GObject *object)
 {
-	CanvasLessonReading* reading = CANVAS_LESSON_READING (object);
+	GPInstructLessonReading* reading = GPINSTRUCT_LESSON_READING (object);
 
 	if (reading->priv->text)
 		g_free (reading->priv->text);
 
-	G_OBJECT_CLASS (canvas_lesson_reading_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_lesson_reading_parent_class)->finalize (object);
 }
 
 static void
-canvas_lesson_reading_class_init (CanvasLessonReadingClass *klass)
+gpinstruct_lesson_reading_class_init (GPInstructLessonReadingClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasLessonElementClass* parent_class = CANVAS_LESSON_ELEMENT_CLASS (klass);*/
+	/*GPInstructLessonElementClass* parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasLessonReadingPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLessonReadingPrivate));
 
-	object_class->finalize = canvas_lesson_reading_finalize;
+	object_class->finalize = gpinstruct_lesson_reading_finalize;
 }
 
 
-CanvasLessonReading*
-canvas_lesson_reading_new (void)
+GPInstructLessonReading*
+gpinstruct_lesson_reading_new (void)
 {
-	return g_object_new (CANVAS_TYPE_LESSON_READING, NULL);
+	return g_object_new (GPINSTRUCT_TYPE_LESSON_READING, NULL);
 }
 
 const gchar*
-canvas_lesson_reading_get_text (CanvasLessonReading* reading)
+gpinstruct_lesson_reading_get_text (GPInstructLessonReading* reading)
 {
 	return reading->priv->text;
 }
 
 void
-canvas_lesson_reading_set_text (CanvasLessonReading* reading, const gchar* text)
+gpinstruct_lesson_reading_set_text (GPInstructLessonReading* reading,
+                                    const gchar* text)
 {
 	if (reading->priv->text)
 		g_free (reading->priv->text);

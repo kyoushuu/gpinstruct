@@ -1,72 +1,71 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CANVAS_LESSON_TEST_H_
-#define _CANVAS_LESSON_TEST_H_
+#ifndef _GPINSTRUCT_LESSON_TEST_H_
+#define _GPINSTRUCT_LESSON_TEST_H_
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define CANVAS_TYPE_LESSON_TEST             (canvas_lesson_test_get_type ())
-#define CANVAS_LESSON_TEST(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), CANVAS_TYPE_LESSON_TEST, CanvasLessonTest))
-#define CANVAS_LESSON_TEST_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), CANVAS_TYPE_LESSON_TEST, CanvasLessonTestClass))
-#define CANVAS_IS_LESSON_TEST(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CANVAS_TYPE_LESSON_TEST))
-#define CANVAS_IS_LESSON_TEST_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_TEST))
-#define CANVAS_LESSON_TEST_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_TEST, CanvasLessonTestClass))
+#define GPINSTRUCT_TYPE_LESSON_TEST             (gpinstruct_lesson_test_get_type ())
+#define GPINSTRUCT_LESSON_TEST(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GPINSTRUCT_TYPE_LESSON_TEST, GPInstructLessonTest))
+#define GPINSTRUCT_LESSON_TEST_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GPINSTRUCT_TYPE_LESSON_TEST, GPInstructLessonTestClass))
+#define GPINSTRUCT_IS_LESSON_TEST(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GPINSTRUCT_TYPE_LESSON_TEST))
+#define GPINSTRUCT_IS_LESSON_TEST_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GPINSTRUCT_TYPE_LESSON_TEST))
+#define GPINSTRUCT_LESSON_TEST_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GPINSTRUCT_TYPE_LESSON_TEST, GPInstructLessonTestClass))
 
-typedef struct _CanvasLessonTestPrivate CanvasLessonTestPrivate;
-typedef struct _CanvasLessonTestClass CanvasLessonTestClass;
-typedef struct _CanvasLessonTest CanvasLessonTest;
+typedef struct _GPInstructLessonTestPrivate GPInstructLessonTestPrivate;
+typedef struct _GPInstructLessonTestClass GPInstructLessonTestClass;
+typedef struct _GPInstructLessonTest GPInstructLessonTest;
 
-struct _CanvasLessonTestClass
+struct _GPInstructLessonTestClass
 {
-	CanvasLessonElementClass parent_class;
+	GPInstructLessonElementClass parent_class;
 
-	gchar*(* get_item) (CanvasLessonTest* test, guint item);
-	gchar*(* get_choice) (CanvasLessonTest* test, guint item, guint choice);
-	guint(* get_items_length) (CanvasLessonTest* test);
-	guint(* get_choices_length) (CanvasLessonTest* test, guint item);
-	guint(* get_item_correct_choice) (CanvasLessonTest* test, guint item);
+	gchar*(* get_item) (GPInstructLessonTest* test, guint item);
+	gchar*(* get_choice) (GPInstructLessonTest* test, guint item, guint choice);
+	guint(* get_items_length) (GPInstructLessonTest* test);
+	guint(* get_choices_length) (GPInstructLessonTest* test, guint item);
+	guint(* get_item_correct_choice) (GPInstructLessonTest* test, guint item);
 };
 
-struct _CanvasLessonTest
+struct _GPInstructLessonTest
 {
-	CanvasLessonElement parent_instance;
+	GPInstructLessonElement parent_instance;
 
-	CanvasLessonTestPrivate* priv;
+	GPInstructLessonTestPrivate* priv;
 };
 
-GType canvas_lesson_test_get_type (void) G_GNUC_CONST;
-CanvasLessonTest* canvas_lesson_test_new (void);
-const gchar* canvas_lesson_test_get_directions (CanvasLessonTest* test);
-void canvas_lesson_test_set_directions (CanvasLessonTest* test, const gchar* directions);
-gboolean canvas_lesson_test_get_explain (CanvasLessonTest* test);
-void canvas_lesson_test_set_explain (CanvasLessonTest* test, gboolean explain);
-const gchar* canvas_lesson_test_get_id (CanvasLessonTest* test);
-void canvas_lesson_test_set_id (CanvasLessonTest* test, const gchar* id);
-gchar* canvas_lesson_test_get_item (CanvasLessonTest* test, guint item);
-gchar* canvas_lesson_test_get_choice (CanvasLessonTest* test, guint item, guint choice);
-guint canvas_lesson_test_get_items_length (CanvasLessonTest* test);
-guint canvas_lesson_test_get_choices_length (CanvasLessonTest* test, guint item);
-guint canvas_lesson_test_get_item_correct_choice (CanvasLessonTest* test, guint item);
+GType gpinstruct_lesson_test_get_type (void) G_GNUC_CONST;
+GPInstructLessonTest* gpinstruct_lesson_test_new (void);
+const gchar* gpinstruct_lesson_test_get_directions (GPInstructLessonTest* test);
+void gpinstruct_lesson_test_set_directions (GPInstructLessonTest* test, const gchar* directions);
+gboolean gpinstruct_lesson_test_get_explain (GPInstructLessonTest* test);
+void gpinstruct_lesson_test_set_explain (GPInstructLessonTest* test, gboolean explain);
+const gchar* gpinstruct_lesson_test_get_id (GPInstructLessonTest* test);
+void gpinstruct_lesson_test_set_id (GPInstructLessonTest* test, const gchar* id);
+gchar* gpinstruct_lesson_test_get_item (GPInstructLessonTest* test, guint item);
+gchar* gpinstruct_lesson_test_get_choice (GPInstructLessonTest* test, guint item, guint choice);
+guint gpinstruct_lesson_test_get_items_length (GPInstructLessonTest* test);
+guint gpinstruct_lesson_test_get_choices_length (GPInstructLessonTest* test, guint item);
+guint gpinstruct_lesson_test_get_item_correct_choice (GPInstructLessonTest* test, guint item);
 
 G_END_DECLS
 
-#endif /* _CANVAS_LESSON_TEST_H_ */
+#endif /* _GPINSTRUCT_LESSON_TEST_H_ */

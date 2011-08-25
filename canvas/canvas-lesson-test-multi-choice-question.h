@@ -1,67 +1,66 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_H_
-#define _CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_H_
+#ifndef _GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION_H_
+#define _GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION_H_
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION             (canvas_lesson_test_multi_choice_question_get_type ())
-#define CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, CanvasLessonTestMultiChoiceQuestion))
-#define CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, CanvasLessonTestMultiChoiceQuestionClass))
-#define CANVAS_IS_LESSON_TEST_MULTI_CHOICE_QUESTION(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION))
-#define CANVAS_IS_LESSON_TEST_MULTI_CHOICE_QUESTION_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION))
-#define CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, CanvasLessonTestMultiChoiceQuestionClass))
+#define GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION             (gpinstruct_lesson_test_multi_choice_question_get_type ())
+#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, GPInstructLessonTestMultiChoiceQuestion))
+#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, GPInstructLessonTestMultiChoiceQuestionClass))
+#define GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE_QUESTION(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION))
+#define GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE_QUESTION_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION))
+#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_QUESTION, GPInstructLessonTestMultiChoiceQuestionClass))
 
-typedef struct _CanvasLessonTestMultiChoiceQuestionPrivate CanvasLessonTestMultiChoiceQuestionPrivate;
-typedef struct _CanvasLessonTestMultiChoiceQuestionClass CanvasLessonTestMultiChoiceQuestionClass;
-typedef struct _CanvasLessonTestMultiChoiceQuestion CanvasLessonTestMultiChoiceQuestion;
+typedef struct _GPInstructLessonTestMultiChoiceQuestionPrivate GPInstructLessonTestMultiChoiceQuestionPrivate;
+typedef struct _GPInstructLessonTestMultiChoiceQuestionClass GPInstructLessonTestMultiChoiceQuestionClass;
+typedef struct _GPInstructLessonTestMultiChoiceQuestion GPInstructLessonTestMultiChoiceQuestion;
 
-struct _CanvasLessonTestMultiChoiceQuestionClass
+struct _GPInstructLessonTestMultiChoiceQuestionClass
 {
-	CanvasObjectClass parent_class;
+	GPInstructObjectClass parent_class;
 };
 
-struct _CanvasLessonTestMultiChoiceQuestion
+struct _GPInstructLessonTestMultiChoiceQuestion
 {
-	CanvasObject parent_instance;
+	GPInstructObject parent_instance;
 
-	CanvasLessonTestMultiChoiceQuestionPrivate* priv;
+	GPInstructLessonTestMultiChoiceQuestionPrivate* priv;
 };
 
-GType canvas_lesson_test_multi_choice_question_get_type (void) G_GNUC_CONST;
-CanvasLessonTestMultiChoiceQuestion* canvas_lesson_test_multi_choice_question_new (void);
-const gchar* canvas_lesson_test_multi_choice_question_get_text (CanvasLessonTestMultiChoiceQuestion* question);
-void canvas_lesson_test_multi_choice_question_set_text (CanvasLessonTestMultiChoiceQuestion* question, const gchar* text);
-guint canvas_lesson_test_multi_choice_question_get_answer (CanvasLessonTestMultiChoiceQuestion* question);
-void canvas_lesson_test_multi_choice_question_set_answer (CanvasLessonTestMultiChoiceQuestion* question, guint answer);
-void canvas_lesson_test_multi_choice_question_add_choice (CanvasLessonTestMultiChoiceQuestion* question, const gchar* choice);
-void canvas_lesson_test_multi_choice_question_remove_choice (CanvasLessonTestMultiChoiceQuestion* question, guint choice);
-const gchar* canvas_lesson_test_multi_choice_question_get_choice (CanvasLessonTestMultiChoiceQuestion* question, guint choice);
-void canvas_lesson_test_multi_choice_question_set_choice (CanvasLessonTestMultiChoiceQuestion* question, guint choice, const gchar* text);
-GList* canvas_lesson_test_multi_choice_question_get_choices (CanvasLessonTestMultiChoiceQuestion* question);
-guint canvas_lesson_test_multi_choice_question_get_choices_length (CanvasLessonTestMultiChoiceQuestion* question);
-const gchar* canvas_lesson_test_multi_choice_question_get_explanation (CanvasLessonTestMultiChoiceQuestion* question);
-void canvas_lesson_test_multi_choice_question_set_explanation (CanvasLessonTestMultiChoiceQuestion* question, const gchar* explanation);
+GType gpinstruct_lesson_test_multi_choice_question_get_type (void) G_GNUC_CONST;
+GPInstructLessonTestMultiChoiceQuestion* gpinstruct_lesson_test_multi_choice_question_new (void);
+const gchar* gpinstruct_lesson_test_multi_choice_question_get_text (GPInstructLessonTestMultiChoiceQuestion* question);
+void gpinstruct_lesson_test_multi_choice_question_set_text (GPInstructLessonTestMultiChoiceQuestion* question, const gchar* text);
+guint gpinstruct_lesson_test_multi_choice_question_get_answer (GPInstructLessonTestMultiChoiceQuestion* question);
+void gpinstruct_lesson_test_multi_choice_question_set_answer (GPInstructLessonTestMultiChoiceQuestion* question, guint answer);
+void gpinstruct_lesson_test_multi_choice_question_add_choice (GPInstructLessonTestMultiChoiceQuestion* question, const gchar* choice);
+void gpinstruct_lesson_test_multi_choice_question_remove_choice (GPInstructLessonTestMultiChoiceQuestion* question, guint choice);
+const gchar* gpinstruct_lesson_test_multi_choice_question_get_choice (GPInstructLessonTestMultiChoiceQuestion* question, guint choice);
+void gpinstruct_lesson_test_multi_choice_question_set_choice (GPInstructLessonTestMultiChoiceQuestion* question, guint choice, const gchar* text);
+GList* gpinstruct_lesson_test_multi_choice_question_get_choices (GPInstructLessonTestMultiChoiceQuestion* question);
+guint gpinstruct_lesson_test_multi_choice_question_get_choices_length (GPInstructLessonTestMultiChoiceQuestion* question);
+const gchar* gpinstruct_lesson_test_multi_choice_question_get_explanation (GPInstructLessonTestMultiChoiceQuestion* question);
+void gpinstruct_lesson_test_multi_choice_question_set_explanation (GPInstructLessonTestMultiChoiceQuestion* question, const gchar* explanation);
 
 G_END_DECLS
 
-#endif /* _CANVAS_LESSON_TEST_MULTI_CHOICE_QUESTION_H_ */
+#endif /* _GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION_H_ */

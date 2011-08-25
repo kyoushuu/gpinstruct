@@ -1,4 +1,4 @@
-#include "canvas-marshalers.h"
+#include "gpinstruct-marshalers.h"
 
 #include	<glib-object.h>
 
@@ -50,9 +50,9 @@
 #endif /* !G_ENABLE_DEBUG */
 
 
-/* BOOLEAN:VOID (/home/galeon/Projects/canvas/src/canvas-marshalers.list:24) */
+/* BOOLEAN:VOID (/home/galeon/Projects/gpinstruct/src/gpinstruct-marshalers.list:24) */
 void
-_canvas_marshal_BOOLEAN__VOID (GClosure     *closure,
+_gpinstruct_marshal_BOOLEAN__VOID (GClosure     *closure,
                                GValue       *return_value G_GNUC_UNUSED,
                                guint         n_param_values,
                                const GValue *param_values,

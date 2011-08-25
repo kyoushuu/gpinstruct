@@ -1,6 +1,5 @@
 /*
- * canvas-editor.h
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <canvas-editor/canvas-editor-window.h>
+#include <gpinstruct-editor/gpinstruct-editor-window.h>
 
-#include <canvas-editor/canvas-object-editor.h>
-#include <canvas-editor/canvas-project-editor.h>
-#include <canvas-editor/canvas-category-editor.h>
-#include <canvas-editor/canvas-lesson-editor.h>
-#include <canvas-editor/canvas-lesson-discussion-editor.h>
-#include <canvas-editor/canvas-lesson-reading-editor.h>
-#include <canvas-editor/canvas-lesson-test-multi-choice-editor.h>
-#include <canvas-editor/canvas-lesson-test-word-pool-editor.h>
-#include <canvas-editor/canvas-lesson-test-order-editor.h>
+#include <gpinstruct-editor/gpinstruct-object-editor.h>
+#include <gpinstruct-editor/gpinstruct-project-editor.h>
+#include <gpinstruct-editor/gpinstruct-category-editor.h>
+#include <gpinstruct-editor/gpinstruct-lesson-editor.h>
+#include <gpinstruct-editor/gpinstruct-lesson-discussion-editor.h>
+#include <gpinstruct-editor/gpinstruct-lesson-reading-editor.h>
+#include <gpinstruct-editor/gpinstruct-lesson-test-multi-choice-editor.h>
+#include <gpinstruct-editor/gpinstruct-lesson-test-word-pool-editor.h>
+#include <gpinstruct-editor/gpinstruct-lesson-test-order-editor.h>

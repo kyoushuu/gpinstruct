@@ -1,41 +1,40 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas/canvas-private.h"
-#include "canvas/canvas-marshalers.h"
-#include "canvas-view/canvas-view.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct/gpinstruct-private.h"
+#include "gpinstruct/gpinstruct-marshalers.h"
+#include "gpinstruct-view/gpinstruct-view.h"
 
-struct _CanvasLessonViewPagePrivate
+struct _GPInstructLessonViewPagePrivate
 {
 	gchar* title;
 
 	gboolean next;
 	gboolean back;
 
-	CanvasMessageType message;
+	GPInstructMessageType message;
 	gchar* explanation;
 };
 
-#define CANVAS_LESSON_VIEW_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_VIEW_PAGE, CanvasLessonViewPagePrivate))
+#define GPINSTRUCT_LESSON_VIEW_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_VIEW_PAGE, GPInstructLessonViewPagePrivate))
 
 enum
 {
@@ -52,7 +51,8 @@ static guint lesson_view_page_signals[LAST_SIGNAL] = { 0 };
 
 
 void
-page_reset (CanvasLessonViewPage* view, gpointer user_data)
+page_reset (GPInstructLessonViewPage* view,
+            gpointer user_data)
 {
 	GtkScrolledWindow* scrolled_window = GTK_SCROLLED_WINDOW (view);
 
@@ -63,12 +63,12 @@ page_reset (CanvasLessonViewPage* view, gpointer user_data)
 }
 
 
-G_DEFINE_TYPE (CanvasLessonViewPage, canvas_lesson_view_page, GTK_TYPE_SCROLLED_WINDOW);
+G_DEFINE_TYPE (GPInstructLessonViewPage, gpinstruct_lesson_view_page, GTK_TYPE_SCROLLED_WINDOW);
 
 static void
-canvas_lesson_view_page_init (CanvasLessonViewPage *object)
+gpinstruct_lesson_view_page_init (GPInstructLessonViewPage *object)
 {
-	object->priv = CANVAS_LESSON_VIEW_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_VIEW_PAGE_PRIVATE (object);
 
 	object->priv->title = NULL;
 
@@ -84,9 +84,9 @@ canvas_lesson_view_page_init (CanvasLessonViewPage *object)
 }
 
 static void
-canvas_lesson_view_page_finalize (GObject *object)
+gpinstruct_lesson_view_page_finalize (GObject *object)
 {
-	CanvasLessonViewPage* page = CANVAS_LESSON_VIEW_PAGE (object);
+	GPInstructLessonViewPage* page = GPINSTRUCT_LESSON_VIEW_PAGE (object);
 
 	if (page->priv->title)
 		g_free (page->priv->title);
@@ -94,18 +94,18 @@ canvas_lesson_view_page_finalize (GObject *object)
 	if (page->priv->explanation)
 		g_free (page->priv->explanation);
 
-	G_OBJECT_CLASS (canvas_lesson_view_page_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_lesson_view_page_parent_class)->finalize (object);
 }
 
 static void
-canvas_lesson_view_page_class_init (CanvasLessonViewPageClass *klass)
+gpinstruct_lesson_view_page_class_init (GPInstructLessonViewPageClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
 	/*GtkScrolledWindowClass* parent_class = GTK_SCROLLED_WINDOW_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasLessonViewPagePrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLessonViewPagePrivate));
 
-	object_class->finalize = canvas_lesson_view_page_finalize;
+	object_class->finalize = gpinstruct_lesson_view_page_finalize;
 
 	klass->show_next = NULL;
 	klass->show_previous = NULL;
@@ -116,25 +116,25 @@ canvas_lesson_view_page_class_init (CanvasLessonViewPageClass *klass)
 		g_signal_new ("show-next",
 		              G_OBJECT_CLASS_TYPE (klass),
 		              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		              G_STRUCT_OFFSET (CanvasLessonViewPageClass, show_next),
-		              _canvas_boolean_handled_accumulator, NULL,
-		              _canvas_marshal_BOOLEAN__VOID,
+		              G_STRUCT_OFFSET (GPInstructLessonViewPageClass, show_next),
+		              _gpinstruct_boolean_handled_accumulator, NULL,
+		              _gpinstruct_marshal_BOOLEAN__VOID,
 		              G_TYPE_BOOLEAN, 0);
 
 	lesson_view_page_signals[SHOW_PREVIOUS] =
 		g_signal_new ("show-previous",
 		              G_OBJECT_CLASS_TYPE (klass),
 		              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		              G_STRUCT_OFFSET (CanvasLessonViewPageClass, show_previous),
-		              _canvas_boolean_handled_accumulator, NULL,
-		              _canvas_marshal_BOOLEAN__VOID,
+		              G_STRUCT_OFFSET (GPInstructLessonViewPageClass, show_previous),
+		              _gpinstruct_boolean_handled_accumulator, NULL,
+		              _gpinstruct_marshal_BOOLEAN__VOID,
 		              G_TYPE_BOOLEAN, 0);
 
 	lesson_view_page_signals[SHOW_CURRENT] =
 		g_signal_new ("show-current",
 		              G_OBJECT_CLASS_TYPE (klass),
 		              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		              G_STRUCT_OFFSET (CanvasLessonViewPageClass, show_current),
+		              G_STRUCT_OFFSET (GPInstructLessonViewPageClass, show_current),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID,
 		              G_TYPE_NONE, 0);
@@ -143,28 +143,28 @@ canvas_lesson_view_page_class_init (CanvasLessonViewPageClass *klass)
 		g_signal_new ("reset",
 		              G_OBJECT_CLASS_TYPE (klass),
 		              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		              G_STRUCT_OFFSET (CanvasLessonViewPageClass, reset),
+		              G_STRUCT_OFFSET (GPInstructLessonViewPageClass, reset),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID,
 		              G_TYPE_NONE, 0);
 }
 
 
-CanvasLessonViewPage*
-canvas_lesson_view_page_new (void)
+GPInstructLessonViewPage*
+gpinstruct_lesson_view_page_new (void)
 {
-	return g_object_new (CANVAS_TYPE_LESSON_VIEW_PAGE, NULL);
+	return g_object_new (GPINSTRUCT_TYPE_LESSON_VIEW_PAGE, NULL);
 }
 
 const gchar*
-canvas_lesson_view_page_get_title (CanvasLessonViewPage* page)
+gpinstruct_lesson_view_page_get_title (GPInstructLessonViewPage* page)
 {
 	return page->priv->title;
 }
 
 void
-canvas_lesson_view_page_set_title (CanvasLessonViewPage* page,
-                                   const gchar* title)
+gpinstruct_lesson_view_page_set_title (GPInstructLessonViewPage* page,
+                                       const gchar* title)
 {
 	if (page->priv->title)
 		g_free (page->priv->title);
@@ -172,33 +172,33 @@ canvas_lesson_view_page_set_title (CanvasLessonViewPage* page,
 }
 
 gboolean
-canvas_lesson_view_page_get_show_next_button (CanvasLessonViewPage* page)
+gpinstruct_lesson_view_page_get_show_next_button (GPInstructLessonViewPage* page)
 {
 	return page->priv->next;
 }
 
 void
-canvas_lesson_view_page_set_show_next_button (CanvasLessonViewPage* page,
-                                              gboolean show)
+gpinstruct_lesson_view_page_set_show_next_button (GPInstructLessonViewPage* page,
+                                                  gboolean show)
 {
 	page->priv->next = show;
 }
 
 gboolean
-canvas_lesson_view_page_get_show_back_button (CanvasLessonViewPage* page)
+gpinstruct_lesson_view_page_get_show_back_button (GPInstructLessonViewPage* page)
 {
 	return page->priv->back;
 }
 
 void
-canvas_lesson_view_page_set_show_back_button (CanvasLessonViewPage* page,
-                                              gboolean show)
+gpinstruct_lesson_view_page_set_show_back_button (GPInstructLessonViewPage* page,
+                                                  gboolean show)
 {
 	page->priv->back = show;
 }
 
 gboolean
-canvas_lesson_view_page_show_next (CanvasLessonViewPage* page)
+gpinstruct_lesson_view_page_show_next (GPInstructLessonViewPage* page)
 {
 	gboolean clicked = FALSE;
 	g_signal_emit (page, lesson_view_page_signals[SHOW_NEXT], 0, &clicked);
@@ -206,7 +206,7 @@ canvas_lesson_view_page_show_next (CanvasLessonViewPage* page)
 }
 
 gboolean
-canvas_lesson_view_page_show_previous (CanvasLessonViewPage* page)
+gpinstruct_lesson_view_page_show_previous (GPInstructLessonViewPage* page)
 {
 	gboolean clicked = FALSE;
 	g_signal_emit (page, lesson_view_page_signals[SHOW_PREVIOUS], 0, &clicked);
@@ -214,31 +214,33 @@ canvas_lesson_view_page_show_previous (CanvasLessonViewPage* page)
 }
 
 void
-canvas_lesson_view_page_show_current (CanvasLessonViewPage* page)
+gpinstruct_lesson_view_page_show_current (GPInstructLessonViewPage* page)
 {
 	g_signal_emit (page, lesson_view_page_signals[SHOW_CURRENT], 0);
 }
 
 void
-canvas_lesson_view_page_reset (CanvasLessonViewPage* page)
+gpinstruct_lesson_view_page_reset (GPInstructLessonViewPage* page)
 {
 	g_signal_emit (page, lesson_view_page_signals[RESET], 0);
 }
 
 void
-canvas_lesson_view_page_set_message (CanvasLessonViewPage* page, CanvasMessageType message)
+gpinstruct_lesson_view_page_set_message (GPInstructLessonViewPage* page,
+                                         GPInstructMessageType message)
 {
 	page->priv->message = message;
 }
 
-CanvasMessageType
-canvas_lesson_view_page_get_message (CanvasLessonViewPage* page)
+GPInstructMessageType
+gpinstruct_lesson_view_page_get_message (GPInstructLessonViewPage* page)
 {
 	return page->priv->message;
 }
 
 void
-canvas_lesson_view_page_set_explanation (CanvasLessonViewPage* page, const gchar* explanation)
+gpinstruct_lesson_view_page_set_explanation (GPInstructLessonViewPage* page,
+                                             const gchar* explanation)
 {
 	if (page->priv->explanation)
 		g_free (page->priv->explanation);
@@ -246,7 +248,7 @@ canvas_lesson_view_page_set_explanation (CanvasLessonViewPage* page, const gchar
 }
 
 const gchar*
-canvas_lesson_view_page_get_explanation (CanvasLessonViewPage* page)
+gpinstruct_lesson_view_page_get_explanation (GPInstructLessonViewPage* page)
 {
 	return page->priv->explanation;
 }

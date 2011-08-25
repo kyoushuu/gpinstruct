@@ -1,13 +1,5 @@
-/***************************************************************************
- *            canvas.h
- *
- *  Sat July 23 22:50:29 2011
- *  Copyright  2011  Arnel A. Borja
- *  <galeon@ymail.com>
- ****************************************************************************/
 /*
- * canvas.h
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,29 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <canvas/canvas-object.h>
+#include <gpinstruct/gpinstruct-object.h>
 
-#include <canvas/canvas-lesson-element.h>
+#include <gpinstruct/gpinstruct-lesson-element.h>
 
-#include <canvas/canvas-lesson-discussion.h>
-#include <canvas/canvas-lesson-reading.h>
-
-
-#include <canvas/canvas-lesson-test.h>
-
-#include <canvas/canvas-lesson-test-multi-choice-question.h>
-#include <canvas/canvas-lesson-test-multi-choice.h>
-#include <canvas/canvas-lesson-test-word-pool-question.h>
-#include <canvas/canvas-lesson-test-word-pool.h>
-#include <canvas/canvas-lesson-test-order-item.h>
-#include <canvas/canvas-lesson-test-order.h>
+#include <gpinstruct/gpinstruct-lesson-discussion.h>
+#include <gpinstruct/gpinstruct-lesson-reading.h>
 
 
-#include <canvas/canvas-lesson.h>
-#include <canvas/canvas-category.h>
-#include <canvas/canvas-project.h>
+#include <gpinstruct/gpinstruct-lesson-test.h>
 
-#include <canvas/canvas-parser.h>
+#include <gpinstruct/gpinstruct-lesson-test-multi-choice-question.h>
+#include <gpinstruct/gpinstruct-lesson-test-multi-choice.h>
+#include <gpinstruct/gpinstruct-lesson-test-word-pool-question.h>
+#include <gpinstruct/gpinstruct-lesson-test-word-pool.h>
+#include <gpinstruct/gpinstruct-lesson-test-order-item.h>
+#include <gpinstruct/gpinstruct-lesson-test-order.h>
+
+
+#include <gpinstruct/gpinstruct-lesson.h>
+#include <gpinstruct/gpinstruct-category.h>
+#include <gpinstruct/gpinstruct-project.h>
+
+#include <gpinstruct/gpinstruct-parser.h>
 
 #if (GLIB_MAJOR_VERSION < 2) || (GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 28)
 void g_list_free_full (GList *list, GDestroyNotify free_func);

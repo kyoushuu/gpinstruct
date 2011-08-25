@@ -12,47 +12,47 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS)
 
 lib_LTLIBRARIES =  \
-	libcanvas-editor.la
+	libgpinstruct-editor.la
 
-libcanvas_editor_la_SOURCES =  \
-	canvas-editor.h \
-	canvas-object-editor.h \
-	canvas-object-editor.c \
-	canvas-project-editor.h \
-	canvas-project-editor.c \
-	canvas-category-editor.h \
-	canvas-category-editor.c \
-	canvas-lesson-editor.h \
-	canvas-lesson-editor.c \
-	canvas-lesson-discussion-editor.h \
-	canvas-lesson-discussion-editor.c \
-	canvas-lesson-reading-editor.h \
-	canvas-lesson-reading-editor.c \
-	canvas-lesson-test-multi-choice-editor.h \
-	canvas-lesson-test-multi-choice-editor.c \
-	canvas-lesson-test-word-pool-editor.h \
-	canvas-lesson-test-word-pool-editor.c \
-	canvas-lesson-test-order-editor.h \
-	canvas-lesson-test-order-editor.c \
-	canvas-editor-window.h \
-	canvas-editor-window.c
+libgpinstruct_editor_la_SOURCES =  \
+	gpinstruct-editor.h \
+	gpinstruct-object-editor.h \
+	gpinstruct-object-editor.c \
+	gpinstruct-project-editor.h \
+	gpinstruct-project-editor.c \
+	gpinstruct-category-editor.h \
+	gpinstruct-category-editor.c \
+	gpinstruct-lesson-editor.h \
+	gpinstruct-lesson-editor.c \
+	gpinstruct-lesson-discussion-editor.h \
+	gpinstruct-lesson-discussion-editor.c \
+	gpinstruct-lesson-reading-editor.h \
+	gpinstruct-lesson-reading-editor.c \
+	gpinstruct-lesson-test-multi-choice-editor.h \
+	gpinstruct-lesson-test-multi-choice-editor.c \
+	gpinstruct-lesson-test-word-pool-editor.h \
+	gpinstruct-lesson-test-word-pool-editor.c \
+	gpinstruct-lesson-test-order-editor.h \
+	gpinstruct-lesson-test-order-editor.c \
+	gpinstruct-editor-window.h \
+	gpinstruct-editor-window.c
 
-libcanvas_editor_la_CPPFLAGS = -DG_LOG_DOMAIN=\"Canvas-Editor\" \
+libgpinstruct_editor_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Editor\" \
 	$(AM_CPPFLAGS)
 
-libcanvas_editor_la_LDFLAGS = -no-undefined
+libgpinstruct_editor_la_LDFLAGS = -no-undefined
 
-libcanvas_editor_la_LIBADD = $(GTK_LIBS) \
-	$(top_builddir)/canvas/libcanvas.la \
-	$(top_builddir)/canvas-view/libcanvas-view.la
+libgpinstruct_editor_la_LIBADD = $(GTK_LIBS) \
+	$(top_builddir)/gpinstruct/libgpinstruct.la \
+	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la
 
-bin_PROGRAMS = canvas-editor
+bin_PROGRAMS = gpinstruct-editor
 
-canvas_editor_SOURCES =  \
+gpinstruct_editor_SOURCES =  \
 	main.c
 
-canvas_editor_LDADD = $(GTK_LIBS) \
-	$(top_builddir)/canvas/libcanvas.la \
-	$(top_builddir)/canvas-view/libcanvas-view.la \
-	libcanvas-editor.la
+gpinstruct_editor_LDADD = $(GTK_LIBS) \
+	$(top_builddir)/gpinstruct/libgpinstruct.la \
+	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
+	libgpinstruct-editor.la
 

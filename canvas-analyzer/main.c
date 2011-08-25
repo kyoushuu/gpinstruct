@@ -1,6 +1,5 @@
 /*
- * main.c
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,15 +22,16 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
-#include "canvas-analyzer/canvas-analyzer.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
+#include "gpinstruct-analyzer/gpinstruct-analyzer.h"
 
 
 GtkWidget *window;
 
 int
-main (int argc, char *argv[])
+main (int argc,
+      char *argv[])
 {
 #ifdef ENABLE_NLS
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -43,7 +43,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 
-	window = canvas_analyzer_window_new ();
+	window = gpinstruct_analyzer_window_new ();
 
 
 	/* Exit when the window is closed */

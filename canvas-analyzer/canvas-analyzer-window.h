@@ -1,59 +1,58 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CANVAS_ANALYZER_WINDOW_H_
-#define _CANVAS_ANALYZER_WINDOW_H_
+#ifndef _GPINSTRUCT_ANALYZER_WINDOW_H_
+#define _GPINSTRUCT_ANALYZER_WINDOW_H_
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define CANVAS_TYPE_ANALYZER_WINDOW             (canvas_analyzer_window_get_type ())
-#define CANVAS_ANALYZER_WINDOW(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), CANVAS_TYPE_ANALYZER_WINDOW, CanvasAnalyzerWindow))
-#define CANVAS_ANALYZER_WINDOW_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), CANVAS_TYPE_ANALYZER_WINDOW, CanvasAnalyzerWindowClass))
-#define CANVAS_IS_ANALYZER_WINDOW(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CANVAS_TYPE_ANALYZER_WINDOW))
-#define CANVAS_IS_ANALYZER_WINDOW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_ANALYZER_WINDOW))
-#define CANVAS_ANALYZER_WINDOW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_ANALYZER_WINDOW, CanvasAnalyzerWindowClass))
+#define GPINSTRUCT_TYPE_ANALYZER_WINDOW             (gpinstruct_analyzer_window_get_type ())
+#define GPINSTRUCT_ANALYZER_WINDOW(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GPINSTRUCT_TYPE_ANALYZER_WINDOW, GPInstructAnalyzerWindow))
+#define GPINSTRUCT_ANALYZER_WINDOW_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GPINSTRUCT_TYPE_ANALYZER_WINDOW, GPInstructAnalyzerWindowClass))
+#define GPINSTRUCT_IS_ANALYZER_WINDOW(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GPINSTRUCT_TYPE_ANALYZER_WINDOW))
+#define GPINSTRUCT_IS_ANALYZER_WINDOW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GPINSTRUCT_TYPE_ANALYZER_WINDOW))
+#define GPINSTRUCT_ANALYZER_WINDOW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GPINSTRUCT_TYPE_ANALYZER_WINDOW, GPInstructAnalyzerWindowClass))
 
-typedef struct _CanvasAnalyzerWindowPrivate CanvasAnalyzerWindowPrivate;
-typedef struct _CanvasAnalyzerWindowClass CanvasAnalyzerWindowClass;
-typedef struct _CanvasAnalyzerWindow CanvasAnalyzerWindow;
+typedef struct _GPInstructAnalyzerWindowPrivate GPInstructAnalyzerWindowPrivate;
+typedef struct _GPInstructAnalyzerWindowClass GPInstructAnalyzerWindowClass;
+typedef struct _GPInstructAnalyzerWindow GPInstructAnalyzerWindow;
 
-struct _CanvasAnalyzerWindowClass
+struct _GPInstructAnalyzerWindowClass
 {
 	GtkWindowClass parent_class;
 };
 
-struct _CanvasAnalyzerWindow
+struct _GPInstructAnalyzerWindow
 {
 	GtkWindow parent_instance;
 
-	CanvasAnalyzerWindowPrivate* priv;
+	GPInstructAnalyzerWindowPrivate* priv;
 };
 
-GType canvas_analyzer_window_get_type (void) G_GNUC_CONST;
-GtkWidget* canvas_analyzer_window_new (void);
-void canvas_analyzer_window_new_session (CanvasAnalyzerWindow* window);
-gboolean canvas_analyzer_window_close_session (CanvasAnalyzerWindow* window);
-gboolean canvas_analyzer_window_add_log_file (CanvasAnalyzerWindow* window, const gchar* file);
-gboolean canvas_analyzer_window_quit (CanvasAnalyzerWindow* window);
+GType gpinstruct_analyzer_window_get_type (void) G_GNUC_CONST;
+GtkWidget* gpinstruct_analyzer_window_new (void);
+void gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window);
+gboolean gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow* window);
+gboolean gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow* window, const gchar* file);
+gboolean gpinstruct_analyzer_window_quit (GPInstructAnalyzerWindow* window);
 
 G_END_DECLS
 
-#endif /* _CANVAS_ANALYZER_WINDOW_H_ */
+#endif /* _GPINSTRUCT_ANALYZER_WINDOW_H_ */

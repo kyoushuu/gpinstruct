@@ -1,6 +1,5 @@
 /*
- * canvas-view.c
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,7 +18,7 @@
 
 #include <glib.h>
 
-#include "canvas-view-private.h"
+#include "gpinstruct-view-private.h"
 
 guint*
 random_array (guint length)

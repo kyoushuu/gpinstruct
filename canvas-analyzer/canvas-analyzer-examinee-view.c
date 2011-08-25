@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -22,11 +21,11 @@
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
-#include "canvas-analyzer/canvas-analyzer.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
+#include "gpinstruct-analyzer/gpinstruct-analyzer.h"
 
-struct _CanvasAnalyzerExamineeViewPrivate
+struct _GPInstructAnalyzerExamineeViewPrivate
 {
 	GtkListStore* examinee_store;
 	GtkWidget* examinee_treeview;
@@ -38,7 +37,7 @@ struct _CanvasAnalyzerExamineeViewPrivate
 	GtkWidget* test_treeview;
 };
 
-#define CANVAS_ANALYZER_EXAMINEE_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_ANALYZER_EXAMINEE_VIEW, CanvasAnalyzerExamineeViewPrivate))
+#define GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_EXAMINEE_VIEW, GPInstructAnalyzerExamineeViewPrivate))
 
 
 
@@ -86,11 +85,12 @@ enum
 
 
 static void
-examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
+examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
+                                    gpointer user_data)
 {
-	CanvasAnalyzerExamineeView* view = CANVAS_ANALYZER_EXAMINEE_VIEW (user_data);
+	GPInstructAnalyzerExamineeView* view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (user_data);
 
-	CanvasLogAnalyzerExaminee* examinee;
+	GPInstructLogAnalyzerExaminee* examinee;
 
 	GtkTreeIter iter, iterProject, iterCategory, iterLesson;
 	GtkTreeModel *model;
@@ -113,7 +113,7 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 
 		if (examinee)
 		{
-			CanvasLogAnalyzerProject* project = examinee->project;
+			GPInstructLogAnalyzerProject* project = examinee->project;
 
 			items = project->items_length;
 			frequency = project->times_taken;
@@ -136,17 +136,17 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 			ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
 			gtk_tree_store_insert_with_values (view->priv->project_store, &iterProject, NULL, -1,
-					                           PROJECT_TITLE_COLUMN, canvas_project_get_title (project->object),
-					                           PROJECT_ITEMS_COLUMN, items_text,
-					                           PROJECT_FREQUENCY_COLUMN, frequency_text,
-					                           PROJECT_SCORE_COLUMN, score_text,
-								               PROJECT_AVE_SCORE_COLUMN, ave_score_text,
-					                           PROJECT_PERCENTAGE_COLUMN, percentage_text,
-					                           PROJECT_TIME_COLUMN, time_text,
-					                           PROJECT_AVE_TIME_COLUMN, ave_time_text,
-					                           PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_PROJECT,
-					                           PROJECT_STRUCT_POINTER_COLUMN, project,
-					                           -1);
+			                                   PROJECT_TITLE_COLUMN, gpinstruct_project_get_title (project->object),
+			                                   PROJECT_ITEMS_COLUMN, items_text,
+			                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
+			                                   PROJECT_SCORE_COLUMN, score_text,
+			                                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
+			                                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
+			                                   PROJECT_TIME_COLUMN, time_text,
+			                                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
+			                                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_PROJECT,
+			                                   PROJECT_STRUCT_POINTER_COLUMN, project,
+			                                   -1);
 
 			g_free (items_text);
 			g_free (frequency_text);
@@ -160,7 +160,7 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 
 			while (categories)
 			{
-				CanvasLogAnalyzerCategory* category = (CanvasLogAnalyzerCategory*)categories->data;
+				GPInstructLogAnalyzerCategory* category = (GPInstructLogAnalyzerCategory*)categories->data;
 
 				items = category->items_length;
 				frequency = category->times_taken;
@@ -183,17 +183,17 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 				ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
 				gtk_tree_store_insert_with_values (view->priv->project_store, &iterCategory, &iterProject, -1,
-							                       PROJECT_TITLE_COLUMN, canvas_category_get_title (category->object),
-							                       PROJECT_ITEMS_COLUMN, items_text,
-							                       PROJECT_FREQUENCY_COLUMN, frequency_text,
-							                       PROJECT_SCORE_COLUMN, score_text,
-								                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
-							                       PROJECT_PERCENTAGE_COLUMN, percentage_text,
-							                       PROJECT_TIME_COLUMN, time_text,
-							                       PROJECT_AVE_TIME_COLUMN, ave_time_text,
-							                       PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_CATEGORY,
-							                       PROJECT_STRUCT_POINTER_COLUMN, category,
-							                       -1);
+				                                   PROJECT_TITLE_COLUMN, gpinstruct_category_get_title (category->object),
+				                                   PROJECT_ITEMS_COLUMN, items_text,
+				                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
+				                                   PROJECT_SCORE_COLUMN, score_text,
+				                                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
+				                                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
+				                                   PROJECT_TIME_COLUMN, time_text,
+				                                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
+				                                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_CATEGORY,
+				                                   PROJECT_STRUCT_POINTER_COLUMN, category,
+				                                   -1);
 
 				g_free (items_text);
 				g_free (frequency_text);
@@ -207,7 +207,7 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 
 				while (lessons)
 				{
-					CanvasLogAnalyzerLesson* lesson = (CanvasLogAnalyzerLesson*)lessons->data;
+					GPInstructLogAnalyzerLesson* lesson = (GPInstructLogAnalyzerLesson*)lessons->data;
 
 					items = lesson->items_length;
 					frequency = lesson->times_taken;
@@ -230,17 +230,17 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 					ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
 					gtk_tree_store_insert_with_values (view->priv->project_store, &iterLesson, &iterCategory, -1,
-									                   PROJECT_TITLE_COLUMN, canvas_lesson_get_title (lesson->object),
-									                   PROJECT_ITEMS_COLUMN, items_text,
-									                   PROJECT_FREQUENCY_COLUMN, frequency_text,
-									                   PROJECT_SCORE_COLUMN, score_text,
-								                       PROJECT_AVE_SCORE_COLUMN, ave_score_text,
-									                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
-									                   PROJECT_TIME_COLUMN, time_text,
-									                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
-									                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_LESSON,
-									                   PROJECT_STRUCT_POINTER_COLUMN, lesson,
-									                   -1);
+					                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_get_title (lesson->object),
+					                                   PROJECT_ITEMS_COLUMN, items_text,
+					                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
+					                                   PROJECT_SCORE_COLUMN, score_text,
+					                                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
+					                                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
+					                                   PROJECT_TIME_COLUMN, time_text,
+					                                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
+					                                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_LESSON,
+					                                   PROJECT_STRUCT_POINTER_COLUMN, lesson,
+					                                   -1);
 
 					g_free (items_text);
 					g_free (frequency_text);
@@ -254,7 +254,7 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 
 					while (tests)
 					{
-						CanvasLogAnalyzerTest* test = (CanvasLogAnalyzerTest*)tests->data;
+						GPInstructLogAnalyzerTest* test = (GPInstructLogAnalyzerTest*)tests->data;
 
 						items = test->items_length;
 						frequency = test->times_taken;
@@ -277,17 +277,17 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 						ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
 						gtk_tree_store_insert_with_values (view->priv->project_store, NULL, &iterLesson, -1,
-											               PROJECT_TITLE_COLUMN, canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (test->object)),
-											               PROJECT_ITEMS_COLUMN, items_text,
-											               PROJECT_FREQUENCY_COLUMN, frequency_text,
-											               PROJECT_SCORE_COLUMN, score_text,
-								                           PROJECT_AVE_SCORE_COLUMN, ave_score_text,
-											               PROJECT_PERCENTAGE_COLUMN, percentage_text,
-											               PROJECT_TIME_COLUMN, time_text,
-											               PROJECT_AVE_TIME_COLUMN, ave_time_text,
-											               PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_TEST,
-											               PROJECT_STRUCT_POINTER_COLUMN, test,
-											               -1);
+						                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test->object)),
+						                                   PROJECT_ITEMS_COLUMN, items_text,
+						                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
+						                                   PROJECT_SCORE_COLUMN, score_text,
+						                                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
+						                                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
+						                                   PROJECT_TIME_COLUMN, time_text,
+						                                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
+						                                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_TEST,
+						                                   PROJECT_STRUCT_POINTER_COLUMN, test,
+						                                   -1);
 
 						g_free (items_text);
 						g_free (frequency_text);
@@ -313,14 +313,15 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_d
 
 
 static void
-project_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_data)
+project_tree_selection_changed_cb (GtkTreeSelection *selection,
+                                   gpointer user_data)
 {
-	CanvasAnalyzerExamineeView* view = CANVAS_ANALYZER_EXAMINEE_VIEW (user_data);
+	GPInstructAnalyzerExamineeView* view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (user_data);
 
 	GtkTreeIter iter, iterItem, iterChoice;
 	GtkTreeModel *model;
 	guint struct_type;
-	CanvasLogAnalyzerTest* test;
+	GPInstructLogAnalyzerTest* test;
 
 	guint min;
 	gdouble sec;
@@ -347,7 +348,7 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_da
 
 			while (items)
 			{
-				CanvasLogAnalyzerItem* item = items->data;
+				GPInstructLogAnalyzerItem* item = items->data;
 
 				children = item->choices_length;
 				frequency = item->times_answered;
@@ -356,8 +357,8 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_da
 				time_spent = item->time_spent;
 				ave_time_spent = frequency? time_spent/frequency:0;
 
-				title_text = canvas_lesson_test_get_item (test->object,
-				                                          item_num);
+				title_text = gpinstruct_lesson_test_get_item (test->object,
+				                                              item_num);
 				children_text = g_strdup_printf ("%d", children);
 				frequency_text = g_strdup_printf ("%d", frequency);
 				score_text = g_strdup_printf ("%d", score);
@@ -372,13 +373,13 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_da
 				gtk_tree_store_insert_with_values (view->priv->test_store,
 				                                   &iterItem, NULL,
 				                                   -1,
-							                       TEST_TITLE_COLUMN, title_text,
-							                       TEST_ITEMS_COLUMN, children_text,
-							                       TEST_FREQUENCY_COLUMN, frequency_text,
-							                       TEST_SCORE_COLUMN, score_text,
-							                       TEST_PERCENTAGE_COLUMN, percentage_text,
-							                       TEST_TIME_COLUMN, time_text,
-							                       TEST_AVE_TIME_COLUMN, ave_time_text,
+				                                   TEST_TITLE_COLUMN, title_text,
+				                                   TEST_ITEMS_COLUMN, children_text,
+				                                   TEST_FREQUENCY_COLUMN, frequency_text,
+				                                   TEST_SCORE_COLUMN, score_text,
+				                                   TEST_PERCENTAGE_COLUMN, percentage_text,
+				                                   TEST_TIME_COLUMN, time_text,
+				                                   TEST_AVE_TIME_COLUMN, ave_time_text,
 				                                   -1);
 
 				g_free (title_text);
@@ -394,11 +395,11 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_da
 
 				while (choices)
 				{
-					CanvasLogAnalyzerChoice* choice = choices->data;
+					GPInstructLogAnalyzerChoice* choice = choices->data;
 
-					title_text = canvas_lesson_test_get_choice (test->object,
-					                                            item_num,
-					                                            choice_num);
+					title_text = gpinstruct_lesson_test_get_choice (test->object,
+					                                                item_num,
+					                                                choice_num);
 					frequency = choice->times_chosen;
 					percentage = (item->times_answered?(frequency/item->times_answered):0) * 100;
 					time_spent = choice->time_spent;
@@ -414,14 +415,14 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_da
 					ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
 					gtk_tree_store_insert_with_values (view->priv->test_store,
-							                           &iterChoice, &iterItem,
-							                           -1,
-										               TEST_TITLE_COLUMN, title_text,
-										               TEST_FREQUENCY_COLUMN, frequency_text,
+					                                   &iterChoice, &iterItem,
+					                                   -1,
+					                                   TEST_TITLE_COLUMN, title_text,
+					                                   TEST_FREQUENCY_COLUMN, frequency_text,
 					                                   TEST_PERCENTAGE_COLUMN, percentage_text,
-										               TEST_TIME_COLUMN, time_text,
-										               TEST_AVE_TIME_COLUMN, ave_time_text,
-							                           -1);
+					                                   TEST_TIME_COLUMN, time_text,
+					                                   TEST_AVE_TIME_COLUMN, ave_time_text,
+					                                   -1);
 
 					g_free (title_text);
 					g_free (frequency_text);
@@ -442,12 +443,12 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection, gpointer user_da
 
 
 
-G_DEFINE_TYPE (CanvasAnalyzerExamineeView, canvas_analyzer_examinee_view, GTK_TYPE_HPANED);
+G_DEFINE_TYPE (GPInstructAnalyzerExamineeView, gpinstruct_analyzer_examinee_view, GTK_TYPE_HPANED);
 
 static void
-canvas_analyzer_examinee_view_init (CanvasAnalyzerExamineeView *object)
+gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 {
-	object->priv = CANVAS_ANALYZER_EXAMINEE_VIEW_PRIVATE (object);
+	object->priv = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_PRIVATE (object);
 
 	GtkTreeSelection *selection;
 	GtkCellRenderer* renderer;
@@ -471,8 +472,8 @@ canvas_analyzer_examinee_view_init (CanvasAnalyzerExamineeView *object)
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (examinee_treeview));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 	g_signal_connect (selection, "changed",
-		              G_CALLBACK (examinee_tree_selection_changed_cb),
-		              object);
+	                  G_CALLBACK (examinee_tree_selection_changed_cb),
+	                  object);
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_renderer_set_alignment (renderer, 0, 0.5);
@@ -511,8 +512,8 @@ canvas_analyzer_examinee_view_init (CanvasAnalyzerExamineeView *object)
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (project_treeview));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 	g_signal_connect (selection, "changed",
-		              G_CALLBACK (project_tree_selection_changed_cb),
-		              object);
+	                  G_CALLBACK (project_tree_selection_changed_cb),
+	                  object);
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_renderer_set_alignment (renderer, 0, 0.5);
@@ -678,9 +679,9 @@ canvas_analyzer_examinee_view_init (CanvasAnalyzerExamineeView *object)
 }
 
 static void
-canvas_analyzer_examinee_view_finalize (GObject *object)
+gpinstruct_analyzer_examinee_view_finalize (GObject *object)
 {
-	CanvasAnalyzerExamineeView* view = CANVAS_ANALYZER_EXAMINEE_VIEW (object);
+	GPInstructAnalyzerExamineeView* view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (object);
 
 	if (view->priv->examinee_store)
 		g_object_unref (view->priv->examinee_store);
@@ -691,43 +692,43 @@ canvas_analyzer_examinee_view_finalize (GObject *object)
 	if (view->priv->test_store)
 		g_object_unref (view->priv->test_store);
 
-	G_OBJECT_CLASS (canvas_analyzer_examinee_view_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_analyzer_examinee_view_parent_class)->finalize (object);
 }
 
 static void
-canvas_analyzer_examinee_view_class_init (CanvasAnalyzerExamineeViewClass *klass)
+gpinstruct_analyzer_examinee_view_class_init (GPInstructAnalyzerExamineeViewClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
 	/*GtkHPanedClass* parent_class = GTK_HPANED_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasAnalyzerExamineeViewPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructAnalyzerExamineeViewPrivate));
 
-	object_class->finalize = canvas_analyzer_examinee_view_finalize;
+	object_class->finalize = gpinstruct_analyzer_examinee_view_finalize;
 }
 
 
 GtkWidget*
-canvas_analyzer_examinee_view_new (CanvasLogAnalyzer* analyzer)
+gpinstruct_analyzer_examinee_view_new (GPInstructLogAnalyzer* analyzer)
 {
-	CanvasAnalyzerExamineeView* view = g_object_new (CANVAS_TYPE_ANALYZER_EXAMINEE_VIEW, NULL);
+	GPInstructAnalyzerExamineeView* view = g_object_new (GPINSTRUCT_TYPE_ANALYZER_EXAMINEE_VIEW, NULL);
 
 	gchar* name;
 
-	GList* examinees = canvas_log_analyzer_get_examinees (analyzer);
+	GList* examinees = gpinstruct_log_analyzer_get_examinees (analyzer);
 	GList* current_examinees = examinees;
 
 	while (current_examinees)
 	{
-		CanvasLogAnalyzerExaminee* examinee = current_examinees->data;
+		GPInstructLogAnalyzerExaminee* examinee = current_examinees->data;
 
 		name = g_strdup_printf ("%s, %s",
 		                        examinee->last_name,
 		                        examinee->first_name);
 
 		gtk_list_store_insert_with_values (view->priv->examinee_store, NULL, -1,
-			                               EXAMINEE_NAME_COLUMN, name,
-			                               EXAMINEE_STRUCT_POINTER_COLUMN, examinee,
-			                               -1);
+		                                   EXAMINEE_NAME_COLUMN, name,
+		                                   EXAMINEE_STRUCT_POINTER_COLUMN, examinee,
+		                                   -1);
 
 		g_free (name);
 

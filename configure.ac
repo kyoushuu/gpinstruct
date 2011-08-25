@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl Created by Anjuta application wizard.
 
-AC_INIT(canvas, 0.1)
+AC_INIT(gpinstruct, 0.1)
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
@@ -16,7 +16,7 @@ AC_PROG_CC
 dnl ***************************************************************************
 dnl Internatinalization
 dnl ***************************************************************************
-GETTEXT_PACKAGE=canvas
+GETTEXT_PACKAGE=gpinstruct
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 AM_GLIB_GNU_GETTEXT
@@ -77,8 +77,8 @@ PKG_CHECK_MODULES(GTK,gtk+-3.0,,[PKG_CHECK_MODULES(GTK,gtk+-2.0)])
 
 AC_OUTPUT([
 Makefile
-canvas/Makefile
-canvas-view/Makefile
-canvas-editor/Makefile
-canvas-analyzer/Makefile
+gpinstruct/Makefile
+gpinstruct-view/Makefile
+gpinstruct-editor/Makefile
+gpinstruct-analyzer/Makefile
 po/Makefile.in])

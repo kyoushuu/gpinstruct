@@ -1,6 +1,5 @@
 /*
- * canvas-analyzer.h
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <canvas-analyzer/canvas-log-analyzer.h>
-#include <canvas-analyzer/canvas-analyzer-window.h>
-#include <canvas-analyzer/canvas-analyzer-project-view.h>
-#include <canvas-analyzer/canvas-analyzer-examinee-view.h>
+#include <gpinstruct-analyzer/gpinstruct-log-analyzer.h>
+#include <gpinstruct-analyzer/gpinstruct-analyzer-window.h>
+#include <gpinstruct-analyzer/gpinstruct-analyzer-project-view.h>
+#include <gpinstruct-analyzer/gpinstruct-analyzer-examinee-view.h>

@@ -1,65 +1,64 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CANVAS_LESSON_VIEW_H_
-#define _CANVAS_LESSON_VIEW_H_
+#ifndef _GPINSTRUCT_LESSON_VIEW_H_
+#define _GPINSTRUCT_LESSON_VIEW_H_
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define CANVAS_TYPE_LESSON_VIEW             (canvas_lesson_view_get_type ())
-#define CANVAS_LESSON_VIEW(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), CANVAS_TYPE_LESSON_VIEW, CanvasLessonView))
-#define CANVAS_LESSON_VIEW_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), CANVAS_TYPE_LESSON_VIEW, CanvasLessonViewClass))
-#define CANVAS_IS_LESSON_VIEW(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CANVAS_TYPE_LESSON_VIEW))
-#define CANVAS_IS_LESSON_VIEW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_VIEW))
-#define CANVAS_LESSON_VIEW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_VIEW, CanvasLessonViewClass))
+#define GPINSTRUCT_TYPE_LESSON_VIEW             (gpinstruct_lesson_view_get_type ())
+#define GPINSTRUCT_LESSON_VIEW(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GPINSTRUCT_TYPE_LESSON_VIEW, GPInstructLessonView))
+#define GPINSTRUCT_LESSON_VIEW_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GPINSTRUCT_TYPE_LESSON_VIEW, GPInstructLessonViewClass))
+#define GPINSTRUCT_IS_LESSON_VIEW(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GPINSTRUCT_TYPE_LESSON_VIEW))
+#define GPINSTRUCT_IS_LESSON_VIEW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GPINSTRUCT_TYPE_LESSON_VIEW))
+#define GPINSTRUCT_LESSON_VIEW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GPINSTRUCT_TYPE_LESSON_VIEW, GPInstructLessonViewClass))
 
-typedef struct _CanvasLessonViewPrivate CanvasLessonViewPrivate;
-typedef struct _CanvasLessonViewClass CanvasLessonViewClass;
-typedef struct _CanvasLessonView CanvasLessonView;
+typedef struct _GPInstructLessonViewPrivate GPInstructLessonViewPrivate;
+typedef struct _GPInstructLessonViewClass GPInstructLessonViewClass;
+typedef struct _GPInstructLessonView GPInstructLessonView;
 
-struct _CanvasLessonViewClass
+struct _GPInstructLessonViewClass
 {
 	GtkDialogClass parent_class;
 
 	/* Signals */
-	gboolean(* next) (CanvasLessonView* view, gpointer user_data);
-	gboolean(* back) (CanvasLessonView* view, gpointer user_data);
+	gboolean(* next) (GPInstructLessonView* view, gpointer user_data);
+	gboolean(* back) (GPInstructLessonView* view, gpointer user_data);
 };
 
-struct _CanvasLessonView
+struct _GPInstructLessonView
 {
 	GtkDialog parent_instance;
 
-	CanvasLessonViewPrivate* priv;
+	GPInstructLessonViewPrivate* priv;
 };
 
-GType canvas_lesson_view_get_type (void) G_GNUC_CONST;
-CanvasLessonView* canvas_lesson_view_new (CanvasLesson* lesson, CanvasMessagePool* pool, CanvasLog* log);
-void canvas_lesson_view_append_page (CanvasLessonView* view, CanvasLessonViewPage* page);
-guint canvas_lesson_view_get_current_page (CanvasLessonView* view);
-void canvas_lesson_view_set_current_page (CanvasLessonView* view, guint page);
-CanvasLessonViewPage* canvas_lesson_view_get_current_page_object (CanvasLessonView* view);
-void canvas_lesson_view_set_explanation (CanvasLessonView* view, const gchar* explanation);
-const gchar* canvas_lesson_view_get_explanation (CanvasLessonView* view);
+GType gpinstruct_lesson_view_get_type (void) G_GNUC_CONST;
+GPInstructLessonView* gpinstruct_lesson_view_new (GPInstructLesson* lesson, GPInstructMessagePool* pool, GPInstructLog* log);
+void gpinstruct_lesson_view_append_page (GPInstructLessonView* view, GPInstructLessonViewPage* page);
+guint gpinstruct_lesson_view_get_current_page (GPInstructLessonView* view);
+void gpinstruct_lesson_view_set_current_page (GPInstructLessonView* view, guint page);
+GPInstructLessonViewPage* gpinstruct_lesson_view_get_current_page_object (GPInstructLessonView* view);
+void gpinstruct_lesson_view_set_explanation (GPInstructLessonView* view, const gchar* explanation);
+const gchar* gpinstruct_lesson_view_get_explanation (GPInstructLessonView* view);
 
 G_END_DECLS
 
-#endif /* _CANVAS_LESSON_VIEW_H_ */
+#endif /* _GPINSTRUCT_LESSON_VIEW_H_ */

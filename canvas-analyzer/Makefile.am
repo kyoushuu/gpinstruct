@@ -9,35 +9,35 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS)
 
 lib_LTLIBRARIES =  \
-	libcanvas-analyzer.la
+	libgpinstruct-analyzer.la
 
-libcanvas_analyzer_la_SOURCES =  \
-	canvas-analyzer-window.h \
-	canvas-analyzer-window.c \
-	canvas-analyzer.h \
-	canvas-log-analyzer.h \
-	canvas-log-analyzer.c \
-	canvas-analyzer-project-view.h \
-	canvas-analyzer-project-view.c \
-	canvas-analyzer-examinee-view.h \
-	canvas-analyzer-examinee-view.c
+libgpinstruct_analyzer_la_SOURCES =  \
+	gpinstruct-analyzer-window.h \
+	gpinstruct-analyzer-window.c \
+	gpinstruct-analyzer.h \
+	gpinstruct-log-analyzer.h \
+	gpinstruct-log-analyzer.c \
+	gpinstruct-analyzer-project-view.h \
+	gpinstruct-analyzer-project-view.c \
+	gpinstruct-analyzer-examinee-view.h \
+	gpinstruct-analyzer-examinee-view.c
 
-libcanvas_analyzer_la_CPPFLAGS = -DG_LOG_DOMAIN=\"Canvas-Editor\" \
+libgpinstruct_analyzer_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Editor\" \
 	$(AM_CPPFLAGS)
 
-libcanvas_analyzer_la_LDFLAGS = -no-undefined
+libgpinstruct_analyzer_la_LDFLAGS = -no-undefined
 
-libcanvas_analyzer_la_LIBADD = $(GTK_LIBS) \
-	$(top_builddir)/canvas/libcanvas.la \
-	$(top_builddir)/canvas-view/libcanvas-view.la
+libgpinstruct_analyzer_la_LIBADD = $(GTK_LIBS) \
+	$(top_builddir)/gpinstruct/libgpinstruct.la \
+	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la
 
 bin_PROGRAMS =  \
-	canvas-analyzer
+	gpinstruct-analyzer
 
-canvas_analyzer_SOURCES =  \
+gpinstruct_analyzer_SOURCES =  \
 	main.c
 
-canvas_analyzer_LDADD = $(GTK_LIBS) \
-	$(top_builddir)/canvas/libcanvas.la \
-	$(top_builddir)/canvas-view/libcanvas-view.la \
-	libcanvas-analyzer.la
+gpinstruct_analyzer_LDADD = $(GTK_LIBS) \
+	$(top_builddir)/gpinstruct/libgpinstruct.la \
+	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
+	libgpinstruct-analyzer.la

@@ -1,57 +1,56 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CANVAS_LESSON_DISCUSSION_H_
-#define _CANVAS_LESSON_DISCUSSION_H_
+#ifndef _GPINSTRUCT_LESSON_DISCUSSION_H_
+#define _GPINSTRUCT_LESSON_DISCUSSION_H_
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define CANVAS_TYPE_LESSON_DISCUSSION             (canvas_lesson_discussion_get_type ())
-#define CANVAS_LESSON_DISCUSSION(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), CANVAS_TYPE_LESSON_DISCUSSION, CanvasLessonDiscussion))
-#define CANVAS_LESSON_DISCUSSION_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), CANVAS_TYPE_LESSON_DISCUSSION, CanvasLessonDiscussionClass))
-#define CANVAS_IS_LESSON_DISCUSSION(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CANVAS_TYPE_LESSON_DISCUSSION))
-#define CANVAS_IS_LESSON_DISCUSSION_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), CANVAS_TYPE_LESSON_DISCUSSION))
-#define CANVAS_LESSON_DISCUSSION_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), CANVAS_TYPE_LESSON_DISCUSSION, CanvasLessonDiscussionClass))
+#define GPINSTRUCT_TYPE_LESSON_DISCUSSION             (gpinstruct_lesson_discussion_get_type ())
+#define GPINSTRUCT_LESSON_DISCUSSION(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GPINSTRUCT_TYPE_LESSON_DISCUSSION, GPInstructLessonDiscussion))
+#define GPINSTRUCT_LESSON_DISCUSSION_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GPINSTRUCT_TYPE_LESSON_DISCUSSION, GPInstructLessonDiscussionClass))
+#define GPINSTRUCT_IS_LESSON_DISCUSSION(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GPINSTRUCT_TYPE_LESSON_DISCUSSION))
+#define GPINSTRUCT_IS_LESSON_DISCUSSION_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GPINSTRUCT_TYPE_LESSON_DISCUSSION))
+#define GPINSTRUCT_LESSON_DISCUSSION_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GPINSTRUCT_TYPE_LESSON_DISCUSSION, GPInstructLessonDiscussionClass))
 
-typedef struct _CanvasLessonDiscussionPrivate CanvasLessonDiscussionPrivate;
-typedef struct _CanvasLessonDiscussionClass CanvasLessonDiscussionClass;
-typedef struct _CanvasLessonDiscussion CanvasLessonDiscussion;
+typedef struct _GPInstructLessonDiscussionPrivate GPInstructLessonDiscussionPrivate;
+typedef struct _GPInstructLessonDiscussionClass GPInstructLessonDiscussionClass;
+typedef struct _GPInstructLessonDiscussion GPInstructLessonDiscussion;
 
-struct _CanvasLessonDiscussionClass
+struct _GPInstructLessonDiscussionClass
 {
-	CanvasLessonElementClass parent_class;
+	GPInstructLessonElementClass parent_class;
 };
 
-struct _CanvasLessonDiscussion
+struct _GPInstructLessonDiscussion
 {
-	CanvasLessonElement parent_instance;
+	GPInstructLessonElement parent_instance;
 
-	CanvasLessonDiscussionPrivate* priv;
+	GPInstructLessonDiscussionPrivate* priv;
 };
 
-GType canvas_lesson_discussion_get_type (void) G_GNUC_CONST;
-CanvasLessonDiscussion* canvas_lesson_discussion_new (void);
-const gchar* canvas_lesson_discussion_get_text (CanvasLessonDiscussion* discussion);
-void canvas_lesson_discussion_set_text (CanvasLessonDiscussion* discussion, const gchar* text);
+GType gpinstruct_lesson_discussion_get_type (void) G_GNUC_CONST;
+GPInstructLessonDiscussion* gpinstruct_lesson_discussion_new (void);
+const gchar* gpinstruct_lesson_discussion_get_text (GPInstructLessonDiscussion* discussion);
+void gpinstruct_lesson_discussion_set_text (GPInstructLessonDiscussion* discussion, const gchar* text);
 
 G_END_DECLS
 
-#endif /* _CANVAS_LESSON_DISCUSSION_H_ */
+#endif /* _GPINSTRUCT_LESSON_DISCUSSION_H_ */

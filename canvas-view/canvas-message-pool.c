@@ -1,87 +1,87 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
 
-#define CANVAS_MESSAGE_TYPE_SIZE CANVAS_MESSAGE_TYPE_FAIL+1
+#define GPINSTRUCT_MESSAGE_TYPE_SIZE GPINSTRUCT_MESSAGE_TYPE_FAIL+1
 
 
 
-struct _CanvasMessagePoolPrivate
+struct _GPInstructMessagePoolPrivate
 {
-	GList* messages[CANVAS_MESSAGE_TYPE_SIZE];
+	GList* messages[GPINSTRUCT_MESSAGE_TYPE_SIZE];
 };
 
-#define CANVAS_MESSAGE_POOL_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_MESSAGE_POOL, CanvasMessagePoolPrivate))
+#define GPINSTRUCT_MESSAGE_POOL_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_MESSAGE_POOL, GPInstructMessagePoolPrivate))
 
 
 
-G_DEFINE_TYPE (CanvasMessagePool, canvas_message_pool, CANVAS_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructMessagePool, gpinstruct_message_pool, GPINSTRUCT_TYPE_OBJECT);
 
 static void
-canvas_message_pool_init (CanvasMessagePool *object)
+gpinstruct_message_pool_init (GPInstructMessagePool *object)
 {
-	object->priv = CANVAS_MESSAGE_POOL_PRIVATE (object);
+	object->priv = GPINSTRUCT_MESSAGE_POOL_PRIVATE (object);
 
 	int i;
-	for (i = 0; i < CANVAS_MESSAGE_TYPE_SIZE; i++)
+	for (i = 0; i < GPINSTRUCT_MESSAGE_TYPE_SIZE; i++)
 		object->priv->messages[i] = NULL;
 }
 
 static void
-canvas_message_pool_finalize (GObject *object)
+gpinstruct_message_pool_finalize (GObject *object)
 {
-	CanvasMessagePool* pool = CANVAS_MESSAGE_POOL (object);
+	GPInstructMessagePool* pool = GPINSTRUCT_MESSAGE_POOL (object);
 
 	int i;
-	for (i = 0; i < CANVAS_MESSAGE_TYPE_SIZE; i++)
+	for (i = 0; i < GPINSTRUCT_MESSAGE_TYPE_SIZE; i++)
 	{
 		if (pool->priv->messages[i])
 			g_list_free_full (pool->priv->messages[i], g_free);
 	}
 
-	G_OBJECT_CLASS (canvas_message_pool_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_message_pool_parent_class)->finalize (object);
 }
 
 static void
-canvas_message_pool_class_init (CanvasMessagePoolClass *klass)
+gpinstruct_message_pool_class_init (GPInstructMessagePoolClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
+	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasMessagePoolPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructMessagePoolPrivate));
 
-	object_class->finalize = canvas_message_pool_finalize;
+	object_class->finalize = gpinstruct_message_pool_finalize;
 }
 
 
-CanvasMessagePool*
-canvas_message_pool_new (void)
+GPInstructMessagePool*
+gpinstruct_message_pool_new (void)
 {
-	return g_object_new (CANVAS_TYPE_MESSAGE_POOL, NULL);
+	return g_object_new (GPINSTRUCT_TYPE_MESSAGE_POOL, NULL);
 }
 
 void
-canvas_message_pool_load_from_file (CanvasMessagePool* pool, const gchar *file)
+gpinstruct_message_pool_load_from_file (GPInstructMessagePool* pool,
+                                        const gchar *file)
 {
 	GKeyFile* key_file = g_key_file_new ();
 	g_key_file_set_list_separator (key_file, ',');
@@ -90,16 +90,16 @@ canvas_message_pool_load_from_file (CanvasMessagePool* pool, const gchar *file)
 	if (g_key_file_load_from_file (key_file, file, G_KEY_FILE_NONE, &error))
 	{
 		struct {
-			CanvasMessageType type;
+			GPInstructMessageType type;
 			gchar* name;
 		} groups[] = {
-			{CANVAS_MESSAGE_TYPE_CORRECT,		"Correct"},
-			{CANVAS_MESSAGE_TYPE_CORRECT_ALL,	"CorrectAll"},
-			{CANVAS_MESSAGE_TYPE_WRONG,			"Wrong"},
-			{CANVAS_MESSAGE_TYPE_WRONG_SOME,	"WrongSome"},
-			{CANVAS_MESSAGE_TYPE_WRONG_ALL,		"WrongAll"},
-			{CANVAS_MESSAGE_TYPE_PASS,			"Pass"},
-			{CANVAS_MESSAGE_TYPE_FAIL,			"Fail"}
+			{GPINSTRUCT_MESSAGE_TYPE_CORRECT,		"Correct"},
+			{GPINSTRUCT_MESSAGE_TYPE_CORRECT_ALL,	"CorrectAll"},
+			{GPINSTRUCT_MESSAGE_TYPE_WRONG,			"Wrong"},
+			{GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME,	"WrongSome"},
+			{GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL,		"WrongAll"},
+			{GPINSTRUCT_MESSAGE_TYPE_PASS,			"Pass"},
+			{GPINSTRUCT_MESSAGE_TYPE_FAIL,			"Fail"}
 		};
 		guint groups_num = G_N_ELEMENTS (groups);
 		guint group;
@@ -107,7 +107,7 @@ canvas_message_pool_load_from_file (CanvasMessagePool* pool, const gchar *file)
 		gchar** keys;
 		guint key;
 
-		CanvasMessageType type;
+		GPInstructMessageType type;
 
 		for (group = 0; group < groups_num; group++)
 		{
@@ -136,9 +136,10 @@ canvas_message_pool_load_from_file (CanvasMessagePool* pool, const gchar *file)
 }
 
 const gchar*
-canvas_message_pool_get_random (CanvasMessagePool* pool, CanvasMessageType type)
+gpinstruct_message_pool_get_random (GPInstructMessagePool* pool,
+                                    GPInstructMessageType type)
 {
-	if (type <= CANVAS_MESSAGE_TYPE_NONE || type >= CANVAS_MESSAGE_TYPE_SIZE)
+	if (type <= GPINSTRUCT_MESSAGE_TYPE_NONE || type >= GPINSTRUCT_MESSAGE_TYPE_SIZE)
 		return NULL;
 
 	GList* messages = pool->priv->messages[type];
@@ -155,26 +156,29 @@ canvas_message_pool_get_random (CanvasMessagePool* pool, CanvasMessageType type)
 }
 
 void
-canvas_message_pool_add (CanvasMessagePool* pool, CanvasMessageType type, const gchar* message)
+gpinstruct_message_pool_add (GPInstructMessagePool* pool,
+                             GPInstructMessageType type,
+                             const gchar* message)
 {
-	g_return_if_fail (type > CANVAS_MESSAGE_TYPE_NONE && type < CANVAS_MESSAGE_TYPE_SIZE);
+	g_return_if_fail (type > GPINSTRUCT_MESSAGE_TYPE_NONE && type < GPINSTRUCT_MESSAGE_TYPE_SIZE);
 
 	pool->priv->messages[type] = g_list_append (pool->priv->messages[type],
 	                                            g_strdup (message));
 }
 
 void
-canvas_message_pool_add_multiple (CanvasMessagePool* pool, ...)
+gpinstruct_message_pool_add_multiple (GPInstructMessagePool* pool,
+                                      ...)
 {
-	CanvasMessageType type;
+	GPInstructMessageType type;
 
 	va_list args;
 	va_start (args, pool);
 
 	while (TRUE)
 	{
-		type = va_arg (args, CanvasMessageType);
-		if (type <= CANVAS_MESSAGE_TYPE_NONE || type > CANVAS_MESSAGE_TYPE_SIZE)
+		type = va_arg (args, GPInstructMessageType);
+		if (type <= GPINSTRUCT_MESSAGE_TYPE_NONE || type > GPINSTRUCT_MESSAGE_TYPE_SIZE)
 			return;
 
 		pool->priv->messages[type] = g_list_append (pool->priv->messages[type],
@@ -184,9 +188,11 @@ canvas_message_pool_add_multiple (CanvasMessagePool* pool, ...)
 }
 
 void
-canvas_message_pool_remove (CanvasMessagePool* pool, CanvasMessageType type, guint message)
+gpinstruct_message_pool_remove (GPInstructMessagePool* pool,
+                                GPInstructMessageType type,
+                                guint message)
 {
-	g_return_if_fail (type > CANVAS_MESSAGE_TYPE_NONE && type < CANVAS_MESSAGE_TYPE_SIZE);
+	g_return_if_fail (type > GPINSTRUCT_MESSAGE_TYPE_NONE && type < GPINSTRUCT_MESSAGE_TYPE_SIZE);
 
 	GList* messages = pool->priv->messages[type];
 	GList* selected = g_list_nth (messages, message);
@@ -196,9 +202,11 @@ canvas_message_pool_remove (CanvasMessagePool* pool, CanvasMessageType type, gui
 }
 
 const gchar*
-canvas_message_pool_get (CanvasMessagePool* pool, CanvasMessageType type, guint message)
+gpinstruct_message_pool_get (GPInstructMessagePool* pool,
+                             GPInstructMessageType type,
+                             guint message)
 {
-	if (type <= CANVAS_MESSAGE_TYPE_NONE || type >= CANVAS_MESSAGE_TYPE_SIZE)
+	if (type <= GPINSTRUCT_MESSAGE_TYPE_NONE || type >= GPINSTRUCT_MESSAGE_TYPE_SIZE)
 		return NULL;
 
 	return g_list_nth_data (pool->priv->messages[type], message);

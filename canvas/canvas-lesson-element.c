@@ -1,80 +1,80 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "canvas/canvas.h"
+#include "gpinstruct/gpinstruct.h"
 
-struct _CanvasLessonElementPrivate
+struct _GPInstructLessonElementPrivate
 {
 	gchar* title;
 };
 
-#define CANVAS_LESSON_ELEMENT_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_ELEMENT, CanvasLessonElementPrivate))
+#define GPINSTRUCT_LESSON_ELEMENT_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT, GPInstructLessonElementPrivate))
 
 
 
-G_DEFINE_TYPE (CanvasLessonElement, canvas_lesson_element, CANVAS_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructLessonElement, gpinstruct_lesson_element, GPINSTRUCT_TYPE_OBJECT);
 
 static void
-canvas_lesson_element_init (CanvasLessonElement *object)
+gpinstruct_lesson_element_init (GPInstructLessonElement *object)
 {
-	object->priv = CANVAS_LESSON_ELEMENT_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_ELEMENT_PRIVATE (object);
 
 	object->priv->title = g_strdup ("");
 }
 
 static void
-canvas_lesson_element_finalize (GObject *object)
+gpinstruct_lesson_element_finalize (GObject *object)
 {
-	CanvasLessonElement* element = CANVAS_LESSON_ELEMENT (object);
+	GPInstructLessonElement* element = GPINSTRUCT_LESSON_ELEMENT (object);
 
 	if (element->priv->title)
 		g_free (element->priv->title);
 
-	G_OBJECT_CLASS (canvas_lesson_element_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_lesson_element_parent_class)->finalize (object);
 }
 
 static void
-canvas_lesson_element_class_init (CanvasLessonElementClass *klass)
+gpinstruct_lesson_element_class_init (GPInstructLessonElementClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
+	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasLessonElementPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLessonElementPrivate));
 
-	object_class->finalize = canvas_lesson_element_finalize;
+	object_class->finalize = gpinstruct_lesson_element_finalize;
 }
 
 
-CanvasLessonElement*
-canvas_lesson_element_new (void)
+GPInstructLessonElement*
+gpinstruct_lesson_element_new (void)
 {
-	return g_object_new (CANVAS_TYPE_LESSON_ELEMENT, NULL);
+	return g_object_new (GPINSTRUCT_TYPE_LESSON_ELEMENT, NULL);
 }
 
 const gchar*
-canvas_lesson_element_get_title (CanvasLessonElement* element)
+gpinstruct_lesson_element_get_title (GPInstructLessonElement* element)
 {
 	return element->priv->title;
 }
 
 void
-canvas_lesson_element_set_title (CanvasLessonElement* element, const gchar *title)
+gpinstruct_lesson_element_set_title (GPInstructLessonElement* element,
+                                     const gchar *title)
 {
 	if (element->priv->title)
 		g_free (element->priv->title);

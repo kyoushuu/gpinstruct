@@ -1,34 +1,33 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
-#include "canvas-view-private.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
+#include "gpinstruct-view-private.h"
 #include "gtktextbuffermarkup.h"
 
-struct _CanvasLessonTestWordPoolPagePrivate
+struct _GPInstructLessonTestWordPoolPagePrivate
 {
-	CanvasLessonTestWordPool* test;
-	CanvasLessonScore* score;
-	CanvasLog* log;
+	GPInstructLessonTestWordPool* test;
+	GPInstructLessonScore* score;
+	GPInstructLog* log;
 
 	guint curr_question;
 	guint* questions;
@@ -40,14 +39,15 @@ struct _CanvasLessonTestWordPoolPagePrivate
 	GtkWidget* choices_treeview;
 };
 
-#define CANVAS_LESSON_TEST_WORD_POOL_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_TEST_WORD_POOL_PAGE, CanvasLessonTestWordPoolPagePrivate))
+#define GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_PAGE, GPInstructLessonTestWordPoolPagePrivate))
 
 
 
 void
-word_pool_show_question (CanvasLessonTestWordPoolPage* page, guint question_num)
+word_pool_show_question (GPInstructLessonTestWordPoolPage* page,
+                         guint question_num)
 {
-	GList* questions = canvas_lesson_test_word_pool_get_questions (page->priv->test);
+	GList* questions = gpinstruct_lesson_test_word_pool_get_questions (page->priv->test);
 	if (question_num < g_list_length (questions))
 	{
 		page->priv->curr_question = question_num;
@@ -56,9 +56,9 @@ word_pool_show_question (CanvasLessonTestWordPoolPage* page, guint question_num)
 		gtk_tree_selection_select_path (gtk_tree_view_get_selection (GTK_TREE_VIEW (page->priv->choices_treeview)), path);
 		gtk_tree_path_free (path);
 
-		CanvasLessonTestWordPoolQuestion* question = g_list_nth_data (questions, page->priv->questions[question_num]);
+		GPInstructLessonTestWordPoolQuestion* question = g_list_nth_data (questions, page->priv->questions[question_num]);
 
-		gchar* text = g_strdup_printf ("%d. %s", 1+question_num, canvas_lesson_test_word_pool_question_get_text (question));
+		gchar* text = g_strdup_printf ("%d. %s", 1+question_num, gpinstruct_lesson_test_word_pool_question_get_text (question));
 		gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (page->priv->question_textview)), text);
 		g_free (text);
 	}
@@ -68,13 +68,14 @@ word_pool_show_question (CanvasLessonTestWordPoolPage* page, guint question_num)
 }
 
 static void
-page_reset (CanvasLessonTestWordPoolPage* page, gpointer user_data)
+page_reset (GPInstructLessonTestWordPoolPage* page,
+            gpointer user_data)
 {
 	if (page->priv->questions)
 		g_free (page->priv->questions);
-	page->priv->questions = random_array (canvas_lesson_test_word_pool_get_questions_length (page->priv->test));
+	page->priv->questions = random_array (gpinstruct_lesson_test_word_pool_get_questions_length (page->priv->test));
 
-	GList* choices = canvas_lesson_test_word_pool_get_choices (page->priv->test);
+	GList* choices = gpinstruct_lesson_test_word_pool_get_choices (page->priv->test);
 	guint length = g_list_length (choices);
 
 	if (page->priv->choices)
@@ -94,16 +95,16 @@ page_reset (CanvasLessonTestWordPoolPage* page, gpointer user_data)
 
 	g_list_free (choices);
 
-	word_pool_show_question (CANVAS_LESSON_TEST_WORD_POOL_PAGE (page), 0);
+	word_pool_show_question (GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE (page), 0);
 }
 
 
-G_DEFINE_TYPE (CanvasLessonTestWordPoolPage, canvas_lesson_test_word_pool_page, CANVAS_TYPE_LESSON_VIEW_PAGE);
+G_DEFINE_TYPE (GPInstructLessonTestWordPoolPage, gpinstruct_lesson_test_word_pool_page, GPINSTRUCT_TYPE_LESSON_VIEW_PAGE);
 
 static void
-canvas_lesson_test_word_pool_page_init (CanvasLessonTestWordPoolPage *object)
+gpinstruct_lesson_test_word_pool_page_init (GPInstructLessonTestWordPoolPage *object)
 {
-	object->priv = CANVAS_LESSON_TEST_WORD_POOL_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE_PRIVATE (object);
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;
@@ -118,9 +119,9 @@ canvas_lesson_test_word_pool_page_init (CanvasLessonTestWordPoolPage *object)
 }
 
 static void
-canvas_lesson_test_word_pool_page_finalize (GObject *object)
+gpinstruct_lesson_test_word_pool_page_finalize (GObject *object)
 {
-	CanvasLessonTestWordPoolPage* page = CANVAS_LESSON_TEST_WORD_POOL_PAGE (object);
+	GPInstructLessonTestWordPoolPage* page = GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE (object);
 
 	if (page->priv->questions)
 		g_free (page->priv->questions);
@@ -131,29 +132,30 @@ canvas_lesson_test_word_pool_page_finalize (GObject *object)
 	if (page->priv->store)
 		g_object_unref (page->priv->store);
 
-	G_OBJECT_CLASS (canvas_lesson_test_word_pool_page_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_lesson_test_word_pool_page_parent_class)->finalize (object);
 }
 
 static void
-canvas_lesson_test_word_pool_page_class_init (CanvasLessonTestWordPoolPageClass *klass)
+gpinstruct_lesson_test_word_pool_page_class_init (GPInstructLessonTestWordPoolPageClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);*/
+	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasLessonTestWordPoolPagePrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLessonTestWordPoolPagePrivate));
 
-	object_class->finalize = canvas_lesson_test_word_pool_page_finalize;
+	object_class->finalize = gpinstruct_lesson_test_word_pool_page_finalize;
 }
 
 
 static gboolean
-page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data)
+page_show_next (GPInstructLessonTestWordPoolPage* page,
+                gpointer user_data)
 {
-	canvas_lesson_score_increase_total (page->priv->score);
+	gpinstruct_lesson_score_increase_total (page->priv->score);
 
-	GList* questions = canvas_lesson_test_word_pool_get_questions (page->priv->test);
+	GList* questions = gpinstruct_lesson_test_word_pool_get_questions (page->priv->test);
 	guint question_id = page->priv->questions[page->priv->curr_question];
-	CanvasLessonTestWordPoolQuestion* question = CANVAS_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, question_id));
+	GPInstructLessonTestWordPoolQuestion* question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, question_id));
 	guint questions_num = g_list_length (questions);
 	g_list_free (questions);
 
@@ -166,8 +168,8 @@ page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data)
 		selected = gtk_tree_path_get_indices (gtk_tree_model_get_path (tm, &iter))[0];
 
 	guint correct_choice = -1;
-	guint answer = canvas_lesson_test_word_pool_question_get_answer (question);
-	guint choices = canvas_lesson_test_word_pool_get_choices_length (page->priv->test);
+	guint answer = gpinstruct_lesson_test_word_pool_question_get_answer (question);
+	guint choices = gpinstruct_lesson_test_word_pool_get_choices_length (page->priv->test);
 	int i;
 	for (i=0; i<choices; i++)
 	{
@@ -180,26 +182,26 @@ page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data)
 
 	if (correct_choice >= 0)
 	{
-		gboolean explain = canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (page->priv->test));
+		gboolean explain = gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (page->priv->test));
 
 		if (page->priv->log)
-			canvas_log_add (page->priv->log,
-				            CANVAS_LESSON_TEST (page->priv->test),
-				            question_id, page->priv->choices[selected]);
+			gpinstruct_log_add (page->priv->log,
+			                    GPINSTRUCT_LESSON_TEST (page->priv->test),
+			                    question_id, page->priv->choices[selected]);
 
 		if (selected == correct_choice)
 		{
-			canvas_lesson_score_increase_score (page->priv->score);
+			gpinstruct_lesson_score_increase_score (page->priv->score);
 			if (explain)
-				canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
-				                                     CANVAS_MESSAGE_TYPE_CORRECT);
+				gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+				                                         GPINSTRUCT_MESSAGE_TYPE_CORRECT);
 		}
 		else if (explain)
 		{
-			canvas_lesson_view_page_set_message (CANVAS_LESSON_VIEW_PAGE (page),
-			                                     CANVAS_MESSAGE_TYPE_WRONG);
-			canvas_lesson_view_page_set_explanation (CANVAS_LESSON_VIEW_PAGE (page),
-			                                         canvas_lesson_test_word_pool_question_get_explanation (question));
+			gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+			                                         GPINSTRUCT_MESSAGE_TYPE_WRONG);
+			gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+			                                             gpinstruct_lesson_test_word_pool_question_get_explanation (question));
 		}
 	}
 	else
@@ -215,16 +217,16 @@ page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data)
 }
 
 
-CanvasLessonTestWordPoolPage*
-canvas_lesson_test_word_pool_page_new (CanvasLessonTestWordPool* test,
-                                       CanvasLessonScore* score,
-                                       CanvasLog* log)
+GPInstructLessonTestWordPoolPage*
+gpinstruct_lesson_test_word_pool_page_new (GPInstructLessonTestWordPool* test,
+                                           GPInstructLessonScore* score,
+                                           GPInstructLog* log)
 {
-	CanvasLessonTestWordPoolPage* page = g_object_new (CANVAS_TYPE_LESSON_TEST_WORD_POOL_PAGE, NULL);
+	GPInstructLessonTestWordPoolPage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_PAGE, NULL);
 
-	canvas_lesson_view_page_set_title (CANVAS_LESSON_VIEW_PAGE (page),
-	                                   canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (test)));
-	canvas_lesson_view_page_set_show_back_button (CANVAS_LESSON_VIEW_PAGE (page), FALSE);
+	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+	                                       gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
+	gpinstruct_lesson_view_page_set_show_back_button (GPINSTRUCT_LESSON_VIEW_PAGE (page), FALSE);
 
 	g_signal_connect (page, "show-next", G_CALLBACK (page_show_next), NULL);
 	g_signal_connect (page, "reset", G_CALLBACK (page_reset), NULL);

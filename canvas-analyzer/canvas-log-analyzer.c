@@ -1,20 +1,19 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * canvas
- * Copyright (C) Arnel A. Borja 2011 <galeon@ymail.com>
- * 
- * canvas is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * GPInstruct - Programmed Instruction
+ * Copyright (C) 2011 - Arnel A. Borja
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * canvas is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <config.h>
@@ -22,30 +21,30 @@
 
 #include <gtk/gtk.h>
 
-#include "canvas/canvas.h"
-#include "canvas-view/canvas-view.h"
-#include "canvas-analyzer/canvas-analyzer.h"
+#include "gpinstruct/gpinstruct.h"
+#include "gpinstruct-view/gpinstruct-view.h"
+#include "gpinstruct-analyzer/gpinstruct-analyzer.h"
 
-struct _CanvasLogAnalyzerPrivate
+struct _GPInstructLogAnalyzerPrivate
 {
-	CanvasLogAnalyzerProject* aproject;
-	CanvasProject* project;
+	GPInstructLogAnalyzerProject* aproject;
+	GPInstructProject* project;
 	GList* examinees;
 };
 
-#define CANVAS_LOG_ANALYZER_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LOG_ANALYZER, CanvasLogAnalyzerPrivate))
+#define GPINSTRUCT_LOG_ANALYZER_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LOG_ANALYZER, GPInstructLogAnalyzerPrivate))
 
 
 
 static void
-free_answer (CanvasLogAnalyzerAnswer* answer)
+free_answer (GPInstructLogAnalyzerAnswer* answer)
 {
 	g_free (answer);
 }
 
 
 static void
-free_choice (CanvasLogAnalyzerChoice* choice)
+free_choice (GPInstructLogAnalyzerChoice* choice)
 {
 	g_list_free_full (choice->answers, (GDestroyNotify)free_answer);
 	g_free (choice);
@@ -53,7 +52,7 @@ free_choice (CanvasLogAnalyzerChoice* choice)
 
 
 static void
-free_item (CanvasLogAnalyzerItem* item)
+free_item (GPInstructLogAnalyzerItem* item)
 {
 	g_list_free_full (item->choices, (GDestroyNotify)free_choice);
 	g_free (item);
@@ -61,7 +60,7 @@ free_item (CanvasLogAnalyzerItem* item)
 
 
 static void
-free_test (CanvasLogAnalyzerTest* test)
+free_test (GPInstructLogAnalyzerTest* test)
 {
 	g_list_free_full (test->items, (GDestroyNotify)free_item);
 	g_free (test);
@@ -69,7 +68,7 @@ free_test (CanvasLogAnalyzerTest* test)
 
 
 static void
-free_lesson (CanvasLogAnalyzerLesson* lesson)
+free_lesson (GPInstructLogAnalyzerLesson* lesson)
 {
 	g_list_free_full (lesson->tests, (GDestroyNotify)free_test);
 	g_free (lesson);
@@ -77,7 +76,7 @@ free_lesson (CanvasLogAnalyzerLesson* lesson)
 
 
 static void
-free_category (CanvasLogAnalyzerCategory* category)
+free_category (GPInstructLogAnalyzerCategory* category)
 {
 	g_list_free_full (category->lessons, (GDestroyNotify)free_lesson);
 	g_free (category);
@@ -85,7 +84,7 @@ free_category (CanvasLogAnalyzerCategory* category)
 
 
 static void
-free_project (CanvasLogAnalyzerProject* project)
+free_project (GPInstructLogAnalyzerProject* project)
 {
 	g_list_free_full (project->categories, (GDestroyNotify)free_category);
 	g_datalist_clear (&project->tests_list);
@@ -94,7 +93,7 @@ free_project (CanvasLogAnalyzerProject* project)
 
 
 static void
-free_examinee (CanvasLogAnalyzerExaminee* examinee)
+free_examinee (GPInstructLogAnalyzerExaminee* examinee)
 {
 	free_project (examinee->project);
 	g_free (examinee->last_name);
@@ -104,12 +103,12 @@ free_examinee (CanvasLogAnalyzerExaminee* examinee)
 
 
 
-G_DEFINE_TYPE (CanvasLogAnalyzer, canvas_log_analyzer, CANVAS_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructLogAnalyzer, gpinstruct_log_analyzer, GPINSTRUCT_TYPE_OBJECT);
 
 static void
-canvas_log_analyzer_init (CanvasLogAnalyzer *object)
+gpinstruct_log_analyzer_init (GPInstructLogAnalyzer *object)
 {
-	object->priv = CANVAS_LOG_ANALYZER_PRIVATE (object);
+	object->priv = GPINSTRUCT_LOG_ANALYZER_PRIVATE (object);
 
 	object->priv->aproject = NULL;
 	object->priv->project = NULL;
@@ -117,9 +116,9 @@ canvas_log_analyzer_init (CanvasLogAnalyzer *object)
 }
 
 static void
-canvas_log_analyzer_finalize (GObject *object)
+gpinstruct_log_analyzer_finalize (GObject *object)
 {
-	CanvasLogAnalyzer* analyzer = CANVAS_LOG_ANALYZER (object);
+	GPInstructLogAnalyzer* analyzer = GPINSTRUCT_LOG_ANALYZER (object);
 
 	if (analyzer->priv->aproject)
 		free_project (analyzer->priv->aproject);
@@ -130,104 +129,105 @@ canvas_log_analyzer_finalize (GObject *object)
 	if (analyzer->priv->examinees)
 		g_list_free_full (analyzer->priv->examinees, (GDestroyNotify)free_examinee);
 
-	G_OBJECT_CLASS (canvas_log_analyzer_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gpinstruct_log_analyzer_parent_class)->finalize (object);
 }
 
 static void
-canvas_log_analyzer_class_init (CanvasLogAnalyzerClass *klass)
+gpinstruct_log_analyzer_class_init (GPInstructLogAnalyzerClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasObjectClass* parent_class = CANVAS_OBJECT_CLASS (klass);*/
+	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
 
-	g_type_class_add_private (klass, sizeof (CanvasLogAnalyzerPrivate));
+	g_type_class_add_private (klass, sizeof (GPInstructLogAnalyzerPrivate));
 
-	object_class->finalize = canvas_log_analyzer_finalize;
+	object_class->finalize = gpinstruct_log_analyzer_finalize;
 }
 
 
-static CanvasLogAnalyzerProject*
-create_project_tree (CanvasLogAnalyzer* analyzer, CanvasProject* project)
+static GPInstructLogAnalyzerProject*
+create_project_tree (GPInstructLogAnalyzer* analyzer,
+                     GPInstructProject* project)
 {
-	CanvasCategory*			curr_category;
-	CanvasLesson*			curr_lesson;
-	CanvasLessonElement*	curr_lesson_element;
-	CanvasLessonTest*		curr_lesson_test;
+	GPInstructCategory*			curr_category;
+	GPInstructLesson*			curr_lesson;
+	GPInstructLessonElement*	curr_lesson_element;
+	GPInstructLessonTest*		curr_lesson_test;
 
 	GList *categories, *lessons, *lesson_elements;
 	GList *curr_categories, *curr_lessons, *curr_lesson_elements;
 
 	int i, j;
 
-	CanvasLogAnalyzerProject* aproject = g_new0 (CanvasLogAnalyzerProject, 1);
+	GPInstructLogAnalyzerProject* aproject = g_new0 (GPInstructLogAnalyzerProject, 1);
 	aproject->object = project;
 	g_datalist_init (&aproject->tests_list);
 
-	categories = canvas_project_get_categories (project);
+	categories = gpinstruct_project_get_categories (project);
 	curr_categories = categories;
 
 	while (curr_categories)
 	{
-		curr_category = CANVAS_CATEGORY (curr_categories->data);
+		curr_category = GPINSTRUCT_CATEGORY (curr_categories->data);
 
-		CanvasLogAnalyzerCategory* acategory = g_new0 (CanvasLogAnalyzerCategory, 1);
+		GPInstructLogAnalyzerCategory* acategory = g_new0 (GPInstructLogAnalyzerCategory, 1);
 		acategory->object = curr_category;
 		acategory->project = aproject;
 
 		aproject->categories = g_list_append (aproject->categories, acategory);
 
-		lessons = canvas_category_get_lessons (curr_category);
+		lessons = gpinstruct_category_get_lessons (curr_category);
 		curr_lessons = lessons;
 
 		while (curr_lessons)
 		{
-			curr_lesson = CANVAS_LESSON (curr_lessons->data);
+			curr_lesson = GPINSTRUCT_LESSON (curr_lessons->data);
 
-			CanvasLogAnalyzerLesson* alesson = g_new0 (CanvasLogAnalyzerLesson, 1);
+			GPInstructLogAnalyzerLesson* alesson = g_new0 (GPInstructLogAnalyzerLesson, 1);
 			alesson->object = curr_lesson;
 			alesson->category = acategory;
 
 			acategory->lessons = g_list_append (acategory->lessons, alesson);
 
-			lesson_elements = canvas_lesson_get_lesson_elements (curr_lesson);
+			lesson_elements = gpinstruct_lesson_get_lesson_elements (curr_lesson);
 			curr_lesson_elements = lesson_elements;
 
 			while (curr_lesson_elements)
 			{
-				curr_lesson_element = CANVAS_LESSON_ELEMENT (curr_lesson_elements->data);
+				curr_lesson_element = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements->data);
 
-				if (CANVAS_IS_LESSON_TEST (curr_lesson_element))
+				if (GPINSTRUCT_IS_LESSON_TEST (curr_lesson_element))
 				{
-					curr_lesson_test = CANVAS_LESSON_TEST (curr_lesson_element);
+					curr_lesson_test = GPINSTRUCT_LESSON_TEST (curr_lesson_element);
 
-					CanvasLogAnalyzerTest* atest = g_new0 (CanvasLogAnalyzerTest, 1);
+					GPInstructLogAnalyzerTest* atest = g_new0 (GPInstructLogAnalyzerTest, 1);
 					atest->object = curr_lesson_test;
 					atest->lesson = alesson;
-					atest->id = g_quark_from_string (canvas_lesson_test_get_id (curr_lesson_test));
+					atest->id = g_quark_from_string (gpinstruct_lesson_test_get_id (curr_lesson_test));
 
 					alesson->tests = g_list_append (alesson->tests, atest);
 
 					g_datalist_set_data (&aproject->tests_list,
-					                     canvas_lesson_test_get_id (curr_lesson_test),
+					                     gpinstruct_lesson_test_get_id (curr_lesson_test),
 					                     atest);
 
-					guint items_num = canvas_lesson_test_get_items_length (curr_lesson_test);
+					guint items_num = gpinstruct_lesson_test_get_items_length (curr_lesson_test);
 					atest->items_length = items_num;
 
 					for (i=0; i<items_num; i++)
 					{
-						CanvasLogAnalyzerItem* aitem = g_new0 (CanvasLogAnalyzerItem, 1);
+						GPInstructLogAnalyzerItem* aitem = g_new0 (GPInstructLogAnalyzerItem, 1);
 						aitem->id = i;
 						aitem->test = atest;
-						aitem->answer = canvas_lesson_test_get_item_correct_choice (curr_lesson_test, i);
+						aitem->answer = gpinstruct_lesson_test_get_item_correct_choice (curr_lesson_test, i);
 
 						atest->items = g_list_append (atest->items, aitem);
 
-						guint choices_num = canvas_lesson_test_get_choices_length (curr_lesson_test, i);
+						guint choices_num = gpinstruct_lesson_test_get_choices_length (curr_lesson_test, i);
 						aitem->choices_length = choices_num;
 
 						for (j=0; j<choices_num; j++)
 						{
-							CanvasLogAnalyzerChoice* achoice = g_new0 (CanvasLogAnalyzerChoice, 1);
+							GPInstructLogAnalyzerChoice* achoice = g_new0 (GPInstructLogAnalyzerChoice, 1);
 							achoice->id = j;
 							achoice->item = aitem;
 
@@ -254,16 +254,18 @@ create_project_tree (CanvasLogAnalyzer* analyzer, CanvasProject* project)
 
 		curr_categories = curr_categories->next;
 	}
-	
+
 	g_list_free (categories);
 
 	return aproject;
 }
 
 void
-add_test (CanvasLogAnalyzerProject* aproject, CanvasLogTest* log_test, CanvasLogAnalyzerExaminee* examinee)
+add_test (GPInstructLogAnalyzerProject* aproject,
+          GPInstructLogTest* log_test,
+          GPInstructLogAnalyzerExaminee* examinee)
 {
-	CanvasLogAnalyzerTest* test = g_datalist_id_get_data (&aproject->tests_list, log_test->id);
+	GPInstructLogAnalyzerTest* test = g_datalist_id_get_data (&aproject->tests_list, log_test->id);
 
 	if (test == NULL)
 		return;
@@ -287,8 +289,8 @@ add_test (CanvasLogAnalyzerProject* aproject, CanvasLogTest* log_test, CanvasLog
 
 	while (answers)
 	{
-		CanvasLogAnswer* answer = answers->data;
-		CanvasLogAnalyzerItem* item = g_list_nth_data (test->items, answer->item_id);
+		GPInstructLogAnswer* answer = answers->data;
+		GPInstructLogAnalyzerItem* item = g_list_nth_data (test->items, answer->item_id);
 
 		if (item)
 		{
@@ -309,14 +311,14 @@ add_test (CanvasLogAnalyzerProject* aproject, CanvasLogTest* log_test, CanvasLog
 				test->lesson->category->project->items_correctly_answered += 1;
 			}
 
-			CanvasLogAnalyzerChoice* choice = g_list_nth_data (item->choices, answer->answer_id);
+			GPInstructLogAnalyzerChoice* choice = g_list_nth_data (item->choices, answer->answer_id);
 
 			if (choice)
 			{
 				choice->times_chosen += 1;
 				choice->time_spent += answer->time_spent;
 
-				CanvasLogAnalyzerAnswer* aanswer = g_new0 (CanvasLogAnalyzerAnswer, 1);
+				GPInstructLogAnalyzerAnswer* aanswer = g_new0 (GPInstructLogAnalyzerAnswer, 1);
 				aanswer->choice = choice;
 				aanswer->examinee = examinee;
 				aanswer->time_spent = answer->time_spent;
@@ -330,10 +332,10 @@ add_test (CanvasLogAnalyzerProject* aproject, CanvasLogTest* log_test, CanvasLog
 }
 
 
-CanvasLogAnalyzer*
-canvas_log_analyzer_new (CanvasProject* project)
+GPInstructLogAnalyzer*
+gpinstruct_log_analyzer_new (GPInstructProject* project)
 {
-	CanvasLogAnalyzer* analyzer = g_object_new (CANVAS_TYPE_LOG_ANALYZER, NULL);
+	GPInstructLogAnalyzer* analyzer = g_object_new (GPINSTRUCT_TYPE_LOG_ANALYZER, NULL);
 
 	analyzer->priv->aproject = create_project_tree (analyzer, project);
 
@@ -343,22 +345,23 @@ canvas_log_analyzer_new (CanvasProject* project)
 }
 
 void
-canvas_log_analyzer_add_log (CanvasLogAnalyzer* analyzer, CanvasLog* log)
+gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer* analyzer,
+                                 GPInstructLog* log)
 {
 	analyzer->priv->aproject->times_taken += 1;
 
-	CanvasLogAnalyzerExaminee* examinee = g_new0 (CanvasLogAnalyzerExaminee, 1);
-	examinee->last_name = g_strdup (canvas_log_get_last_name (log));
-	examinee->first_name = g_strdup (canvas_log_get_first_name (log));
+	GPInstructLogAnalyzerExaminee* examinee = g_new0 (GPInstructLogAnalyzerExaminee, 1);
+	examinee->last_name = g_strdup (gpinstruct_log_get_last_name (log));
+	examinee->first_name = g_strdup (gpinstruct_log_get_first_name (log));
 	examinee->project = create_project_tree (analyzer, analyzer->priv->project);
 	analyzer->priv->examinees = g_list_append (analyzer->priv->examinees, examinee);
 
-	GList* tests = canvas_log_get_tests (log);
+	GList* tests = gpinstruct_log_get_tests (log);
 	GList* curr_tests = tests;
 
 	while (curr_tests)
 	{
-		CanvasLogTest* log_test = curr_tests->data;
+		GPInstructLogTest* log_test = curr_tests->data;
 		add_test (analyzer->priv->aproject, log_test, examinee);
 		add_test (examinee->project, log_test, examinee);
 		curr_tests = curr_tests->next;
@@ -367,14 +370,14 @@ canvas_log_analyzer_add_log (CanvasLogAnalyzer* analyzer, CanvasLog* log)
 	g_list_free (tests);
 }
 
-CanvasLogAnalyzerProject*
-canvas_log_analyzer_get_project (CanvasLogAnalyzer* analyzer)
+GPInstructLogAnalyzerProject*
+gpinstruct_log_analyzer_get_project (GPInstructLogAnalyzer* analyzer)
 {
 	return analyzer->priv->aproject;
 }
 
 GList*
-canvas_log_analyzer_get_examinees (CanvasLogAnalyzer* analyzer)
+gpinstruct_log_analyzer_get_examinees (GPInstructLogAnalyzer* analyzer)
 {
 	return g_list_copy (analyzer->priv->examinees);
 }

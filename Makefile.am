@@ -1,10 +1,10 @@
 ## Process this file with automake to produce Makefile.in
 ## Created by Anjuta
 
-SUBDIRS = canvas canvas-view canvas-editor canvas-analyzer po
+SUBDIRS = gpinstruct gpinstruct-view gpinstruct-editor gpinstruct-analyzer po
 
-canvasdocdir = ${prefix}/doc/canvas
-canvasdoc_DATA = \
+gpinstructdocdir = ${prefix}/doc/gpinstruct
+gpinstructdoc_DATA = \
 	README\
 	COPYING\
 	AUTHORS\
@@ -17,7 +17,7 @@ INTLTOOL_FILES = intltool-extract.in \
 	intltool-merge.in \
 	intltool-update.in
 
-EXTRA_DIST = $(canvasdoc_DATA) \
+EXTRA_DIST = $(gpinstructdoc_DATA) \
 	$(INTLTOOL_FILES)
 
 DISTCLEANFILES = intltool-extract \
@@ -28,4 +28,4 @@ DISTCLEANFILES = intltool-extract \
 
 # Remove doc directory on uninstall
 uninstall-local:
-	-rm -r $(canvasdocdir)
+	-rm -r $(gpinstructdocdir)

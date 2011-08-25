@@ -13,57 +13,57 @@ AM_CPPFLAGS = \
 	$(LIBXML_CFLAGS)
 
 lib_LTLIBRARIES =  \
-	libcanvas-view.la
+	libgpinstruct-view.la
 
-libcanvas_view_la_SOURCES =  \
-	canvas-view.c \
-	canvas-view.h \
-	canvas-view-private.h \
-	canvas-lesson-directions-page.c \
-	canvas-lesson-directions-page.h \
-	canvas-lesson-discussion-page.c \
-	canvas-lesson-discussion-page.h \
-	canvas-lesson-reading-page.c \
-	canvas-lesson-reading-page.h \
-	canvas-lesson-score.c \
-	canvas-lesson-score.h \
-	canvas-lesson-score-page.c \
-	canvas-lesson-score-page.h \
-	canvas-lesson-test-multi-choice-page.c \
-	canvas-lesson-test-multi-choice-page.h \
-	canvas-lesson-test-order-page.c \
-	canvas-lesson-test-order-page.h \
-	canvas-lesson-test-word-pool-page.c \
-	canvas-lesson-test-word-pool-page.h \
-	canvas-lesson-view.c \
-	canvas-lesson-view.h \
-	canvas-lesson-view-page.c \
-	canvas-lesson-view-page.h \
-	canvas-log.h \
-	canvas-log.c \
-	canvas-message-pool.c \
-	canvas-message-pool.h \
-	canvas-project-view.c \
-	canvas-project-view.h \
+libgpinstruct_view_la_SOURCES =  \
+	gpinstruct-view.c \
+	gpinstruct-view.h \
+	gpinstruct-view-private.h \
+	gpinstruct-lesson-directions-page.c \
+	gpinstruct-lesson-directions-page.h \
+	gpinstruct-lesson-discussion-page.c \
+	gpinstruct-lesson-discussion-page.h \
+	gpinstruct-lesson-reading-page.c \
+	gpinstruct-lesson-reading-page.h \
+	gpinstruct-lesson-score.c \
+	gpinstruct-lesson-score.h \
+	gpinstruct-lesson-score-page.c \
+	gpinstruct-lesson-score-page.h \
+	gpinstruct-lesson-test-multi-choice-page.c \
+	gpinstruct-lesson-test-multi-choice-page.h \
+	gpinstruct-lesson-test-order-page.c \
+	gpinstruct-lesson-test-order-page.h \
+	gpinstruct-lesson-test-word-pool-page.c \
+	gpinstruct-lesson-test-word-pool-page.h \
+	gpinstruct-lesson-view.c \
+	gpinstruct-lesson-view.h \
+	gpinstruct-lesson-view-page.c \
+	gpinstruct-lesson-view-page.h \
+	gpinstruct-log.h \
+	gpinstruct-log.c \
+	gpinstruct-message-pool.c \
+	gpinstruct-message-pool.h \
+	gpinstruct-project-view.c \
+	gpinstruct-project-view.h \
 	gtktextbuffermarkup.c \
 	gtktextbuffermarkup.h
 
-libcanvas_view_la_CPPFLAGS = -DG_LOG_DOMAIN=\"Canvas-View\" \
+libgpinstruct_view_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-View\" \
 	$(AM_CPPFLAGS)
 
-libcanvas_view_la_LDFLAGS = \
+libgpinstruct_view_la_LDFLAGS = \
 	-no-undefined
 
-libcanvas_view_la_LIBADD = $(GTK_LIBS) \
+libgpinstruct_view_la_LIBADD = $(GTK_LIBS) \
 	$(LIBXML_LIBS) \
-	$(top_builddir)/canvas/libcanvas.la
+	$(top_builddir)/gpinstruct/libgpinstruct.la
 
-bin_PROGRAMS = canvas-view
+bin_PROGRAMS = gpinstruct-view
 
-canvas_view_SOURCES = \
+gpinstruct_view_SOURCES = \
 	main.c
 
-canvas_view_LDADD = $(GTK_LIBS) \
-	$(top_builddir)/canvas/libcanvas.la \
-	libcanvas-view.la
+gpinstruct_view_LDADD = $(GTK_LIBS) \
+	$(top_builddir)/gpinstruct/libgpinstruct.la \
+	libgpinstruct-view.la
 
