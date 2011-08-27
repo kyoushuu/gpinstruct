@@ -112,6 +112,9 @@ static void
 page_reset (GPInstructLessonTestMultiChoicePage* page,
             gpointer user_data)
 {
+	if (page->priv->log)
+		gpinstruct_log_close_test (page->priv->log);
+
 	if (page->priv->questions)
 		g_free (page->priv->questions);
 	page->priv->questions = random_array (gpinstruct_lesson_test_multi_choice_get_questions_length (page->priv->test));

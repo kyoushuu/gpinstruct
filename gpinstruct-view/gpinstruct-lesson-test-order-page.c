@@ -41,6 +41,9 @@ static void
 page_reset (GPInstructLessonTestOrderPage* page,
             gpointer user_data)
 {
+	if (page->priv->log)
+		gpinstruct_log_close_test (page->priv->log);
+
 	GList* items = gpinstruct_lesson_test_order_get_items (page->priv->test);
 	guint length = g_list_length (items);
 

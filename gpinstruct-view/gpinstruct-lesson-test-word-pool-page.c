@@ -71,6 +71,9 @@ static void
 page_reset (GPInstructLessonTestWordPoolPage* page,
             gpointer user_data)
 {
+	if (page->priv->log)
+		gpinstruct_log_close_test (page->priv->log);
+
 	if (page->priv->questions)
 		g_free (page->priv->questions);
 	page->priv->questions = random_array (gpinstruct_lesson_test_word_pool_get_questions_length (page->priv->test));

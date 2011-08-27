@@ -69,6 +69,7 @@ void gpinstruct_log_set_first_name (GPInstructLog* log, const gchar* first_name)
 const gchar* gpinstruct_log_get_first_name (GPInstructLog* log);
 void gpinstruct_log_set_group (GPInstructLog* log, guint elements);
 void gpinstruct_log_add (GPInstructLog* log, GPInstructLessonTest* test, guint item_id, guint answer_id);
+void gpinstruct_log_close_test (GPInstructLog* log);
 void gpinstruct_log_timer_start (GPInstructLog* log);
 void gpinstruct_log_timer_stop (GPInstructLog* log);
 GList* gpinstruct_log_get_tests (GPInstructLog* log);

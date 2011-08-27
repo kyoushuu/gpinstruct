@@ -223,6 +223,12 @@ gpinstruct_log_add (GPInstructLog* log,
 }
 
 void
+gpinstruct_log_close_test (GPInstructLog* log)
+{
+	log->priv->last_test = 0;
+}
+
+void
 gpinstruct_log_timer_start (GPInstructLog* log)
 {
 	g_timer_start (log->priv->timer);
