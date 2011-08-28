@@ -33,10 +33,20 @@ int
 main (int argc,
       char *argv[])
 {
+#ifdef G_OS_WIN32
+	gchar* prefix = g_win32_get_package_installation_directory_of_module (NULL);
+#endif
+
 #ifdef ENABLE_NLS
-	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+#ifdef G_OS_WIN32
+	gchar* localedir = g_build_filename (prefix, "share", "locale", NULL);
+#else
+	gchar* localedir = g_strdup (PACKAGE_LOCALE_DIR);
+#endif
+	bindtextdomain (GETTEXT_PACKAGE, localedir);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
+	g_free (localedir);
 #endif
 
 
@@ -52,6 +62,10 @@ main (int argc,
 	gtk_widget_show_all (window);
 
 	gtk_main ();
+
+#ifdef G_OS_WIN32
+	g_free (prefix);
+#endif
 
 	return 0;
 }

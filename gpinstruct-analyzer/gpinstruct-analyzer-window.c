@@ -316,7 +316,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 	GtkWidget* view_hbox = gtk_hbox_new (FALSE, 3);
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), view_hbox, FALSE, TRUE, 0);
 
-	GtkWidget* view_label = gtk_label_new (_("Select View"));
+	GtkWidget* view_label = gtk_label_new (_("Select View:"));
 	gtk_box_pack_start (GTK_BOX (view_hbox), view_label, FALSE, TRUE, 0);
 
 	GtkTreeIter view_iter;
