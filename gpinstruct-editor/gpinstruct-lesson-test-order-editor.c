@@ -158,6 +158,10 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 
 				update_tree_view (GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data));
 				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+				
+				gtk_tree_model_iter_nth_child (GTK_TREE_MODEL (editor->priv->store),
+				                               &iter, NULL, gtk_tree_path_get_indices (path)[0]);
+				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view)), &iter);
 			}
 
 			gtk_widget_destroy (dialog);
@@ -189,6 +193,9 @@ items_add_button_clicked (GtkButton *button,
 	                    DATA_COLUMN, item,
 	                    -1);
 
+	gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->tree_view)),
+	                                &iter);
+
 	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
@@ -200,12 +207,26 @@ items_remove_button_clicked (GtkButton *button,
 	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
-	GtkTreeIter iter;
+	GtkTreeIter iter, iterSel;
 	GtkTreePath *path;
+	gboolean select = FALSE;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->tree_view));
 	if (gtk_tree_selection_get_selected (selection, NULL, &iter))
 	{
+		iterSel = iter;
+		if (gtk_tree_model_iter_next (GTK_TREE_MODEL (editor->priv->store), &iterSel))
+			select = TRUE;
+		else
+		{
+			iterSel = iter;
+			if (gtk_tree_model_iter_previous (GTK_TREE_MODEL (editor->priv->store), &iterSel))
+				select = TRUE;
+		}
+
+		if (select)
+			gtk_tree_selection_select_iter (selection, &iterSel);
+
 		path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->store), &iter);
 
 		gpinstruct_lesson_test_order_remove_item (editor->priv->test, gtk_tree_path_get_indices (path)[0]);

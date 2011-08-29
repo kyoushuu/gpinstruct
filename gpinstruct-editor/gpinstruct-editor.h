@@ -27,3 +27,7 @@
 #include <gpinstruct-editor/gpinstruct-lesson-test-multi-choice-editor.h>
 #include <gpinstruct-editor/gpinstruct-lesson-test-word-pool-editor.h>
 #include <gpinstruct-editor/gpinstruct-lesson-test-order-editor.h>
+
+#if (GTK_MAJOR_VERSION < 3)
+gboolean gtk_tree_model_iter_previous (GtkTreeModel *tree_model, GtkTreeIter  *iter);
+#endif

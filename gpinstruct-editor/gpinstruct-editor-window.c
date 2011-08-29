@@ -670,11 +670,31 @@ remove_object_activate (GtkWidget *menuitem,
 {
 	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 	GPInstructObject* object_popup;
-	GtkTreeIter iter;
+	GtkTreeIter iter, iterSel;
+	gboolean select = FALSE;
 
 	if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (window->priv->store),
 	                                &iter, &window->priv->iter_popup))
 	{
+		iterSel = window->priv->iter_popup;
+		if (gtk_tree_model_iter_next (GTK_TREE_MODEL (window->priv->store), &iterSel))
+			select = TRUE;
+		else
+		{
+			iterSel = window->priv->iter_popup;
+			if (gtk_tree_model_iter_previous (GTK_TREE_MODEL (window->priv->store), &iterSel))
+				select = TRUE;
+			else
+			{
+				if (gtk_tree_model_iter_parent (GTK_TREE_MODEL (window->priv->store), &iterSel, &window->priv->iter_popup))
+					select = TRUE;
+			}
+		}
+
+		if (select)
+			gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view)),
+			                                &iterSel);
+
 		GtkTreePath* path = gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->store),
 		                                             &window->priv->iter_popup);
 		gint* indices = gtk_tree_path_get_indices (path);

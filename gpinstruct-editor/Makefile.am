@@ -16,6 +16,7 @@ lib_LTLIBRARIES =  \
 
 libgpinstruct_editor_la_SOURCES =  \
 	gpinstruct-editor.h \
+	gpinstruct-editor.c \
 	gpinstruct-object-editor.h \
 	gpinstruct-object-editor.c \
 	gpinstruct-project-editor.h \

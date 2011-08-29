@@ -190,6 +190,10 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 
 				update_questions_tree_view (GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data));
 				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+				
+				gtk_tree_model_iter_nth_child (GTK_TREE_MODEL (editor->priv->questions_store),
+				                               &iter, NULL, gtk_tree_path_get_indices (path)[0]);
+				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view)), &iter);
 			}
 
 			gtk_widget_destroy (dialog);
@@ -219,6 +223,9 @@ questions_add_button_clicked (GtkButton *button,
 	                    DATA_COLUMN, question,
 	                    -1);
 
+	gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->questions_tree_view)),
+	                                &iter);
+
 	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
@@ -230,12 +237,26 @@ questions_remove_button_clicked (GtkButton *button,
 	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
-	GtkTreeIter iter;
+	GtkTreeIter iter, iterSel;
 	GtkTreePath *path;
+	gboolean select = FALSE;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->questions_tree_view));
 	if (gtk_tree_selection_get_selected (selection, NULL, &iter))
 	{
+		iterSel = iter;
+		if (gtk_tree_model_iter_next (GTK_TREE_MODEL (editor->priv->questions_store), &iterSel))
+			select = TRUE;
+		else
+		{
+			iterSel = iter;
+			if (gtk_tree_model_iter_previous (GTK_TREE_MODEL (editor->priv->questions_store), &iterSel))
+				select = TRUE;
+		}
+
+		if (select)
+			gtk_tree_selection_select_iter (selection, &iterSel);
+
 		path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->questions_store), &iter);
 
 		gpinstruct_lesson_test_word_pool_remove_question (editor->priv->test, gtk_tree_path_get_indices (path)[0]);
@@ -284,60 +305,58 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
 {
 	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
-	GPInstructObject* object;
 	GtkTreeIter iter;
 	GtkWidget *scrolled_window, *text_view;
 
 	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (editor->priv->choices_store), &iter, path))
 	{
-		gtk_tree_model_get (GTK_TREE_MODEL (editor->priv->choices_store), &iter,
-		                    DATA_COLUMN, &object,
-		                    -1);
-		if (object == NULL)
+		guint choice = gtk_tree_path_get_indices (path)[0];
+
+		GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Choice Properties"),
+		                                                 GTK_WINDOW (editor->priv->window),
+		                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+		                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+		                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+		                                                 NULL);
+		GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+		gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
+
+		scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+		                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+		text_view = gtk_text_view_new ();
+		gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
+		gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
+		                          gpinstruct_lesson_test_word_pool_get_choice (editor->priv->test, choice),
+		                          -1);
+		gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
+		gtk_box_pack_start (GTK_BOX (content_area),
+		                    gtk_label_new (_("Text:")),
+		                    FALSE, TRUE, 0);
+		gtk_box_pack_start (GTK_BOX (content_area),
+		                    scrolled_window,
+		                    TRUE, TRUE, 0);
+
+		gtk_widget_show_all (content_area);
+		if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 		{
-			guint choice = gtk_tree_path_get_indices (path)[0];
+			GtkTextIter start, end;
+			gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
+			                            &start, &end);
+			gchar* text = gtk_text_iter_get_text (&start, &end);
+			gpinstruct_lesson_test_word_pool_set_choice (editor->priv->test, choice, text);
+			g_free (text);
 
-			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Choice Properties"),
-			                                                 GTK_WINDOW (editor->priv->window),
-			                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
-			                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-			                                                 NULL);
-			GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-			gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
+			update_choices_tree_view (GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data));
+			gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 
-			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-			gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-			                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-			text_view = gtk_text_view_new ();
-			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
-			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
-			                          gpinstruct_lesson_test_word_pool_get_choice (editor->priv->test, choice),
-			                          -1);
-			gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
-			gtk_box_pack_start (GTK_BOX (content_area),
-			                    gtk_label_new (_("Text:")),
-			                    FALSE, TRUE, 0);
-			gtk_box_pack_start (GTK_BOX (content_area),
-			                    scrolled_window,
-			                    TRUE, TRUE, 0);
-
-			gtk_widget_show_all (content_area);
-			if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
-			{
-				GtkTextIter start, end;
-				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
-				                            &start, &end);
-				gchar* text = gtk_text_iter_get_text (&start, &end);
-				gpinstruct_lesson_test_word_pool_set_choice (editor->priv->test, choice, text);
-				g_free (text);
-
-				update_choices_tree_view (GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data));
-				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
-			}
-
-			gtk_widget_destroy (dialog);
+			gtk_tree_model_iter_nth_child (GTK_TREE_MODEL (editor->priv->choices_store),
+			                               &iter, NULL, choice);
+			gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view)),
+			                                &iter);
 		}
+
+		gtk_widget_destroy (dialog);
 	}
 }
 
@@ -360,6 +379,9 @@ choices_add_button_clicked (GtkButton *button,
 	                    DATA_COLUMN, title,
 	                    -1);
 
+	gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->choices_tree_view)),
+	                                &iter);
+
 	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
@@ -371,12 +393,26 @@ choices_remove_button_clicked (GtkButton *button,
 	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
-	GtkTreeIter iter;
+	GtkTreeIter iter, iterSel;
 	GtkTreePath *path;
+	gboolean select = FALSE;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->choices_tree_view));
 	if (gtk_tree_selection_get_selected (selection, NULL, &iter))
 	{
+		iterSel = iter;
+		if (gtk_tree_model_iter_next (GTK_TREE_MODEL (editor->priv->choices_store), &iterSel))
+			select = TRUE;
+		else
+		{
+			iterSel = iter;
+			if (gtk_tree_model_iter_previous (GTK_TREE_MODEL (editor->priv->choices_store), &iterSel))
+				select = TRUE;
+		}
+
+		if (select)
+			gtk_tree_selection_select_iter (selection, &iterSel);
+
 		path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->choices_store), &iter);
 
 		gpinstruct_lesson_test_word_pool_remove_choice (editor->priv->test, gtk_tree_path_get_indices (path)[0]);

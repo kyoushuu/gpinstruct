@@ -189,6 +189,10 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 
 				update_questions_tree_view (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data));
 				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+				
+				gtk_tree_model_iter_nth_child (GTK_TREE_MODEL (editor->priv->questions_store),
+				                               &iter, NULL, gtk_tree_path_get_indices (path)[0]);
+				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view)), &iter);
 			}
 
 			gtk_widget_destroy (dialog);
@@ -218,6 +222,9 @@ questions_add_button_clicked (GtkButton *button,
 	                    DATA_COLUMN, question,
 	                    -1);
 
+	gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->questions_tree_view)),
+	                                &iter);
+
 	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
@@ -229,12 +236,26 @@ questions_remove_button_clicked (GtkButton *button,
 	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
-	GtkTreeIter iter;
+	GtkTreeIter iter, iterSel;
 	GtkTreePath *path;
+	gboolean select = FALSE;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->questions_tree_view));
 	if (gtk_tree_selection_get_selected (selection, NULL, &iter))
 	{
+		iterSel = iter;
+		if (gtk_tree_model_iter_next (GTK_TREE_MODEL (editor->priv->questions_store), &iterSel))
+			select = TRUE;
+		else
+		{
+			iterSel = iter;
+			if (gtk_tree_model_iter_previous (GTK_TREE_MODEL (editor->priv->questions_store), &iterSel))
+				select = TRUE;
+		}
+
+		if (select)
+			gtk_tree_selection_select_iter (selection, &iterSel);
+
 		path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->questions_store), &iter);
 
 		gpinstruct_lesson_test_multi_choice_remove_question (editor->priv->test, gtk_tree_path_get_indices (path)[0]);
@@ -355,6 +376,11 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
 
 				update_choices_tree_view (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data));
 				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+
+				gtk_tree_model_iter_nth_child (GTK_TREE_MODEL (editor->priv->choices_store),
+					                           &iter, NULL, choice);
+				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view)),
+					                            &iter);
 			}
 
 			gtk_widget_destroy (dialog);
@@ -390,6 +416,9 @@ choices_add_button_clicked (GtkButton *button,
 		                    DATA_COLUMN, NULL,
 		                    -1);
 
+		gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->choices_tree_view)),
+			                            &iter);
+
 		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 	}
 }
@@ -403,8 +432,9 @@ choices_remove_button_clicked (GtkButton *button,
 
 	GPInstructLessonTestMultiChoiceQuestion* question;
 	GtkTreeSelection *selection;
-	GtkTreeIter iter;
+	GtkTreeIter iter, iterSel;
 	GtkTreePath *path;
+	gboolean select = FALSE;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->questions_tree_view));
 	if (gtk_tree_selection_get_selected (selection, NULL, &iter))
@@ -416,6 +446,19 @@ choices_remove_button_clicked (GtkButton *button,
 		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->choices_tree_view));
 		if (gtk_tree_selection_get_selected (selection, NULL, &iter))
 		{
+			iterSel = iter;
+			if (gtk_tree_model_iter_next (GTK_TREE_MODEL (editor->priv->choices_store), &iterSel))
+				select = TRUE;
+			else
+			{
+				iterSel = iter;
+				if (gtk_tree_model_iter_previous (GTK_TREE_MODEL (editor->priv->choices_store), &iterSel))
+					select = TRUE;
+			}
+
+			if (select)
+				gtk_tree_selection_select_iter (selection, &iterSel);
+
 			path = gtk_tree_model_get_path (GTK_TREE_MODEL (editor->priv->choices_store), &iter);
 
 			gpinstruct_lesson_test_multi_choice_question_remove_choice (question, gtk_tree_path_get_indices (path)[0]);
