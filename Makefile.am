@@ -3,8 +3,7 @@
 
 SUBDIRS = gpinstruct gpinstruct-view gpinstruct-editor gpinstruct-analyzer po
 
-gpinstructdocdir = ${prefix}/doc/gpinstruct
-gpinstructdoc_DATA = \
+dist_doc_DATA = \
 	README\
 	COPYING\
 	AUTHORS\
@@ -12,20 +11,4 @@ gpinstructdoc_DATA = \
 	INSTALL\
 	NEWS
 
-
-INTLTOOL_FILES = intltool-extract.in \
-	intltool-merge.in \
-	intltool-update.in
-
-EXTRA_DIST = $(gpinstructdoc_DATA) \
-	$(INTLTOOL_FILES)
-
-DISTCLEANFILES = intltool-extract \
-	intltool-merge \
-	intltool-update \
-	po/.intltool-merge-cache
-
-
-# Remove doc directory on uninstall
-uninstall-local:
-	-rm -r $(gpinstructdocdir)
+EXTRA_DIST = autogen.sh
