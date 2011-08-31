@@ -117,9 +117,11 @@ page_reset (GPInstructLessonTestMultiChoicePage* page,
 
 	if (page->priv->questions)
 		g_free (page->priv->questions);
-	page->priv->questions = random_array (gpinstruct_lesson_test_multi_choice_get_questions_length (page->priv->test));
 
-	multi_choice_show_question (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE (page), 0);
+	guint questions_num = gpinstruct_lesson_test_multi_choice_get_questions_length (page->priv->test);
+	page->priv->questions = random_array (questions_num);
+	if (questions_num)
+		multi_choice_show_question (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE (page), 0);
 }
 
 
@@ -176,13 +178,18 @@ static gboolean
 page_show_next (GPInstructLessonTestMultiChoicePage* page,
                 gpointer user_data)
 {
-	gpinstruct_lesson_score_increase_total (page->priv->score);
-
 	GList* questions = gpinstruct_lesson_test_multi_choice_get_questions (page->priv->test);
+	guint questions_num = g_list_length (questions);
+
+	if (questions_num == 0)
+		return FALSE;
+
 	guint question_id = page->priv->questions[page->priv->curr_question];
 	GPInstructLessonTestMultiChoiceQuestion* question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (g_list_nth_data (questions, question_id));
-	guint questions_num = g_list_length (questions);
+
 	g_list_free (questions);
+
+	gpinstruct_lesson_score_increase_total (page->priv->score);
 
 	guint correct_choice = -1;
 	guint answer = gpinstruct_lesson_test_multi_choice_question_get_answer (question);

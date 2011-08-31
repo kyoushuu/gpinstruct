@@ -76,7 +76,9 @@ page_reset (GPInstructLessonTestWordPoolPage* page,
 
 	if (page->priv->questions)
 		g_free (page->priv->questions);
-	page->priv->questions = random_array (gpinstruct_lesson_test_word_pool_get_questions_length (page->priv->test));
+
+	guint questions_num = gpinstruct_lesson_test_word_pool_get_questions_length (page->priv->test);
+	page->priv->questions = random_array (questions_num);
 
 	GList* choices = gpinstruct_lesson_test_word_pool_get_choices (page->priv->test);
 	guint length = g_list_length (choices);
@@ -98,7 +100,8 @@ page_reset (GPInstructLessonTestWordPoolPage* page,
 
 	g_list_free (choices);
 
-	word_pool_show_question (GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE (page), 0);
+	if (questions_num)
+		word_pool_show_question (GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE (page), 0);
 }
 
 
@@ -154,13 +157,18 @@ static gboolean
 page_show_next (GPInstructLessonTestWordPoolPage* page,
                 gpointer user_data)
 {
-	gpinstruct_lesson_score_increase_total (page->priv->score);
-
 	GList* questions = gpinstruct_lesson_test_word_pool_get_questions (page->priv->test);
+	guint questions_num = g_list_length (questions);
+
+	if (questions_num == 0)
+		return FALSE;
+
 	guint question_id = page->priv->questions[page->priv->curr_question];
 	GPInstructLessonTestWordPoolQuestion* question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, question_id));
-	guint questions_num = g_list_length (questions);
+
 	g_list_free (questions);
+
+	gpinstruct_lesson_score_increase_total (page->priv->score);
 
 	GtkTreeSelection* tsel = gtk_tree_view_get_selection (GTK_TREE_VIEW (page->priv->choices_treeview));
 	GtkTreeIter iter;

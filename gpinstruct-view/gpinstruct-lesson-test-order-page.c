@@ -49,8 +49,8 @@ page_reset (GPInstructLessonTestOrderPage* page,
 
 	if (page->priv->items)
 		g_free (page->priv->items);
-	page->priv->items = random_array (length);
 
+	page->priv->items = random_array (length);
 	gtk_list_store_clear (page->priv->store);
 
 	int i;
