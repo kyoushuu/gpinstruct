@@ -1,7 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl Created by Anjuta application wizard.
 
-AC_INIT(gpinstruct, 0.1)
+AC_INIT([GPInstruct], [0.1],
+		[galeon@ymail.com],
+		[gpinstruct],
+		[http://gpinstruct.sourceforge.net/])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([ChangeLog])
 

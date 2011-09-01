@@ -369,8 +369,8 @@ gpinstruct_log_save (GPInstructLog* log,
 	xmlSetProp (current_node, BAD_CAST "first-name", BAD_CAST log->priv->first_name);
 
 	xmlSetNs (current_node, xmlNewNs (current_node,
-	                                  BAD_CAST "http://gpinstruct.sourceforge.net",
-	                                  BAD_CAST "gpinstruct"));
+	                                  BAD_CAST PACKAGE_URL,
+	                                  BAD_CAST PACKAGE_TARNAME));
 
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
 	xmlDocSetRootElement (doc, current_node);

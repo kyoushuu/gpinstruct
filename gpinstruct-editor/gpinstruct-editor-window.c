@@ -530,7 +530,7 @@ help_about_action (GtkAction *action,
 	                                          "version", PACKAGE_VERSION,
 	                                          "title", _("About GPInstruct Editor"),
 	                                          "comments", _("GPInstruct Project Editor"),
-	                                          "website", "http://gpinstruct.sourceforge.net",
+	                                          "website", PACKAGE_URL,
 	                                          "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
 #if GTK_MAJOR_VERSION >= 3
 	                                          "license-type", GTK_LICENSE_GPL_3_0,

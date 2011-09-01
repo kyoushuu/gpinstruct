@@ -532,8 +532,8 @@ gpinstruct_parser_save (GPInstructParser* parser,
 	xmlSetProp (current_node, BAD_CAST "title", BAD_CAST gpinstruct_project_get_title (project));
 
 	xmlSetNs (current_node, xmlNewNs (current_node,
-	                                  BAD_CAST "http://gpinstruct.sourceforge.net",
-	                                  BAD_CAST "gpinstruct"));
+	                                  BAD_CAST PACKAGE_URL,
+	                                  BAD_CAST PACKAGE_TARNAME));
 
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
 	xmlDocSetRootElement (doc, current_node);
