@@ -394,7 +394,7 @@ file_open_action (GtkAction *action,
 	                                      NULL);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+	gtk_file_filter_set_name (filter, _("GPInstruct project file"));
 	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
@@ -436,7 +436,7 @@ file_saveas_action (GtkAction *action,
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+	gtk_file_filter_set_name (filter, _("GPInstruct project file"));
 	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
@@ -1183,7 +1183,7 @@ gpinstruct_editor_window_save_file (GPInstructEditorWindow* window)
 			gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
 
 			GtkFileFilter *filter = gtk_file_filter_new ();
-			gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+			gtk_file_filter_set_name (filter, _("GPInstruct project file"));
 			gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 			gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 

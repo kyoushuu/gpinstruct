@@ -68,7 +68,7 @@ main (int argc,
 		                                                 NULL);
 
 		GtkFileFilter *filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+		gtk_file_filter_set_name (filter, _("GPInstruct project file"));
 		gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 

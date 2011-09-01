@@ -126,7 +126,7 @@ file_add_action (GtkAction *action,
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), TRUE);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("GPI Log file"));
+	gtk_file_filter_set_name (filter, _("GPInstruct log file"));
 	gtk_file_filter_add_pattern (filter, "*.gpinstruct-log");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
@@ -395,7 +395,7 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("GPInstruct Project file"));
+	gtk_file_filter_set_name (filter, _("GPInstruct project file"));
 	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
