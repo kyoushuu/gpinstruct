@@ -28,3 +28,4 @@
 #include "canvas-lesson.h"
 #include "canvas-category.h"
 #include "canvas-project.h"
+#include "canvas-parser.h"

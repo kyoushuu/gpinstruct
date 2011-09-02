@@ -26,7 +26,9 @@ canvas_SOURCES = \
 	canvas-lesson.c \
 	canvas.h \
 	canvas-lesson-element.h \
-	canvas-lesson-element.c
+	canvas-lesson-element.c \
+	canvas-parser.h \
+	canvas-parser.c
 
 canvas_LDFLAGS = \
 	-Wl,--export-dynamic

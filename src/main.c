@@ -23,6 +23,8 @@
 
 #include <glib/gi18n.h>
 
+#include "canvas.h"
+
 
 
 static GtkWidget*
@@ -31,7 +33,7 @@ create_window (void)
 	GtkWidget *window;
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title (GTK_WINDOW (window), "canvas");
+	gtk_window_set_title (GTK_WINDOW (window), "Canvas");
 
 	/* Exit when the window is closed */
 	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
@@ -57,6 +59,15 @@ main (int argc, char *argv[])
 
 	window = create_window ();
 	gtk_widget_show (window);
+
+	CanvasParser* parser = canvas_parser_new ();
+	GError* error = NULL;
+	CanvasProject* project = canvas_parser_parse (parser, "<canvas-projec title=\"English\"></canvas-projec>", &error);
+	if (error)
+	{
+		printf(_("Error: %s\n"), error->message);
+		g_error_free (error);
+	}
 
 	gtk_main ();
 	return 0;

@@ -28,7 +28,8 @@ AM_PROG_LIBTOOL
 
 
 
-PKG_CHECK_MODULES(CANVAS, [gtk+-3.0 ])
+PKG_CHECK_MODULES(CANVAS, libxml-2.0
+[gtk+-3.0 ])
 
 
 
