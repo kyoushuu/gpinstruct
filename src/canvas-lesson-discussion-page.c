@@ -54,7 +54,7 @@ canvas_lesson_discussion_page_new (CanvasLessonDiscussion *discussion)
 	CanvasLessonDiscussionPage* page = g_object_new (CANVAS_TYPE_LESSON_DISCUSSION_PAGE, NULL);
 	canvas_lesson_view_page_set_title (CANVAS_LESSON_VIEW_PAGE (page), canvas_lesson_element_get_title (CANVAS_LESSON_ELEMENT (discussion)));
 
-	GtkWidget* discussion_textview = discussion_textview = gtk_text_view_new ();
+	GtkWidget* discussion_textview = gtk_text_view_new ();
 	gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (discussion_textview)),
 	                            canvas_lesson_discussion_get_text (discussion));
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (discussion_textview), GTK_WRAP_WORD);
