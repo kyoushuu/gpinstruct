@@ -275,7 +275,7 @@ canvas_lesson_view_new (CanvasLesson* lesson)
 		}
 		else if (CANVAS_IS_LESSON_TEST (curr_element))
 		{
-			if (!canvas_lesson_get_single_score (lesson))
+			if (!single_score)
 				curr_score = canvas_lesson_score_new ();
 
 			if (CANVAS_IS_LESSON_TEST_MULTI_CHOICE (curr_element))
@@ -289,12 +289,6 @@ canvas_lesson_view_new (CanvasLesson* lesson)
 
 				CanvasLessonTestMultiChoicePage* question_page = canvas_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score);
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (question_page));
-
-				if (!single_score)
-				{
-					CanvasLessonScorePage* score_page = canvas_lesson_score_page_new (curr_score);
-					canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (score_page));
-				}
 			}
 			else if (CANVAS_IS_LESSON_TEST_WORD_POOL (curr_element))
 			{
@@ -307,12 +301,12 @@ canvas_lesson_view_new (CanvasLesson* lesson)
 
 				CanvasLessonTestWordPoolPage* question_page = canvas_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score);
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (question_page));
+			}
 
-				if (!single_score)
-				{
-					CanvasLessonScorePage* score_page = canvas_lesson_score_page_new (curr_score);
-					canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (score_page));
-				}
+			if (!single_score)
+			{
+				CanvasLessonScorePage* score_page = canvas_lesson_score_page_new (curr_score);
+				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (score_page));
 			}
 		}
 
