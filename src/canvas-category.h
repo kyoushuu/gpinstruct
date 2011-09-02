@@ -47,7 +47,7 @@ struct _CanvasCategory
 GType canvas_category_get_type (void) G_GNUC_CONST;
 CanvasCategory* canvas_category_new (void);
 const gchar* canvas_category_get_title (CanvasCategory* category);
-void canvas_category_set_title (CanvasCategory* category, gchar *title);
+void canvas_category_set_title (CanvasCategory* category, const gchar *title);
 guint canvas_category_get_lessons_length (CanvasCategory* category);
 void canvas_category_add_lesson (CanvasCategory* category, CanvasLesson* lesson);
 void canvas_category_remove_lesson (CanvasCategory* category, CanvasLesson* lesson);

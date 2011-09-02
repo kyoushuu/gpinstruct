@@ -79,7 +79,7 @@ canvas_project_get_title (CanvasProject* project)
 
 void
 canvas_project_set_title (CanvasProject* project,
-                          gchar *title)
+                          const gchar *title)
 {
 	CanvasProjectPrivate* private_data = CANVAS_PROJECT_PRIVATE(project);
 

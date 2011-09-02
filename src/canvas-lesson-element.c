@@ -74,7 +74,7 @@ canvas_lesson_element_get_title (CanvasLessonElement* element)
 }
 
 void
-canvas_lesson_element_set_title (CanvasLessonElement* element, gchar *title)
+canvas_lesson_element_set_title (CanvasLessonElement* element, const gchar *title)
 {
 	CanvasLessonElementPrivate* private_data = CANVAS_LESSON_ELEMENT_PRIVATE(element);
 

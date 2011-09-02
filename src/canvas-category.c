@@ -80,7 +80,7 @@ canvas_category_get_title (CanvasCategory* category)
 
 void
 canvas_category_set_title (CanvasCategory* category,
-                          gchar *title)
+                           const gchar *title)
 {
 	CanvasCategoryPrivate* private_data = CANVAS_CATEGORY_PRIVATE(category);
 

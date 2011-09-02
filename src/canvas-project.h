@@ -48,7 +48,7 @@ struct _CanvasProject
 GType canvas_project_get_type (void) G_GNUC_CONST;
 CanvasProject* canvas_project_new (void);
 const gchar* canvas_project_get_title (CanvasProject* project);
-void canvas_project_set_title (CanvasProject* project, gchar *title);
+void canvas_project_set_title (CanvasProject* project, const gchar *title);
 guint canvas_project_get_categories_length (CanvasProject* project);
 void canvas_project_add_category (CanvasProject* project, CanvasCategory* category);
 void canvas_project_remove_category (CanvasProject* project, CanvasCategory* category);

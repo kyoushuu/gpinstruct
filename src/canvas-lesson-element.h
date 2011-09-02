@@ -47,7 +47,7 @@ struct _CanvasLessonElement
 GType canvas_lesson_element_get_type (void) G_GNUC_CONST;
 CanvasLessonElement* canvas_lesson_element_new (void);
 const gchar* canvas_lesson_element_get_title (CanvasLessonElement* element);
-void canvas_lesson_element_set_title (CanvasLessonElement* element, gchar *title);
+void canvas_lesson_element_set_title (CanvasLessonElement* element, const gchar *title);
 
 G_END_DECLS
 

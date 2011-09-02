@@ -79,7 +79,8 @@ canvas_lesson_get_title (CanvasLesson* lesson)
 }
 
 void
-canvas_lesson_set_title (CanvasLesson* lesson, gchar* title)
+canvas_lesson_set_title (CanvasLesson* lesson,
+                         const gchar* title)
 {
 	CanvasLessonPrivate* private_data = CANVAS_LESSON_PRIVATE(lesson);
 
@@ -95,7 +96,8 @@ canvas_lesson_get_lesson_elements_length (CanvasLesson* lesson)
 }
 
 void
-canvas_lesson_add_lesson_element (CanvasLesson* lesson, CanvasLessonElement* element)
+canvas_lesson_add_lesson_element (CanvasLesson* lesson,
+                                  CanvasLessonElement* element)
 {
 	g_return_if_fail (CANVAS_IS_LESSON_ELEMENT (element));
 
@@ -104,7 +106,8 @@ canvas_lesson_add_lesson_element (CanvasLesson* lesson, CanvasLessonElement* ele
 }
 
 void
-canvas_lesson_remove_lesson_element (CanvasLesson* lesson, CanvasLessonElement* element)
+canvas_lesson_remove_lesson_element (CanvasLesson* lesson,
+                                     CanvasLessonElement* element)
 {
 	g_return_if_fail (CANVAS_IS_LESSON_ELEMENT (element));
 
