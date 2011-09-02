@@ -48,6 +48,8 @@ GType canvas_lesson_test_get_type (void) G_GNUC_CONST;
 CanvasLessonTest* canvas_lesson_test_new (void);
 const gchar* canvas_lesson_test_get_directions (CanvasLessonTest* test);
 void canvas_lesson_test_set_directions (CanvasLessonTest* test, const gchar* directions);
+gboolean canvas_lesson_test_get_explain (CanvasLessonTest* test);
+void canvas_lesson_test_set_explain (CanvasLessonTest* test, gboolean explain);
 
 G_END_DECLS
 

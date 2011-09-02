@@ -633,8 +633,9 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 				{
 					curr_lesson_test_multi_choice = CANVAS_LESSON_TEST_MULTI_CHOICE (curr_lesson_element);
 
-					output = g_markup_printf_escaped ("<test-multi-choice title=\"%s\">\n",
-					                                  canvas_lesson_element_get_title (curr_lesson_element));
+					output = g_markup_printf_escaped ("<test-multi-choice title=\"%s\" explain=\"%s\">\n",
+					                                  canvas_lesson_element_get_title (curr_lesson_element),
+					                                  (canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)))?"true":"false");
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
@@ -694,8 +695,9 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 				{
 					curr_lesson_test_word_pool = CANVAS_LESSON_TEST_WORD_POOL (curr_lesson_element);
 
-					output = g_markup_printf_escaped ("<test-word-pool title=\"%s\">\n",
-					                                  canvas_lesson_element_get_title (curr_lesson_element));
+					output = g_markup_printf_escaped ("<test-word-pool title=\"%s\" explain=\"%s\">\n",
+					                                  canvas_lesson_element_get_title (curr_lesson_element),
+					                                  (canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_word_pool)))?"true":"false");
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 
@@ -755,8 +757,9 @@ canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* f
 				{
 					curr_lesson_test_order = CANVAS_LESSON_TEST_ORDER (curr_lesson_element);
 
-					output = g_markup_printf_escaped ("<test-order title=\"%s\">\n",
-					                                  canvas_lesson_element_get_title (curr_lesson_element));
+					output = g_markup_printf_escaped ("<test-order title=\"%s\" explain=\"%s\">\n",
+					                                  canvas_lesson_element_get_title (curr_lesson_element),
+					                                  (canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_order)))?"true":"false");
 					g_data_output_stream_put_string (dataout, output, NULL, NULL);
 					g_free (output);
 

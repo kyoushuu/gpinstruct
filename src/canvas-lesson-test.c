@@ -23,6 +23,7 @@ typedef struct _CanvasLessonTestPrivate CanvasLessonTestPrivate;
 struct _CanvasLessonTestPrivate
 {
 	gchar* directions;
+	gboolean explain;
 };
 
 #define CANVAS_LESSON_TEST_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_TEST, CanvasLessonTestPrivate))
@@ -36,6 +37,7 @@ canvas_lesson_test_init (CanvasLessonTest *object)
 {
 	CanvasLessonTestPrivate* priv = CANVAS_LESSON_TEST_PRIVATE(object);
 	priv->directions = g_strdup ("");
+	priv->explain = FALSE;
 }
 
 static void
@@ -81,4 +83,16 @@ canvas_lesson_test_set_directions (CanvasLessonTest* test, const gchar* directio
 	if (priv->directions)
 		g_free (priv->directions);
 	priv->directions = g_strdup (directions);
+}
+
+gboolean
+canvas_lesson_test_get_explain (CanvasLessonTest* test)
+{
+	return CANVAS_LESSON_TEST_PRIVATE(test)->explain;
+}
+
+void
+canvas_lesson_test_set_explain (CanvasLessonTest* test, gboolean explain)
+{
+	CANVAS_LESSON_TEST_PRIVATE(test)->explain = explain;
 }
