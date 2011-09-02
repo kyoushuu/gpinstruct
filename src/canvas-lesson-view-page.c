@@ -52,6 +52,17 @@ enum
 static guint lesson_view_page_signals[LAST_SIGNAL] = { 0 };
 
 
+void
+page_reset (CanvasLessonViewPage* view, gpointer user_data)
+{
+	GtkScrolledWindow* scrolled_window = GTK_SCROLLED_WINDOW (view);
+
+	gtk_range_set_fill_level (GTK_RANGE (gtk_scrolled_window_get_hscrollbar (scrolled_window)),
+	                          0);
+	gtk_range_set_fill_level (GTK_RANGE (gtk_scrolled_window_get_vscrollbar (scrolled_window)),
+	                          0);
+}
+
 
 G_DEFINE_TYPE (CanvasLessonViewPage, canvas_lesson_view_page, GTK_TYPE_SCROLLED_WINDOW);
 
@@ -97,7 +108,7 @@ canvas_lesson_view_page_class_init (CanvasLessonViewPageClass *klass)
 	klass->show_next = NULL;
 	klass->show_previous = NULL;
 	klass->show_current = NULL;
-	klass->reset = NULL;
+	klass->reset = page_reset;
 
 	lesson_view_page_signals[SHOW_NEXT] =
 		g_signal_new ("show-next",

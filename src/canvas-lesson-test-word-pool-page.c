@@ -66,7 +66,7 @@ word_pool_show_question (CanvasLessonTestWordPoolPage* page, guint question_num)
 }
 
 void
-word_pool_reset (CanvasLessonViewPage* view, gpointer user_data)
+word_pool_page_reset (CanvasLessonViewPage* view, gpointer user_data)
 {
 	word_pool_show_question (CANVAS_LESSON_TEST_WORD_POOL_PAGE (view), 0);
 }
@@ -97,12 +97,11 @@ static void
 canvas_lesson_test_word_pool_page_class_init (CanvasLessonTestWordPoolPageClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);
+	/*CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestWordPoolPagePrivate));
 
 	object_class->finalize = canvas_lesson_test_word_pool_page_finalize;
-	parent_class->reset = word_pool_reset;
 }
 
 
@@ -165,6 +164,7 @@ canvas_lesson_test_word_pool_page_new (CanvasLessonTestWordPool* test,
 	canvas_lesson_view_page_set_show_back_button (CANVAS_LESSON_VIEW_PAGE (page), FALSE);
 
 	g_signal_connect (page, "show-next", G_CALLBACK (word_pool_page_show_next), NULL);
+	g_signal_connect (page, "reset", G_CALLBACK (word_pool_page_reset), NULL);
 
 	priv->test = test;
 	priv->score = score;

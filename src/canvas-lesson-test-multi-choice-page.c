@@ -104,7 +104,7 @@ multi_choice_show_question (CanvasLessonTestMultiChoicePage* page, guint questio
 }
 
 void
-multi_choice_reset (CanvasLessonViewPage* view, gpointer user_data)
+multi_choice_page_reset (CanvasLessonViewPage* view, gpointer user_data)
 {
 	multi_choice_show_question (CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE (view), 0);
 }
@@ -142,12 +142,11 @@ static void
 canvas_lesson_test_multi_choice_page_class_init (CanvasLessonTestMultiChoicePageClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);
+	/*CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestMultiChoicePagePrivate));
 
 	object_class->finalize = canvas_lesson_test_multi_choice_page_finalize;
-	parent_class->reset = multi_choice_reset;
 }
 
 
@@ -202,6 +201,7 @@ canvas_lesson_test_multi_choice_page_new (CanvasLessonTestMultiChoice* test,
 	canvas_lesson_view_page_set_show_back_button (CANVAS_LESSON_VIEW_PAGE (page), FALSE);
 
 	g_signal_connect (page, "show-next", G_CALLBACK (multi_choice_page_show_next), NULL);
+	g_signal_connect (page, "reset", G_CALLBACK (multi_choice_page_reset), NULL);
 
 	priv->test = test;
 	priv->score = score;
