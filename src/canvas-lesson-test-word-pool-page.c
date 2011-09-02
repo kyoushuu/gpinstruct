@@ -97,11 +97,12 @@ static void
 canvas_lesson_test_word_pool_page_class_init (CanvasLessonTestWordPoolPageClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);*/
+	CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonTestWordPoolPagePrivate));
 
 	object_class->finalize = canvas_lesson_test_word_pool_page_finalize;
+	parent_class->reset = word_pool_reset;
 }
 
 
@@ -206,8 +207,6 @@ canvas_lesson_test_word_pool_page_new (CanvasLessonTestWordPool* test,
 	g_list_free (choices);
 
 	g_object_unref (store);
-
-	word_pool_show_question (page, 0);
 
 	return page;
 }
