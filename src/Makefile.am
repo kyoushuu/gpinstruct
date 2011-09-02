@@ -29,11 +29,13 @@ canvas_editor_SOURCES =  \
 
 canvas_editor_LDADD = $(GTK_LIBS) \
 	libcanvas.la \
-	libcanvas-view.la
+	libcanvas-view.la \
+	libcanvas-editor.la
 
 lib_LTLIBRARIES =  \
 	libcanvas.la \
-	libcanvas-view.la
+	libcanvas-view.la \
+	libcanvas-editor.la
 
 libcanvas_la_SOURCES =  \
 	canvas.c \
@@ -73,6 +75,9 @@ libcanvas_la_SOURCES =  \
 	canvas-project.c \
 	canvas-project.h
 
+libcanvas_la_CPPFLAGS = -DG_LOG_DOMAIN=\"Canvas\" \
+	$(AM_CPPFLAGS)
+
 libcanvas_la_LDFLAGS = \
 	-no-undefined
 
@@ -110,8 +115,36 @@ libcanvas_view_la_SOURCES =  \
 	gtktextbuffermarkup.c \
 	gtktextbuffermarkup.h
 
+libcanvas_view_la_CPPFLAGS = -DG_LOG_DOMAIN=\"Canvas-View\" \
+	$(AM_CPPFLAGS)
+
 libcanvas_view_la_LDFLAGS = \
 	-no-undefined
 
 libcanvas_view_la_LIBADD = $(GTK_LIBS) \
+	libcanvas.la
+
+libcanvas_editor_la_SOURCES =  \
+	canvas-editor.h \
+	canvas-object-editor.h \
+	canvas-object-editor.c \
+	canvas-project-editor.h \
+	canvas-project-editor.c \
+	canvas-category-editor.h \
+	canvas-category-editor.c \
+	canvas-lesson-editor.h \
+	canvas-lesson-editor.c \
+	canvas-lesson-discussion-editor.h \
+	canvas-lesson-discussion-editor.c \
+	canvas-lesson-reading-editor.h \
+	canvas-lesson-reading-editor.c \
+	canvas-editor-window.h \
+	canvas-editor-window.c
+
+libcanvas_editor_la_CPPFLAGS = -DG_LOG_DOMAIN=\"Canvas-Editor\" \
+	$(AM_CPPFLAGS)
+
+libcanvas_editor_la_LDFLAGS = -no-undefined
+
+libcanvas_editor_la_LIBADD = $(GTK_LIBS) \
 	libcanvas.la

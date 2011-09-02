@@ -1,5 +1,5 @@
 /*
- * canvas-editor.c
+ * canvas-editor.h
  *
  * Copyright (C) 2011 - Arnel A. Borja
  *
@@ -17,41 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
-#include <glib/gi18n.h>
+#include "canvas-editor-window.h"
 
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
-
-#include "canvas.h"
-#include "canvas-view.h"
-#include "canvas-editor.h"
-
-
-GtkWidget *window;
-
-int
-main (int argc, char *argv[])
-{
-#ifdef ENABLE_NLS
-	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-#endif
-
-
-	gtk_init (&argc, &argv);
-
-
-	window = canvas_editor_window_new ();
-
-
-	/* Exit when the window is closed */
-	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
-
-	gtk_widget_show_all (window);
-
-	gtk_main ();
-
-	return 0;
-}
+#include "canvas-object-editor.h"
+#include "canvas-project-editor.h"
+#include "canvas-category-editor.h"
+#include "canvas-lesson-editor.h"
+#include "canvas-lesson-discussion-editor.h"
+#include "canvas-lesson-reading-editor.h"
