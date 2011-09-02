@@ -102,6 +102,25 @@ back_button_clicked (GtkButton *button,
 	g_signal_emit (user_data, lesson_view_signals[BACK], 0, &clicked);
 }
 
+void
+view_show (GtkWidget* widget,
+           gpointer   user_data)
+{
+	CanvasLessonView* view = CANVAS_LESSON_VIEW (widget);
+	CanvasLessonViewPrivate* priv = CANVAS_LESSON_VIEW_PRIVATE (view);
+
+	GList* current_pages = priv->pages;
+
+	while (current_pages)
+	{
+		canvas_lesson_view_page_reset (CANVAS_LESSON_VIEW_PAGE (current_pages->data));
+
+		current_pages = current_pages->next;
+	}
+
+	show_page (view, 0);
+}
+
 
 static void
 canvas_lesson_view_init (CanvasLessonView *object)
@@ -110,6 +129,7 @@ canvas_lesson_view_init (CanvasLessonView *object)
 
 	priv->current_page = 0;
 	priv->current_page_object = NULL;
+	priv->pages = NULL;
 
 	GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
 	GtkWidget* action_area = gtk_dialog_get_action_area (GTK_DIALOG (object));
@@ -136,7 +156,7 @@ canvas_lesson_view_init (CanvasLessonView *object)
 	gtk_window_set_default_size (GTK_WINDOW (object), 400, 300);
 	gtk_widget_set_size_request (GTK_WIDGET (object), 400, 300);
 
-	priv->pages = NULL;
+	g_signal_connect (object, "show", G_CALLBACK (view_show), NULL);
 
 	priv->pages_size_group = gtk_size_group_new (GTK_SIZE_GROUP_BOTH);
 }
@@ -320,8 +340,6 @@ canvas_lesson_view_new (CanvasLesson* lesson)
 	}
 
 	g_list_free (lesson_elements);
-
-	show_page (view, 0);
 
 	return view;
 }

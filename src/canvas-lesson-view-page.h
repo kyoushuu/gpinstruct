@@ -42,6 +42,7 @@ struct _CanvasLessonViewPageClass
 	gboolean(* show_next) (CanvasLessonViewPage* view, gpointer user_data);
 	gboolean(* show_previous) (CanvasLessonViewPage* view, gpointer user_data);
 	void(* show_current) (CanvasLessonViewPage* view, gpointer user_data);
+	void(* reset) (CanvasLessonViewPage* view, gpointer user_data);
 };
 
 struct _CanvasLessonViewPage
@@ -60,6 +61,7 @@ void canvas_lesson_view_page_set_show_back_button (CanvasLessonViewPage* page, g
 gboolean canvas_lesson_view_page_show_next (CanvasLessonViewPage* page);
 gboolean canvas_lesson_view_page_show_previous (CanvasLessonViewPage* page);
 void canvas_lesson_view_page_show_current (CanvasLessonViewPage* page);
+void canvas_lesson_view_page_reset (CanvasLessonViewPage* page);
 
 G_END_DECLS
 

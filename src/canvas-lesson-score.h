@@ -50,6 +50,7 @@ void canvas_lesson_score_increase_total (CanvasLessonScore* score);
 guint canvas_lesson_score_get_total (CanvasLessonScore* score);
 void canvas_lesson_score_increase_score (CanvasLessonScore* score);
 guint canvas_lesson_score_get_score (CanvasLessonScore* score);
+void canvas_lesson_score_clear (CanvasLessonScore* score);
 
 G_END_DECLS
 

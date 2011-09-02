@@ -38,45 +38,6 @@ struct _CanvasLessonTestMultiChoicePagePrivate
 
 
 
-G_DEFINE_TYPE (CanvasLessonTestMultiChoicePage, canvas_lesson_test_multi_choice_page, CANVAS_TYPE_LESSON_VIEW_PAGE);
-
-static void
-canvas_lesson_test_multi_choice_page_init (CanvasLessonTestMultiChoicePage *object)
-{
-	CanvasLessonTestMultiChoicePagePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (object);
-
-	priv->test = NULL;
-	priv->score = NULL;
-	priv->curr_question = 0;
-	priv->choice_buttons = NULL;
-	priv->vbox = NULL;
-	priv->question_textview = NULL;
-	priv->choices_vbox = NULL;
-}
-
-static void
-canvas_lesson_test_multi_choice_page_finalize (GObject *object)
-{
-	CanvasLessonTestMultiChoicePagePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (object);
-
-	if (priv->choice_buttons)
-		g_list_free (priv->choice_buttons);
-
-	G_OBJECT_CLASS (canvas_lesson_test_multi_choice_page_parent_class)->finalize (object);
-}
-
-static void
-canvas_lesson_test_multi_choice_page_class_init (CanvasLessonTestMultiChoicePageClass *klass)
-{
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);*/
-
-	g_type_class_add_private (klass, sizeof (CanvasLessonTestMultiChoicePagePrivate));
-
-	object_class->finalize = canvas_lesson_test_multi_choice_page_finalize;
-}
-
-
 void
 multi_choice_show_question (CanvasLessonTestMultiChoicePage* page, guint question_num)
 {
@@ -138,6 +99,54 @@ multi_choice_show_question (CanvasLessonTestMultiChoicePage* page, guint questio
 	g_list_free (questions);
 	
 }
+
+void
+multi_choice_reset (CanvasLessonViewPage* view, gpointer user_data)
+{
+	multi_choice_show_question (CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE (view), 0);
+}
+
+
+
+G_DEFINE_TYPE (CanvasLessonTestMultiChoicePage, canvas_lesson_test_multi_choice_page, CANVAS_TYPE_LESSON_VIEW_PAGE);
+
+static void
+canvas_lesson_test_multi_choice_page_init (CanvasLessonTestMultiChoicePage *object)
+{
+	CanvasLessonTestMultiChoicePagePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (object);
+
+	priv->test = NULL;
+	priv->score = NULL;
+	priv->curr_question = 0;
+	priv->choice_buttons = NULL;
+	priv->vbox = NULL;
+	priv->question_textview = NULL;
+	priv->choices_vbox = NULL;
+}
+
+static void
+canvas_lesson_test_multi_choice_page_finalize (GObject *object)
+{
+	CanvasLessonTestMultiChoicePagePrivate* priv = CANVAS_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (object);
+
+	if (priv->choice_buttons)
+		g_list_free (priv->choice_buttons);
+
+	G_OBJECT_CLASS (canvas_lesson_test_multi_choice_page_parent_class)->finalize (object);
+}
+
+static void
+canvas_lesson_test_multi_choice_page_class_init (CanvasLessonTestMultiChoicePageClass *klass)
+{
+	GObjectClass* object_class = G_OBJECT_CLASS (klass);
+	CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);
+
+	g_type_class_add_private (klass, sizeof (CanvasLessonTestMultiChoicePagePrivate));
+
+	object_class->finalize = canvas_lesson_test_multi_choice_page_finalize;
+	parent_class->reset = multi_choice_reset;
+}
+
 
 gboolean
 multi_choice_page_show_next (CanvasLessonTestMultiChoicePage* page, gpointer user_data)

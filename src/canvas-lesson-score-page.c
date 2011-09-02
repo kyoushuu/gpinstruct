@@ -35,6 +35,13 @@ struct _CanvasLessonScorePagePrivate
 
 
 
+void
+score_reset (CanvasLessonViewPage* view, gpointer user_data)
+{
+	canvas_lesson_score_clear (CANVAS_LESSON_SCORE_PAGE_PRIVATE (view)->score);
+}
+
+
 G_DEFINE_TYPE (CanvasLessonScorePage, canvas_lesson_score_page, CANVAS_TYPE_LESSON_VIEW_PAGE);
 
 static void
@@ -58,11 +65,12 @@ static void
 canvas_lesson_score_page_class_init (CanvasLessonScorePageClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);*/
+	CanvasLessonViewPageClass* parent_class = CANVAS_LESSON_VIEW_PAGE_CLASS (klass);
 
 	g_type_class_add_private (klass, sizeof (CanvasLessonScorePagePrivate));
 
 	object_class->finalize = canvas_lesson_score_page_finalize;
+	parent_class->reset = score_reset;
 }
 
 

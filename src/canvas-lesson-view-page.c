@@ -37,6 +37,7 @@ enum
 	SHOW_NEXT,
 	SHOW_PREVIOUS,
 	SHOW_CURRENT,
+	RESET,
 
 	LAST_SIGNAL
 };
@@ -87,6 +88,7 @@ canvas_lesson_view_page_class_init (CanvasLessonViewPageClass *klass)
 	klass->show_next = NULL;
 	klass->show_previous = NULL;
 	klass->show_current = NULL;
+	klass->reset = NULL;
 
 	lesson_view_page_signals[SHOW_NEXT] =
 		g_signal_new ("show-next",
@@ -111,6 +113,15 @@ canvas_lesson_view_page_class_init (CanvasLessonViewPageClass *klass)
 		              G_OBJECT_CLASS_TYPE (klass),
 		              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		              G_STRUCT_OFFSET (CanvasLessonViewPageClass, show_current),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__VOID,
+		              G_TYPE_NONE, 0);
+
+	lesson_view_page_signals[RESET] =
+		g_signal_new ("reset",
+		              G_OBJECT_CLASS_TYPE (klass),
+		              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		              G_STRUCT_OFFSET (CanvasLessonViewPageClass, reset),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID,
 		              G_TYPE_NONE, 0);
@@ -186,4 +197,10 @@ void
 canvas_lesson_view_page_show_current (CanvasLessonViewPage* page)
 {
 	g_signal_emit (page, lesson_view_page_signals[SHOW_CURRENT], 0);
+}
+
+void
+canvas_lesson_view_page_reset (CanvasLessonViewPage* page)
+{
+	g_signal_emit (page, lesson_view_page_signals[RESET], 0);
 }

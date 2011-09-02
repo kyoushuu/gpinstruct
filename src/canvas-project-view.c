@@ -41,17 +41,12 @@ lesson_button_clicked (GtkButton *button,
 	CanvasProjectView* project_view = CANVAS_PROJECT_VIEW (user_data);
 	CanvasProjectViewPrivate* priv = CANVAS_PROJECT_VIEW_PRIVATE (project_view);
 
-	CanvasLesson* lesson = g_hash_table_lookup (priv->hashtable, button);
+	CanvasLessonView* view = g_hash_table_lookup (priv->hashtable, button);
 
-	if (lesson)
+	if (view)
 	{
-		CanvasLessonView* view = canvas_lesson_view_new (lesson);
-
-		/*if (gdk_window_get_state (gtk_widget_get_window (GTK_WIDGET (project_view))) & GDK_WINDOW_STATE_MAXIMIZED)
-			gtk_window_maximize (GTK_WINDOW (project_view));*/
-
 		gtk_dialog_run (GTK_DIALOG (view));
-		gtk_widget_destroy (GTK_WIDGET (view));
+		gtk_widget_hide (GTK_WIDGET (view));
 	}
 }
 
@@ -73,7 +68,21 @@ canvas_project_view_finalize (GObject *object)
 	CanvasProjectViewPrivate* priv = CANVAS_PROJECT_VIEW_PRIVATE (object);
 
 	if (priv->hashtable)
+	{
+		GList* views = g_hash_table_get_values (priv->hashtable);
+		GList* current_views = views;
+
+		while (current_views)
+		{
+			GtkWidget* view = GTK_WIDGET (current_views->data);
+			gtk_widget_destroy (view);
+			current_views = current_views->next;
+		}
+
+		g_list_free (views);
+
 		g_hash_table_destroy (priv->hashtable);
+	}
 
 	G_OBJECT_CLASS (canvas_project_view_parent_class)->finalize (object);
 }
@@ -151,7 +160,9 @@ canvas_project_view_new (CanvasProject* project)
 			gtk_box_pack_start (GTK_BOX (category_vbox), lesson_button, FALSE, FALSE, 3);
 			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), project_view);
 
-			g_hash_table_insert (priv->hashtable, lesson_button, lesson);
+			CanvasLessonView* view = canvas_lesson_view_new (lesson);
+
+			g_hash_table_insert (priv->hashtable, lesson_button, view);
 
 			curr_lessons = curr_lessons->next;
 		}

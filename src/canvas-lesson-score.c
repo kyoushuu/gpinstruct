@@ -90,3 +90,10 @@ canvas_lesson_score_get_score (CanvasLessonScore* score)
 {
 	return CANVAS_LESSON_SCORE_PRIVATE (score)->score;
 }
+
+void
+canvas_lesson_score_clear (CanvasLessonScore* score)
+{
+	CANVAS_LESSON_SCORE_PRIVATE (score)->total = 0;
+	CANVAS_LESSON_SCORE_PRIVATE (score)->score = 0;
+}

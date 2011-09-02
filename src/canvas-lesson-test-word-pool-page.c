@@ -37,6 +37,38 @@ struct _CanvasLessonTestWordPoolPagePrivate
 
 
 
+void
+word_pool_show_question (CanvasLessonTestWordPoolPage* page, guint question_num)
+{
+	CanvasLessonTestWordPoolPagePrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PAGE_PRIVATE (page);
+
+	GList* questions = canvas_lesson_test_word_pool_get_questions (priv->test);
+	if (question_num < g_list_length (questions))
+	{
+		priv->curr_question = question_num;
+
+		GtkTreePath *path = gtk_tree_path_new_from_string ("0");
+		gtk_tree_selection_select_path (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->choices_treeview)), path);
+		gtk_tree_path_free (path);
+
+		CanvasLessonTestWordPoolQuestion* question = g_list_nth_data (questions, question_num);
+
+		gchar* text = g_strdup_printf ("%d. %s", 1+question_num, canvas_lesson_test_word_pool_question_get_text (question));
+		gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->question_textview)), text);
+		g_free (text);
+	}
+
+	g_list_free (questions);
+	
+}
+
+void
+word_pool_reset (CanvasLessonViewPage* view, gpointer user_data)
+{
+	word_pool_show_question (CANVAS_LESSON_TEST_WORD_POOL_PAGE (view), 0);
+}
+
+
 G_DEFINE_TYPE (CanvasLessonTestWordPoolPage, canvas_lesson_test_word_pool_page, CANVAS_TYPE_LESSON_VIEW_PAGE);
 
 static void
@@ -69,31 +101,6 @@ canvas_lesson_test_word_pool_page_class_init (CanvasLessonTestWordPoolPageClass 
 	object_class->finalize = canvas_lesson_test_word_pool_page_finalize;
 }
 
-
-void
-word_pool_show_question (CanvasLessonTestWordPoolPage* page, guint question_num)
-{
-	CanvasLessonTestWordPoolPagePrivate* priv = CANVAS_LESSON_TEST_WORD_POOL_PAGE_PRIVATE (page);
-
-	GList* questions = canvas_lesson_test_word_pool_get_questions (priv->test);
-	if (question_num < g_list_length (questions))
-	{
-		priv->curr_question = question_num;
-
-		GtkTreePath *path = gtk_tree_path_new_from_string ("0");
-		gtk_tree_selection_select_path (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->choices_treeview)), path);
-		gtk_tree_path_free (path);
-
-		CanvasLessonTestWordPoolQuestion* question = g_list_nth_data (questions, question_num);
-
-		gchar* text = g_strdup_printf ("%d. %s", 1+question_num, canvas_lesson_test_word_pool_question_get_text (question));
-		gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->question_textview)), text);
-		g_free (text);
-	}
-
-	g_list_free (questions);
-	
-}
 
 gboolean
 word_pool_page_show_next (CanvasLessonTestWordPoolPage* page, gpointer user_data)
