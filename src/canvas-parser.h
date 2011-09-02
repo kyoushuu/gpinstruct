@@ -46,7 +46,8 @@ struct _CanvasParser
 
 GType canvas_parser_get_type (void) G_GNUC_CONST;
 CanvasParser* canvas_parser_new (void);
-CanvasProject* canvas_parser_parse (CanvasParser* parser, const gchar* text, GError** error);
+CanvasProject* canvas_parser_open (CanvasParser* parser, const gchar* text, GError** error);
+void canvas_parser_save (CanvasParser* parser, CanvasProject* project, const gchar* filename, GError** error);
 
 G_END_DECLS
 

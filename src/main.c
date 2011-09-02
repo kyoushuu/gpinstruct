@@ -60,9 +60,26 @@ main (int argc, char *argv[])
 	window = create_window ();
 	gtk_widget_show (window);
 
-	CanvasParser* parser = canvas_parser_new ();
 	GError* error = NULL;
-	CanvasProject* project = canvas_parser_parse (parser, "<canvas-projec title=\"English\"></canvas-projec>", &error);
+
+	gchar* contents;
+	g_file_get_contents ("english.xml", &contents, NULL, &error);
+	if (error)
+	{
+		printf(_("Error: %s\n"), error->message);
+		g_error_free (error);
+	}
+
+	CanvasParser* parser = canvas_parser_new ();
+
+	CanvasProject* project = canvas_parser_open (parser, contents, &error);
+	if (error)
+	{
+		printf(_("Error: %s\n"), error->message);
+		g_error_free (error);
+	}
+
+	canvas_parser_save (parser, project, "english2.xml", &error);
 	if (error)
 	{
 		printf(_("Error: %s\n"), error->message);
