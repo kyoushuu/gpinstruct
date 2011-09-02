@@ -214,7 +214,5 @@ canvas_lesson_test_multi_choice_page_new (CanvasLessonTestMultiChoice* test,
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->question_textview), FALSE);
 	gtk_box_pack_start (GTK_BOX (priv->vbox), priv->question_textview, TRUE, TRUE, 3);
 
-	multi_choice_show_question (page, 0);
-
 	return page;
 }
