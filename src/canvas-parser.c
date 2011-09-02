@@ -639,7 +639,7 @@ canvas_parser_save (CanvasParser* parser,
 					xmlSetProp (current_node, BAD_CAST "explain", canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_word_pool))?BAD_CAST "true":BAD_CAST "false");
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "directions",
-					                            BAD_CAST canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)));
+					                            BAD_CAST canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_word_pool)));
 
 					/* Currently in a "directions" element, go back to "test-word-pool" element */
 					current_node = current_node->parent;
@@ -705,7 +705,7 @@ canvas_parser_save (CanvasParser* parser,
 					xmlSetProp (current_node, BAD_CAST "explain", canvas_lesson_test_get_explain (CANVAS_LESSON_TEST (curr_lesson_test_order))?BAD_CAST "true":BAD_CAST "false");
 
 					current_node = xmlNewChild (current_node, NULL, BAD_CAST "directions",
-					                            BAD_CAST canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_multi_choice)));
+					                            BAD_CAST canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_lesson_test_order)));
 
 					/* Currently in a "directions" element, go back to "test-order" element */
 					current_node = current_node->parent;
