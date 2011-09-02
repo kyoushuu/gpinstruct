@@ -90,7 +90,7 @@ canvas_category_set_title (CanvasCategory* category,
 }
 
 guint
-canvas_category_get_categories_length (CanvasCategory* category)
+canvas_category_get_lessons_length (CanvasCategory* category)
 {
 	return g_list_length (CANVAS_CATEGORY_PRIVATE(category)->lessons);
 }
