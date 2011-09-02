@@ -6,7 +6,7 @@
 
 G_BEGIN_DECLS
 
-/* BOOLEAN:VOID (/home/galeon/Projects/gpinstruct/src/gpinstruct-marshalers.list:24) */
+/* BOOLEAN:VOID (gpinstruct-marshalers.list:24) */
 extern void _gpinstruct_marshal_BOOLEAN__VOID (GClosure     *closure,
                                            GValue       *return_value,
                                            guint         n_param_values,

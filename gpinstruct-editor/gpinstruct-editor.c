@@ -1,7 +1,7 @@
 /*
  * gpinstruct-editor.c
  *
- * Copyright (C) 2011 - Arnel A. Borja
+ * Copyright (C) 2011 - Arnel A. Borja (kyoushuu@yahoo.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

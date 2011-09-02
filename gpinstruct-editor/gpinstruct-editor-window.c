@@ -1,6 +1,6 @@
 /*
  * GPInstruct - Programmed Instruction
- * Copyright (C) 2011 - Arnel A. Borja
+ * Copyright (C) 2011 - Arnel A. Borja (kyoushuu@yahoo.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -510,7 +510,7 @@ help_about_action (GtkAction *action,
 {
 	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
-	static gchar* authors[] = {"Arnel A. Borja <galeon@ymail.com>", NULL};
+	static gchar* authors[] = {"Arnel A. Borja <kyoushuu@yahoo.com>", NULL};
 	gchar* license = _(
 	                   "This program is free software; you can redistribute it and/or modify "
 	                   "it under the terms of the GNU General Public License as published by "

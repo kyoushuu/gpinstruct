@@ -50,7 +50,7 @@
 #endif /* !G_ENABLE_DEBUG */
 
 
-/* BOOLEAN:VOID (/home/galeon/Projects/gpinstruct/src/gpinstruct-marshalers.list:24) */
+/* BOOLEAN:VOID (gpinstruct-marshalers.list:24) */
 void
 _gpinstruct_marshal_BOOLEAN__VOID (GClosure     *closure,
                                GValue       *return_value G_GNUC_UNUSED,
