@@ -22,7 +22,7 @@
 typedef struct _CanvasLessonTestPrivate CanvasLessonTestPrivate;
 struct _CanvasLessonTestPrivate
 {
-	gchar* direction;
+	gchar* directions;
 };
 
 #define CANVAS_LESSON_TEST_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), CANVAS_TYPE_LESSON_TEST, CanvasLessonTestPrivate))
@@ -35,7 +35,7 @@ static void
 canvas_lesson_test_init (CanvasLessonTest *object)
 {
 	CanvasLessonTestPrivate* private_data = CANVAS_LESSON_TEST_PRIVATE(object);
-	private_data->direction = g_strdup ("");
+	private_data->directions = g_strdup ("");
 }
 
 static void
@@ -43,8 +43,8 @@ canvas_lesson_test_finalize (GObject *object)
 {
 	CanvasLessonTestPrivate* private_data = CANVAS_LESSON_TEST_PRIVATE(object);
 
-	if (private_data->direction)
-		g_free (private_data->direction);
+	if (private_data->directions)
+		g_free (private_data->directions);
 
 	G_OBJECT_CLASS (canvas_lesson_test_parent_class)->finalize (object);
 }
@@ -68,17 +68,17 @@ canvas_lesson_test_new (void)
 }
 
 const gchar*
-canvas_lesson_test_get_direction (CanvasLessonTest* test)
+canvas_lesson_test_get_directions (CanvasLessonTest* test)
 {
-	return CANVAS_LESSON_TEST_PRIVATE(test)->direction;
+	return CANVAS_LESSON_TEST_PRIVATE(test)->directions;
 }
 
 void
-canvas_lesson_test_set_direction (CanvasLessonTest* test, const gchar* direction)
+canvas_lesson_test_set_directions (CanvasLessonTest* test, const gchar* directions)
 {
 	CanvasLessonTestPrivate* private_data = CANVAS_LESSON_TEST_PRIVATE(test);
 
-	if (private_data->direction)
-		g_free (private_data->direction);
-	private_data->direction = g_strdup (direction);
+	if (private_data->directions)
+		g_free (private_data->directions);
+	private_data->directions = g_strdup (directions);
 }
