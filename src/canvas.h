@@ -38,6 +38,8 @@
 #include "canvas-lesson-test-multi-choice.h"
 #include "canvas-lesson-test-word-pool-question.h"
 #include "canvas-lesson-test-word-pool.h"
+#include "canvas-lesson-test-order-item.h"
+#include "canvas-lesson-test-order.h"
 
 
 #include "canvas-lesson.h"
@@ -48,11 +50,11 @@
 
 #include <gtk/gtk.h>
 
+#include "canvas-lesson-score.h"
+
 #include "canvas-lesson-view-page.h"
 #include "canvas-lesson-view.h"
 #include "canvas-project-view.h"
-
-#include "canvas-lesson-score.h"
 
 #include "canvas-lesson-view-page.h"
 #include "canvas-lesson-discussion-page.h"
@@ -61,6 +63,7 @@
 #include "canvas-lesson-score-page.h"
 #include "canvas-lesson-test-multi-choice-page.h"
 #include "canvas-lesson-test-word-pool-page.h"
+#include "canvas-lesson-test-order-page.h"
 
 #include "canvas-lesson-view.h"
 #include "canvas-project-view.h"

@@ -237,6 +237,7 @@ canvas_lesson_view_new (CanvasLesson* lesson)
 	CanvasLessonReading* curr_reading;
 	CanvasLessonTestMultiChoice* curr_test_multi_choice;
 	CanvasLessonTestWordPool* curr_test_word_pool;
+	CanvasLessonTestOrder* curr_test_order;
 	CanvasLessonScore* curr_score;
 	CanvasLessonScore* curr_lesson_score;
 
@@ -320,6 +321,18 @@ canvas_lesson_view_new (CanvasLesson* lesson)
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (directions_page));
 
 				CanvasLessonTestWordPoolPage* question_page = canvas_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score);
+				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (question_page));
+			}
+			else if (CANVAS_IS_LESSON_TEST_ORDER (curr_element))
+			{
+				curr_test_order = CANVAS_LESSON_TEST_ORDER (curr_element);
+
+				CanvasLessonDirectionsPage* directions_page =
+					canvas_lesson_directions_page_new (canvas_lesson_element_get_title (curr_element),
+						                               canvas_lesson_test_get_directions (CANVAS_LESSON_TEST (curr_element)));
+				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (directions_page));
+
+				CanvasLessonTestOrderPage* question_page = canvas_lesson_test_order_page_new (curr_test_order, curr_score);
 				canvas_lesson_view_append_page (view, CANVAS_LESSON_VIEW_PAGE (question_page));
 			}
 
