@@ -12,3 +12,8 @@ dist_doc_DATA = \
 	NEWS
 
 EXTRA_DIST = autogen.sh
+
+
+# Remove doc directory on uninstall
+uninstall-local:
+	-rm -r $(docdir)
