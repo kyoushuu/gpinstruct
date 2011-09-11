@@ -868,6 +868,7 @@ gpinstruct_parser_save (GPInstructParser* parser,
 	xmlNodePtr current_node = add_project (project);
 
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
+	xmlSetDocCompressMode (doc, 9);
 	xmlDocSetRootElement (doc, current_node);
 
 	xmlIndentTreeOutput = 1;
