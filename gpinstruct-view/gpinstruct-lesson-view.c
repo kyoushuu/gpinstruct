@@ -379,7 +379,6 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	GPInstructLessonTestWordPool* curr_test_word_pool;
 	GPInstructLessonTestOrder* curr_test_order;
 	GPInstructLessonScore* curr_score;
-	GPInstructLessonScore* curr_lesson_score;
 
 	gboolean single_score;
 
@@ -417,7 +416,7 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	single_score = gpinstruct_lesson_get_single_score (lesson);
 
 	if (single_score)
-		curr_lesson_score = gpinstruct_lesson_score_new ();
+		curr_score = gpinstruct_lesson_score_new ();
 
 	GList* lesson_elements = gpinstruct_lesson_get_lesson_elements (lesson);
 	GList* curr_lesson_elements = lesson_elements;
@@ -494,7 +493,7 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 	if (single_score)
 	{
-		GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_lesson_score);
+		GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
 		gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
 	}
 
