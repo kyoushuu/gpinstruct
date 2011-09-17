@@ -82,7 +82,11 @@ show_page (GPInstructLessonView *view,
 		gpinstruct_lesson_view_page_show_current (page);
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (view->priv->contents), page_num);
 
-		gtk_window_set_title (GTK_WINDOW (view), gpinstruct_lesson_view_page_get_title (page));
+		gchar* title = g_strdup_printf ("%s - %s",
+		                                gpinstruct_lesson_get_title (view->priv->lesson),
+		                                gpinstruct_lesson_view_page_get_title (page));
+		gtk_window_set_title (GTK_WINDOW (view), title);
+		g_free (title);
 
 		if (page_num != 0 && gpinstruct_lesson_view_page_get_show_back_button (page))
 			gtk_widget_set_sensitive (view->priv->back, TRUE);
@@ -392,10 +396,10 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	const gchar* lesson_title = gpinstruct_lesson_get_title (lesson);
 
 	GPInstructLessonViewPage* finish_page = gpinstruct_lesson_view_page_new ();
-	gpinstruct_lesson_view_page_set_title (finish_page, lesson_title);
+	gpinstruct_lesson_view_page_set_title (finish_page, _("End"));
 
 	GtkWidget* finish_label = gtk_label_new (NULL);
-	title = g_strdup_printf ("End of\n<b><big>%s</big></b>", lesson_title);
+	title = g_strdup_printf (_("End of\n<b><big>%s</big></b>"), lesson_title);
 	gtk_label_set_markup (GTK_LABEL (finish_label), title);
 	g_free (title);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (finish_page), finish_label);
@@ -403,10 +407,10 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	gpinstruct_lesson_view_append_page (view, finish_page);
 
 	GPInstructLessonViewPage* welcome_page = gpinstruct_lesson_view_page_new ();
-	gpinstruct_lesson_view_page_set_title (welcome_page, lesson_title);
+	gpinstruct_lesson_view_page_set_title (welcome_page, _("Welcome"));
 
 	GtkWidget* welcome_label = gtk_label_new (NULL);
-	title = g_strdup_printf ("Welcome to\n<b><big>%s</big></b>", lesson_title);
+	title = g_strdup_printf (_("Welcome to\n<b><big>%s</big></b>"), lesson_title);
 	gtk_label_set_markup (GTK_LABEL (welcome_label), title);
 	g_free (title);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (welcome_page), welcome_label);
@@ -485,6 +489,11 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 			{
 				GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
+				title = g_strdup_printf ("%s - %s",
+				                         gpinstruct_lesson_element_get_title (curr_element),
+				                         _("Score"));
+				gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (score_page), title);
+				g_free (title);
 			}
 		}
 
@@ -495,6 +504,7 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	{
 		GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
 		gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
+		gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (score_page), _("Score"));
 	}
 
 	g_list_free (lesson_elements);
