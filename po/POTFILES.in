@@ -1,10 +1,12 @@
 # List of source files containing translatable strings.
 
 # GPInstruct Library
+gpinstruct/gpinstruct.c
 gpinstruct/gpinstruct-category.c
 gpinstruct/gpinstruct-lesson.c
 gpinstruct/gpinstruct-lesson-discussion.c
 gpinstruct/gpinstruct-lesson-element.c
+gpinstruct/gpinstruct-lesson-element-group.c
 gpinstruct/gpinstruct-lesson-reading.c
 gpinstruct/gpinstruct-lesson-test.c
 gpinstruct/gpinstruct-lesson-test-multi-choice.c
@@ -13,7 +15,6 @@ gpinstruct/gpinstruct-lesson-test-order.c
 gpinstruct/gpinstruct-lesson-test-order-item.c
 gpinstruct/gpinstruct-lesson-test-word-pool.c
 gpinstruct/gpinstruct-lesson-test-word-pool-question.c
-gpinstruct/gpinstruct-marshalers.c
 gpinstruct/gpinstruct-object.c
 gpinstruct/gpinstruct-parser.c
 gpinstruct/gpinstruct-project.c
@@ -46,6 +47,7 @@ gpinstruct-editor/gpinstruct-editor.c
 gpinstruct-editor/gpinstruct-editor-window.c
 gpinstruct-editor/gpinstruct-lesson-discussion-editor.c
 gpinstruct-editor/gpinstruct-lesson-editor.c
+gpinstruct-editor/gpinstruct-lesson-element-group-editor.c
 gpinstruct-editor/gpinstruct-lesson-reading-editor.c
 gpinstruct-editor/gpinstruct-lesson-test-multi-choice-editor.c
 gpinstruct-editor/gpinstruct-lesson-test-order-editor.c
