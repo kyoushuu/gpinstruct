@@ -373,6 +373,7 @@ gpinstruct_log_save (GPInstructLog* log,
 	                                  BAD_CAST PACKAGE_TARNAME));
 
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
+	xmlSetDocCompressMode (doc, 9);
 	xmlDocSetRootElement (doc, current_node);
 
 	g_list_foreach (log->priv->tests_list, (GFunc)add_test_node, current_node);

@@ -22,6 +22,7 @@
 #include <gpinstruct-editor/gpinstruct-project-editor.h>
 #include <gpinstruct-editor/gpinstruct-category-editor.h>
 #include <gpinstruct-editor/gpinstruct-lesson-editor.h>
+#include <gpinstruct-editor/gpinstruct-lesson-element-group-editor.h>
 #include <gpinstruct-editor/gpinstruct-lesson-discussion-editor.h>
 #include <gpinstruct-editor/gpinstruct-lesson-reading-editor.h>
 #include <gpinstruct-editor/gpinstruct-lesson-test-multi-choice-editor.h>

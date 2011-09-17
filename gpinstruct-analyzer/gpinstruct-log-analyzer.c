@@ -68,9 +68,29 @@ free_test (GPInstructLogAnalyzerTest* test)
 
 
 static void
+free_group (GPInstructLogAnalyzerGroup* group)
+{
+	g_list_free_full (group->tests, (GDestroyNotify)free_test);
+	g_free (group);
+}
+
+
+static void
+free_lesson_element (GPInstructLogAnalyzerLessonElement* element)
+{
+	if (element->is_test)
+		free_test (element->test);
+	else
+		free_group (element->group);
+
+	g_free (element);
+}
+
+
+static void
 free_lesson (GPInstructLogAnalyzerLesson* lesson)
 {
-	g_list_free_full (lesson->tests, (GDestroyNotify)free_test);
+	g_list_free_full (lesson->elements, (GDestroyNotify)free_lesson_element);
 	g_free (lesson);
 }
 
@@ -148,13 +168,17 @@ static GPInstructLogAnalyzerProject*
 create_project_tree (GPInstructLogAnalyzer* analyzer,
                      GPInstructProject* project)
 {
-	GPInstructCategory*			curr_category;
-	GPInstructLesson*			curr_lesson;
-	GPInstructLessonElement*	curr_lesson_element;
-	GPInstructLessonTest*		curr_lesson_test;
+	GPInstructCategory*				curr_category;
+	GPInstructLesson*				curr_lesson;
+	GPInstructLessonElement*		curr_lesson_element;
+	GPInstructLessonElementGroup*	curr_lesson_element_group;
+	GPInstructLessonElement*		curr_lesson_group_element;
+	GPInstructLessonTest*			curr_lesson_test;
 
-	GList *categories, *lessons, *lesson_elements;
-	GList *curr_categories, *curr_lessons, *curr_lesson_elements;
+	GList *categories, *curr_categories;
+	GList *lessons, *curr_lessons;
+	GList *lesson_elements, *curr_lesson_elements;
+	GList *lesson_elements_group, *curr_lesson_elements_group;
 
 	int i, j;
 
@@ -199,12 +223,16 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 				{
 					curr_lesson_test = GPINSTRUCT_LESSON_TEST (curr_lesson_element);
 
+					GPInstructLogAnalyzerLessonElement* aelement = g_new0 (GPInstructLogAnalyzerLessonElement, 1);
+					aelement->is_test = TRUE;
+
+					alesson->elements = g_list_append (alesson->elements, aelement);
+
 					GPInstructLogAnalyzerTest* atest = g_new0 (GPInstructLogAnalyzerTest, 1);
 					atest->object = curr_lesson_test;
 					atest->lesson = alesson;
 					atest->id = g_quark_from_string (gpinstruct_lesson_test_get_id (curr_lesson_test));
-
-					alesson->tests = g_list_append (alesson->tests, atest);
+					aelement->test = atest;
 
 					g_datalist_set_data (&aproject->tests_list,
 					                     gpinstruct_lesson_test_get_id (curr_lesson_test),
@@ -236,6 +264,75 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 					}
 
 					alesson->items_length += atest->items_length;
+				}
+				else if (GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (curr_lesson_element))
+				{
+					curr_lesson_element_group = GPINSTRUCT_LESSON_ELEMENT_GROUP (curr_lesson_element);
+
+					GPInstructLogAnalyzerLessonElement* aelement = g_new0 (GPInstructLogAnalyzerLessonElement, 1);
+					aelement->is_test = FALSE;
+
+					alesson->elements = g_list_append (alesson->elements, aelement);
+
+					GPInstructLogAnalyzerGroup* agroup = g_new0 (GPInstructLogAnalyzerGroup, 1);
+					agroup->object = curr_lesson_element_group;
+					aelement->group = agroup;
+
+					lesson_elements_group = gpinstruct_lesson_element_group_get_lesson_elements (curr_lesson_element_group);
+					curr_lesson_elements_group = lesson_elements_group;
+
+					while (curr_lesson_elements_group)
+					{
+						curr_lesson_group_element = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements_group->data);
+
+						if (GPINSTRUCT_IS_LESSON_TEST (curr_lesson_group_element))
+						{
+							curr_lesson_test = GPINSTRUCT_LESSON_TEST (curr_lesson_group_element);
+
+							GPInstructLogAnalyzerTest* atest = g_new0 (GPInstructLogAnalyzerTest, 1);
+							atest->object = curr_lesson_test;
+							atest->lesson = alesson;
+							atest->group = agroup;
+							atest->id = g_quark_from_string (gpinstruct_lesson_test_get_id (curr_lesson_test));
+
+							agroup->tests = g_list_append (agroup->tests, atest);
+
+							g_datalist_set_data (&aproject->tests_list,
+							                     gpinstruct_lesson_test_get_id (curr_lesson_test),
+							                     atest);
+
+							guint items_num = gpinstruct_lesson_test_get_items_length (curr_lesson_test);
+							atest->items_length = items_num;
+
+							for (i=0; i<items_num; i++)
+							{
+								GPInstructLogAnalyzerItem* aitem = g_new0 (GPInstructLogAnalyzerItem, 1);
+								aitem->id = i;
+								aitem->test = atest;
+								aitem->answer = gpinstruct_lesson_test_get_item_correct_choice (curr_lesson_test, i);
+
+								atest->items = g_list_append (atest->items, aitem);
+
+								guint choices_num = gpinstruct_lesson_test_get_choices_length (curr_lesson_test, i);
+								aitem->choices_length = choices_num;
+
+								for (j=0; j<choices_num; j++)
+								{
+									GPInstructLogAnalyzerChoice* achoice = g_new0 (GPInstructLogAnalyzerChoice, 1);
+									achoice->id = j;
+									achoice->item = aitem;
+
+									aitem->choices = g_list_append (aitem->choices, achoice);
+								}
+							}
+
+							agroup->items_length += atest->items_length;
+						}
+
+						curr_lesson_elements_group = curr_lesson_elements_group->next;
+					}
+
+					alesson->items_length += agroup->items_length;
 				}
 
 				curr_lesson_elements = curr_lesson_elements->next;
@@ -274,7 +371,6 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 
 	if (test->lesson->object != aproject->last_lesson)
 	{
-
 		test->lesson->times_taken += 1;
 		aproject->last_lesson = test->lesson->object;
 
@@ -283,6 +379,12 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 			test->lesson->category->times_taken += 1;
 			aproject->last_category = test->lesson->category->object;
 		}
+	}
+
+	if (test->group != NULL && test->group->object != aproject->last_group)
+	{
+		test->group->times_taken += 1;
+		aproject->last_group = test->group->object;
 	}
 
 	GList* answers = log_test->answers;
@@ -298,6 +400,7 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 
 			item->time_spent += answer->time_spent;
 			test->time_spent += answer->time_spent;
+			if (test->group) test->group->time_spent += answer->time_spent;
 			test->lesson->time_spent += answer->time_spent;
 			test->lesson->category->time_spent += answer->time_spent;
 			test->lesson->category->project->time_spent += answer->time_spent;
@@ -306,6 +409,7 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 			{
 				item->times_correctly_answered += 1;
 				test->items_correctly_answered += 1;
+				if (test->group) test->group->items_correctly_answered += 1;
 				test->lesson->items_correctly_answered += 1;
 				test->lesson->category->items_correctly_answered += 1;
 				test->lesson->category->project->items_correctly_answered += 1;

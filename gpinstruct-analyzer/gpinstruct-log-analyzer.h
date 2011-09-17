@@ -49,6 +49,8 @@ struct _GPInstructLogAnalyzer
 typedef struct _GPInstructLogAnalyzerProject GPInstructLogAnalyzerProject;
 typedef struct _GPInstructLogAnalyzerCategory GPInstructLogAnalyzerCategory;
 typedef struct _GPInstructLogAnalyzerLesson GPInstructLogAnalyzerLesson;
+typedef struct _GPInstructLogAnalyzerLessonElement GPInstructLogAnalyzerLessonElement;
+typedef struct _GPInstructLogAnalyzerGroup GPInstructLogAnalyzerGroup;
 typedef struct _GPInstructLogAnalyzerTest GPInstructLogAnalyzerTest;
 typedef struct _GPInstructLogAnalyzerItem GPInstructLogAnalyzerItem;
 typedef struct _GPInstructLogAnalyzerChoice GPInstructLogAnalyzerChoice;
@@ -63,6 +65,7 @@ struct _GPInstructLogAnalyzerProject
 	GData* tests_list;
 	GPInstructCategory* last_category;
 	GPInstructLesson* last_lesson;
+	GPInstructLessonElementGroup* last_group;
 
 	guint times_taken;
 	gdouble time_spent;
@@ -85,8 +88,28 @@ struct _GPInstructLogAnalyzerCategory
 struct _GPInstructLogAnalyzerLesson
 {
 	GPInstructLogAnalyzerCategory* category;
-	GList* tests; /* GPInstructLogAnalyzerTest */
+	GList* elements; /* GPInstructLogAnalyzerLessonElement */
 	GPInstructLesson* object;
+
+	guint times_taken;
+	gdouble time_spent;
+	guint items_length;
+	guint items_correctly_answered;
+};
+
+struct _GPInstructLogAnalyzerLessonElement
+{
+	GPInstructLogAnalyzerLesson* lesson;
+	gboolean is_test;
+	GPInstructLogAnalyzerTest* test;
+	GPInstructLogAnalyzerGroup* group;
+};
+
+struct _GPInstructLogAnalyzerGroup
+{
+	GPInstructLogAnalyzerLesson* lesson;
+	GList* tests; /* GPInstructLogAnalyzerTest */
+	GPInstructLessonElementGroup* object;
 
 	guint times_taken;
 	gdouble time_spent;
@@ -97,6 +120,7 @@ struct _GPInstructLogAnalyzerLesson
 struct _GPInstructLogAnalyzerTest
 {
 	GPInstructLogAnalyzerLesson* lesson;
+	GPInstructLogAnalyzerGroup* group;
 	GList* items; /* GPInstructLogAnalyzerItem */
 	GQuark id;
 	GPInstructLessonTest* object;

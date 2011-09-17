@@ -364,6 +364,69 @@ parse_reading (xmlNode *node)
 	return reading;
 }
 
+static GPInstructLessonElementGroup*
+parse_group (xmlNode *node)
+{
+	GPInstructLessonElementGroup* group = gpinstruct_lesson_element_group_new ();
+
+	xmlNode *current_node;
+	xmlChar *temp;
+
+	temp = xmlGetProp (node, BAD_CAST "title");
+	if (temp)
+	{
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (group), (gchar*)temp);
+		xmlFree (temp);
+	}
+
+	temp = xmlGetProp (node, BAD_CAST "directions");
+	if (temp)
+	{
+		gpinstruct_lesson_element_group_set_directions (group, (gchar*)temp);
+		xmlFree (temp);
+	}
+
+	temp = xmlGetProp (node, BAD_CAST "single-score");
+	if (temp)
+	{
+		gpinstruct_lesson_element_group_set_single_score (group, GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		xmlFree (temp);
+	}
+
+	temp = xmlGetProp (node, BAD_CAST "single-directions");
+	if (temp)
+	{
+		gpinstruct_lesson_element_group_set_single_directions (group, GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		xmlFree (temp);
+	}
+
+	for (current_node = node->children;
+	     current_node != NULL;
+	     current_node = current_node->next)
+	{
+		if (current_node->type == XML_ELEMENT_NODE)
+		{
+			if (xmlStrEqual (current_node->name, BAD_CAST "test-multi-choice"))
+				gpinstruct_lesson_element_group_add_lesson_element (group,
+				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_multi_choice_test (current_node)));
+			else if (xmlStrEqual (current_node->name, BAD_CAST "test-word-pool"))
+				gpinstruct_lesson_element_group_add_lesson_element (group,
+				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_word_pool_test (current_node)));
+			else if (xmlStrEqual (current_node->name, BAD_CAST "test-order"))
+				gpinstruct_lesson_element_group_add_lesson_element (group,
+				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_order_test (current_node)));
+			else if (xmlStrEqual (current_node->name, BAD_CAST "discussion"))
+				gpinstruct_lesson_element_group_add_lesson_element (group,
+				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_discussion (current_node)));
+			else if (xmlStrEqual (current_node->name, BAD_CAST "reading"))
+				gpinstruct_lesson_element_group_add_lesson_element (group,
+				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_reading (current_node)));
+		}
+	}
+
+	return group;
+}
+
 static GPInstructLesson*
 parse_lesson (xmlNode *node)
 {
@@ -407,6 +470,9 @@ parse_lesson (xmlNode *node)
 			else if (xmlStrEqual (current_node->name, BAD_CAST "reading"))
 				gpinstruct_lesson_add_lesson_element (lesson,
 				                                      GPINSTRUCT_LESSON_ELEMENT (parse_reading (current_node)));
+			else if (xmlStrEqual (current_node->name, BAD_CAST "group"))
+				gpinstruct_lesson_add_lesson_element (lesson,
+				                                      GPINSTRUCT_LESSON_ELEMENT (parse_group (current_node)));
 		}
 	}
 
@@ -678,6 +744,58 @@ add_order_test (GPInstructLessonTestOrder* test,
 }
 
 static xmlNodePtr
+add_group (GPInstructLessonElementGroup* group,
+           xmlNodePtr parent_node)
+{
+	GPInstructLessonElement* curr_lesson_element;
+
+	GList *lesson_elements;
+	GList *curr_lesson_elements;
+
+	xmlNodePtr current_node = xmlNewChild (parent_node, NULL,
+	                                       BAD_CAST "group", NULL);
+	xmlSetProp (current_node, BAD_CAST "title",
+	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (group)));
+	xmlSetProp (current_node, BAD_CAST "single-score",
+	            gpinstruct_lesson_element_group_get_single_score (group)?BAD_CAST "true":BAD_CAST "false");
+	xmlSetProp (current_node, BAD_CAST "single-directions",
+	            gpinstruct_lesson_element_group_get_single_directions (group)?BAD_CAST "true":BAD_CAST "false");
+
+	xmlNewChild (current_node, NULL, BAD_CAST "directions",
+	             BAD_CAST gpinstruct_lesson_element_group_get_directions (group));
+
+	lesson_elements = gpinstruct_lesson_element_group_get_lesson_elements (group);
+	curr_lesson_elements = lesson_elements;
+
+	while (curr_lesson_elements)
+	{
+		curr_lesson_element = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements->data);
+
+		if (GPINSTRUCT_IS_LESSON_DISCUSSION (curr_lesson_element))
+			add_discussion (GPINSTRUCT_LESSON_DISCUSSION (curr_lesson_element),
+			                current_node);
+		else if (GPINSTRUCT_IS_LESSON_READING (curr_lesson_element))
+			add_reading (GPINSTRUCT_LESSON_READING (curr_lesson_element),
+			             current_node);
+		else if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (curr_lesson_element))
+			add_multi_choice_test (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (curr_lesson_element),
+			                       current_node);
+		else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (curr_lesson_element))
+			add_word_pool_test (GPINSTRUCT_LESSON_TEST_WORD_POOL (curr_lesson_element),
+			                    current_node);
+		else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (curr_lesson_element))
+			add_order_test (GPINSTRUCT_LESSON_TEST_ORDER (curr_lesson_element),
+			                current_node);
+
+		curr_lesson_elements = curr_lesson_elements->next;
+	}
+
+	g_list_free (lesson_elements);
+
+	return current_node;
+}
+
+static xmlNodePtr
 add_lesson (GPInstructLesson* lesson,
             xmlNodePtr parent_node)
 {
@@ -715,6 +833,9 @@ add_lesson (GPInstructLesson* lesson,
 		else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (curr_lesson_element))
 			add_order_test (GPINSTRUCT_LESSON_TEST_ORDER (curr_lesson_element),
 			                current_node);
+		else if (GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (curr_lesson_element))
+			add_group (GPINSTRUCT_LESSON_ELEMENT_GROUP (curr_lesson_element),
+			           current_node);
 
 		curr_lesson_elements = curr_lesson_elements->next;
 	}

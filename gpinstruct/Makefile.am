@@ -28,6 +28,8 @@ libgpinstruct_la_SOURCES =  \
 	gpinstruct-lesson-discussion.h \
 	gpinstruct-lesson-element.c \
 	gpinstruct-lesson-element.h \
+	gpinstruct-lesson-element-group.h \
+	gpinstruct-lesson-element-group.c \
 	gpinstruct-lesson-reading.c \
 	gpinstruct-lesson-reading.h \
 	gpinstruct-lesson-test.c \

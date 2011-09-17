@@ -25,6 +25,8 @@ libgpinstruct_editor_la_SOURCES =  \
 	gpinstruct-category-editor.c \
 	gpinstruct-lesson-editor.h \
 	gpinstruct-lesson-editor.c \
+	gpinstruct-lesson-element-group-editor.h \
+	gpinstruct-lesson-element-group-editor.c \
 	gpinstruct-lesson-discussion-editor.h \
 	gpinstruct-lesson-discussion-editor.c \
 	gpinstruct-lesson-reading-editor.h \

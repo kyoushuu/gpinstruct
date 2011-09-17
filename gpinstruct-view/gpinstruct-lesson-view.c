@@ -376,6 +376,8 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 {
 	GPInstructLessonView* view = g_object_new (GPINSTRUCT_TYPE_LESSON_VIEW, NULL);
 
+	GPInstructLessonElementGroup* curr_element_group;
+	GPInstructLessonElement* curr_group_element;
 	GPInstructLessonElement* curr_element;
 	GPInstructLessonDiscussion* curr_discussion;
 	GPInstructLessonReading* curr_reading;
@@ -384,7 +386,7 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	GPInstructLessonTestOrder* curr_test_order;
 	GPInstructLessonScore* curr_score;
 
-	gboolean single_score;
+	gboolean single_score, group_single_score, single_directions;
 
 	view->priv->lesson = g_object_ref (lesson);
 	if (pool)
@@ -495,6 +497,124 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 				gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (score_page), title);
 				g_free (title);
 			}
+		}
+		else if (GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (curr_element))
+		{
+			curr_element_group = GPINSTRUCT_LESSON_ELEMENT_GROUP (curr_element);
+
+			group_single_score = gpinstruct_lesson_element_group_get_single_score (curr_element_group);
+			single_directions = gpinstruct_lesson_element_group_get_single_directions (curr_element_group);
+
+			if (single_directions)
+			{
+				GPInstructLessonDirectionsPage* directions_page =
+					gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_element),
+					                                       gpinstruct_lesson_element_group_get_directions (curr_element_group));
+				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
+			}
+
+			if (!single_score && group_single_score)
+				curr_score = gpinstruct_lesson_score_new ();
+
+			GList* lesson_elements_group = gpinstruct_lesson_element_group_get_lesson_elements (curr_element_group);
+			GList* curr_lesson_elements_group = lesson_elements_group;
+
+			while (curr_lesson_elements_group)
+			{
+				curr_group_element = curr_lesson_elements_group->data;
+
+				if (GPINSTRUCT_IS_LESSON_DISCUSSION (curr_group_element))
+				{
+					curr_discussion = GPINSTRUCT_LESSON_DISCUSSION (curr_group_element);
+
+					GPInstructLessonDiscussionPage* page = gpinstruct_lesson_discussion_page_new (curr_discussion);
+					gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (page));
+				}
+				else if (GPINSTRUCT_IS_LESSON_READING (curr_group_element))
+				{
+					curr_reading = GPINSTRUCT_LESSON_READING (curr_group_element);
+
+					GPInstructLessonReadingPage* page = gpinstruct_lesson_reading_page_new (curr_reading);
+					gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (page));
+				}
+				else if (GPINSTRUCT_IS_LESSON_TEST (curr_group_element))
+				{
+					if (!single_score && !group_single_score)
+						curr_score = gpinstruct_lesson_score_new ();
+
+					if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (curr_group_element))
+					{
+						curr_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (curr_group_element);
+
+						if (!single_directions)
+						{
+							GPInstructLessonDirectionsPage* directions_page =
+								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
+								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
+							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
+						}
+
+						GPInstructLessonTestMultiChoicePage* question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, view->priv->log);
+						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
+					}
+					else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (curr_group_element))
+					{
+						curr_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (curr_group_element);
+
+						if (!single_directions)
+						{
+							GPInstructLessonDirectionsPage* directions_page =
+								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
+								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
+							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
+						}
+
+						GPInstructLessonTestWordPoolPage* question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, view->priv->log);
+						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
+					}
+					else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (curr_group_element))
+					{
+						curr_test_order = GPINSTRUCT_LESSON_TEST_ORDER (curr_group_element);
+
+						if (!single_directions)
+						{
+							GPInstructLessonDirectionsPage* directions_page =
+								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
+								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
+							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
+						}
+
+						GPInstructLessonTestOrderPage* question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, view->priv->log);
+						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
+					}
+
+					if (!single_score && !group_single_score)
+					{
+						GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
+						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
+						title = g_strdup_printf ("%s - %s",
+						                         gpinstruct_lesson_element_get_title (curr_group_element),
+						                         _("Score"));
+						gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (score_page), title);
+						g_free (title);
+					}
+				}
+
+				curr_lesson_elements_group = curr_lesson_elements_group->next;
+			}
+
+			if (!single_score && group_single_score)
+			{
+				GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
+				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
+				title = g_strdup_printf ("%s - %s",
+				                         gpinstruct_lesson_element_get_title (curr_element),
+				                         _("Score"));
+				gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (score_page), title);
+				g_free (title);
+			}
+
+			g_list_free (lesson_elements_group);
 		}
 
 		curr_lesson_elements = curr_lesson_elements->next;

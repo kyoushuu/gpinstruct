@@ -70,6 +70,7 @@ enum
 	STRUCT_TYPE_PROJECT,
 	STRUCT_TYPE_CATEGORY,
 	STRUCT_TYPE_LESSON,
+	STRUCT_TYPE_GROUP,
 	STRUCT_TYPE_TEST
 };
 
@@ -465,7 +466,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
 {
 	GPInstructAnalyzerProjectView* view = g_object_new (GPINSTRUCT_TYPE_ANALYZER_PROJECT_VIEW, NULL);
 
-	GtkTreeIter iterProject, iterCategory, iterLesson;
+	GtkTreeIter iterProject, iterCategory, iterLesson, iterGroup;
 
 	guint min;
 	gdouble sec;
@@ -612,54 +613,152 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
 			g_free (time_text);
 			g_free (ave_time_text);
 
-			GList* tests = lesson->tests;
+			GList* elements = lesson->elements;
 
-			while (tests)
+			while (elements)
 			{
-				GPInstructLogAnalyzerTest* test = (GPInstructLogAnalyzerTest*)tests->data;
+				if (((GPInstructLogAnalyzerLessonElement*)elements->data)->is_test)
+				{
+					GPInstructLogAnalyzerTest* test = ((GPInstructLogAnalyzerLessonElement*)elements->data)->test;
 
-				items = test->items_length;
-				frequency = test->times_taken;
-				score = test->items_correctly_answered;
-				ave_score =  (frequency? score/frequency:0);
-				percentage = (items?(ave_score/items):0) * 100;
-				time_spent = test->time_spent;
-				ave_time_spent = frequency? time_spent/frequency:0;
+					items = test->items_length;
+					frequency = test->times_taken;
+					score = test->items_correctly_answered;
+					ave_score =  (frequency? score/frequency:0);
+					percentage = (items?(ave_score/items):0) * 100;
+					time_spent = test->time_spent;
+					ave_time_spent = frequency? time_spent/frequency:0;
 
-				items_text = g_strdup_printf ("%d", items);
-				frequency_text = g_strdup_printf ("%d", frequency);
-				score_text = g_strdup_printf ("%d", score);
-				ave_score_text = g_strdup_printf ("%.2f", ave_score);
-				percentage_text = g_strdup_printf ("%.2f%%", percentage);
-				min = time_spent / 60;
-				sec = time_spent - (min * 60);
-				time_text = g_strdup_printf ("%dm %.2fs", min, sec);
-				min = ave_time_spent / 60;
-				sec = ave_time_spent - (min * 60);
-				ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
+					items_text = g_strdup_printf ("%d", items);
+					frequency_text = g_strdup_printf ("%d", frequency);
+					score_text = g_strdup_printf ("%d", score);
+					ave_score_text = g_strdup_printf ("%.2f", ave_score);
+					percentage_text = g_strdup_printf ("%.2f%%", percentage);
+					min = time_spent / 60;
+					sec = time_spent - (min * 60);
+					time_text = g_strdup_printf ("%dm %.2fs", min, sec);
+					min = ave_time_spent / 60;
+					sec = ave_time_spent - (min * 60);
+					ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-				gtk_tree_store_insert_with_values (view->priv->project_store, NULL, &iterLesson, -1,
-				                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test->object)),
-				                                   PROJECT_ITEMS_COLUMN, items_text,
-				                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
-				                                   PROJECT_SCORE_COLUMN, score_text,
-				                                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
-				                                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
-				                                   PROJECT_TIME_COLUMN, time_text,
-				                                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
-				                                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_TEST,
-				                                   PROJECT_STRUCT_POINTER_COLUMN, test,
-				                                   -1);
+					gtk_tree_store_insert_with_values (view->priv->project_store, NULL, &iterLesson, -1,
+					                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test->object)),
+					                                   PROJECT_ITEMS_COLUMN, items_text,
+					                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
+					                                   PROJECT_SCORE_COLUMN, score_text,
+					                                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
+					                                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
+					                                   PROJECT_TIME_COLUMN, time_text,
+					                                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
+					                                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_TEST,
+					                                   PROJECT_STRUCT_POINTER_COLUMN, test,
+					                                   -1);
 
-				g_free (items_text);
-				g_free (frequency_text);
-				g_free (score_text);
-				g_free (ave_score_text);
-				g_free (percentage_text);
-				g_free (time_text);
-				g_free (ave_time_text);
+					g_free (items_text);
+					g_free (frequency_text);
+					g_free (score_text);
+					g_free (ave_score_text);
+					g_free (percentage_text);
+					g_free (time_text);
+					g_free (ave_time_text);
+				}
+				else
+				{
+					GPInstructLogAnalyzerGroup* group = ((GPInstructLogAnalyzerLessonElement*)elements->data)->group;
 
-				tests = tests->next;
+					items = group->items_length;
+					frequency = group->times_taken;
+					score = group->items_correctly_answered;
+					ave_score =  (frequency? score/frequency:0);
+					percentage = (items?(ave_score/items):0) * 100;
+					time_spent = group->time_spent;
+					ave_time_spent = frequency? time_spent/frequency:0;
+
+					items_text = g_strdup_printf ("%d", items);
+					frequency_text = g_strdup_printf ("%d", frequency);
+					score_text = g_strdup_printf ("%d", score);
+					ave_score_text = g_strdup_printf ("%.2f", ave_score);
+					percentage_text = g_strdup_printf ("%.2f%%", percentage);
+					min = time_spent / 60;
+					sec = time_spent - (min * 60);
+					time_text = g_strdup_printf ("%dm %.2fs", min, sec);
+					min = ave_time_spent / 60;
+					sec = ave_time_spent - (min * 60);
+					ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
+
+					gtk_tree_store_insert_with_values (view->priv->project_store, &iterGroup, &iterLesson, -1,
+					                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (group->object)),
+					                                   PROJECT_ITEMS_COLUMN, items_text,
+					                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
+					                                   PROJECT_SCORE_COLUMN, score_text,
+					                                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
+					                                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
+					                                   PROJECT_TIME_COLUMN, time_text,
+					                                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
+					                                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_GROUP,
+					                                   PROJECT_STRUCT_POINTER_COLUMN, group,
+					                                   -1);
+
+					g_free (items_text);
+					g_free (frequency_text);
+					g_free (score_text);
+					g_free (ave_score_text);
+					g_free (percentage_text);
+					g_free (time_text);
+					g_free (ave_time_text);
+
+					GList* tests = group->tests;
+
+					while (tests)
+					{
+						GPInstructLogAnalyzerTest* test = (GPInstructLogAnalyzerTest*)tests->data;
+
+						items = test->items_length;
+						frequency = test->times_taken;
+						score = test->items_correctly_answered;
+						ave_score =  (frequency? score/frequency:0);
+						percentage = (items?(ave_score/items):0) * 100;
+						time_spent = test->time_spent;
+						ave_time_spent = frequency? time_spent/frequency:0;
+
+						items_text = g_strdup_printf ("%d", items);
+						frequency_text = g_strdup_printf ("%d", frequency);
+						score_text = g_strdup_printf ("%d", score);
+						ave_score_text = g_strdup_printf ("%.2f", ave_score);
+						percentage_text = g_strdup_printf ("%.2f%%", percentage);
+						min = time_spent / 60;
+						sec = time_spent - (min * 60);
+						time_text = g_strdup_printf ("%dm %.2fs", min, sec);
+						min = ave_time_spent / 60;
+						sec = ave_time_spent - (min * 60);
+						ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
+
+						gtk_tree_store_insert_with_values (view->priv->project_store, NULL, &iterGroup, -1,
+						                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test->object)),
+						                                   PROJECT_ITEMS_COLUMN, items_text,
+						                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
+						                                   PROJECT_SCORE_COLUMN, score_text,
+						                                   PROJECT_AVE_SCORE_COLUMN, ave_score_text,
+						                                   PROJECT_PERCENTAGE_COLUMN, percentage_text,
+						                                   PROJECT_TIME_COLUMN, time_text,
+						                                   PROJECT_AVE_TIME_COLUMN, ave_time_text,
+						                                   PROJECT_STRUCT_TYPE_COLUMN, STRUCT_TYPE_TEST,
+						                                   PROJECT_STRUCT_POINTER_COLUMN, test,
+						                                   -1);
+
+						g_free (items_text);
+						g_free (frequency_text);
+						g_free (score_text);
+						g_free (ave_score_text);
+						g_free (percentage_text);
+						g_free (time_text);
+						g_free (ave_time_text);
+
+						tests = tests->next;
+					}
+				}
+
+				elements = elements->next;
 			}
 
 			lessons = lessons->next;

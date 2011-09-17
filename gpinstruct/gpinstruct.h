@@ -19,6 +19,7 @@
 #include <gpinstruct/gpinstruct-object.h>
 
 #include <gpinstruct/gpinstruct-lesson-element.h>
+#include <gpinstruct/gpinstruct-lesson-element-group.h>
 
 #include <gpinstruct/gpinstruct-lesson-discussion.h>
 #include <gpinstruct/gpinstruct-lesson-reading.h>
