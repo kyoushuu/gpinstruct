@@ -25,7 +25,9 @@ libgpinstruct_analyzer_la_SOURCES =  \
 libgpinstruct_analyzer_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Editor\" \
 	$(AM_CPPFLAGS)
 
-libgpinstruct_analyzer_la_LDFLAGS = -no-undefined
+libgpinstruct_analyzer_la_LDFLAGS = \
+	-no-undefined \
+	-version-info $(LT_VERSION_INFO)
 
 libgpinstruct_analyzer_la_LIBADD = $(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \

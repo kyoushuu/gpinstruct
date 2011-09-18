@@ -61,7 +61,8 @@ libgpinstruct_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct\" \
 	$(AM_CPPFLAGS)
 
 libgpinstruct_la_LDFLAGS = \
-	-no-undefined
+	-no-undefined \
+	-version-info $(LT_VERSION_INFO)
 
 libgpinstruct_la_LIBADD = $(GOBJECT_LIBS) \
 	$(GIO_LIBS) \

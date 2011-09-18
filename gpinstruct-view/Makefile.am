@@ -52,7 +52,8 @@ libgpinstruct_view_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-View\" \
 	$(AM_CPPFLAGS)
 
 libgpinstruct_view_la_LDFLAGS = \
-	-no-undefined
+	-no-undefined \
+	-version-info $(LT_VERSION_INFO)
 
 libgpinstruct_view_la_LIBADD = $(GTK_LIBS) \
 	$(LIBXML_LIBS) \
