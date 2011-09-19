@@ -73,7 +73,7 @@ update_tree_view (GPInstructLessonTestOrderEditor* editor)
 		text = gpinstruct_lesson_test_order_item_get_text (item);
 		gtk_list_store_append (editor->priv->store, &iterItem);
 		gtk_list_store_set (editor->priv->store, &iterItem,
-		                    TITLE_COLUMN, text,
+		                    TITLE_COLUMN, (text != NULL && *text != '\0')? text:_("(Empty Item)"),
 		                    DATA_COLUMN, item,
 		                    -1);
 
@@ -178,18 +178,15 @@ items_add_button_clicked (GtkButton *button,
 
 	GPInstructLessonTestOrderItem* item;
 	GtkTreeIter iter;
-	gchar* title;
 
-	title = _("Empty Item");
 	item = gpinstruct_lesson_test_order_item_new ();
-	gpinstruct_lesson_test_order_item_set_text (item, title);
 	gpinstruct_lesson_test_order_item_set_answer (item,
 	                                              gtk_tree_model_iter_n_children (GTK_TREE_MODEL (editor->priv->store), NULL));
 	gpinstruct_lesson_test_order_add_item (editor->priv->test, item);
 
 	gtk_list_store_append (editor->priv->store, &iter);
 	gtk_list_store_set (editor->priv->store, &iter,
-	                    TITLE_COLUMN, title,
+	                    TITLE_COLUMN, _("(Empty Item)"),
 	                    DATA_COLUMN, item,
 	                    -1);
 

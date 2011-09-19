@@ -73,7 +73,7 @@ update_questions_tree_view (GPInstructLessonTestMultiChoiceEditor* editor)
 		text = gpinstruct_lesson_test_multi_choice_question_get_text (question);
 		gtk_list_store_append (editor->priv->questions_store, &iterQuestion);
 		gtk_list_store_set (editor->priv->questions_store, &iterQuestion,
-		                    TITLE_COLUMN, text,
+		                    TITLE_COLUMN, (text != NULL && *text != '\0')? text:_("(Empty Question)"),
 		                    DATA_COLUMN, question,
 		                    -1);
 
@@ -209,16 +209,13 @@ questions_add_button_clicked (GtkButton *button,
 
 	GPInstructLessonTestMultiChoiceQuestion* question;
 	GtkTreeIter iter;
-	gchar* title;
 
-	title = _("Empty Question");
 	question = gpinstruct_lesson_test_multi_choice_question_new ();
-	gpinstruct_lesson_test_multi_choice_question_set_text (question, title);
 	gpinstruct_lesson_test_multi_choice_add_question (editor->priv->test, question);
 
 	gtk_list_store_append (editor->priv->questions_store, &iter);
 	gtk_list_store_set (editor->priv->questions_store, &iter,
-	                    TITLE_COLUMN, title,
+	                    TITLE_COLUMN, _("(Empty Question)"),
 	                    DATA_COLUMN, question,
 	                    -1);
 
@@ -295,6 +292,7 @@ update_choices_tree_view (GPInstructLessonTestMultiChoiceEditor* editor)
 	gtk_list_store_clear (editor->priv->choices_store);
 
 	GtkTreeIter iterChoice;
+	const gchar* text;
 
 	GPInstructLessonTestMultiChoiceQuestion* question = questions_tree_view_get_current_data (editor);
 
@@ -305,9 +303,11 @@ update_choices_tree_view (GPInstructLessonTestMultiChoiceEditor* editor)
 
 		while (curr_choices)
 		{
+			text = curr_choices->data;
+
 			gtk_list_store_append (editor->priv->choices_store, &iterChoice);
 			gtk_list_store_set (editor->priv->choices_store, &iterChoice,
-			                    TITLE_COLUMN, curr_choices->data,
+			                    TITLE_COLUMN, (text != NULL && *text != '\0')? text:_("(Empty Choice)"),
 			                    DATA_COLUMN, NULL,
 			                    -1);
 
@@ -398,7 +398,6 @@ choices_add_button_clicked (GtkButton *button,
 	GPInstructLessonTestMultiChoiceQuestion* question;
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
-	gchar* title;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->questions_tree_view));
 	if (gtk_tree_selection_get_selected (selection, NULL, &iter))
@@ -407,12 +406,11 @@ choices_add_button_clicked (GtkButton *button,
 		                    DATA_COLUMN, &question,
 		                    -1);
 
-		title = _("Empty Choice");
-		gpinstruct_lesson_test_multi_choice_question_add_choice (question, title);
+		gpinstruct_lesson_test_multi_choice_question_add_choice (question, "");
 
 		gtk_list_store_append (editor->priv->choices_store, &iter);
 		gtk_list_store_set (editor->priv->choices_store, &iter,
-		                    TITLE_COLUMN, title,
+		                    TITLE_COLUMN, _("(Empty Choice)"),
 		                    DATA_COLUMN, NULL,
 		                    -1);
 

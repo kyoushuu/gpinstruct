@@ -73,7 +73,7 @@ update_questions_tree_view (GPInstructLessonTestWordPoolEditor* editor)
 		text = gpinstruct_lesson_test_word_pool_question_get_text (question);
 		gtk_list_store_append (editor->priv->questions_store, &iterQuestion);
 		gtk_list_store_set (editor->priv->questions_store, &iterQuestion,
-		                    TITLE_COLUMN, text,
+		                    TITLE_COLUMN, (text != NULL && *text != '\0')? text:_("(Empty Question)"),
 		                    DATA_COLUMN, question,
 		                    -1);
 
@@ -210,16 +210,13 @@ questions_add_button_clicked (GtkButton *button,
 
 	GPInstructLessonTestWordPoolQuestion* question;
 	GtkTreeIter iter;
-	gchar* title;
 
-	title = _("Empty Question");
 	question = gpinstruct_lesson_test_word_pool_question_new ();
-	gpinstruct_lesson_test_word_pool_question_set_text (question, title);
 	gpinstruct_lesson_test_word_pool_add_question (editor->priv->test, question);
 
 	gtk_list_store_append (editor->priv->questions_store, &iter);
 	gtk_list_store_set (editor->priv->questions_store, &iter,
-	                    TITLE_COLUMN, title,
+	                    TITLE_COLUMN, _("(Empty Question)"),
 	                    DATA_COLUMN, question,
 	                    -1);
 
@@ -276,15 +273,17 @@ update_choices_tree_view (GPInstructLessonTestWordPoolEditor* editor)
 	gtk_list_store_clear (editor->priv->choices_store);
 
 	GtkTreeIter iterChoices;
+	const gchar* text;
 
 	GList* choices = gpinstruct_lesson_test_word_pool_get_choices (editor->priv->test);
 	GList* curr_choices = choices;
 
 	while (curr_choices)
 	{
+		text = curr_choices->data;
 		gtk_list_store_append (editor->priv->choices_store, &iterChoices);
 		gtk_list_store_set (editor->priv->choices_store, &iterChoices,
-		                    TITLE_COLUMN, curr_choices->data,
+		                    TITLE_COLUMN, (text != NULL && *text != '\0')? text:_("(Empty Choice)"),
 		                    DATA_COLUMN, NULL,
 		                    -1);
 
@@ -368,15 +367,13 @@ choices_add_button_clicked (GtkButton *button,
 	GPInstructLessonTestWordPoolEditor* editor = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR (user_data);
 
 	GtkTreeIter iter;
-	gchar* title;
 
-	title = _("Empty Choice");
-	gpinstruct_lesson_test_word_pool_add_choice (editor->priv->test, title);
+	gpinstruct_lesson_test_word_pool_add_choice (editor->priv->test, "");
 
 	gtk_list_store_append (editor->priv->choices_store, &iter);
 	gtk_list_store_set (editor->priv->choices_store, &iter,
-	                    TITLE_COLUMN, title,
-	                    DATA_COLUMN, title,
+	                    TITLE_COLUMN, _("(Empty Choice)"),
+	                    DATA_COLUMN, NULL,
 	                    -1);
 
 	gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (editor->priv->choices_tree_view)),
