@@ -318,6 +318,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	gtk_box_pack_start (GTK_BOX (items_hbox), tree_view_scrolled_window, TRUE, TRUE, 0);
 
 	object->priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->store));
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (object->priv->tree_view), TRUE);
 	gtk_widget_set_events (object->priv->tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 	g_signal_connect (object->priv->tree_view, "row-activated", G_CALLBACK (tree_view_row_activated), object);
 	gtk_container_add (GTK_CONTAINER (tree_view_scrolled_window), object->priv->tree_view);

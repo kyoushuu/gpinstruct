@@ -488,6 +488,7 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_tree_view_scrolled_window, TRUE, TRUE, 0);
 
 	object->priv->questions_tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->questions_store));
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (object->priv->questions_tree_view), TRUE);
 	gtk_widget_set_events (object->priv->questions_tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 	g_signal_connect (object->priv->questions_tree_view, "row-activated", G_CALLBACK (questions_tree_view_row_activated), object);
 	gtk_container_add (GTK_CONTAINER (questions_tree_view_scrolled_window), object->priv->questions_tree_view);
@@ -522,6 +523,7 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	gtk_box_pack_start (GTK_BOX (choices_hbox), choices_tree_view_scrolled_window, TRUE, TRUE, 0);
 
 	object->priv->choices_tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->choices_store));
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (object->priv->choices_tree_view), TRUE);
 	gtk_widget_set_events (object->priv->choices_tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 	g_signal_connect (object->priv->choices_tree_view, "row-activated", G_CALLBACK (choices_tree_view_row_activated), object);
 	gtk_container_add (GTK_CONTAINER (choices_tree_view_scrolled_window), object->priv->choices_tree_view);
