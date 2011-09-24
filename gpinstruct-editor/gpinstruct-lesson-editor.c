@@ -20,6 +20,9 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
+#if GTK_MAJOR_VERSION < 3
+#include "gtk-switch.h"
+#endif
 
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-editor/gpinstruct-editor.h"
@@ -63,12 +66,7 @@ gpinstruct_lesson_editor_init (GPInstructLessonEditor *object)
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-#if GTK_MAJOR_VERSION >= 3
 	object->priv->singlescore_switch = gtk_switch_new ();
-#else
-	object->priv->singlescore_switch = gtk_toggle_button_new_with_label (GTK_STOCK_NO);
-	gtk_button_set_use_stock (GTK_BUTTON (object->priv->singlescore_switch), TRUE);
-#endif
 	gtk_table_attach (GTK_TABLE (object), object->priv->singlescore_switch,
 	                  1, 2, 1, 2,
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
@@ -105,25 +103,14 @@ title_entry_activate (GtkEntry *entry,
 	gpinstruct_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->lesson);
 }
 
-#if GTK_MAJOR_VERSION >= 3
 static void
 singlescore_activate (GObject    *gobject,
                       GParamSpec *pspec,
                       gpointer    user_data)
-#else
-static void
-singlescore_activate (GtkToggleButton *togglebutton,
-                      gpointer         user_data)
-#endif
 {
 	GPInstructLessonEditor* editor = GPINSTRUCT_LESSON_EDITOR (user_data);
 
-#if GTK_MAJOR_VERSION >= 3
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->singlescore_switch));
-#else
-	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (editor->priv->singlescore_switch));
-	gtk_button_set_label (GTK_BUTTON (editor->priv->singlescore_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
-#endif
 
 	if (active != gpinstruct_lesson_get_single_score (editor->priv->lesson))
 	{
@@ -148,17 +135,10 @@ gpinstruct_lesson_editor_new (GPInstructEditorWindow* window,
 	g_signal_connect (editor->priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
-#if GTK_MAJOR_VERSION >= 3
 	gtk_switch_set_active (GTK_SWITCH (editor->priv->singlescore_switch),
 	                       gpinstruct_lesson_get_single_score (lesson));
 	g_signal_connect (editor->priv->singlescore_switch, "notify::active",
 	                  G_CALLBACK (singlescore_activate), editor);
-#else
-	g_signal_connect (editor->priv->singlescore_switch, "toggled",
-	                  G_CALLBACK (singlescore_activate), editor);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (editor->priv->singlescore_switch),
-	                              gpinstruct_lesson_get_single_score (lesson));
-#endif
 
 	return editor;
 }

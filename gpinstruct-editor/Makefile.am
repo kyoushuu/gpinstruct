@@ -38,7 +38,9 @@ libgpinstruct_editor_la_SOURCES =  \
 	gpinstruct-lesson-test-order-editor.h \
 	gpinstruct-lesson-test-order-editor.c \
 	gpinstruct-editor-window.h \
-	gpinstruct-editor-window.c
+	gpinstruct-editor-window.c \
+	gtk-switch.h \
+	gtk-switch.c
 
 libgpinstruct_editor_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Editor\" \
 	$(AM_CPPFLAGS)

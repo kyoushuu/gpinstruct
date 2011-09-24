@@ -20,6 +20,9 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
+#if GTK_MAJOR_VERSION < 3
+#include "gtk-switch.h"
+#endif
 
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-editor/gpinstruct-editor.h"
@@ -67,12 +70,7 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-#if GTK_MAJOR_VERSION >= 3
 	object->priv->single_score_switch = gtk_switch_new ();
-#else
-	object->priv->single_score_switch = gtk_toggle_button_new_with_label (GTK_STOCK_NO);
-	gtk_button_set_use_stock (GTK_BUTTON (object->priv->single_score_switch), TRUE);
-#endif
 	gtk_table_attach (GTK_TABLE (object), object->priv->single_score_switch,
 	                  1, 2, 1, 2,
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
@@ -83,12 +81,7 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	                  0, 1, 2, 3,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-#if GTK_MAJOR_VERSION >= 3
 	object->priv->single_directions_switch = gtk_switch_new ();
-#else
-	object->priv->single_directions_switch = gtk_toggle_button_new_with_label (GTK_STOCK_NO);
-	gtk_button_set_use_stock (GTK_BUTTON (object->priv->single_directions_switch), TRUE);
-#endif
 	gtk_table_attach (GTK_TABLE (object), object->priv->single_directions_switch,
 	                  1, 2, 2, 3,
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
@@ -141,25 +134,14 @@ title_entry_activate (GtkEntry *entry,
 	gpinstruct_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->group);
 }
 
-#if GTK_MAJOR_VERSION >= 3
 static void
 single_score_activate (GObject    *gobject,
                        GParamSpec *pspec,
                        gpointer    user_data)
-#else
-static void
-single_score_activate (GtkToggleButton *togglebutton,
-                       gpointer         user_data)
-#endif
 {
 	GPInstructLessonElementGroupEditor* editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
 
-#if GTK_MAJOR_VERSION >= 3
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->single_score_switch));
-#else
-	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (editor->priv->single_score_switch));
-	gtk_button_set_label (GTK_BUTTON (editor->priv->single_score_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
-#endif
 
 	if (active != gpinstruct_lesson_element_group_get_single_score (editor->priv->group))
 	{
@@ -169,25 +151,14 @@ single_score_activate (GtkToggleButton *togglebutton,
 	}
 }
 
-#if GTK_MAJOR_VERSION >= 3
 static void
 single_directions_activate (GObject    *gobject,
                             GParamSpec *pspec,
                             gpointer    user_data)
-#else
-static void
-single_directions_activate (GtkToggleButton *togglebutton,
-                            gpointer         user_data)
-#endif
 {
 	GPInstructLessonElementGroupEditor* editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
 
-#if GTK_MAJOR_VERSION >= 3
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->single_directions_switch));
-#else
-	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (editor->priv->single_directions_switch));
-	gtk_button_set_label (GTK_BUTTON (editor->priv->single_directions_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
-#endif
 
 	if (active != gpinstruct_lesson_element_group_get_single_directions (editor->priv->group))
 	{
@@ -224,29 +195,15 @@ gpinstruct_lesson_element_group_editor_new (GPInstructEditorWindow* window,
 	editor->priv->window = window;
 	editor->priv->group = group;
 
-#if GTK_MAJOR_VERSION >= 3
 	gtk_switch_set_active (GTK_SWITCH (editor->priv->single_score_switch),
 	                       gpinstruct_lesson_element_group_get_single_score (group));
 	g_signal_connect (editor->priv->single_score_switch, "notify::active",
 	                  G_CALLBACK (single_score_activate), editor);
-#else
-	g_signal_connect (editor->priv->single_score_switch, "toggled",
-	                  G_CALLBACK (single_score_activate), editor);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (editor->priv->single_score_switch),
-	                              gpinstruct_lesson_element_group_get_single_score (group));
-#endif
 
-#if GTK_MAJOR_VERSION >= 3
 	gtk_switch_set_active (GTK_SWITCH (editor->priv->single_directions_switch),
 	                       gpinstruct_lesson_element_group_get_single_directions (group));
 	g_signal_connect (editor->priv->single_directions_switch, "notify::active",
 	                  G_CALLBACK (single_directions_activate), editor);
-#else
-	g_signal_connect (editor->priv->single_directions_switch, "toggled",
-	                  G_CALLBACK (single_directions_activate), editor);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (editor->priv->single_directions_switch),
-	                              gpinstruct_lesson_element_group_get_single_directions (group));
-#endif
 
 	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
 	                    gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (group)));

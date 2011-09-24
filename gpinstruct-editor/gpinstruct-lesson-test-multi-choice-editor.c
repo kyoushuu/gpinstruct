@@ -20,6 +20,9 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
+#if GTK_MAJOR_VERSION < 3
+#include "gtk-switch.h"
+#endif
 
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-editor/gpinstruct-editor.h"
@@ -521,12 +524,7 @@ gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoice
 	                  0, 1, 2, 3,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-#if GTK_MAJOR_VERSION >= 3
 	object->priv->explain_switch = gtk_switch_new ();
-#else
-	object->priv->explain_switch = gtk_toggle_button_new_with_label (GTK_STOCK_NO);
-	gtk_button_set_use_stock (GTK_BUTTON (object->priv->explain_switch), TRUE);
-#endif
 	gtk_table_attach (GTK_TABLE (object), object->priv->explain_switch,
 	                  1, 2, 2, 3,
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
@@ -658,25 +656,14 @@ directions_buffer_changed (GtkTextBuffer *textbuffer,
 	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
-#if GTK_MAJOR_VERSION >= 3
 static void
 explain_activate (GObject    *gobject,
                   GParamSpec *pspec,
                   gpointer    user_data)
-#else
-static void
-explain_activate (GtkToggleButton *togglebutton,
-                  gpointer         user_data)
-#endif
 {
 	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
-#if GTK_MAJOR_VERSION >= 3
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->explain_switch));
-#else
-	gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (editor->priv->explain_switch));
-	gtk_button_set_label (GTK_BUTTON (editor->priv->explain_switch), active? GTK_STOCK_YES:GTK_STOCK_NO);
-#endif
 
 	if (active != gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (editor->priv->test)))
 	{
@@ -707,17 +694,10 @@ gpinstruct_lesson_test_multi_choice_editor_new (GPInstructEditorWindow* window,
 	g_signal_connect (buffer, "changed",
 	                  G_CALLBACK (directions_buffer_changed), editor);
 
-#if GTK_MAJOR_VERSION >= 3
 	gtk_switch_set_active (GTK_SWITCH (editor->priv->explain_switch),
 	                       gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test)));
 	g_signal_connect (editor->priv->explain_switch, "notify::active",
 	                  G_CALLBACK (explain_activate), editor);
-#else
-	g_signal_connect (editor->priv->explain_switch, "toggled",
-	                  G_CALLBACK (explain_activate), editor);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (editor->priv->explain_switch),
-	                              gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test)));
-#endif
 
 	update_questions_tree_view (editor);
 
