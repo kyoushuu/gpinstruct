@@ -21,6 +21,8 @@
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-view/gpinstruct-view.h"
 
+#include "compat/compat-glib.h"
+
 #define GPINSTRUCT_MESSAGE_TYPE_SIZE GPINSTRUCT_MESSAGE_TYPE_FAIL+1
 
 

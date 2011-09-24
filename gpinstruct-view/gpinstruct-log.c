@@ -27,6 +27,8 @@
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-view/gpinstruct-view.h"
 
+#include "compat/compat-glib.h"
+
 struct _GPInstructLogPrivate
 {
 	GList* tests_list;

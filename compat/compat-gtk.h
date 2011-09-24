@@ -16,15 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gpinstruct-editor/gpinstruct-editor-window.h>
+#if GTK_MAJOR_VERSION < 3
+#include "gtk-switch.h"
+#include "gtk-tree-model-iter-previous.h"
+#endif
 
-#include <gpinstruct-editor/gpinstruct-object-editor.h>
-#include <gpinstruct-editor/gpinstruct-project-editor.h>
-#include <gpinstruct-editor/gpinstruct-category-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-element-group-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-discussion-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-reading-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-test-multi-choice-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-test-word-pool-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-test-order-editor.h>
+#ifdef __GDK_KEYSYMS_H__
+#ifndef GDK_KEY_Menu
+#define GDK_KEY_Menu GDK_Menu
+#endif
+#ifndef GDK_KEY_Left
+#define GDK_KEY_Left GDK_Left
+#endif
+#ifndef GDK_KEY_Right
+#define GDK_KEY_Right GDK_Right
+#endif
+#endif

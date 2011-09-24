@@ -16,15 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gpinstruct-editor/gpinstruct-editor-window.h>
-
-#include <gpinstruct-editor/gpinstruct-object-editor.h>
-#include <gpinstruct-editor/gpinstruct-project-editor.h>
-#include <gpinstruct-editor/gpinstruct-category-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-element-group-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-discussion-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-reading-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-test-multi-choice-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-test-word-pool-editor.h>
-#include <gpinstruct-editor/gpinstruct-lesson-test-order-editor.h>
+#if GTK_MAJOR_VERSION < 3
+gboolean gtk_tree_model_iter_previous (GtkTreeModel *tree_model, GtkTreeIter  *iter);
+#endif

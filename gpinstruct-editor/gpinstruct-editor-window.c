@@ -21,19 +21,12 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#ifndef GDK_KEY_Menu
-#define GDK_KEY_Menu GDK_Menu
-#endif
-#ifndef GDK_KEY_Left
-#define GDK_KEY_Left GDK_Left
-#endif
-#ifndef GDK_KEY_Right
-#define GDK_KEY_Right GDK_Right
-#endif
 
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-editor/gpinstruct-editor.h"
 #include "gpinstruct-view/gpinstruct-view.h"
+
+#include "compat/compat-gtk.h"
 
 struct _GPInstructEditorWindowPrivate
 {

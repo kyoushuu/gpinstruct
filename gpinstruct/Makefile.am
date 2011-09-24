@@ -67,5 +67,6 @@ libgpinstruct_la_LDFLAGS = \
 libgpinstruct_la_LIBADD = $(GOBJECT_LIBS) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
-	$(LIBXML_LIBS)
+	$(LIBXML_LIBS) \
+	$(top_builddir)/compat/libcompat-glib.la
 

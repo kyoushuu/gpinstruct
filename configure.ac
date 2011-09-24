@@ -106,6 +106,7 @@ PKG_CHECK_MODULES(GTK,gtk+-3.0,,[PKG_CHECK_MODULES(GTK,gtk+-2.0)])
 
 AC_OUTPUT([
 Makefile
+compat/Makefile
 gpinstruct/Makefile
 gpinstruct-view/Makefile
 gpinstruct-editor/Makefile

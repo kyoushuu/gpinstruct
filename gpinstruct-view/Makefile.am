@@ -57,7 +57,9 @@ libgpinstruct_view_la_LDFLAGS = \
 
 libgpinstruct_view_la_LIBADD = $(GTK_LIBS) \
 	$(LIBXML_LIBS) \
-	$(top_builddir)/gpinstruct/libgpinstruct.la
+	$(top_builddir)/gpinstruct/libgpinstruct.la \
+	$(top_builddir)/compat/libcompat-glib.la \
+	$(top_builddir)/compat/libcompat-gtk.la
 
 bin_PROGRAMS = gpinstruct-view
 

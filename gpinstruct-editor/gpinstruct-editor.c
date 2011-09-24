@@ -18,6 +18,7 @@
  */
 
 #include <gtk/gtk.h>
+#include "gpinstruct-editor-private.h"
 
 #if (GTK_MAJOR_VERSION < 3)
 static gboolean

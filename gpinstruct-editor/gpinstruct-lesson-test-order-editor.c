@@ -20,12 +20,11 @@
 #include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
-#if GTK_MAJOR_VERSION < 3
-#include "gtk-switch.h"
-#endif
 
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-editor/gpinstruct-editor.h"
+
+#include "compat/compat-gtk.h"
 
 struct _GPInstructLessonTestOrderEditorPrivate
 {

@@ -21,19 +21,13 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#ifndef GDK_KEY_Menu
-#define GDK_KEY_Menu GDK_Menu
-#endif
-#ifndef GDK_KEY_Left
-#define GDK_KEY_Left GDK_Left
-#endif
-#ifndef GDK_KEY_Right
-#define GDK_KEY_Right GDK_Right
-#endif
 
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-view/gpinstruct-view.h"
 #include "gpinstruct-analyzer/gpinstruct-analyzer.h"
+
+#include "compat/compat-glib.h"
+#include "compat/compat-gtk.h"
 
 struct _GPInstructAnalyzerWindowPrivate
 {
@@ -142,8 +136,7 @@ file_add_action (GtkAction *action,
 			current_log_files = current_log_files->next;
 		}
 
-		g_slist_foreach (log_files, (GFunc)g_free, NULL);
-		g_slist_free (log_files);
+		g_slist_free_full (log_files, (GDestroyNotify)g_free);
 	}
 	else
 	{

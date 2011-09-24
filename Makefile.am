@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 ## Created by Anjuta
 
-SUBDIRS = gpinstruct gpinstruct-view gpinstruct-editor gpinstruct-analyzer po
+SUBDIRS = compat gpinstruct gpinstruct-view gpinstruct-editor gpinstruct-analyzer po
 
 dist_doc_DATA = \
 	README\

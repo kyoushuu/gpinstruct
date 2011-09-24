@@ -16,7 +16,6 @@ lib_LTLIBRARIES =  \
 
 libgpinstruct_editor_la_SOURCES =  \
 	gpinstruct-editor.h \
-	gpinstruct-editor.c \
 	gpinstruct-object-editor.h \
 	gpinstruct-object-editor.c \
 	gpinstruct-project-editor.h \
@@ -38,9 +37,7 @@ libgpinstruct_editor_la_SOURCES =  \
 	gpinstruct-lesson-test-order-editor.h \
 	gpinstruct-lesson-test-order-editor.c \
 	gpinstruct-editor-window.h \
-	gpinstruct-editor-window.c \
-	gtk-switch.h \
-	gtk-switch.c
+	gpinstruct-editor-window.c
 
 libgpinstruct_editor_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Editor\" \
 	$(AM_CPPFLAGS)
@@ -51,7 +48,8 @@ libgpinstruct_editor_la_LDFLAGS = \
 
 libgpinstruct_editor_la_LIBADD = $(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
-	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la
+	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
+	$(top_builddir)/compat/libcompat-gtk.la
 
 bin_PROGRAMS = gpinstruct-editor
 
