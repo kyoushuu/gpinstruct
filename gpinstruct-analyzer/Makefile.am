@@ -2,6 +2,7 @@
 
 
 AM_CPPFLAGS = \
+	-DPACKAGE_PREFIX=\""$(prefix)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
