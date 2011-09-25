@@ -304,6 +304,8 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), main_menu, FALSE, TRUE, 0);
 
 	GtkWidget* toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
+	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
+	                             "primary-toolbar");
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), toolbar, FALSE, TRUE, 0);
 
 	GtkWidget* view_hbox = gtk_hbox_new (FALSE, 3);
