@@ -5,7 +5,7 @@ AM_CPPFLAGS = \
 	-DPACKAGE_PREFIX=\""$(prefix)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
 	-I$(top_srcdir) \
 	$(GTK_CFLAGS)
 
