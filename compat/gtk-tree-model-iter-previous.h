@@ -16,6 +16,4 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if GTK_MAJOR_VERSION < 3
 gboolean gtk_tree_model_iter_previous (GtkTreeModel *tree_model, GtkTreeIter  *iter);
-#endif

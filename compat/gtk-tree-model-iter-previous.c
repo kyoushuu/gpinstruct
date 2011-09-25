@@ -1,6 +1,5 @@
 /*
- * gpinstruct-editor.c
- *
+ * GPInstruct - Programmed Instruction
  * Copyright (C) 2011 - Arnel A. Borja (kyoushuu@yahoo.com)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,7 +17,8 @@
  */
 
 #include <gtk/gtk.h>
-#include "gpinstruct-editor-private.h"
+
+#include "gtk-tree-model-iter-previous.h"
 
 #if (GTK_MAJOR_VERSION < 3)
 static gboolean
