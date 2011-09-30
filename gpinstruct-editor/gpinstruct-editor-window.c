@@ -860,7 +860,7 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 	gtk_window_set_title (GTK_WINDOW (object), _("GPInstruct Editor"));
 	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
 
-	object->priv->main_vbox = gtk_vbox_new (FALSE, 3);
+	object->priv->main_vbox = gtk_vbox_new (FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (object), object->priv->main_vbox);
 
 
