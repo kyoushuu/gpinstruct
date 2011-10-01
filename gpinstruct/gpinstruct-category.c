@@ -69,7 +69,7 @@ gpinstruct_category_class_init (GPInstructCategoryClass *klass)
 GPInstructCategory*
 gpinstruct_category_new (void)
 {
-	return g_object_new(GPINSTRUCT_TYPE_CATEGORY, NULL);
+	return g_object_new (GPINSTRUCT_TYPE_CATEGORY, NULL);
 }
 
 const gchar*

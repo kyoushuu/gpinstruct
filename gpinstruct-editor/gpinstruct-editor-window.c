@@ -1042,7 +1042,7 @@ gpinstruct_editor_window_class_init (GPInstructEditorWindowClass *klass)
 GtkWidget*
 gpinstruct_editor_window_new (void)
 {
-	return g_object_new(GPINSTRUCT_TYPE_EDITOR_WINDOW, NULL);
+	return GTK_WIDGET (g_object_new (GPINSTRUCT_TYPE_EDITOR_WINDOW, NULL));
 }
 
 const gchar*

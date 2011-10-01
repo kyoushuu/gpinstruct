@@ -371,7 +371,7 @@ gpinstruct_analyzer_window_class_init (GPInstructAnalyzerWindowClass *klass)
 GtkWidget*
 gpinstruct_analyzer_window_new (void)
 {
-	return g_object_new (GPINSTRUCT_TYPE_ANALYZER_WINDOW, NULL);
+	return GTK_WIDGET (g_object_new (GPINSTRUCT_TYPE_ANALYZER_WINDOW, NULL));
 }
 
 void

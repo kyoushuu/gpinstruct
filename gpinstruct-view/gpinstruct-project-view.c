@@ -205,5 +205,5 @@ gpinstruct_project_view_new (GPInstructProject* project,
 
 	g_list_free (categories);
 
-	return (GtkWidget*)view;
+	return GTK_WIDGET (view);
 }

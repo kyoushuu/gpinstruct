@@ -937,7 +937,7 @@ gpinstruct_parser_class_init (GPInstructParserClass *klass)
 GPInstructParser*
 gpinstruct_parser_new (void)
 {
-	GPInstructParser* parser = g_object_new(GPINSTRUCT_TYPE_PARSER, NULL);
+	GPInstructParser* parser = g_object_new (GPINSTRUCT_TYPE_PARSER, NULL);
 	return parser;
 }
 

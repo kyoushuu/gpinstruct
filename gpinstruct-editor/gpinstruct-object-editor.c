@@ -52,5 +52,5 @@ gpinstruct_object_editor_class_init (GPInstructObjectEditorClass *klass)
 GPInstructObjectEditor*
 gpinstruct_object_editor_new (void)
 {
-	return g_object_new(GPINSTRUCT_TYPE_OBJECT_EDITOR, NULL);
+	return g_object_new (GPINSTRUCT_TYPE_OBJECT_EDITOR, NULL);
 }
