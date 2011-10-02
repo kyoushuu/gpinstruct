@@ -1,0 +1,60 @@
+                               GPInstruct
+                         Programmed Instruction
+
+ Copyright (C) 2011  Arnel A. Borja <kyoushuu@yahoo.com>
+ This program is free software: you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the
+ Free Software Foundation, either version 3 of the License, or (at your
+ option) any later version.
+
+
+                          General Information
+
+  GPInstruct is a software for Programmed Instruction; you may create a
+set of lessons with questions then your users may view them and answer
+the questions.  You may then get the results which contains the total
+number of correct responses, number of times a question is answered,
+time spent on each questions, etc.
+
+  A "program" in Programmed Instruction is called a "project" in
+GPInstruct.  Projects are divided into categories, then divided further
+into lessons.  Each lesson may contain discussions, readings (texts) and
+tests.  Test types available are multiple choice, word pool and
+ordering.
+
+  GPInstruct contains three programs: Viewer, Editor and Analyzer.  The
+Viewer is for viewing and answering projects in wizard/assistant
+dialogs; the Editor is for editing projects; and the Analyzer is for
+viewing the results obtained from tests.
+
+  GPInstruct is a free and open source software under the General Public
+License version 3.  Check the "License" section below for more
+information. See the file 'COPYING' for license terms and conditions.
+
+  The official web site is <http://gpinstruct.sourceforge.net/>.
+
+
+                              Installation
+
+  GPInstruct's dependencies are GTK+ (2.18+ or 3.0+) and LibXML2.
+
+  GPInstruct is tested to work for Linux and Microsoft Windows operating
+systems.
+
+  See the file 'INSTALL' for compiling instructions.
+
+
+                                License
+
+  This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
