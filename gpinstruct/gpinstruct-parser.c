@@ -942,13 +942,8 @@ gpinstruct_parser_new (void)
 }
 
 GPInstructProject*
-gpinstruct_parser_open (GPInstructParser* parser,
-                        const gchar* file,
-                        GError** error)
+create_project_from_xml_document (xmlDocPtr doc)
 {
-	GPInstructProject* curr_project = NULL;
-
-	xmlDocPtr doc = xmlParseFile (file);
 	xmlNode *current_node;
 
 	if (doc)
@@ -958,19 +953,62 @@ gpinstruct_parser_open (GPInstructParser* parser,
 		if (current_node &&
 		    current_node->name &&
 		    xmlStrEqual (current_node->name, BAD_CAST "project"))
-		{
-			curr_project = parse_project (current_node);
-		}
-		else
-		{
-			g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
-			             _("Failed to parse file."));
-			return NULL;
-		}
-
-		xmlFreeDoc (doc);
+			return parse_project (current_node);
 	}
-	else
+
+	return NULL;
+}
+
+xmlDocPtr
+create_xml_document_from_project (GPInstructProject* project)
+{
+	xmlNodePtr current_node = add_project (project);
+
+	if (!current_node)
+		return NULL;
+
+	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
+	xmlDocSetRootElement (doc, current_node);
+	return doc;
+}
+
+GPInstructProject*
+gpinstruct_parser_load_from_file (GPInstructParser* parser,
+                                  const gchar* file,
+                                  GError** error)
+{
+	GPInstructProject* curr_project;
+
+	xmlDocPtr doc = xmlParseFile (file);
+
+	curr_project = create_project_from_xml_document (doc);
+
+	xmlFreeDoc (doc);
+
+	if (!curr_project)
+	{
+		g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
+		             _("Failed to parse file."));
+		return NULL;
+	}
+
+	return curr_project;
+}
+
+GPInstructProject*
+gpinstruct_parser_load_from_string (GPInstructParser* parser,
+                                    const gchar* contents,
+                                    GError** error)
+{
+	GPInstructProject* curr_project;
+
+	xmlDocPtr doc = xmlParseDoc (BAD_CAST contents);
+
+	curr_project = create_project_from_xml_document (doc);
+
+	xmlFreeDoc (doc);
+
+	if (!curr_project)
 	{
 		g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
 		             _("Failed to parse file."));
@@ -981,18 +1019,51 @@ gpinstruct_parser_open (GPInstructParser* parser,
 }
 
 void
-gpinstruct_parser_save (GPInstructParser* parser,
-                        GPInstructProject* project,
-                        const gchar* file,
-                        GError** error)
+gpinstruct_parser_save_to_file (GPInstructParser* parser,
+                                GPInstructProject* project,
+                                const gchar* file,
+                                GError** error)
 {
-	xmlNodePtr current_node = add_project (project);
+	xmlDocPtr doc = create_xml_document_from_project (project);
 
-	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
-	xmlSetDocCompressMode (doc, 9);
-	xmlDocSetRootElement (doc, current_node);
+	if (!doc)
+	{
+		g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
+		             _("Failed to create an XML document from project."));
+		return;
+	}
 
 	xmlIndentTreeOutput = 1;
-	xmlSaveFormatFileEnc(file, doc, "UTF-8", 1);
-	xmlFreeDoc(doc);
+	xmlTreeIndentString = "\t";
+	xmlSetDocCompressMode (doc, 9);
+	xmlSaveFormatFileEnc (file, doc, "UTF-8", 1);
+	xmlFreeDoc (doc);
+}
+
+gchar*
+gpinstruct_parser_save_to_string (GPInstructParser* parser,
+                                  GPInstructProject* project,
+                                  GError** error)
+{
+	xmlChar* buffer;
+	gchar* contents;
+
+	xmlDocPtr doc = create_xml_document_from_project (project);
+
+	if (!doc)
+	{
+		g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
+		             _("Failed to create an XML document from project."));
+		return NULL;
+	}
+
+	xmlIndentTreeOutput = 1;
+	xmlTreeIndentString = "\t";
+	xmlDocDumpFormatMemoryEnc (doc, &buffer, NULL, "UTF-8", 1);
+	contents = g_strdup ((char*) buffer);
+	xmlFree (buffer);
+
+	xmlFreeDoc (doc);
+
+	return contents;
 }

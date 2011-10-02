@@ -80,7 +80,7 @@ main (int argc,
 		gtk_widget_destroy (dialog);
 	}
 
-	GPInstructProject* project = gpinstruct_parser_open (parser, project_file, &error);
+	GPInstructProject* project = gpinstruct_parser_load_from_file (parser, project_file, &error);
 	if (error)
 	{
 		printf(_("Error: %s\n"), error->message);
@@ -187,7 +187,7 @@ main (int argc,
 
 			gtk_main ();
 
-			gpinstruct_log_save (log, log_file, NULL);
+			gpinstruct_log_save_to_file (log, log_file, NULL);
 
 			g_free (log_file);
 

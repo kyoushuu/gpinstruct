@@ -73,12 +73,15 @@ void gpinstruct_log_close_test (GPInstructLog* log);
 void gpinstruct_log_timer_start (GPInstructLog* log);
 void gpinstruct_log_timer_stop (GPInstructLog* log);
 GList* gpinstruct_log_get_tests (GPInstructLog* log);
-gboolean gpinstruct_log_open (GPInstructLog* log, const gchar* file, GError** error);
-void gpinstruct_log_save (GPInstructLog* log, const gchar* file, GError** error);
+gboolean gpinstruct_log_load_from_file (GPInstructLog* log, const gchar* file, GError** error);
+gboolean gpinstruct_log_load_from_string (GPInstructLog* log, const gchar* contents, GError** error);
+void gpinstruct_log_save_to_file (GPInstructLog* log, const gchar* file, GError** error);
+gchar* gpinstruct_log_save_to_string (GPInstructLog* log, GError** error);
 
 typedef enum
 {
   GPINSTRUCT_LOG_ERROR_PARSE,
+  GPINSTRUCT_LOG_ERROR_INVALID,
   GPINSTRUCT_LOG_ERROR_UNKNOWN_ELEMENT,
   GPINSTRUCT_LOG_ERROR_UNKNOWN_ATTRIBUTE
 } GPInstructLogError;

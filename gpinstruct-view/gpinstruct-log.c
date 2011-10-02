@@ -249,14 +249,11 @@ gpinstruct_log_get_tests (GPInstructLog* log)
 }
 
 gboolean
-gpinstruct_log_open (GPInstructLog* log,
-                     const gchar* file,
-                     GError** error)
+load_log_from_xml_document (GPInstructLog* log,
+                            xmlDocPtr doc)
 {
 	xmlNode *current_node, *parent_node;
 	xmlChar *temp;
-
-	xmlDocPtr doc = xmlParseFile (file);
 
 	if (doc)
 	{
@@ -339,30 +336,16 @@ gpinstruct_log_open (GPInstructLog* log,
 
 			current_node = parent_node;
 			parent_node = current_node->parent;
-		}
-		else
-		{
-			g_set_error (error, GPINSTRUCT_LOG_ERROR, GPINSTRUCT_LOG_ERROR_PARSE,
-			             _("Failed to parse file."));
-			return FALSE;
-		}
 
-		xmlFreeDoc (doc);
-	}
-	else
-	{
-		g_set_error (error, GPINSTRUCT_LOG_ERROR, GPINSTRUCT_LOG_ERROR_PARSE,
-		             _("Failed to parse file."));
-		return FALSE;
+			return TRUE;
+		}
 	}
 
-	return TRUE;
+	return FALSE;
 }
 
-void
-gpinstruct_log_save (GPInstructLog* log,
-                     const gchar* file,
-                     GError** error)
+xmlDocPtr
+create_xml_document_from_log (GPInstructLog* log)
 {
 	xmlNodePtr current_node;
 
@@ -375,12 +358,117 @@ gpinstruct_log_save (GPInstructLog* log,
 	                                  BAD_CAST PACKAGE_TARNAME));
 
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
-	xmlSetDocCompressMode (doc, 9);
 	xmlDocSetRootElement (doc, current_node);
 
 	g_list_foreach (log->priv->tests_list, (GFunc)add_test_node, current_node);
 
+	return doc;
+}
+
+gboolean
+gpinstruct_log_load_from_file (GPInstructLog* log,
+                               const gchar* file,
+                               GError** error)
+{
+	gboolean load;
+
+	xmlDocPtr doc = xmlParseFile (file);
+
+	if (!doc)
+	{
+		g_set_error (error, GPINSTRUCT_LOG_ERROR, GPINSTRUCT_LOG_ERROR_PARSE,
+		             _("Failed to parse file."));
+		return FALSE;
+	}
+
+	load = load_log_from_xml_document (log, doc);
+
+	xmlFreeDoc (doc);
+
+	if (!load)
+	{
+		g_set_error (error, GPINSTRUCT_LOG_ERROR, GPINSTRUCT_LOG_ERROR_INVALID,
+		             _("File is not a valid log."));
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+gboolean
+gpinstruct_log_load_from_string (GPInstructLog* log,
+                                 const gchar* contents,
+                                 GError** error)
+{
+	gboolean load;
+
+	xmlDocPtr doc = xmlParseDoc (BAD_CAST contents);
+
+	if (!doc)
+	{
+		g_set_error (error, GPINSTRUCT_LOG_ERROR, GPINSTRUCT_LOG_ERROR_PARSE,
+		             _("Failed to parse file."));
+		return FALSE;
+	}
+
+	load = load_log_from_xml_document (log, doc);
+
+	xmlFreeDoc (doc);
+
+	if (!load)
+	{
+		g_set_error (error, GPINSTRUCT_LOG_ERROR, GPINSTRUCT_LOG_ERROR_INVALID,
+		             _("File is not a valid log."));
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+void
+gpinstruct_log_save_to_file (GPInstructLog* log,
+                             const gchar* file,
+                             GError** error)
+{
+	xmlDocPtr doc = create_xml_document_from_log (log);
+
+	if (!doc)
+	{
+		g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
+		             _("Failed to create an XML document from log."));
+		return;
+	}
+
 	xmlIndentTreeOutput = 1;
-	xmlSaveFormatFileEnc(file, doc, "UTF-8", 1);
-	xmlFreeDoc(doc);
+	xmlTreeIndentString = "\t";
+	xmlSetDocCompressMode (doc, 9);
+	xmlSaveFormatFileEnc (file, doc, "UTF-8", 1);
+	xmlFreeDoc (doc);
+}
+
+gchar*
+gpinstruct_log_save_to_string (GPInstructLog* log,
+                               GError** error)
+{
+	xmlChar* buffer;
+	gchar* contents;
+
+	xmlDocPtr doc = create_xml_document_from_log (log);
+
+	if (!doc)
+	{
+		g_set_error (error, GPINSTRUCT_PARSER_ERROR, GPINSTRUCT_PARSER_ERROR_PARSE,
+		             _("Failed to create an XML document from log."));
+		return NULL;
+	}
+
+	xmlIndentTreeOutput = 1;
+	xmlTreeIndentString = "\t";
+	xmlDocDumpFormatMemoryEnc (doc, &buffer, NULL, "UTF-8", 1);
+	contents = g_strdup ((char*) buffer);
+	xmlFree (buffer);
+
+	xmlFreeDoc (doc);
+
+	return contents;
 }

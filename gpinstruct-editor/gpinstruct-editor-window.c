@@ -1137,7 +1137,7 @@ gpinstruct_editor_window_open_file (GPInstructEditorWindow* window,
 			return;
 	}
 
-	window->priv->project = gpinstruct_parser_open (window->priv->parser, file, &error);
+	window->priv->project = gpinstruct_parser_load_from_file (window->priv->parser, file, &error);
 	if (error)
 	{
 		g_critical (_("Parsing file error: %s"), error->message);
@@ -1257,7 +1257,7 @@ gpinstruct_editor_window_save_file (GPInstructEditorWindow* window)
 
 	GError* error = NULL;
 
-	gpinstruct_parser_save (window->priv->parser, window->priv->project, filename, &error);
+	gpinstruct_parser_save_to_file (window->priv->parser, window->priv->project, filename, &error);
 
 	if (error)
 	{

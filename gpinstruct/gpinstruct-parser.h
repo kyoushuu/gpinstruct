@@ -45,8 +45,10 @@ struct _GPInstructParser
 
 GType gpinstruct_parser_get_type (void) G_GNUC_CONST;
 GPInstructParser* gpinstruct_parser_new (void);
-GPInstructProject* gpinstruct_parser_open (GPInstructParser* parser, const gchar* file, GError** error);
-void gpinstruct_parser_save (GPInstructParser* parser, GPInstructProject* project, const gchar* file, GError** error);
+GPInstructProject* gpinstruct_parser_load_from_file (GPInstructParser* parser, const gchar* file, GError** error);
+GPInstructProject* gpinstruct_parser_load_from_string (GPInstructParser* parser, const gchar* contents, GError** error);
+void gpinstruct_parser_save_to_file (GPInstructParser* parser, GPInstructProject* project, const gchar* file, GError** error);
+gchar* gpinstruct_parser_save_to_string (GPInstructParser* parser, GPInstructProject* project, GError** error);
 
 typedef enum
 {

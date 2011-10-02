@@ -403,7 +403,7 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
 		GPInstructParser* parser = gpinstruct_parser_new ();
 
 		gchar* project_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		GPInstructProject* project = gpinstruct_parser_open (parser, project_file, &error);
+		GPInstructProject* project = gpinstruct_parser_load_from_file (parser, project_file, &error);
 		if (error)
 		{
 			g_critical(_("Error: %s\n"), error->message);
@@ -465,7 +465,7 @@ gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow* window,
 		return FALSE;
 
 	GPInstructLog* log = gpinstruct_log_new ();
-	if (gpinstruct_log_open (log, file, NULL) == FALSE)
+	if (gpinstruct_log_load_from_file (log, file, NULL) == FALSE)
 	{
 		g_object_unref (log);
 		return FALSE;
