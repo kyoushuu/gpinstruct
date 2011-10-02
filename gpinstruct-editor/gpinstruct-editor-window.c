@@ -795,7 +795,7 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 
 	GError* error = NULL;
 
-	GtkActionEntry actions[] = 
+	GtkActionEntry actions[] =
 	{
 		{"file", NULL, _("_File")},
 		{"file-new", GTK_STOCK_NEW, NULL, "<Control>N", NULL, G_CALLBACK (file_new_action)},
@@ -812,7 +812,7 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 		{"help-about", GTK_STOCK_ABOUT, NULL, "F1", NULL, G_CALLBACK (help_about_action)}
 	};
 
-	gchar* ui = 
+	gchar* ui =
 		"<ui>"
 		"  <menubar name=\"menubar\">"
 		"    <menu name=\"FileMenu\" action=\"file\">"
@@ -1209,7 +1209,7 @@ gpinstruct_editor_window_close_current_file (GPInstructEditorWindow* window)
 	gpinstruct_editor_window_set_filename (window, NULL);
 	gpinstruct_editor_window_set_modified (window, FALSE);
 
-	gpinstruct_editor_window_update_tree_store (window, NULL); 
+	gpinstruct_editor_window_update_tree_store (window, NULL);
 
 	return TRUE;
 }

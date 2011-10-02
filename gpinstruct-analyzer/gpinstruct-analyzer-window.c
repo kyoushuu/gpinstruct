@@ -226,7 +226,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 
 	GError* error = NULL;
 
-	GtkActionEntry actions[] = 
+	GtkActionEntry actions[] =
 	{
 		{"file", NULL, _("_File")},
 		{"file-new", GTK_STOCK_NEW, NULL, "<Control>N", NULL, G_CALLBACK (file_new_action)},
@@ -239,7 +239,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 		{"help-about", GTK_STOCK_ABOUT, NULL, "F1", NULL, G_CALLBACK (help_about_action)}
 	};
 
-	gchar* ui = 
+	gchar* ui =
 		"<ui>"
 		"  <menubar name=\"menubar\">"
 		"    <menu name=\"FileMenu\" action=\"file\">"

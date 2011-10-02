@@ -282,7 +282,7 @@ load_log_from_xml_document (GPInstructLog* log,
 			     current_node != NULL;
 			     current_node = current_node->next)
 			{
-				if (current_node->type == XML_ELEMENT_NODE && 
+				if (current_node->type == XML_ELEMENT_NODE &&
 				    xmlStrEqual (current_node->name, BAD_CAST "test"))
 				{
 					GPInstructLogTest* test = g_new0 (GPInstructLogTest, 1);
@@ -300,7 +300,7 @@ load_log_from_xml_document (GPInstructLog* log,
 					     current_node != NULL;
 					     current_node = current_node->next)
 					{
-						if (current_node->type == XML_ELEMENT_NODE && 
+						if (current_node->type == XML_ELEMENT_NODE &&
 						    xmlStrEqual (current_node->name, BAD_CAST "item"))
 						{
 							GPInstructLogAnswer* answer = g_new0 (GPInstructLogAnswer, 1);
