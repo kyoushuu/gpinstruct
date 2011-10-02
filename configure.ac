@@ -12,8 +12,8 @@ dnl Created by Anjuta application wizard.
 
 m4_define([gpinstruct_major_version], [0])
 m4_define([gpinstruct_minor_version], [1])
-m4_define([gpinstruct_micro_version], [0])
-m4_define([gpinstruct_interface_age], [0])
+m4_define([gpinstruct_micro_version], [1])
+m4_define([gpinstruct_interface_age], [1])
 m4_define([gpinstruct_binary_age],
           [m4_eval(100 * gpinstruct_minor_version + gpinstruct_micro_version)])
 m4_define([gpinstruct_version],
