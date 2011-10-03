@@ -20,6 +20,8 @@
  * From: https://bugzilla.gnome.org/show_bug.cgi?id=59390
  */
 
+#include <config.h>
+
 #include <gtk/gtk.h>
 
 #include "gtktextbuffermarkup.h"

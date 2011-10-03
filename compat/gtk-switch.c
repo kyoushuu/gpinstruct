@@ -18,6 +18,8 @@
 
 /* GtkSwitch widget implementation for GTK+ 2.x */
 
+#include <config.h>
+
 #include <gtk/gtk.h>
 
 #if GTK_MAJOR_VERSION < 3
