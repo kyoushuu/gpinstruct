@@ -2,13 +2,13 @@ dnl Process this file with autoconf to produce a configure script.
 dnl Created by Anjuta application wizard.
 
 
-# Making releases:
-#   GPINSTRUCT_MICRO_VERSION += 1;
-#   GPINSTRUCT_INTERFACE_AGE += 1;
-#   GPINSTRUCT_BINARY_AGE += 1;
-# if any functions have been added, set GPINSTRUCT_INTERFACE_AGE to 0.
-# if backwards compatibility has been broken,
-# set GPINSTRUCT_BINARY_AGE and GPINSTRUCT_INTERFACE_AGE to 0.
+dnl Making releases:
+dnl   GPINSTRUCT_MICRO_VERSION += 1;
+dnl   GPINSTRUCT_INTERFACE_AGE += 1;
+dnl   GPINSTRUCT_BINARY_AGE += 1;
+dnl if any functions have been added, set GPINSTRUCT_INTERFACE_AGE to 0.
+dnl if backwards compatibility has been broken,
+dnl set GPINSTRUCT_BINARY_AGE and GPINSTRUCT_INTERFACE_AGE to 0.
 
 m4_define([gpinstruct_major_version], [0])
 m4_define([gpinstruct_minor_version], [1])
@@ -18,16 +18,16 @@ m4_define([gpinstruct_binary_age],
           [m4_eval(100 * gpinstruct_minor_version + gpinstruct_micro_version)])
 m4_define([gpinstruct_version],
           [gpinstruct_major_version.gpinstruct_minor_version.gpinstruct_micro_version])
-# This is the X.Y used in -lgpinstruct-FOO-X.Y
+dnl This is the X.Y used in -lgpinstruct-FOO-X.Y
 m4_define([gpinstruct_api_version], [0.0])
 
-# Define a string for the earliest version that this release has
-# backwards binary compatibility with for all interfaces a module
-# might. Unless we add module-only API with lower stability
-# guarantees, this should be unchanged until we break binary compat
-# for GPInstruct.
-#
-#GPINSTRUCT_BINARY_VERSION=$GPINSTRUCT_MAJOR_VERSION.$GPINSTRUCT_MINOR_VERSION.$LT_CURRENT
+dnl Define a string for the earliest version that this release has
+dnl backwards binary compatibility with for all interfaces a module
+dnl might. Unless we add module-only API with lower stability
+dnl guarantees, this should be unchanged until we break binary compat
+dnl for GPInstruct.
+dnl
+dnl GPINSTRUCT_BINARY_VERSION=$GPINSTRUCT_MAJOR_VERSION.$GPINSTRUCT_MINOR_VERSION.$LT_CURRENT
 m4_define([gpinstruct_binary_version], [0.0.0])
 
 AC_INIT([GPInstruct], [gpinstruct_version],
@@ -54,7 +54,7 @@ AC_SUBST(GPINSTRUCT_API_VERSION)
 AC_SUBST(GPINSTRUCT_VERSION)
 AC_SUBST(GPINSTRUCT_BINARY_VERSION)
 
-# libtool versioning
+dnl libtool versioning
 m4_define([lt_current], [m4_eval(100 * gpinstruct_minor_version + gpinstruct_micro_version - gpinstruct_interface_age)])
 m4_define([lt_revision], [gpinstruct_interface_age])
 m4_define([lt_age], [m4_eval(gpinstruct_binary_age - gpinstruct_interface_age)])
@@ -79,6 +79,7 @@ AC_PROG_CC
 dnl ***************************************************************************
 dnl Internationalization
 dnl ***************************************************************************
+
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
@@ -86,9 +87,9 @@ AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL([0.35.0])
 
 
-##################################################
-# Check for gtk-doc.
-##################################################
+dnl ***************************************************************************
+dnl Check for gtk-doc.
+dnl ***************************************************************************
 
 GTK_DOC_CHECK([1.11],[--flavour no-tmpl])
 
