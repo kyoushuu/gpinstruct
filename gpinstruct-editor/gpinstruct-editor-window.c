@@ -492,7 +492,23 @@ view_execute_action (GtkAction *action,
 	GPInstructMessagePool* message_pool = gpinstruct_message_pool_new ();
 
 	if (message_pool)
-		gpinstruct_message_pool_load_from_file (message_pool, "messages.ini");
+	{
+#ifdef G_OS_WIN32
+		gchar* prefix = g_win32_get_package_installation_directory_of_module (NULL);
+		gchar* datadir = g_build_filename (prefix, "share", PACKAGE, NULL);
+#else
+		gchar* datadir = g_strdup (PACKAGE_DATA_DIR);
+#endif
+
+		gchar* message_file = g_build_filename (datadir, "messages.ini", NULL);
+		gpinstruct_message_pool_load_from_file (message_pool, message_file);
+		g_free (message_file);
+
+#ifdef G_OS_WIN32
+		g_free (prefix);
+#endif
+		g_free (datadir);
+	}
 
 	GtkWidget* preview_window = gpinstruct_project_view_new (window->priv->project, message_pool, NULL);
 
