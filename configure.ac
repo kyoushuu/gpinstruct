@@ -77,6 +77,17 @@ AC_PROG_CC
 
 
 dnl ***************************************************************************
+dnl Configure options
+dnl ***************************************************************************
+
+AC_ARG_WITH([gstreamer],
+            [AS_HELP_STRING([--with-gstreamer],
+                            [add gstreamer support @<:@default=check@:>@])],
+            [],
+            [with_gstreamer=check])
+
+
+dnl ***************************************************************************
 dnl Internationalization
 dnl ***************************************************************************
 
@@ -103,6 +114,16 @@ PKG_CHECK_MODULES(GIO,gio-2.0)
 PKG_CHECK_MODULES(GLIB,glib-2.0)
 
 PKG_CHECK_MODULES(GTK,gtk+-3.0,,[PKG_CHECK_MODULES(GTK,gtk+-2.0)])
+
+if test "$with_gstreamer" != "no" ; then
+	PKG_CHECK_MODULES(GSTREAMER,
+		              gstreamer-0.10,
+		              [AC_DEFINE(HAVE_GSTREAMER, 1, [Define if gstreamer-0.10 is available]) have_gstreamer=yes],
+		              have_gstreamer=no)
+	AC_SUBST(GSTREAMER_CFLAGS)
+	AC_SUBST(GSTREAMER_LIBS)
+	AM_CONDITIONAL(HAVE_GSTREAMER, [test "x$have_gstreamer" = "xyes"])
+fi
 
 
 AC_OUTPUT([

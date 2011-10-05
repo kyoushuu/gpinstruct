@@ -66,6 +66,7 @@ void gpinstruct_message_pool_add (GPInstructMessagePool* pool, GPInstructMessage
 void gpinstruct_message_pool_add_multiple (GPInstructMessagePool* pool, ...);
 void gpinstruct_message_pool_remove (GPInstructMessagePool* pool, GPInstructMessageType type, guint message);
 const gchar* gpinstruct_message_pool_get (GPInstructMessagePool* pool, GPInstructMessageType type, guint message);
+void gpinstruct_message_pool_play_sound_random (GPInstructMessagePool* pool, GPInstructMessageType type);
 
 G_END_DECLS
 

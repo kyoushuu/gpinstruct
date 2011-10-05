@@ -38,6 +38,10 @@ information. See the file 'COPYING' for license terms and conditions.
 
   GPInstruct's dependencies are GTK+ (2.18+ or 3.0+) and LibXML2.
 
+  The Sound Effects feature needs GStreamer 0.10, including the Core,
+Base and Good plugins.  Currently only Ogg Vorbis audio files are
+supported, though.
+
   GPInstruct is tested to work for Linux and Microsoft Windows operating
 systems.
 

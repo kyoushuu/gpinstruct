@@ -320,6 +320,8 @@ gpinstruct_lesson_view_next (GPInstructLessonView* view,
 	else
 		gtk_widget_hide (view->priv->explain_button);
 
+	gpinstruct_message_pool_play_sound_random (view->priv->pool, message);
+
 	if (show_next)
 		show_page (GPINSTRUCT_LESSON_VIEW (view), view->priv->current_page+1);
 

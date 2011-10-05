@@ -71,3 +71,8 @@ gpinstruct_view_LDADD = $(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	libgpinstruct-view.la
 
+if HAVE_GSTREAMER
+AM_CPPFLAGS += $(GSTREAMER_CFLAGS)
+libgpinstruct_view_la_LIBADD += $(GSTREAMER_LIBS)
+endif
+
