@@ -52,6 +52,7 @@ main (int argc,
 
 	gtk_init (&argc, &argv);
 
+
 	GError* error = NULL;
 
 	GPInstructParser* parser = gpinstruct_parser_new ();
