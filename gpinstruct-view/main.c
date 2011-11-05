@@ -157,34 +157,33 @@ main (int argc,
 
 			GPInstructLog* log = gpinstruct_log_new ();
 
-			if (log)
-			{
-				gpinstruct_log_set_last_name (log, last_name);
-				gpinstruct_log_set_first_name (log, first_name);
-			}
+			gpinstruct_log_set_last_name (log, last_name);
+			gpinstruct_log_set_first_name (log, first_name);
 
 			GPInstructMessagePool* message_pool = gpinstruct_message_pool_new ();
 
-			if (message_pool)
-			{
-				gchar* message_file = g_build_filename (datadir, "messages.ini", NULL);
+			gchar* message_file = g_build_filename (datadir, "messages.ini", NULL);
+
+			if (g_file_test (message_file, G_FILE_TEST_IS_REGULAR))
 				gpinstruct_message_pool_load_from_file (message_pool, message_file);
-				g_free (message_file);
+			else
+			{
+				g_object_unref (message_pool);
+				message_pool = NULL;
 			}
+
+			g_free (message_file);
 
 			GtkWidget* window = gpinstruct_project_view_new (project, message_pool, log);
 
-			g_object_unref (message_pool);
+			if (message_pool) g_object_unref (message_pool);
 
-			if (window)
-			{
-				gtk_window_set_modal (GTK_WINDOW (window), TRUE);
+			gtk_window_set_modal (GTK_WINDOW (window), TRUE);
 
-				/* Exit when the window is closed */
-				g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+			/* Exit when the window is closed */
+			g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
-				gtk_widget_show_all (window);
-			}
+			gtk_widget_show_all (window);
 
 			gtk_main ();
 

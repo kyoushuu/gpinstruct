@@ -28,6 +28,8 @@ libcompat_glib_la_LIBADD = \
 
 libcompat_gtk_la_SOURCES = \
 	compat-gtk.h \
+	gtk-progress-bar.h \
+	gtk-progress-bar.c \
 	gtk-switch.h \
 	gtk-switch.c \
 	gtk-tree-model-iter-previous.h \

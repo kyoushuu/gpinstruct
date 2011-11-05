@@ -113,6 +113,8 @@ PKG_CHECK_MODULES(GIO,gio-2.0)
 
 PKG_CHECK_MODULES(GLIB,glib-2.0)
 
+PKG_CHECK_MODULES(LIBSOUP,libsoup-2.4)
+
 PKG_CHECK_MODULES(GTK,gtk+-3.0,,[PKG_CHECK_MODULES(GTK,gtk+-2.0)])
 
 if test "$with_gstreamer" != "no" ; then
@@ -129,8 +131,11 @@ fi
 AC_OUTPUT([
 Makefile
 compat/Makefile
+libsoup-soap/Makefile
 gpinstruct/Makefile
 gpinstruct-view/Makefile
 gpinstruct-editor/Makefile
 gpinstruct-analyzer/Makefile
+gpinstruct-server/Makefile
+gpinstruct-client/Makefile
 po/Makefile.in])

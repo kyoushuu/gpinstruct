@@ -43,7 +43,6 @@ gpinstruct-editor/main.c
 
 # GPInstruct Editor Library
 gpinstruct-editor/gpinstruct-category-editor.c
-gpinstruct-editor/gpinstruct-editor.c
 gpinstruct-editor/gpinstruct-editor-window.c
 gpinstruct-editor/gpinstruct-lesson-discussion-editor.c
 gpinstruct-editor/gpinstruct-lesson-editor.c
@@ -63,4 +62,13 @@ gpinstruct-analyzer/gpinstruct-analyzer-examinee-view.c
 gpinstruct-analyzer/gpinstruct-analyzer-project-view.c
 gpinstruct-analyzer/gpinstruct-analyzer-window.c
 gpinstruct-analyzer/gpinstruct-log-analyzer.c
+
+# GPInstruct Server
+gpinstruct-server/main.c
+
+# GPInstruct Server Library
+gpinstruct-server/gpinstruct-server-window.c
+
+# GPInstruct Client
+gpinstruct-client/main.c
 
