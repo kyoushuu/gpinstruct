@@ -409,11 +409,12 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
 			g_critical(_("Error: %s\n"), error->message);
 			g_error_free (error);
 			error = NULL;
+			goto error;
 		}
 		g_free (project_file);
 
 		if (project == NULL)
-			return;
+			goto error;
 
 		window->priv->analyzer = gpinstruct_log_analyzer_new (project);
 
@@ -429,7 +430,9 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
 		gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), -1);
 		gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), 0);
 	}
-	gtk_widget_destroy (dialog);
+
+	error:
+		gtk_widget_destroy (dialog);
 }
 
 gboolean
