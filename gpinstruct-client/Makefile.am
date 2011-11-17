@@ -13,7 +13,8 @@ AM_CPPFLAGS = \
 	$(LIBXML_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GTK_CFLAGS) \
-	$(LIBSOUP_CFLAGS)
+	$(LIBSOUP_CFLAGS) \
+	$(LIBSOUP_SOAP_CFLAGS)
 
 bin_PROGRAMS =  \
 	gpinstruct-client
@@ -26,7 +27,7 @@ gpinstruct_client_LDADD = \
 	$(GLIB_LIBS) \
 	$(GTK_LIBS) \
 	$(LIBSOUP_LIBS) \
-	$(top_builddir)/libsoup-soap/libsoup-soap.la \
+	$(LIBSOUP_SOAP_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	$(top_builddir)/compat/libcompat-gtk.la

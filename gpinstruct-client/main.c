@@ -100,9 +100,7 @@ create_session (GPInstructSoapClientPrivate* priv,
 	gtk_widget_show_all (priv->waiting_dialog);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), _("Logging in"));
 
-	SoupSoapMessage* msg = soup_soap_message_new ("POST",
-	                                              priv->server_uri,
-	                                              FALSE, NULL, NULL, NULL);
+	SoupMessage* msg = soup_message_new ("POST", priv->server_uri);
 	if (!msg)
 	{
 		g_set_error_literal (error, GPINSTRUCT_CLIENT_ERROR,
@@ -111,28 +109,21 @@ create_session (GPInstructSoapClientPrivate* priv,
 		goto error;
 	}
 
-	soup_soap_message_start_envelope (msg);
-	soup_soap_message_start_body (msg);
+	SoupSoapMessage *request = soup_soap_message_new_request (msg);
 
-	soup_soap_message_start_element (msg, "createSession", NULL,
-	                                 PACKAGE_URL);
-	soup_soap_message_add_namespace (msg, NULL, PACKAGE_URL);
-	soup_soap_message_start_element (msg, "lastname", NULL, NULL);
-	soup_soap_message_write_string (msg, priv->lastname);
-	soup_soap_message_end_element (msg);
-	soup_soap_message_start_element (msg, "firstname", NULL, NULL);
-	soup_soap_message_write_string (msg, priv->firstname);
-	soup_soap_message_end_element (msg);
-	soup_soap_message_start_element (msg, "password", NULL, NULL);
-	soup_soap_message_write_string (msg, priv->password);
-	soup_soap_message_end_element (msg);
-	soup_soap_message_end_element (msg);
+	soup_soap_message_set_operation_name (request, "createSession");
 
-	soup_soap_message_end_body (msg);
-	soup_soap_message_end_envelope (msg);
-	soup_soap_message_persist (msg);
+	soup_soap_param_group_add_multiple (soup_soap_message_get_params (request),
+	                                    soup_soap_param_new_value ("lastname", priv->lastname),
+	                                    soup_soap_param_new_value ("firstname", priv->firstname),
+	                                    soup_soap_param_new_value ("password", priv->password),
+	                                    NULL);
 
-	soup_session_queue_message (priv->session, SOUP_MESSAGE (msg),
+	soup_soap_message_persist (request);
+
+	g_object_unref (request);
+
+	soup_session_queue_message (priv->session, msg,
 	                            got_create_session_response, priv);
 
 	return TRUE;
@@ -150,9 +141,7 @@ get_project (GPInstructSoapClientPrivate* priv,
 	gtk_widget_show_all (priv->waiting_dialog);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), _("Getting project data"));
 
-	SoupSoapMessage* msg = soup_soap_message_new ("POST",
-	                                              priv->server_uri,
-	                                              FALSE, NULL, NULL, NULL);
+	SoupMessage* msg = soup_message_new ("POST", priv->server_uri);
 	if (!msg)
 	{
 		g_set_error_literal (error, GPINSTRUCT_CLIENT_ERROR,
@@ -161,22 +150,19 @@ get_project (GPInstructSoapClientPrivate* priv,
 		goto error;
 	}
 
-	soup_soap_message_start_envelope (msg);
-	soup_soap_message_start_body (msg);
+	SoupSoapMessage *request = soup_soap_message_new_request (msg);
 
-	soup_soap_message_start_element (msg, "getProject", NULL,
-	                                 PACKAGE_URL);
-	soup_soap_message_add_namespace (msg, NULL, PACKAGE_URL);
-	soup_soap_message_start_element (msg, "sessionID", NULL, NULL);
-	soup_soap_message_write_string (msg, priv->sessionID);
-	soup_soap_message_end_element (msg);
-	soup_soap_message_end_element (msg);
+	soup_soap_message_set_operation_name (request, "getProject");
 
-	soup_soap_message_end_body (msg);
-	soup_soap_message_end_envelope (msg);
-	soup_soap_message_persist (msg);
+	soup_soap_param_group_add_multiple (soup_soap_message_get_params (request),
+	                                    soup_soap_param_new_value ("sessionID", priv->sessionID),
+	                                    NULL);
 
-	soup_session_queue_message (priv->session, SOUP_MESSAGE (msg),
+	soup_soap_message_persist (request);
+
+	g_object_unref (request);
+
+	soup_session_queue_message (priv->session, msg,
 	                            got_get_project_response, priv);
 
 	return TRUE;
@@ -194,40 +180,32 @@ set_log (GPInstructSoapClientPrivate* priv,
 	gtk_widget_show_all (priv->waiting_dialog);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), _("Sending log to server"));
 
-	SoupSoapMessage* msg = soup_soap_message_new ("POST",
-	                                              priv->server_uri,
-	                                              FALSE, NULL, NULL, NULL);
+	gchar* log = gpinstruct_log_save_to_string (priv->log, error);
+	if (*error) goto error;
+
+	SoupMessage* msg = soup_message_new ("POST", priv->server_uri);
 	if (!msg)
 	{
 		g_set_error_literal (error, GPINSTRUCT_CLIENT_ERROR,
 		                     GPINSTRUCT_CLIENT_ERROR_CREATE_WS_REQUEST_FAILED,
 		                     _("Could not create web service request"));
 		goto error;
-	}	
+	}
 
-	gchar* log = gpinstruct_log_save_to_string (priv->log, error);
+	SoupSoapMessage *request = soup_soap_message_new_request (msg);
 
-	if (*error) goto error;
+	soup_soap_message_set_operation_name (request, "setLog");
 
-	soup_soap_message_start_envelope (msg);
-	soup_soap_message_start_body (msg);
+	soup_soap_param_group_add_multiple (soup_soap_message_get_params (request),
+	                                    soup_soap_param_new_value ("sessionID", priv->sessionID),
+	                                    soup_soap_param_new_base64_string ("log", log),
+	                                    NULL);
 
-	soup_soap_message_start_element (msg, "setLog", NULL,
-	                                 PACKAGE_URL);
-	soup_soap_message_add_namespace (msg, NULL, PACKAGE_URL);
-	soup_soap_message_start_element (msg, "sessionID", NULL, NULL);
-	soup_soap_message_write_string (msg, priv->sessionID);
-	soup_soap_message_end_element (msg);
-	soup_soap_message_start_element (msg, "log", NULL, NULL);
-	soup_soap_message_write_base64 (msg, log, strlen (log));
-	soup_soap_message_end_element (msg);
-	soup_soap_message_end_element (msg);
+	soup_soap_message_persist (request);
 
-	soup_soap_message_end_body (msg);
-	soup_soap_message_end_envelope (msg);
-	soup_soap_message_persist (msg);
+	g_object_unref (request);
 
-	soup_session_queue_message (priv->session, SOUP_MESSAGE (msg),
+	soup_session_queue_message (priv->session, msg,
 	                            got_set_log_response, priv);
 
 	g_free (log);
@@ -247,9 +225,7 @@ close_session (GPInstructSoapClientPrivate* priv,
 	gtk_widget_show_all (priv->waiting_dialog);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progress_bar), _("Closing session"));
 
-	SoupSoapMessage* msg = soup_soap_message_new ("POST",
-	                                              priv->server_uri,
-	                                              FALSE, NULL, NULL, NULL);
+	SoupMessage* msg = soup_message_new ("POST", priv->server_uri);
 	if (!msg)
 	{
 		g_set_error_literal (error, GPINSTRUCT_CLIENT_ERROR,
@@ -258,22 +234,19 @@ close_session (GPInstructSoapClientPrivate* priv,
 		goto error;
 	}
 
-	soup_soap_message_start_envelope (msg);
-	soup_soap_message_start_body (msg);
+	SoupSoapMessage *request = soup_soap_message_new_request (msg);
 
-	soup_soap_message_start_element (msg, "closeSession", NULL,
-	                                 PACKAGE_URL);
-	soup_soap_message_add_namespace (msg, NULL, PACKAGE_URL);
-	soup_soap_message_start_element (msg, "sessionID", NULL, NULL);
-	soup_soap_message_write_string (msg, priv->sessionID);
-	soup_soap_message_end_element (msg);
-	soup_soap_message_end_element (msg);
+	soup_soap_message_set_operation_name (request, "closeSession");
 
-	soup_soap_message_end_body (msg);
-	soup_soap_message_end_envelope (msg);
-	soup_soap_message_persist (msg);
+	soup_soap_param_group_add_multiple (soup_soap_message_get_params (request),
+	                                    soup_soap_param_new_value ("sessionID", priv->sessionID),
+	                                    NULL);
 
-	soup_session_queue_message (priv->session, SOUP_MESSAGE (msg),
+	soup_soap_message_persist (request);
+
+	g_object_unref (request);
+
+	soup_session_queue_message (priv->session, msg,
 	                            got_close_session_response, priv);
 
 	return TRUE;
@@ -286,17 +259,18 @@ close_session (GPInstructSoapClientPrivate* priv,
 
 static gboolean
 parse_response (SoupMessage *msg,
-                SoupSoapResponse **response_return,
+                SoupSoapMessage **response_return,
                 GPInstructSoapClientPrivate* priv,
                 GError** error)
 {
-	SoupSoapResponse *response = NULL;
-	SoupSoapParameter *param;
+	SoupSoapMessage *response = NULL;
+	SoupSoapParam *param;
 
 	if (SOUP_STATUS_IS_SERVER_ERROR (msg->status_code))
 	{
-		response = soup_soap_message_parse_response (SOUP_SOAP_MESSAGE (msg));
-		if (!response)
+		response = soup_soap_message_new_response (msg);
+		const gchar *op_name = soup_soap_message_get_operation_name (response);
+		if (op_name == NULL || *op_name == '\0')
 		{
 			g_set_error_literal (error, GPINSTRUCT_CLIENT_ERROR,
 			                     GPINSTRUCT_CLIENT_ERROR_PARSE_RESPONSE_FAILED,
@@ -304,8 +278,9 @@ parse_response (SoupMessage *msg,
 			goto error;
 		}
 
-		param = soup_soap_response_get_first_parameter_by_name (response, "faultstring");
-		gchar* faultstring = soup_soap_parameter_get_string_value (param);
+		param = soup_soap_param_group_get (soup_soap_message_get_params (response),
+		                                   "faultstring");
+		gchar* faultstring = soup_soap_param_get_string (param, NULL);
 
 		g_set_error (error, GPINSTRUCT_CLIENT_ERROR,
 		             GPINSTRUCT_CLIENT_ERROR_SERVER_ERROR,
@@ -321,8 +296,9 @@ parse_response (SoupMessage *msg,
 		goto error;
 	}
 
-	response = soup_soap_message_parse_response (SOUP_SOAP_MESSAGE (msg));
-	if (!response)
+	response = soup_soap_message_new_response (msg);
+	const gchar *op_name = soup_soap_message_get_operation_name (response);
+	if (op_name == NULL || *op_name == '\0')
 	{
 		g_set_error_literal (error, GPINSTRUCT_CLIENT_ERROR,
 		                     GPINSTRUCT_CLIENT_ERROR_PARSE_RESPONSE_FAILED,
@@ -344,8 +320,8 @@ got_close_session_response (SoupSession *session,
                             SoupMessage *msg,
                             gpointer user_data)
 {
-	SoupSoapResponse *response = NULL;
-	SoupSoapParameter *param;
+	SoupSoapMessage *response = NULL;
+	SoupSoapParam *param;
 	GPInstructSoapClientPrivate *priv = user_data;
 	GError* error = NULL;
 	GtkWidget* dialog;
@@ -353,7 +329,8 @@ got_close_session_response (SoupSession *session,
 	if (!parse_response (msg, &response, priv, &error))
 		goto error;
 
-	param = soup_soap_response_get_first_parameter_by_name (response, "result");
+	param = soup_soap_param_group_get (soup_soap_message_get_params (response),
+	                                   "result");
 	if (!param)
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
@@ -361,7 +338,7 @@ got_close_session_response (SoupSession *session,
 		goto error;
 	}
 
-	if (!soup_soap_parameter_get_boolean_value (param))
+	if (!soup_soap_param_get_boolean (param, NULL))
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
 		                     0, _("Server failed to process request."));
@@ -424,8 +401,8 @@ got_set_log_response (SoupSession *session,
                       SoupMessage *msg,
                       gpointer user_data)
 {
-	SoupSoapResponse *response = NULL;
-	SoupSoapParameter *param;
+	SoupSoapMessage *response = NULL;
+	SoupSoapParam *param;
 	GPInstructSoapClientPrivate *priv = user_data;
 	GError* error = NULL;
 	GtkWidget* dialog;
@@ -433,7 +410,8 @@ got_set_log_response (SoupSession *session,
 	if (!parse_response (msg, &response, priv, &error))
 		goto error;
 
-	param = soup_soap_response_get_first_parameter_by_name (response, "result");
+	param = soup_soap_param_group_get (soup_soap_message_get_params (response),
+	                                   "result");
 	if (!param)
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
@@ -441,7 +419,7 @@ got_set_log_response (SoupSession *session,
 		goto error;
 	}
 
-	if (!soup_soap_parameter_get_boolean_value (param))
+	if (!soup_soap_param_get_boolean (param, NULL))
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
 		                     0, _("Server failed to process request."));
@@ -472,14 +450,16 @@ got_set_log_response (SoupSession *session,
 		                                 _("Failed to close session: %s\nTry again?"):_("Failed to save log to server: %s\nTry again?"),
 		                                 error->message);
 		gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+		GQuark error_domain = error->domain;
+		gint error_code = error->code;
 		gtk_widget_destroy (dialog);
 		g_error_free (error);
 		error = NULL;
 
 		if (result == GTK_RESPONSE_YES)
 	{
-		if (error->domain == GPINSTRUCT_CLIENT_ERROR &&
-		    error->code == GPINSTRUCT_CLIENT_ERROR_CREATE_WS_REQUEST_FAILED)
+		if (error_domain == GPINSTRUCT_CLIENT_ERROR &&
+		    error_code == GPINSTRUCT_CLIENT_ERROR_CREATE_WS_REQUEST_FAILED)
 			goto retry;
 		else
 		{
@@ -528,8 +508,8 @@ got_get_project_response (SoupSession *session,
                           SoupMessage *msg,
                           gpointer user_data)
 {
-	SoupSoapResponse *response = NULL;
-	SoupSoapParameter *param;
+	SoupSoapMessage *response = NULL;
+	SoupSoapParam *param;
 	GPInstructSoapClientPrivate *priv = user_data;
 	GError* error = NULL;
 	GtkWidget* dialog;
@@ -537,7 +517,8 @@ got_get_project_response (SoupSession *session,
 	if (!parse_response (msg, &response, priv, &error))
 		goto error;
 
-	param = soup_soap_response_get_first_parameter_by_name (response, "project");
+	param = soup_soap_param_group_get (soup_soap_message_get_params (response),
+	                                   "project");
 	if (!param)
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
@@ -545,11 +526,10 @@ got_get_project_response (SoupSession *session,
 		goto error;
 	}
 
-	gchar* project_base64 = soup_soap_parameter_get_string_value (param);
-
 	gsize project_size;
-	guchar* project_bin = g_base64_decode_inplace (project_base64, &project_size);
 	gchar* project_string;
+	guchar* project_bin = soup_soap_param_get_base64_binary (param, &project_size, &error);
+	if (error) goto error;
 
 	/* Check if compressed using GZip */
 	if (project_size >= 2 && project_bin[0] == 0x1f && project_bin[1] == 0x8b)
@@ -674,8 +654,8 @@ got_create_session_response (SoupSession *session,
                              SoupMessage *msg,
                              gpointer user_data)
 {
-	SoupSoapResponse *response = NULL;
-	SoupSoapParameter *param;
+	SoupSoapMessage *response = NULL;
+	SoupSoapParam *param;
 	GPInstructSoapClientPrivate *priv = user_data;
 	GError* error = NULL;
 	GtkWidget* dialog;
@@ -683,7 +663,8 @@ got_create_session_response (SoupSession *session,
 	if (!parse_response (msg, &response, priv, &error))
 		goto error;
 
-	param = soup_soap_response_get_first_parameter_by_name (response, "sessionID");
+	param = soup_soap_param_group_get (soup_soap_message_get_params (response),
+	                                   "sessionID");
 	if (!param)
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
@@ -691,7 +672,7 @@ got_create_session_response (SoupSession *session,
 		goto error;
 	}
 
-	priv->sessionID = soup_soap_parameter_get_string_value (param);
+	priv->sessionID = soup_soap_param_get_string (param, NULL);
 
 	gtk_progress_bar_pulse (GTK_PROGRESS_BAR (priv->progress_bar));
 
@@ -719,14 +700,16 @@ got_create_session_response (SoupSession *session,
 		                                 _("Failed to get project: %s\nTry again?"):_("Failed to log in: %s\nTry again?"),
 		                                 error->message);
 		gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+		GQuark error_domain = error->domain;
+		gint error_code = error->code;
 		gtk_widget_destroy (dialog);
 		g_error_free (error);
 		error = NULL;
 
 		if (result == GTK_RESPONSE_YES)
 	{
-		if (error->domain == GPINSTRUCT_CLIENT_ERROR &&
-		    error->code == GPINSTRUCT_CLIENT_ERROR_CREATE_WS_REQUEST_FAILED)
+		if (error_domain == GPINSTRUCT_CLIENT_ERROR &&
+		    error_code == GPINSTRUCT_CLIENT_ERROR_CREATE_WS_REQUEST_FAILED)
 			goto retry;
 		else
 		{
@@ -895,6 +878,9 @@ main (int argc,
 		priv->session = soup_session_async_new_with_options (SOUP_SESSION_USER_AGENT, user_agent,
 		                                                     NULL);
 		g_free (user_agent);
+
+		soup_session_add_feature (priv->session,
+		                          SOUP_SESSION_FEATURE (soup_logger_new (SOUP_LOGGER_LOG_BODY, -1)));
 
 		if (!create_session (priv, &error))
 			goto error;

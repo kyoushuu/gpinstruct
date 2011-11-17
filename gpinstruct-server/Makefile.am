@@ -11,7 +11,9 @@ AM_CPPFLAGS = \
 	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
 	-I$(top_srcdir) \
 	$(GTK_CFLAGS) \
-	$(LIBXML_CFLAGS)
+	$(LIBXML_CFLAGS) \
+	$(LIBSOUP_CFLAGS) \
+	$(LIBSOUP_SOAP_CFLAGS)
 
 lib_LTLIBRARIES =  \
 	libgpinstruct-server.la
@@ -29,10 +31,11 @@ libgpinstruct_server_la_LDFLAGS = \
 
 libgpinstruct_server_la_LIBADD = $(GTK_LIBS) \
 	$(LIBXML_LIBS) \
+	$(LIBSOUP_LIBS) \
+	$(LIBSOUP_SOAP_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/compat/libcompat-glib.la \
-	$(top_builddir)/compat/libcompat-gtk.la \
-	$(top_builddir)/libsoup-soap/libsoup-soap.la
+	$(top_builddir)/compat/libcompat-gtk.la
 
 bin_PROGRAMS = gpinstruct-server
 

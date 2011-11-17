@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 ## Created by Anjuta
 
-SUBDIRS = compat libsoup-soap gpinstruct gpinstruct-view gpinstruct-editor gpinstruct-analyzer gpinstruct-server gpinstruct-client po
+SUBDIRS = compat gpinstruct gpinstruct-view gpinstruct-editor gpinstruct-analyzer gpinstruct-server gpinstruct-client po
 
 dist_doc_DATA = \
 	README\
