@@ -462,6 +462,8 @@ gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer* analyzer,
 	examinee->project = create_project_tree (analyzer, analyzer->priv->project);
 	analyzer->priv->examinees = g_list_append (analyzer->priv->examinees, examinee);
 
+	examinee->project->times_taken += 1;
+
 	GList* tests = gpinstruct_log_get_tests (log);
 	GList* curr_tests = tests;
 
