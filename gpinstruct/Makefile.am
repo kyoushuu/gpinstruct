@@ -43,6 +43,10 @@ libgpinstruct_la_SOURCES =  \
 	gpinstruct-lesson-test-order.h \
 	gpinstruct-lesson-test-order-item.c \
 	gpinstruct-lesson-test-order-item.h \
+	gpinstruct-lesson-test-text.c \
+	gpinstruct-lesson-test-text.h \
+	gpinstruct-lesson-test-text-question.c \
+	gpinstruct-lesson-test-text-question.h \
 	gpinstruct-lesson-test-word-pool.c \
 	gpinstruct-lesson-test-word-pool.h \
 	gpinstruct-lesson-test-word-pool-question.c \

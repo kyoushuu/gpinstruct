@@ -124,6 +124,7 @@ struct _GPInstructLogAnalyzerTest
 	GList* items; /* GPInstructLogAnalyzerItem */
 	GQuark id;
 	GPInstructLessonTest* object;
+	gboolean is_string;
 
 	guint times_taken;
 	gdouble time_spent;
@@ -137,6 +138,7 @@ struct _GPInstructLogAnalyzerItem
 	GList* choices;
 	guint id;
 	guint answer;
+	gchar* answer_string;
 
 	guint times_answered;
 	gdouble time_spent;
@@ -149,6 +151,7 @@ struct _GPInstructLogAnalyzerChoice
 	GPInstructLogAnalyzerItem* item;
 	GList* answers;
 	guint id;
+	gchar* string;
 
 	guint times_chosen;
 	gdouble time_spent;

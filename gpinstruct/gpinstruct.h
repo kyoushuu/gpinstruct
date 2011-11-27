@@ -33,6 +33,8 @@
 #include <gpinstruct/gpinstruct-lesson-test-word-pool.h>
 #include <gpinstruct/gpinstruct-lesson-test-order-item.h>
 #include <gpinstruct/gpinstruct-lesson-test-order.h>
+#include <gpinstruct/gpinstruct-lesson-test-text-question.h>
+#include <gpinstruct/gpinstruct-lesson-test-text.h>
 
 
 #include <gpinstruct/gpinstruct-lesson.h>

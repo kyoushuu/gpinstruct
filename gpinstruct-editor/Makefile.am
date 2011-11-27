@@ -37,6 +37,8 @@ libgpinstruct_editor_la_SOURCES =  \
 	gpinstruct-lesson-test-word-pool-editor.c \
 	gpinstruct-lesson-test-order-editor.h \
 	gpinstruct-lesson-test-order-editor.c \
+	gpinstruct-lesson-test-text-editor.h \
+	gpinstruct-lesson-test-text-editor.c \
 	gpinstruct-editor-window.h \
 	gpinstruct-editor-window.c
 

@@ -82,11 +82,13 @@ gpinstruct_lesson_test_class_init (GPInstructLessonTestClass *klass)
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
 	/*GPInstructLessonElementClass* parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
 
+	klass->answer_is_string = FALSE;
 	klass->get_item = NULL;
 	klass->get_choice = NULL;
 	klass->get_items_length = NULL;
 	klass->get_choices_length = NULL;
 	klass->get_item_correct_choice = NULL;
+	klass->get_item_correct_string = NULL;
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestPrivate));
 
@@ -181,6 +183,14 @@ gpinstruct_lesson_test_get_items_length (GPInstructLessonTest* test)
 		return FALSE;
 }
 
+gboolean
+gpinstruct_lesson_test_get_answer_is_string (GPInstructLessonTest* test)
+{
+	gboolean answer_is_string =
+		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->answer_is_string;
+	return answer_is_string;
+}
+
 guint
 gpinstruct_lesson_test_get_choices_length (GPInstructLessonTest* test,
                                            guint item)
@@ -203,4 +213,16 @@ gpinstruct_lesson_test_get_item_correct_choice (GPInstructLessonTest* test,
 		return get_item_correct_choice (test, item);
 	else
 		return 0;
+}
+
+gchar*
+gpinstruct_lesson_test_get_item_correct_string (GPInstructLessonTest* test,
+                                                guint item)
+{
+	gchar*(* get_item_correct_string) (GPInstructLessonTest* test, guint item) =
+		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->get_item_correct_string;
+	if (get_item_correct_string)
+		return get_item_correct_string (test, item);
+	else
+		return NULL;
 }

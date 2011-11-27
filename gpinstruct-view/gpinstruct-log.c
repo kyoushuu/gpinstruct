@@ -69,7 +69,9 @@ add_answer_node (GPInstructLogAnswer* answer,
 
 	xmlNodePtr current_node = xmlNewChild (test_node, NULL, BAD_CAST "item", NULL);
 	xmlSetProp (current_node, BAD_CAST "id", BAD_CAST item_id);
-	xmlSetProp (current_node, BAD_CAST "answer", BAD_CAST answer_id);
+	xmlSetProp (current_node, BAD_CAST "answer-id", BAD_CAST answer_id);
+	if (answer->answer_string)
+		xmlSetProp (current_node, BAD_CAST "answer-string", BAD_CAST answer->answer_string);
 	xmlSetProp (current_node, BAD_CAST "time-spent", BAD_CAST time_spent);
 
 	g_free (item_id);
@@ -88,9 +90,17 @@ add_test_node (GPInstructLogTest* test,
 }
 
 static void
+free_answer (GPInstructLogAnswer* answer)
+{
+	g_free (answer->answer_string);
+	g_free (answer);
+}
+
+static void
 free_answers_foreach (GPInstructLogTest* test)
 {
-	g_list_free_full (test->answers, g_free);
+	g_list_foreach (test->answers, (GFunc) free_answer, NULL);
+	g_list_free (test->answers);
 	g_free (test);
 }
 
@@ -191,15 +201,49 @@ gpinstruct_log_set_group (GPInstructLog* log,
 }
 
 void
-gpinstruct_log_add (GPInstructLog* log,
-                    GPInstructLessonTest* test,
-                    guint item_id, guint answer_id)
+gpinstruct_log_add_choice (GPInstructLog* log,
+                           GPInstructLessonTest* test,
+                           guint item_id, guint answer_id)
 {
 	GQuark test_quark = g_quark_from_string (gpinstruct_lesson_test_get_id (test));
 
-	GPInstructLogAnswer* answer = g_new (GPInstructLogAnswer, 1);
+	GPInstructLogAnswer* answer = g_new0 (GPInstructLogAnswer, 1);
 	answer->item_id = item_id;
 	answer->answer_id = answer_id;
+	answer->time_spent = g_timer_elapsed (log->priv->timer, NULL);
+
+	if (log->priv->curr_group_element)
+	{
+		answer->time_spent /= log->priv->group_elements;
+		log->priv->curr_group_element--;
+	}
+
+	if (log->priv->last_test == test_quark)
+	{
+		GList* last_test = g_list_last (log->priv->tests_list);
+		last_test->data = g_list_append ((GList*)last_test->data, answer);
+	}
+	else
+	{
+		GList* answers_list = g_list_append (NULL, answer);
+		GPInstructLogTest* test = g_new (GPInstructLogTest, 1);
+		test->id = test_quark;
+		test->answers = answers_list;
+		log->priv->tests_list = g_list_append (log->priv->tests_list, test);
+		log->priv->last_test = test_quark;
+	}
+}
+
+void
+gpinstruct_log_add_string (GPInstructLog* log,
+                           GPInstructLessonTest* test,
+                           guint item_id, const gchar* answer_string)
+{
+	GQuark test_quark = g_quark_from_string (gpinstruct_lesson_test_get_id (test));
+
+	GPInstructLogAnswer* answer = g_new0 (GPInstructLogAnswer, 1);
+	answer->item_id = item_id;
+	answer->answer_string = g_strdup (answer_string);
 	answer->time_spent = g_timer_elapsed (log->priv->timer, NULL);
 
 	if (log->priv->curr_group_element)
@@ -313,10 +357,17 @@ load_log_from_xml_document (GPInstructLog* log,
 								xmlFree (temp);
 							}
 
-							temp = xmlGetProp (current_node, BAD_CAST "answer");
+							temp = xmlGetProp (current_node, BAD_CAST "answer-id");
 							if (temp)
 							{
 								answer->answer_id = atoi ((gchar*)temp);
+								xmlFree (temp);
+							}
+
+							temp = xmlGetProp (current_node, BAD_CAST "answer-string");
+							if (temp)
+							{
+								answer->answer_string = g_strdup ((gchar*)temp);
 								xmlFree (temp);
 							}
 

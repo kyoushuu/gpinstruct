@@ -198,9 +198,9 @@ page_show_next (GPInstructLessonTestWordPoolPage* page,
 		gboolean explain = gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (page->priv->test));
 
 		if (page->priv->log)
-			gpinstruct_log_add (page->priv->log,
-			                    GPINSTRUCT_LESSON_TEST (page->priv->test),
-			                    question_id, page->priv->choices[selected]);
+			gpinstruct_log_add_choice (page->priv->log,
+			                           GPINSTRUCT_LESSON_TEST (page->priv->test),
+			                           question_id, page->priv->choices[selected]);
 
 		if (selected == correct_choice)
 		{

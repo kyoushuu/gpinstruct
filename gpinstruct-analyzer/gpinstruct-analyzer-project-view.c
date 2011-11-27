@@ -160,9 +160,12 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 				{
 					GPInstructLogAnalyzerChoice* choice = choices->data;
 
-					title_text = gpinstruct_lesson_test_get_choice (test->object,
-					                                                item_num,
-					                                                choice_num);
+					if (test->is_string)
+						title_text = g_strdup (choice->string);
+					else
+						title_text = gpinstruct_lesson_test_get_choice (test->object,
+						                                                item_num,
+						                                                choice_num);
 					frequency = choice->times_chosen;
 					percentage = (item->times_answered?(frequency/item->times_answered):0) * 100;
 					time_spent = choice->time_spent;

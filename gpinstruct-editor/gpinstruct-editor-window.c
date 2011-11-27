@@ -62,6 +62,7 @@ struct _GPInstructEditorWindowPrivate
 	GtkWidget* popup_new_test_multi_choice_menu_item;
 	GtkWidget* popup_new_test_word_pool_menu_item;
 	GtkWidget* popup_new_test_order_menu_item;
+	GtkWidget* popup_new_test_text_menu_item;
 
 	GtkWidget* popup_remove_menu_item;
 
@@ -226,6 +227,7 @@ tree_view_press_event (GtkWidget *widget,
 		gtk_widget_hide (window->priv->popup_new_test_multi_choice_menu_item);
 		gtk_widget_hide (window->priv->popup_new_test_word_pool_menu_item);
 		gtk_widget_hide (window->priv->popup_new_test_order_menu_item);
+		gtk_widget_hide (window->priv->popup_new_test_text_menu_item);
 		gtk_widget_hide (window->priv->popup_remove_menu_item);
 
 		if (GPINSTRUCT_IS_PROJECT (object_popup))
@@ -245,6 +247,7 @@ tree_view_press_event (GtkWidget *widget,
 			gtk_widget_show (window->priv->popup_new_test_multi_choice_menu_item);
 			gtk_widget_show (window->priv->popup_new_test_word_pool_menu_item);
 			gtk_widget_show (window->priv->popup_new_test_order_menu_item);
+			gtk_widget_show (window->priv->popup_new_test_text_menu_item);
 			gtk_widget_show (window->priv->popup_remove_menu_item);
 		}
 		else if (GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (object_popup))
@@ -254,6 +257,7 @@ tree_view_press_event (GtkWidget *widget,
 			gtk_widget_show (window->priv->popup_new_test_multi_choice_menu_item);
 			gtk_widget_show (window->priv->popup_new_test_word_pool_menu_item);
 			gtk_widget_show (window->priv->popup_new_test_order_menu_item);
+			gtk_widget_show (window->priv->popup_new_test_text_menu_item);
 			gtk_widget_show (window->priv->popup_remove_menu_item);
 		}
 		else if (GPINSTRUCT_IS_LESSON_ELEMENT (object_popup))
@@ -333,6 +337,11 @@ tree_view_selection_changed (GtkTreeSelection *treeselection,
 		{
 			window->priv->object_editor = GTK_WIDGET (gpinstruct_lesson_test_order_editor_new (window,
 			                                                                                   GPINSTRUCT_LESSON_TEST_ORDER (object)));
+		}
+		else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (object))
+		{
+			window->priv->object_editor = GTK_WIDGET (gpinstruct_lesson_test_text_editor_new (window,
+			                                                                                  GPINSTRUCT_LESSON_TEST_TEXT (object)));
 		}
 		else if (GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (object))
 		{
@@ -712,6 +721,24 @@ new_object_activate (GtkWidget *menuitem,
 		                    -1);
 		g_free (title);
 	}
+	else if (menuitem == window->priv->popup_new_test_text_menu_item)
+	{
+		GPInstructLessonTestText* test = gpinstruct_lesson_test_text_new ();
+		if (GPINSTRUCT_IS_LESSON (object_popup))
+			gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
+			                                      GPINSTRUCT_LESSON_ELEMENT (test));
+		else
+			gpinstruct_lesson_element_group_add_lesson_element (GPINSTRUCT_LESSON_ELEMENT_GROUP (object_popup),
+			                                                    GPINSTRUCT_LESSON_ELEMENT (test));
+
+		title = g_strdup_printf (_("Lesson Test (Text): \"%s\""), _("Untitled"));
+		gtk_tree_store_append (window->priv->store, &iter, &window->priv->iter_popup);
+		gtk_tree_store_set (window->priv->store, &iter,
+		                    TITLE_COLUMN, title,
+		                    DATA_COLUMN, test,
+		                    -1);
+		g_free (title);
+	}
 	else
 		return;
 
@@ -1006,6 +1033,11 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 	object->priv->popup_new_test_order_menu_item = gtk_menu_item_new_with_mnemonic (_("New _Order Test"));
 	gtk_menu_shell_append (GTK_MENU_SHELL (object->priv->popup_menu), object->priv->popup_new_test_order_menu_item);
 	g_signal_connect (object->priv->popup_new_test_order_menu_item, "activate",
+	                  G_CALLBACK (new_object_activate), object);
+
+	object->priv->popup_new_test_text_menu_item = gtk_menu_item_new_with_mnemonic (_("New _Text Test"));
+	gtk_menu_shell_append (GTK_MENU_SHELL (object->priv->popup_menu), object->priv->popup_new_test_text_menu_item);
+	g_signal_connect (object->priv->popup_new_test_text_menu_item, "activate",
 	                  G_CALLBACK (new_object_activate), object);
 
 	object->priv->popup_remove_menu_item = gtk_menu_item_new_with_mnemonic (_("_Remove"));
@@ -1423,6 +1455,18 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 					                    -1);
 					g_free (title);
 				}
+				else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (lesson_element))
+				{
+					/*GPInstructLessonTestText* lesson_test_text = GPINSTRUCT_LESSON_TEST_TEXT (lesson_element);*/
+
+					title = g_strdup_printf (_("Lesson Test (Text): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
+					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
+					gtk_tree_store_set (window->priv->store, &iterLessonElement,
+					                    TITLE_COLUMN, title,
+					                    DATA_COLUMN, lesson_element,
+					                    -1);
+					g_free (title);
+				}
 				else if (GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (lesson_element))
 				{
 					GPInstructLessonElementGroup* lesson_element_group = GPINSTRUCT_LESSON_ELEMENT_GROUP (lesson_element);
@@ -1495,6 +1539,18 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 							/*GPInstructLessonTestOrder* lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (lesson_element_group);*/
 
 							title = g_strdup_printf (_("Lesson Test (Order): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
+							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
+							gtk_tree_store_set (window->priv->store, &iterLessonElement,
+							                    TITLE_COLUMN, title,
+							                    DATA_COLUMN, lesson_element_group,
+							                    -1);
+							g_free (title);
+						}
+						else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (lesson_element_group))
+						{
+							/*GPInstructLessonTestText* lesson_test_text = GPINSTRUCT_LESSON_TEST_TEXT (lesson_element_group);*/
+
+							title = g_strdup_printf (_("Lesson Test (Text): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
 							gtk_tree_store_set (window->priv->store, &iterLessonElement,
 							                    TITLE_COLUMN, title,

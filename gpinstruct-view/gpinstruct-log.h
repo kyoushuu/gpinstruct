@@ -54,6 +54,7 @@ typedef struct {
 typedef struct {
 	guint item_id;
 	guint answer_id;
+	gchar *answer_string;
 	gdouble time_spent;
 } GPInstructLogAnswer;
 
@@ -68,7 +69,8 @@ const gchar* gpinstruct_log_get_last_name (GPInstructLog* log);
 void gpinstruct_log_set_first_name (GPInstructLog* log, const gchar* first_name);
 const gchar* gpinstruct_log_get_first_name (GPInstructLog* log);
 void gpinstruct_log_set_group (GPInstructLog* log, guint elements);
-void gpinstruct_log_add (GPInstructLog* log, GPInstructLessonTest* test, guint item_id, guint answer_id);
+void gpinstruct_log_add_choice (GPInstructLog* log, GPInstructLessonTest* test, guint item_id, guint answer_id);
+void gpinstruct_log_add_string (GPInstructLog* log, GPInstructLessonTest* test, guint item_id, const gchar* answer_string);
 void gpinstruct_log_close_test (GPInstructLog* log);
 void gpinstruct_log_timer_start (GPInstructLog* log);
 void gpinstruct_log_timer_stop (GPInstructLog* log);

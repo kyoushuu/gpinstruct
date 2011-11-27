@@ -234,6 +234,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 					atest->object = curr_lesson_test;
 					atest->lesson = alesson;
 					atest->id = g_quark_from_string (gpinstruct_lesson_test_get_id (curr_lesson_test));
+					atest->is_string = gpinstruct_lesson_test_get_answer_is_string (curr_lesson_test);
 					aelement->test = atest;
 
 					g_datalist_set_data (&aproject->tests_list,
@@ -249,6 +250,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 						aitem->id = i;
 						aitem->test = atest;
 						aitem->answer = gpinstruct_lesson_test_get_item_correct_choice (curr_lesson_test, i);
+						aitem->answer_string = gpinstruct_lesson_test_get_item_correct_string (curr_lesson_test, i);
 
 						atest->items = g_list_append (atest->items, aitem);
 
@@ -296,6 +298,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 							atest->lesson = alesson;
 							atest->group = agroup;
 							atest->id = g_quark_from_string (gpinstruct_lesson_test_get_id (curr_lesson_test));
+							atest->is_string = gpinstruct_lesson_test_get_answer_is_string (curr_lesson_test);
 
 							agroup->tests = g_list_append (agroup->tests, atest);
 
@@ -312,6 +315,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 								aitem->id = i;
 								aitem->test = atest;
 								aitem->answer = gpinstruct_lesson_test_get_item_correct_choice (curr_lesson_test, i);
+								aitem->answer_string = gpinstruct_lesson_test_get_item_correct_string (curr_lesson_test, i);
 
 								atest->items = g_list_append (atest->items, aitem);
 
@@ -407,7 +411,10 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 			test->lesson->category->time_spent += answer->time_spent;
 			test->lesson->category->project->time_spent += answer->time_spent;
 
-			if (answer->answer_id == item->answer)
+			if ((test->is_string == FALSE &&
+			     answer->answer_id == item->answer) ||
+			    (test->is_string == TRUE &&
+			     g_ascii_strcasecmp (answer->answer_string, item->answer_string) == 0))
 			{
 				item->times_correctly_answered += 1;
 				test->items_correctly_answered += 1;
@@ -417,7 +424,39 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 				test->lesson->category->project->items_correctly_answered += 1;
 			}
 
-			GPInstructLogAnalyzerChoice* choice = g_list_nth_data (item->choices, answer->answer_id);
+			GPInstructLogAnalyzerChoice* choice = NULL;
+			if (test->is_string)
+			{
+				GList *choices = item->choices;
+
+				while (choices)
+				{
+					GPInstructLogAnalyzerChoice* curr_choice = choices->data;
+
+					if (g_ascii_strcasecmp (curr_choice->string,
+					                        answer->answer_string) == 1)
+					{
+						choice = curr_choice;
+						break;
+					}
+
+					choices = choices->next;
+				}
+
+				if (choice == NULL)
+				{
+					choice = g_new0 (GPInstructLogAnalyzerChoice, 1);
+					choice->id = 0;
+					choice->item = item;
+					choice->string = g_strdup (answer->answer_string);
+
+					item->choices = g_list_append (item->choices, choice);
+				}
+			}
+			else
+			{
+				choice = g_list_nth_data (item->choices, answer->answer_id);
+			}
 
 			if (choice)
 			{

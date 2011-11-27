@@ -125,9 +125,9 @@ page_show_next (GPInstructLessonTestOrderPage* page,
 			gtk_tree_model_get (GTK_TREE_MODEL (page->priv->store), &iter, 1, &position, -1);
 
 			if (page->priv->log)
-				gpinstruct_log_add (page->priv->log,
-				                    GPINSTRUCT_LESSON_TEST (page->priv->test),
-				                    position, questions_num);
+				gpinstruct_log_add_choice (page->priv->log,
+				                           GPINSTRUCT_LESSON_TEST (page->priv->test),
+				                           position, questions_num);
 
 			if (questions_num == position)
 				gpinstruct_lesson_score_increase_score (page->priv->score);
