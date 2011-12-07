@@ -387,6 +387,7 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	GPInstructLessonTestWordPool* curr_test_word_pool;
 	GPInstructLessonTestOrder* curr_test_order;
 	GPInstructLessonTestText* curr_test_text;
+	GPInstructLessonTestScrambled* curr_test_scrambled;
 	GPInstructLessonScore* curr_score;
 
 	gboolean single_score, group_single_score, single_directions;
@@ -499,6 +500,18 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
 				GPInstructLessonTestTextPage* question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, view->priv->log);
+				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
+			}
+			else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (curr_element))
+			{
+				curr_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (curr_element);
+
+				GPInstructLessonDirectionsPage* directions_page =
+					gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_element),
+					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
+				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
+
+				GPInstructLessonTestScrambledPage* question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, view->priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 
@@ -615,6 +628,21 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 						}
 
 						GPInstructLessonTestTextPage* question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, view->priv->log);
+						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
+					}
+					else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (curr_group_element))
+					{
+						curr_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (curr_group_element);
+
+						if (!single_directions)
+						{
+							GPInstructLessonDirectionsPage* directions_page =
+								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
+								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
+							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
+						}
+
+						GPInstructLessonTestScrambledPage* question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, view->priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 

@@ -17,3 +17,4 @@
  */
 
 guint* random_array (guint length);
+void randomize_string (gchar *string);

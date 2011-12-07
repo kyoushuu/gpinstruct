@@ -34,6 +34,8 @@ libgpinstruct_view_la_SOURCES =  \
 	gpinstruct-lesson-test-multi-choice-page.h \
 	gpinstruct-lesson-test-order-page.c \
 	gpinstruct-lesson-test-order-page.h \
+	gpinstruct-lesson-test-scrambled-page.c \
+	gpinstruct-lesson-test-scrambled-page.h \
 	gpinstruct-lesson-test-text-page.c \
 	gpinstruct-lesson-test-text-page.h \
 	gpinstruct-lesson-test-word-pool-page.c \

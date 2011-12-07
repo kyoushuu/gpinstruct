@@ -39,6 +39,8 @@ libgpinstruct_editor_la_SOURCES =  \
 	gpinstruct-lesson-test-order-editor.c \
 	gpinstruct-lesson-test-text-editor.h \
 	gpinstruct-lesson-test-text-editor.c \
+	gpinstruct-lesson-test-scrambled-editor.h \
+	gpinstruct-lesson-test-scrambled-editor.c \
 	gpinstruct-editor-window.h \
 	gpinstruct-editor-window.c
 

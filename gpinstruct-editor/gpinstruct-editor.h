@@ -29,3 +29,4 @@
 #include <gpinstruct-editor/gpinstruct-lesson-test-word-pool-editor.h>
 #include <gpinstruct-editor/gpinstruct-lesson-test-order-editor.h>
 #include <gpinstruct-editor/gpinstruct-lesson-test-text-editor.h>
+#include <gpinstruct-editor/gpinstruct-lesson-test-scrambled-editor.h>

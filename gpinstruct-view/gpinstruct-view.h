@@ -34,6 +34,7 @@
 #include <gpinstruct-view/gpinstruct-lesson-test-word-pool-page.h>
 #include <gpinstruct-view/gpinstruct-lesson-test-order-page.h>
 #include <gpinstruct-view/gpinstruct-lesson-test-text-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-test-scrambled-page.h>
 
 #include <gpinstruct-view/gpinstruct-lesson-view.h>
 #include <gpinstruct-view/gpinstruct-project-view.h>

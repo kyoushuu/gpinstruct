@@ -17,6 +17,7 @@
  */
 
 #include <config.h>
+#include <string.h>
 
 #include <glib.h>
 
@@ -45,4 +46,20 @@ random_array (guint length)
 	}
 
 	return array;
+}
+
+void
+randomize_string (gchar *string)
+{
+	gchar* original = g_strdup (string);
+	gsize length = strlen (string);
+	guint* array = random_array (length);
+
+	gint i;
+	for (i=0; i<length; i++)
+	{
+		string[i] = original[array[i]];
+	}
+
+	g_free (array);
 }

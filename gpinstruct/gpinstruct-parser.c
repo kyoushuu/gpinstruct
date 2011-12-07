@@ -410,6 +410,99 @@ parse_text_test (xmlNode *node)
 	return test;
 }
 
+static GPInstructLessonTestScrambled*
+parse_scrambled_test (xmlNode *node)
+{
+	GPInstructLessonTestScrambled* test = gpinstruct_lesson_test_scrambled_new ();
+
+	xmlNode *current_node, *parent_node;
+	xmlChar *temp;
+
+	temp = xmlGetProp (node, BAD_CAST "title");
+	if (temp)
+	{
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
+		xmlFree (temp);
+	}
+
+	temp = xmlGetProp (node, BAD_CAST "id");
+	if (temp)
+	{
+		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+		xmlFree (temp);
+	}
+
+	temp = xmlGetProp (node, BAD_CAST "explain");
+	if (temp)
+	{
+		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		xmlFree (temp);
+	}
+
+	for (current_node = node->children;
+	     current_node != NULL;
+	     current_node = current_node->next)
+	{
+		if (current_node->type == XML_ELEMENT_NODE)
+		{
+			if (xmlStrEqual (current_node->name, BAD_CAST "directions"))
+			{
+				temp = xmlNodeGetContent (current_node);
+				if (temp)
+				{
+					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+					xmlFree (temp);
+				}
+			}
+			else if (xmlStrEqual (current_node->name, BAD_CAST "question"))
+			{
+				GPInstructLessonTestScrambledQuestion* question = gpinstruct_lesson_test_scrambled_question_new ();
+				gpinstruct_lesson_test_scrambled_add_question (test, question);
+
+				temp = xmlGetProp (current_node, BAD_CAST "answer");
+				if (temp)
+				{
+					gpinstruct_lesson_test_scrambled_question_set_answer (question, (gchar*)temp);
+					xmlFree (temp);
+				}
+
+				for (parent_node = current_node,
+				     current_node = current_node->children;
+				     current_node != NULL;
+				     current_node = current_node->next)
+				{
+					if (current_node->type == XML_ELEMENT_NODE)
+					{
+						if (xmlStrEqual (current_node->name, BAD_CAST "text"))
+						{
+							temp = xmlNodeGetContent (current_node);
+							if (temp)
+							{
+								gpinstruct_lesson_test_scrambled_question_set_text (question, (gchar*)temp);
+								xmlFree (temp);
+							}
+						}
+						else if (xmlStrEqual (current_node->name, BAD_CAST "explanation"))
+						{
+							temp = xmlNodeGetContent (current_node);
+							if (temp)
+							{
+								gpinstruct_lesson_test_scrambled_question_set_explanation (question, (gchar*)temp);
+								xmlFree (temp);
+							}
+						}
+					}
+				}
+
+				current_node = parent_node;
+				parent_node = current_node->parent;
+			}
+		}
+	}
+
+	return test;
+}
+
 static GPInstructLessonDiscussion*
 parse_discussion (xmlNode *node)
 {
@@ -512,6 +605,9 @@ parse_group (xmlNode *node)
 			else if (xmlStrEqual (current_node->name, BAD_CAST "test-text"))
 				gpinstruct_lesson_element_group_add_lesson_element (group,
 				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_text_test (current_node)));
+			else if (xmlStrEqual (current_node->name, BAD_CAST "test-scrambled"))
+				gpinstruct_lesson_element_group_add_lesson_element (group,
+				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_scrambled_test (current_node)));
 			else if (xmlStrEqual (current_node->name, BAD_CAST "discussion"))
 				gpinstruct_lesson_element_group_add_lesson_element (group,
 				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_discussion (current_node)));
@@ -564,6 +660,9 @@ parse_lesson (xmlNode *node)
 			else if (xmlStrEqual (current_node->name, BAD_CAST "test-text"))
 				gpinstruct_lesson_add_lesson_element (lesson,
 				                                      GPINSTRUCT_LESSON_ELEMENT (parse_text_test (current_node)));
+			else if (xmlStrEqual (current_node->name, BAD_CAST "test-scrambled"))
+				gpinstruct_lesson_add_lesson_element (lesson,
+				                                      GPINSTRUCT_LESSON_ELEMENT (parse_scrambled_test (current_node)));
 			else if (xmlStrEqual (current_node->name, BAD_CAST "discussion"))
 				gpinstruct_lesson_add_lesson_element (lesson,
 				                                      GPINSTRUCT_LESSON_ELEMENT (parse_discussion (current_node)));
@@ -845,7 +944,7 @@ add_order_test (GPInstructLessonTestOrder* test,
 
 static xmlNodePtr
 add_text_test (GPInstructLessonTestText* test,
-                    xmlNodePtr parent_node)
+               xmlNodePtr parent_node)
 {
 	GPInstructLessonTestTextQuestion* curr_question;
 
@@ -881,6 +980,53 @@ add_text_test (GPInstructLessonTestText* test,
 
 		xmlNewChild (question_node, NULL, BAD_CAST "explanation",
 		             BAD_CAST gpinstruct_lesson_test_text_question_get_explanation (curr_question));
+
+		curr_questions = curr_questions->next;
+	}
+
+	g_list_free (questions);
+
+	return node;
+}
+
+static xmlNodePtr
+add_scrambled_test (GPInstructLessonTestScrambled* test,
+                    xmlNodePtr parent_node)
+{
+	GPInstructLessonTestScrambledQuestion* curr_question;
+
+	GList *questions, *curr_questions;
+
+	xmlNodePtr question_node;
+
+	xmlNodePtr node = xmlNewChild (parent_node, NULL,
+	                               BAD_CAST "test-scrambled", NULL);
+	xmlSetProp (node, BAD_CAST "title",
+	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
+	xmlSetProp (node, BAD_CAST "id",
+	            BAD_CAST gpinstruct_lesson_test_get_id (GPINSTRUCT_LESSON_TEST (test)));
+	xmlSetProp (node, BAD_CAST "explain",
+	            gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test))?BAD_CAST "true":BAD_CAST "false");
+
+	xmlNewChild (node, NULL, BAD_CAST "directions",
+	             BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
+
+	questions = gpinstruct_lesson_test_scrambled_get_questions (test);
+	curr_questions = questions;
+
+	while (curr_questions)
+	{
+		curr_question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (curr_questions->data);
+
+		question_node = xmlNewChild (node, NULL, BAD_CAST "question", NULL);
+		xmlSetProp (question_node, BAD_CAST "answer",
+		            BAD_CAST gpinstruct_lesson_test_scrambled_question_get_answer (curr_question));
+
+		xmlNewChild (question_node, NULL, BAD_CAST "text",
+		             BAD_CAST gpinstruct_lesson_test_scrambled_question_get_text (curr_question));
+
+		xmlNewChild (question_node, NULL, BAD_CAST "explanation",
+		             BAD_CAST gpinstruct_lesson_test_scrambled_question_get_explanation (curr_question));
 
 		curr_questions = curr_questions->next;
 	}
@@ -936,6 +1082,9 @@ add_group (GPInstructLessonElementGroup* group,
 		else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (curr_lesson_element))
 			add_text_test (GPINSTRUCT_LESSON_TEST_TEXT (curr_lesson_element),
 			               current_node);
+		else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (curr_lesson_element))
+			add_scrambled_test (GPINSTRUCT_LESSON_TEST_SCRAMBLED (curr_lesson_element),
+			                    current_node);
 
 		curr_lesson_elements = curr_lesson_elements->next;
 	}
@@ -986,6 +1135,9 @@ add_lesson (GPInstructLesson* lesson,
 		else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (curr_lesson_element))
 			add_text_test (GPINSTRUCT_LESSON_TEST_TEXT (curr_lesson_element),
 			               current_node);
+		else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (curr_lesson_element))
+			add_scrambled_test (GPINSTRUCT_LESSON_TEST_SCRAMBLED (curr_lesson_element),
+			                    current_node);
 		else if (GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (curr_lesson_element))
 			add_group (GPINSTRUCT_LESSON_ELEMENT_GROUP (curr_lesson_element),
 			           current_node);

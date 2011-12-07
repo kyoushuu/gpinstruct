@@ -35,6 +35,8 @@
 #include <gpinstruct/gpinstruct-lesson-test-order.h>
 #include <gpinstruct/gpinstruct-lesson-test-text-question.h>
 #include <gpinstruct/gpinstruct-lesson-test-text.h>
+#include <gpinstruct/gpinstruct-lesson-test-scrambled-question.h>
+#include <gpinstruct/gpinstruct-lesson-test-scrambled.h>
 
 
 #include <gpinstruct/gpinstruct-lesson.h>
