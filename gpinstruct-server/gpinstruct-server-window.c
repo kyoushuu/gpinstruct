@@ -33,6 +33,9 @@ struct _GPInstructServerWindowPrivate
 	GtkActionGroup* action_group;
 
 
+	GtkWidget* title_entry;
+	GtkWidget* port_entry;
+
 	GtkWidget* tree_view;
 	GtkTreeStore* store;
 
@@ -229,6 +232,37 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), toolbar, FALSE, TRUE, 0);
 
 
+	GtkWidget* info_frame = gtk_frame_new (_("Project Information"));
+	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), info_frame,
+	                    FALSE, TRUE, 0);
+
+	GtkWidget* info_table = gtk_table_new (2, 2, FALSE);
+	gtk_container_add (GTK_CONTAINER (info_frame), info_table);
+
+	GtkWidget* title_label = gtk_label_new (_("Title:"));
+	gtk_table_attach (GTK_TABLE (info_table), title_label,
+	                  0, 1, 0, 1,
+	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
+	                  0, 0);
+	object->priv->title_entry = gtk_entry_new ();
+	gtk_editable_set_editable (GTK_EDITABLE (object->priv->title_entry), FALSE);
+	gtk_table_attach (GTK_TABLE (info_table), object->priv->title_entry,
+	                  1, 2, 0, 1,
+	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
+	                  0, 0);
+
+	GtkWidget* port_label = gtk_label_new (_("Port:"));
+	gtk_table_attach (GTK_TABLE (info_table), port_label,
+	                  0, 1, 1, 2,
+	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
+	                  0, 0);
+	object->priv->port_entry = gtk_entry_new ();
+	gtk_editable_set_editable (GTK_EDITABLE (object->priv->port_entry), FALSE);
+	gtk_table_attach (GTK_TABLE (info_table), object->priv->port_entry,
+	                  1, 2, 1, 2,
+	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
+	                  0, 0);
+
 	object->priv->store = gtk_tree_store_new (SERVER_N_COLUMNS,
 	                                          G_TYPE_STRING,
 	                                          G_TYPE_STRING,
@@ -341,7 +375,16 @@ gpinstruct_server_window_new_session (GPInstructServerWindow* window)
 
 		window->priv->session = gpinstruct_server_session_new (project_file,
 		                                                       log_folder);
-		g_print ("Port: %d\n", gpinstruct_server_session_get_port (window->priv->session));
+
+		gtk_entry_set_text (GTK_ENTRY (window->priv->title_entry),
+		                    gpinstruct_project_get_title (gpinstruct_server_session_get_project (window->priv->session)));
+
+		gchar *port = g_strdup_printf ("%d",
+		                               gpinstruct_server_session_get_port (window->priv->session));
+		gtk_entry_set_text (GTK_ENTRY (window->priv->port_entry),
+		                    port);
+		g_free (port);
+
 
 		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
 			                                                   "file-close"),

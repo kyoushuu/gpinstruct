@@ -55,6 +55,7 @@ GPInstructServerSession *gpinstruct_server_session_new (const gchar *project_fil
 const gchar *gpinstruct_server_session_get_project_filename (GPInstructServerSession *session);
 const gchar *gpinstruct_server_session_get_log_folder (GPInstructServerSession *session);
 void gpinstruct_server_session_set_log_folder (GPInstructServerSession *session, const gchar *log_folder);
+GPInstructProject *gpinstruct_server_session_get_project (GPInstructServerSession *session);
 guint gpinstruct_server_session_get_port (GPInstructServerSession *session);
 
 G_END_DECLS

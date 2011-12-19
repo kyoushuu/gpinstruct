@@ -585,6 +585,14 @@ gpinstruct_server_session_set_log_folder (GPInstructServerSession *session,
 	priv->log_folder = g_strdup (log_folder);
 }
 
+GPInstructProject *
+gpinstruct_server_session_get_project (GPInstructServerSession *session)
+{
+	g_return_val_if_fail (GPINSTRUCT_IS_SERVER_SESSION (session), 0);
+
+	return session->priv->project;
+}
+
 guint
 gpinstruct_server_session_get_port (GPInstructServerSession *session)
 {
