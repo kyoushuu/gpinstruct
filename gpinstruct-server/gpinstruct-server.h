@@ -17,4 +17,5 @@
  */
 
 #include "gpinstruct-server-window.h"
+#include "gpinstruct-server-session.h"
 

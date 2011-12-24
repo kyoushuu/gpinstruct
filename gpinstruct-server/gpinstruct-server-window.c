@@ -39,8 +39,8 @@ struct _GPInstructServerWindowPrivate
 
 	GtkWidget* statusbar;
 
-	GPInstructProject* project;
-	gchar* project_file;
+
+	GPInstructServerSession* session;
 };
 
 #define GPINSTRUCT_SERVER_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_SERVER_WINDOW, GPInstructServerWindowPrivate))
@@ -145,9 +145,6 @@ static void
 gpinstruct_server_window_init (GPInstructServerWindow *object)
 {
 	object->priv = GPINSTRUCT_SERVER_WINDOW_PRIVATE (object);
-
-	object->priv->project = NULL;
-	object->priv->project_file = NULL;
 
 	GError* error = NULL;
 
@@ -271,54 +268,107 @@ gpinstruct_server_window_new (void)
 	return GTK_WIDGET (g_object_new (GPINSTRUCT_TYPE_SERVER_WINDOW, NULL));
 }
 
-const gchar*
-gpinstruct_server_window_get_filename (GPInstructServerWindow* window)
-{
-	return window->priv->project_file;
-}
-
-static void
-gpinstruct_server_window_set_filename (GPInstructServerWindow* window,
-                                       const gchar* file)
-{
-	if (window->priv->project_file)
-		g_free (window->priv->project_file);
-	window->priv->project_file = g_strdup (file);
-}
-
 void
 gpinstruct_server_window_new_session (GPInstructServerWindow* window)
 {
-	if (window->priv->project)
+	if (window->priv->session)
 	{
 		if (gpinstruct_server_window_close_session (window) == FALSE)
 			return;
 	}
 
-	window->priv->project = gpinstruct_project_new ();
+	GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Create New Session"),
+	                                                 GTK_WINDOW (window),
+	                                                 GTK_DIALOG_MODAL,
+	                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+	                                                 NULL);
 
-	gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
-	                                                       "file-close"),
-	                          TRUE);
+	GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
-	gpinstruct_server_window_set_filename (window, NULL);
+	GtkWidget *content_table = gtk_table_new (3, 2, FALSE);
+	gtk_box_pack_start (GTK_BOX (content_area), content_table,
+	                    TRUE, TRUE, 0);
+
+	gtk_table_attach (GTK_TABLE (content_table),
+	                  gtk_label_new (_("Project File:")),
+	                  0, 1, 0, 1,
+	                  GTK_FILL, GTK_FILL,
+	                  0, 0);
+
+	GtkWidget* project_file_chooser =
+		gtk_file_chooser_button_new (_("Choose Project File"),
+		                             GTK_FILE_CHOOSER_ACTION_OPEN);
+
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("GPInstruct project file"));
+	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (project_file_chooser),
+	                             filter);
+
+	gtk_table_attach (GTK_TABLE (content_table),
+	                  project_file_chooser,
+	                  1, 2, 0, 1,
+	                  GTK_FILL | GTK_EXPAND, GTK_FILL,
+	                  0, 0);
+
+	gtk_table_attach (GTK_TABLE (content_table),
+	                  gtk_label_new (_("Log Folder:")),
+	                  0, 1, 1, 2,
+	                  GTK_FILL, GTK_FILL,
+	                  0, 0);
+
+	GtkWidget* log_folder_chooser =
+		gtk_file_chooser_button_new (_("Choose Log Folder"),
+		                             GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+
+	gtk_table_attach (GTK_TABLE (content_table),
+	                  log_folder_chooser,
+	                  1, 2, 1, 2,
+	                  GTK_FILL | GTK_EXPAND, GTK_FILL,
+	                  0, 0);
+
+	gtk_widget_show_all (content_table);
+
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		gchar *project_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (project_file_chooser));
+		gchar *log_folder = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (log_folder_chooser));
+
+		if (!g_file_test (project_file, G_FILE_TEST_IS_REGULAR) ||
+		    !g_file_test (log_folder, G_FILE_TEST_IS_DIR))
+			goto error;
+
+		window->priv->session = gpinstruct_server_session_new (project_file,
+		                                                       log_folder);
+		g_print ("Port: %d\n", gpinstruct_server_session_get_port (window->priv->session));
+
+		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+			                                                   "file-close"),
+			                      TRUE);
+
+		error:
+			g_free (project_file);
+			g_free (log_folder);
+	}
+
+	gtk_widget_destroy (dialog);
 }
 
 gboolean
 gpinstruct_server_window_close_session (GPInstructServerWindow* window)
 {
-	if (window->priv->project == NULL)
+	if (window->priv->session == NULL)
 		return FALSE;
-
-	if (window->priv->project)
-		g_object_unref (window->priv->project);
-	window->priv->project = NULL;
+	else
+	{
+		g_object_unref (window->priv->session);
+		window->priv->session = NULL;
+	}
 
 	gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
 	                                                       "file-close"),
 	                          FALSE);
-
-	gpinstruct_server_window_set_filename (window, NULL);
 
 	return TRUE;
 }
@@ -326,7 +376,7 @@ gpinstruct_server_window_close_session (GPInstructServerWindow* window)
 gboolean
 gpinstruct_server_window_quit (GPInstructServerWindow* window)
 {
-	if (window->priv->project)
+	if (window->priv->session)
 	{
 		if (gpinstruct_server_window_close_session (window) == FALSE)
 			return FALSE;

@@ -21,7 +21,9 @@ lib_LTLIBRARIES =  \
 libgpinstruct_server_la_SOURCES = \
 gpinstruct-server-window.h \
 	gpinstruct-server-window.c \
-	gpinstruct-server.h
+	gpinstruct-server.h \
+	gpinstruct-server-session.h \
+	gpinstruct-server-session.c
 libgpinstruct_server_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Server\" \
 	$(AM_CPPFLAGS)
 
