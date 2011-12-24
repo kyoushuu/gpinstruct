@@ -140,19 +140,52 @@ page_show_next (GPInstructLessonTestOrderPage* page,
 
 	if (gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (page->priv->test)))
 	{
-		if (wrong > 0 && wrong == questions_num)
+		if (wrong)
 		{
-			gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
-			                                         GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL);
-			gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
-			                                             gpinstruct_lesson_test_order_get_explanation (page->priv->test));
-		}
-		else if (wrong)
-		{
-			gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
-			                                         GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME);
-			gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
-			                                             gpinstruct_lesson_test_order_get_explanation (page->priv->test));
+			if (wrong == questions_num)
+			{
+				gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+					                                     GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL);
+			}
+			else
+			{
+				gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+					                                     GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME);
+			}
+
+			const gchar *explanation = gpinstruct_lesson_test_order_get_explanation (page->priv->test);
+
+			if (explanation && *explanation != '\0')
+				gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+				                                             explanation);
+			else
+			{
+				GString *explanation_answer = g_string_new (NULL);
+
+				GList* items = gpinstruct_lesson_test_order_get_items (page->priv->test);
+				guint length = g_list_length (items);
+				const gchar *answers[length];
+				int i;
+				for (i = 0; i<length; i++)
+				{
+					GPInstructLessonTestOrderItem* item = g_list_nth_data (items, i);
+					answers[gpinstruct_lesson_test_order_item_get_answer (item)] =
+						gpinstruct_lesson_test_order_item_get_text (item);
+				}
+				for (i = 0; i<length; i++)
+				{
+					g_string_append_printf (explanation_answer,
+								            "%d. %s\n",
+					                        i+1,
+								            answers[i]);
+				}
+				g_list_free (items);
+
+				gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+						                                     explanation_answer->str);
+
+				g_string_free (explanation_answer, TRUE);
+			}
 		}
 		else
 			gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),

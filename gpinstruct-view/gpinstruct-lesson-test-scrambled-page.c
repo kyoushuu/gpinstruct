@@ -169,8 +169,21 @@ page_show_next (GPInstructLessonTestScrambledPage* page,
 	{
 		gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 		                                         GPINSTRUCT_MESSAGE_TYPE_WRONG);
-		gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
-		                                             gpinstruct_lesson_test_scrambled_question_get_explanation (question));
+
+		const gchar *explanation = gpinstruct_lesson_test_scrambled_question_get_explanation (question);
+
+		if (explanation && *explanation != '\0')
+			gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+				                                             explanation);
+		else
+		{
+			gchar *explanation = g_strdup_printf ("%s\n\nAnswer: %s",
+			                                      gpinstruct_lesson_test_scrambled_question_get_text (question),
+			                                      correct_answer);
+			gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+				                                         explanation);
+			g_free (explanation);
+		}
 	}
 
 	if (page->priv->curr_question+1 < questions_num)

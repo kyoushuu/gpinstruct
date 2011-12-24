@@ -213,8 +213,31 @@ page_show_next (GPInstructLessonTestWordPoolPage* page,
 		{
 			gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 			                                         GPINSTRUCT_MESSAGE_TYPE_WRONG);
-			gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
-			                                             gpinstruct_lesson_test_word_pool_question_get_explanation (question));
+
+			const gchar *explanation = gpinstruct_lesson_test_word_pool_question_get_explanation (question);
+			if (explanation && *explanation != '\0')
+				gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+				                                             explanation);
+			else
+			{
+				GString *explanation_answer = g_string_new (gpinstruct_lesson_test_word_pool_question_get_text (question));
+
+				GList* choices = gpinstruct_lesson_test_word_pool_get_choices (page->priv->test);
+				guint length = g_list_length (choices);
+				for (i = 0; i<length; i++)
+				{
+					g_string_append_printf (explanation_answer,
+							                correct_choice==i? "\n<i>%c. %s</i>":"\n%c. %s",
+							                'a'+i,
+							                (gchar*)g_list_nth_data (choices, page->priv->choices[i]));
+				}
+				g_list_free (choices);
+
+				gpinstruct_lesson_view_page_set_explanation (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+						                                     explanation_answer->str);
+
+				g_string_free (explanation_answer, TRUE);
+			}
 		}
 	}
 	else
