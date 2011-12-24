@@ -874,10 +874,8 @@ main (int argc,
 
 		gtk_widget_show_all (priv->waiting_dialog);
 
-		gchar *user_agent = g_strdup_printf (_("GPInstruct Client %s"), PACKAGE_VERSION);
-		priv->session = soup_session_async_new_with_options (SOUP_SESSION_USER_AGENT, user_agent,
+		priv->session = soup_session_async_new_with_options (SOUP_SESSION_USER_AGENT, PACKAGE_TARNAME "-client/" PACKAGE_VERSION " ",
 		                                                     NULL);
-		g_free (user_agent);
 
 		soup_session_add_feature (priv->session,
 		                          SOUP_SESSION_FEATURE (soup_logger_new (SOUP_LOGGER_LOG_BODY, -1)));
