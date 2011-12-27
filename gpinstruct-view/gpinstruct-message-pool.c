@@ -195,6 +195,7 @@ gpinstruct_message_pool_load_from_file (GPInstructMessagePool* pool,
 			{GPINSTRUCT_MESSAGE_TYPE_CORRECT_ALL,	"CorrectAll"},
 			{GPINSTRUCT_MESSAGE_TYPE_WRONG,			"Wrong"},
 			{GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME,	"WrongSome"},
+			{GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST,	"WrongMost"},
 			{GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL,		"WrongAll"},
 			{GPINSTRUCT_MESSAGE_TYPE_PASS,			"Pass"},
 			{GPINSTRUCT_MESSAGE_TYPE_FAIL,			"Fail"}

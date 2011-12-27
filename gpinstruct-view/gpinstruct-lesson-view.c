@@ -283,6 +283,9 @@ gpinstruct_lesson_view_next (GPInstructLessonView* view,
 		case GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME:
 			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_WARNING);
 			break;
+		case GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST:
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_ERROR);
+			break;
 		case GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL:
 			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_ERROR);
 			break;
@@ -302,6 +305,7 @@ gpinstruct_lesson_view_next (GPInstructLessonView* view,
 
 	if (message == GPINSTRUCT_MESSAGE_TYPE_WRONG ||
 	    message == GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME ||
+	    message == GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST ||
 	    message == GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL)
 	{
 		if (view->priv->explanation)

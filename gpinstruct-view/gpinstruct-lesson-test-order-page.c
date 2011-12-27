@@ -147,6 +147,11 @@ page_show_next (GPInstructLessonTestOrderPage* page,
 				gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 					                                     GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL);
 			}
+			else if ((gfloat)wrong / questions_num > 0.5)
+			{
+				gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
+					                                     GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST);
+			}
 			else
 			{
 				gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
