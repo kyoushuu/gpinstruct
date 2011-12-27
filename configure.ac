@@ -66,7 +66,6 @@ AC_SUBST(LT_CURRENT_MINUS_AGE)
 
 AM_INIT_AUTOMAKE([-Wall -Werror gnu no-dist-gzip dist-xz])
 AM_SILENT_RULES([yes])
-AM_MAINTAINER_MODE
 
 
 LT_INIT([disable-static win32-dll])
