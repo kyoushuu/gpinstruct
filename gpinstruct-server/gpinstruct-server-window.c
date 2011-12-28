@@ -137,6 +137,7 @@ help_about_action (GtkAction *action,
 	                                          "license", license,
 	                                          "wrap-license", TRUE,
 	                                          "authors", authors,
+	                                          "logo-icon-name", "gpinstruct-server",
 	                                          NULL);
                    }
 
