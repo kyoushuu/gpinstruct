@@ -79,3 +79,14 @@ libgpinstruct_la_LIBADD = $(GOBJECT_LIBS) \
 	$(LIBXML_LIBS) \
 	$(top_builddir)/compat/libcompat-glib.la
 
+
+if NATIVE_WIN32
+libgpinstruct_la_DEPENDENCIES = libgpinstruct-win32-res.o
+libgpinstruct_la_LDFLAGS += -Wl,libgpinstruct-win32-res.o
+endif
+
+libgpinstruct-win32-res.o: libgpinstruct.rc
+	$(WINDRES) $< $@
+
+EXTRA_DIST = \
+	libgpinstruct.rc.in

@@ -51,7 +51,12 @@ private_icons = \
 	gpinstruct-client.svg \
 	gpinstruct-editor.svg \
 	gpinstruct-server.svg \
-	gpinstruct-view.svg
+	gpinstruct-view.svg \
+	gpinstruct-analyzer.ico \
+	gpinstruct-client.ico \
+	gpinstruct-editor.ico \
+	gpinstruct-server.ico \
+	gpinstruct-view.ico
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t
 

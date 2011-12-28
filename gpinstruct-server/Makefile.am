@@ -48,3 +48,21 @@ gpinstruct_server_LDADD = $(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	libgpinstruct-server.la
 
+
+if NATIVE_WIN32
+gpinstruct_server_LDFLAGS = -mwindows
+gpinstruct_server_LDADD += gpinstruct-server-win32-res.o
+libgpinstruct_server_la_DEPENDENCIES = libgpinstruct-server-win32-res.o
+libgpinstruct_server_la_LDFLAGS += -Wl,libgpinstruct-server-win32-res.o
+endif
+
+gpinstruct-server-win32-res.o: gpinstruct-server.rc
+	$(WINDRES) $< $@
+
+libgpinstruct-server-win32-res.o: libgpinstruct-server.rc
+	$(WINDRES) $< $@
+
+EXTRA_DIST = \
+	gpinstruct-server.rc.in \
+	libgpinstruct-server.rc.in
+

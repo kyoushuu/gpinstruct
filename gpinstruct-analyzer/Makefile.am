@@ -46,3 +46,21 @@ gpinstruct_analyzer_LDADD = $(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	libgpinstruct-analyzer.la
+
+
+if NATIVE_WIN32
+gpinstruct_analyzer_LDFLAGS = -mwindows
+gpinstruct_analyzer_LDADD += gpinstruct-analyzer-win32-res.o
+libgpinstruct_analyzer_la_DEPENDENCIES = libgpinstruct-analyzer-win32-res.o
+libgpinstruct_analyzer_la_LDFLAGS += -Wl,libgpinstruct-analyzer-win32-res.o
+endif
+
+gpinstruct-analyzer-win32-res.o: gpinstruct-analyzer.rc
+	$(WINDRES) $< $@
+
+libgpinstruct-analyzer-win32-res.o: libgpinstruct-analyzer.rc
+	$(WINDRES) $< $@
+
+EXTRA_DIST = \
+	gpinstruct-analyzer.rc.in \
+	libgpinstruct-analyzer.rc.in

@@ -75,6 +75,25 @@ gpinstruct_view_LDADD = $(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	libgpinstruct-view.la
 
+
+if NATIVE_WIN32
+gpinstruct_view_LDFLAGS = -mwindows
+gpinstruct_view_LDADD += gpinstruct-view-win32-res.o
+libgpinstruct_view_la_DEPENDENCIES = libgpinstruct-view-win32-res.o
+libgpinstruct_view_la_LDFLAGS += -Wl,libgpinstruct-view-win32-res.o
+endif
+
+gpinstruct-view-win32-res.o: gpinstruct-view.rc
+	$(WINDRES) $< $@
+
+libgpinstruct-view-win32-res.o: libgpinstruct-view.rc
+	$(WINDRES) $< $@
+
+EXTRA_DIST = \
+	gpinstruct-view.rc.in \
+	libgpinstruct-view.rc.in
+
+
 if HAVE_GSTREAMER
 AM_CPPFLAGS += $(GSTREAMER_CFLAGS)
 libgpinstruct_view_la_LIBADD += $(GSTREAMER_LIBS)

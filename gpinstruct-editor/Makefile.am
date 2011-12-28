@@ -66,3 +66,20 @@ gpinstruct_editor_LDADD = $(GTK_LIBS) \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	libgpinstruct-editor.la
 
+
+if NATIVE_WIN32
+gpinstruct_editor_LDFLAGS = -mwindows
+gpinstruct_editor_LDADD += gpinstruct-editor-win32-res.o
+libgpinstruct_editor_la_DEPENDENCIES = libgpinstruct-editor-win32-res.o
+libgpinstruct_editor_la_LDFLAGS += -Wl,libgpinstruct-editor-win32-res.o
+endif
+
+gpinstruct-editor-win32-res.o: gpinstruct-editor.rc
+	$(WINDRES) $< $@
+
+libgpinstruct-editor-win32-res.o: libgpinstruct-editor.rc
+	$(WINDRES) $< $@
+
+EXTRA_DIST = \
+	gpinstruct-editor.rc.in \
+	libgpinstruct-editor.rc.in

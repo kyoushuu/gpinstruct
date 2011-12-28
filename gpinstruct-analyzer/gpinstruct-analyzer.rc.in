@@ -1,0 +1,29 @@
+#include <winver.h>                      
+
+GPINSTRUCT_ICON		ICON		"../data/icons/gpinstruct-analyzer.ico"
+
+VS_VERSION_INFO VERSIONINFO
+  FILEVERSION     @GPINSTRUCT_MAJOR_VERSION@,@GPINSTRUCT_MINOR_VERSION@,@GPINSTRUCT_MICRO_VERSION@,0
+  PRODUCTVERSION  @GPINSTRUCT_MAJOR_VERSION@,@GPINSTRUCT_MINOR_VERSION@,@GPINSTRUCT_MICRO_VERSION@,0
+  FILEOS          VOS__WINDOWS32
+  FILETYPE        VFT_APP
+  BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+      BLOCK "040904B0"
+      BEGIN
+        VALUE "CompanyName", "Arnel A. Borja"
+        VALUE "FileDescription", "GPInstruct Analyzer @GPINSTRUCT_VERSION@"
+        VALUE "FileVersion", "@GPINSTRUCT_VERSION@.0"
+        VALUE "LegalCopyright", "Copyright © 2011 Arnel A. Borja"
+        VALUE "OriginalFilename", "gpinstruct-analyzer.exe"
+        VALUE "ProductName", "GPInstruct Analyzer"
+        VALUE "ProductVersion", "@GPINSTRUCT_VERSION@.0"
+      END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+      VALUE "Translation", 0x409, 1200
+    END
+  END
+

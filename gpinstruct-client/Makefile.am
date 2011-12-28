@@ -52,3 +52,21 @@ gpinstruct_client_LDADD = \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	libgpinstruct-client.la
+
+
+if NATIVE_WIN32
+gpinstruct_client_LDFLAGS = -mwindows
+gpinstruct_client_LDADD += gpinstruct-client-win32-res.o
+libgpinstruct_client_la_DEPENDENCIES = libgpinstruct-client-win32-res.o
+libgpinstruct_client_la_LDFLAGS += -Wl,libgpinstruct-client-win32-res.o
+endif
+
+gpinstruct-client-win32-res.o: gpinstruct-client.rc
+	$(WINDRES) $< $@
+
+libgpinstruct-client-win32-res.o: libgpinstruct-client.rc
+	$(WINDRES) $< $@
+
+EXTRA_DIST = \
+	gpinstruct-client.rc.in \
+	libgpinstruct-client.rc.in

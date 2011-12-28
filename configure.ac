@@ -104,6 +104,37 @@ dnl ***************************************************************************
 GTK_DOC_CHECK([1.11],[--flavour no-tmpl])
 
 
+dnl ================================================================
+dnl Check for windows
+dnl ================================================================
+case $host_os in
+  *mingw* | pw32* | cygwin*)
+    platform_win32=yes
+    ;;
+  *)
+    platform_win32=no
+    ;;
+esac
+AM_CONDITIONAL(PLATFORM_WIN32, test x"$platform_win32" = "xyes")
+
+case $host_os in
+  *mingw*)
+    native_win32=yes
+    ;;
+  *)
+    native_win32=no
+    ;;
+esac
+AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
+
+if test "$native_win32" = "yes"; then
+  AC_CHECK_TOOL(WINDRES, windres, no)
+  if test "$WINDRES" = no; then
+    AC_MSG_ERROR([*** Could not find an implementation of windres in your PATH.])
+  fi
+fi
+
+
 PKG_CHECK_MODULES(LIBXML,libxml-2.0)
 
 PKG_CHECK_MODULES(GOBJECT,gobject-2.0)
@@ -133,11 +164,22 @@ AC_OUTPUT([
 Makefile
 compat/Makefile
 gpinstruct/Makefile
+gpinstruct/libgpinstruct.rc
 gpinstruct-view/Makefile
+gpinstruct-view/gpinstruct-view.rc
+gpinstruct-view/libgpinstruct-view.rc
 gpinstruct-editor/Makefile
+gpinstruct-editor/gpinstruct-editor.rc
+gpinstruct-editor/libgpinstruct-editor.rc
 gpinstruct-analyzer/Makefile
+gpinstruct-analyzer/gpinstruct-analyzer.rc
+gpinstruct-analyzer/libgpinstruct-analyzer.rc
 gpinstruct-server/Makefile
+gpinstruct-server/gpinstruct-server.rc
+gpinstruct-server/libgpinstruct-server.rc
 gpinstruct-client/Makefile
+gpinstruct-client/gpinstruct-client.rc
+gpinstruct-client/libgpinstruct-client.rc
 data/gpinstruct-analyzer.desktop.in
 data/gpinstruct-client.desktop.in
 data/gpinstruct-editor.desktop.in
