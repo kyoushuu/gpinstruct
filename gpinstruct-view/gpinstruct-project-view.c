@@ -17,6 +17,7 @@
  */
 
 #include <config.h>
+#include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
 
@@ -126,14 +127,14 @@ gpinstruct_project_view_new (GPInstructProject* project,
 	{
 		view->priv->pool = gpinstruct_message_pool_new ();
 		gpinstruct_message_pool_add_multiple (view->priv->pool,
-		                                      GPINSTRUCT_MESSAGE_TYPE_CORRECT,		"Your last answer is correct.",
-		                                      GPINSTRUCT_MESSAGE_TYPE_CORRECT_ALL,	"All of your answers are correct.",
-		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG,		"Your last answer is wrong.",
-		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME,	"Some of your answers are wrong.",
-		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST,	"Most of your answers are wrong.",
-		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL,	"All of your answers are wrong.",
-		                                      GPINSTRUCT_MESSAGE_TYPE_PASS,			"You passed the test.",
-		                                      GPINSTRUCT_MESSAGE_TYPE_FAIL,			"You failed the test.",
+		                                      GPINSTRUCT_MESSAGE_TYPE_CORRECT,		_("Your last answer is correct."),
+		                                      GPINSTRUCT_MESSAGE_TYPE_CORRECT_ALL,	_("All of your answers are correct."),
+		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG,		_("Your last answer is wrong."),
+		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME,	_("Some of your answers are wrong."),
+		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST,	_("Most of your answers are wrong."),
+		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL,	_("All of your answers are wrong."),
+		                                      GPINSTRUCT_MESSAGE_TYPE_PASS,			_("You passed the test."),
+		                                      GPINSTRUCT_MESSAGE_TYPE_FAIL,			_("You failed the test."),
 		                                      GPINSTRUCT_MESSAGE_TYPE_NONE);
 	}
 
