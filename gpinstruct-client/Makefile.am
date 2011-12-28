@@ -16,13 +16,22 @@ AM_CPPFLAGS = \
 	$(LIBSOUP_CFLAGS) \
 	$(LIBSOUP_SOAP_CFLAGS)
 
-bin_PROGRAMS =  \
-	gpinstruct-client
+lib_LTLIBRARIES = \
+	libgpinstruct-client.la
 
-gpinstruct_client_SOURCES =  \
-	main.c
+libgpinstruct_client_la_SOURCES = \
+	gpinstruct-client.h \
+	gpinstruct-client-window.h \
+	gpinstruct-client-window.c
 
-gpinstruct_client_LDADD = \
+libgpinstruct_client_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Client\" \
+	$(AM_CPPFLAGS)
+
+libgpinstruct_client_la_LDFLAGS = \
+	-no-undefined \
+	-version-info $(LT_VERSION_INFO)
+
+libgpinstruct_client_la_LIBADD = \
 	$(LIBXML_LIBS) \
 	$(GLIB_LIBS) \
 	$(GTK_LIBS) \
@@ -31,3 +40,15 @@ gpinstruct_client_LDADD = \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	$(top_builddir)/compat/libcompat-gtk.la
+
+bin_PROGRAMS =  \
+	gpinstruct-client
+
+gpinstruct_client_SOURCES =  \
+	main.c
+
+gpinstruct_client_LDADD = \
+	$(GTK_LIBS) \
+	$(top_builddir)/gpinstruct/libgpinstruct.la \
+	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
+	libgpinstruct-client.la
