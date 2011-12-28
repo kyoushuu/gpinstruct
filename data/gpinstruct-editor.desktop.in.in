@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=GPInstruct Editor
+_Comment=Create, edit and view GPInstruct projects
+Exec=gpinstruct-editor %U
+TryExec=gpinstruct-editor
+Terminal=false
+Type=Application
+Icon=gpinstruct-editor
+Categories=GNOME;Education;

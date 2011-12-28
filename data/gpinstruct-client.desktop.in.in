@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=GPInstruct Client
+_Comment=Answer projects from a GPInstruct Server
+Exec=gpinstruct-client
+TryExec=gpinstruct-client
+Terminal=false
+Type=Application
+Icon=gpinstruct-client
+Categories=GNOME;Education;

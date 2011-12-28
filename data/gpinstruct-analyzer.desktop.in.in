@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=GPInstruct Analyzer
+_Comment=View and analyze results from GPInstruct Viewer and GPInstruct Server
+Exec=gpinstruct-analyzer %U
+TryExec=gpinstruct-analyzer
+Terminal=false
+Type=Application
+Icon=gpinstruct-analyzer
+Categories=GNOME;Education;

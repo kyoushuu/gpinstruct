@@ -138,4 +138,11 @@ gpinstruct-editor/Makefile
 gpinstruct-analyzer/Makefile
 gpinstruct-server/Makefile
 gpinstruct-client/Makefile
+data/gpinstruct-analyzer.desktop.in
+data/gpinstruct-client.desktop.in
+data/gpinstruct-editor.desktop.in
+data/gpinstruct-server.desktop.in
+data/gpinstruct-view.desktop.in
+data/Makefile
+data/icons/Makefile
 po/Makefile.in])

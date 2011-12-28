@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=GPInstruct Viewer
+_Comment=Test, view and answer GPInstruct projects
+Exec=gpinstruct-view %U
+TryExec=gpinstruct-view
+Terminal=false
+Type=Application
+Icon=gpinstruct-view
+Categories=GNOME;Education;

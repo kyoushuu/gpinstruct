@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=GPInstruct Server
+_Comment=Serve GPInstruct projects through local network
+Exec=gpinstruct-server %U
+TryExec=gpinstruct-server
+Terminal=false
+Type=Application
+Icon=gpinstruct-server
+Categories=GNOME;Education;
