@@ -76,8 +76,7 @@ page_reset (GPInstructLessonTestWordPoolPage* page,
 	if (page->priv->log)
 		gpinstruct_log_close_test (page->priv->log);
 
-	if (page->priv->questions)
-		g_free (page->priv->questions);
+	g_free (page->priv->questions);
 
 	guint questions_num = gpinstruct_lesson_test_word_pool_get_questions_length (page->priv->test);
 	page->priv->questions = random_array (questions_num);
@@ -85,8 +84,7 @@ page_reset (GPInstructLessonTestWordPoolPage* page,
 	GList* choices = gpinstruct_lesson_test_word_pool_get_choices (page->priv->test);
 	guint length = g_list_length (choices);
 
-	if (page->priv->choices)
-		g_free (page->priv->choices);
+	g_free (page->priv->choices);
 	page->priv->choices = random_array (length);
 
 	gtk_list_store_clear (page->priv->store);
@@ -131,11 +129,8 @@ gpinstruct_lesson_test_word_pool_page_finalize (GObject *object)
 {
 	GPInstructLessonTestWordPoolPage* page = GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE (object);
 
-	if (page->priv->questions)
-		g_free (page->priv->questions);
-
-	if (page->priv->choices)
-		g_free (page->priv->choices);
+	g_free (page->priv->questions);
+	g_free (page->priv->choices);
 
 	if (page->priv->store)
 		g_object_unref (page->priv->store);

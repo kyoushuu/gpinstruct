@@ -48,14 +48,9 @@ gpinstruct_lesson_test_scrambled_question_finalize (GObject *object)
 {
 	GPInstructLessonTestScrambledQuestion* question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (object);
 
-	if (question->priv->text)
-		g_free (question->priv->text);
-
-	if (question->priv->explanation)
-		g_free (question->priv->explanation);
-
-	if (question->priv->answer)
-		g_free (question->priv->answer);
+	g_free (question->priv->text);
+	g_free (question->priv->explanation);
+	g_free (question->priv->answer);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_scrambled_question_parent_class)->finalize (object);
 }
@@ -88,8 +83,7 @@ void
 gpinstruct_lesson_test_scrambled_question_set_text (GPInstructLessonTestScrambledQuestion* question,
                                                     const gchar* text)
 {
-	if (question->priv->text)
-		g_free (question->priv->text);
+	g_free (question->priv->text);
 	question->priv->text = g_strdup (text);
 }
 
@@ -117,7 +111,6 @@ void
 gpinstruct_lesson_test_scrambled_question_set_explanation (GPInstructLessonTestScrambledQuestion* question,
                                                            const gchar* explanation)
 {
-	if (question->priv->explanation)
-		g_free (question->priv->explanation);
+	g_free (question->priv->explanation);
 	question->priv->explanation = g_strdup (explanation);
 }

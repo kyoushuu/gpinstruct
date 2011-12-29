@@ -49,8 +49,7 @@ page_reset (GPInstructLessonTestOrderPage* page,
 	GList* items = gpinstruct_lesson_test_order_get_items (page->priv->test);
 	guint length = g_list_length (items);
 
-	if (page->priv->items)
-		g_free (page->priv->items);
+	g_free (page->priv->items);
 
 	page->priv->items = random_array (length);
 	gtk_list_store_clear (page->priv->store);
@@ -83,8 +82,8 @@ static void
 gpinstruct_lesson_test_order_page_finalize (GObject *object)
 {
 	GPInstructLessonTestOrderPage* page = GPINSTRUCT_LESSON_TEST_ORDER_PAGE (object);
-	if (page->priv->items)
-		g_free (page->priv->items);
+
+	g_free (page->priv->items);
 
 	if (page->priv->store)
 		g_object_unref (page->priv->store);

@@ -52,8 +52,7 @@ gpinstruct_lesson_element_group_finalize (GObject *object)
 {
 	GPInstructLessonElementGroup* group = GPINSTRUCT_LESSON_ELEMENT_GROUP (object);
 
-	if (group->priv->directions)
-		g_free (group->priv->directions);
+	g_free (group->priv->directions);
 
 	if (group->priv->lesson_elements)
 		g_list_free_full (group->priv->lesson_elements, g_object_unref);
@@ -89,8 +88,7 @@ void
 gpinstruct_lesson_element_group_set_directions (GPInstructLessonElementGroup* group,
                                                 const gchar* directions)
 {
-	if (group->priv->directions)
-		g_free (group->priv->directions);
+	g_free (group->priv->directions);
 	group->priv->directions = g_strdup (directions);
 }
 

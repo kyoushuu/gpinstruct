@@ -48,10 +48,8 @@ gpinstruct_category_finalize (GObject *object)
 {
 	GPInstructCategory* category = GPINSTRUCT_CATEGORY (object);
 
-	if (category->priv->title)
-		g_free (category->priv->title);
-	if (category->priv->lessons)
-		g_list_free_full (category->priv->lessons, g_object_unref);
+	g_free (category->priv->title);
+	g_list_free_full (category->priv->lessons, g_object_unref);
 
 	G_OBJECT_CLASS (gpinstruct_category_parent_class)->finalize (object);
 }
@@ -84,8 +82,7 @@ void
 gpinstruct_category_set_title (GPInstructCategory* category,
                                const gchar *title)
 {
-	if (category->priv->title)
-		g_free (category->priv->title);
+	g_free (category->priv->title);
 	category->priv->title = g_strdup (title);
 }
 

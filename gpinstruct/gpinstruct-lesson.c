@@ -50,8 +50,7 @@ gpinstruct_lesson_finalize (GObject *object)
 {
 	GPInstructLesson* lesson = GPINSTRUCT_LESSON (object);
 
-	if (lesson->priv->title)
-		g_free (lesson->priv->title);
+	g_free (lesson->priv->title);
 	if (lesson->priv->lesson_elements)
 		g_list_free_full (lesson->priv->lesson_elements, g_object_unref);
 
@@ -86,8 +85,7 @@ void
 gpinstruct_lesson_set_title (GPInstructLesson* lesson,
                              const gchar* title)
 {
-	if (lesson->priv->title)
-		g_free (lesson->priv->title);
+	g_free (lesson->priv->title);
 	lesson->priv->title = g_strdup (title);
 }
 

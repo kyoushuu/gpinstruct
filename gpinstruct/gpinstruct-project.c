@@ -48,8 +48,8 @@ gpinstruct_project_finalize (GObject *object)
 {
 	GPInstructProject* project = GPINSTRUCT_PROJECT (object);
 
-	if (project->priv->title)
-		g_free (project->priv->title);
+	g_free (project->priv->title);
+
 	if (project->priv->categories)
 		g_list_free_full (project->priv->categories, g_object_unref);
 
@@ -84,8 +84,7 @@ void
 gpinstruct_project_set_title (GPInstructProject* project,
                               const gchar *title)
 {
-	if (project->priv->title)
-		g_free (project->priv->title);
+	g_free (project->priv->title);
 	project->priv->title = g_strdup (title);
 }
 

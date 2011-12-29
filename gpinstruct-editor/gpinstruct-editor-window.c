@@ -1136,8 +1136,7 @@ static void
 gpinstruct_editor_window_set_filename (GPInstructEditorWindow* window,
                                        const gchar* file)
 {
-	if (window->priv->project_file)
-		g_free (window->priv->project_file);
+	g_free (window->priv->project_file);
 	window->priv->project_file = g_strdup (file);
 }
 

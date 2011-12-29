@@ -44,8 +44,7 @@ gpinstruct_lesson_reading_finalize (GObject *object)
 {
 	GPInstructLessonReading* reading = GPINSTRUCT_LESSON_READING (object);
 
-	if (reading->priv->text)
-		g_free (reading->priv->text);
+	g_free (reading->priv->text);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_reading_parent_class)->finalize (object);
 }
@@ -78,7 +77,6 @@ void
 gpinstruct_lesson_reading_set_text (GPInstructLessonReading* reading,
                                     const gchar* text)
 {
-	if (reading->priv->text)
-		g_free (reading->priv->text);
+	g_free (reading->priv->text);
 	reading->priv->text = g_strdup (text);
 }

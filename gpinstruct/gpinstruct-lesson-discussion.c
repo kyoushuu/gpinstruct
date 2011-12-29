@@ -44,8 +44,7 @@ gpinstruct_lesson_discussion_finalize (GObject *object)
 {
 	GPInstructLessonDiscussion* discussion = GPINSTRUCT_LESSON_DISCUSSION (object);
 
-	if (discussion->priv->text)
-		g_free (discussion->priv->text);
+	g_free (discussion->priv->text);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_discussion_parent_class)->finalize (object);
 }
@@ -78,8 +77,7 @@ void
 gpinstruct_lesson_discussion_set_text (GPInstructLessonDiscussion* discussion,
                                        const gchar* text)
 {
-	if (discussion->priv->text)
-		g_free (discussion->priv->text);
+	g_free (discussion->priv->text);
 	discussion->priv->text = g_strdup (text);
 }
 

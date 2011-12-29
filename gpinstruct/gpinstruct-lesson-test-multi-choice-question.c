@@ -52,11 +52,8 @@ gpinstruct_lesson_test_multi_choice_question_finalize (GObject *object)
 {
 	GPInstructLessonTestMultiChoiceQuestion* question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
 
-	if (question->priv->text)
-		g_free (question->priv->text);
-
-	if (question->priv->explanation)
-		g_free (question->priv->explanation);
+	g_free (question->priv->text);
+	g_free (question->priv->explanation);
 
 	if (question->priv->choices)
 		g_list_free_full (question->priv->choices, g_free);
@@ -92,8 +89,7 @@ void
 gpinstruct_lesson_test_multi_choice_question_set_text (GPInstructLessonTestMultiChoiceQuestion* question,
                                                        const gchar* text)
 {
-	if (question->priv->text)
-		g_free (question->priv->text);
+	g_free (question->priv->text);
 	question->priv->text = g_strdup (text);
 }
 
@@ -141,8 +137,7 @@ gpinstruct_lesson_test_multi_choice_question_set_choice (GPInstructLessonTestMul
 {
 	GList* nth_node = g_list_nth (question->priv->choices, choice);;
 
-	if (nth_node->data)
-		g_free (nth_node->data);
+	g_free (nth_node->data);
 	nth_node->data = g_strdup (text);
 }
 
@@ -168,7 +163,6 @@ void
 gpinstruct_lesson_test_multi_choice_question_set_explanation (GPInstructLessonTestMultiChoiceQuestion* question,
                                                               const gchar* explanation)
 {
-	if (question->priv->explanation)
-		g_free (question->priv->explanation);
+	g_free (question->priv->explanation);
 	question->priv->explanation = g_strdup (explanation);
 }

@@ -67,11 +67,8 @@ gpinstruct_lesson_test_finalize (GObject *object)
 {
 	GPInstructLessonTest* test = GPINSTRUCT_LESSON_TEST (object);
 
-	if (test->priv->directions)
-		g_free (test->priv->directions);
-
-	if (test->priv->id)
-		g_free (test->priv->id);
+	g_free (test->priv->directions);
+	g_free (test->priv->id);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_parent_class)->finalize (object);
 }
@@ -112,8 +109,7 @@ void
 gpinstruct_lesson_test_set_directions (GPInstructLessonTest* test,
                                        const gchar* directions)
 {
-	if (test->priv->directions)
-		g_free (test->priv->directions);
+	g_free (test->priv->directions);
 	test->priv->directions = g_strdup (directions);
 }
 
@@ -142,8 +138,7 @@ void
 gpinstruct_lesson_test_set_id (GPInstructLessonTest* test,
                                const gchar* id)
 {
-	if (test->priv->id)
-		g_free (test->priv->id);
+	g_free (test->priv->id);
 	test->priv->id = g_strdup (id);
 }
 

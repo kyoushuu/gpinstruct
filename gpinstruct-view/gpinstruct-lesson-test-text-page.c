@@ -72,8 +72,7 @@ page_reset (GPInstructLessonTestTextPage* page,
 	if (page->priv->log)
 		gpinstruct_log_close_test (page->priv->log);
 
-	if (page->priv->questions)
-		g_free (page->priv->questions);
+	g_free (page->priv->questions);
 
 	guint questions_num = gpinstruct_lesson_test_text_get_questions_length (page->priv->test);
 	page->priv->questions = random_array (questions_num);
@@ -105,8 +104,7 @@ gpinstruct_lesson_test_text_page_finalize (GObject *object)
 {
 	GPInstructLessonTestTextPage* page = GPINSTRUCT_LESSON_TEST_TEXT_PAGE (object);
 
-	if (page->priv->questions)
-		g_free (page->priv->questions);
+	g_free (page->priv->questions);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_text_page_parent_class)->finalize (object);
 }

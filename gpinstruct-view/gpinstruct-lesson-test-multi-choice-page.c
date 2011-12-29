@@ -81,8 +81,7 @@ multi_choice_show_question (GPInstructLessonTestMultiChoicePage* page,
 		GList* choices = gpinstruct_lesson_test_multi_choice_question_get_choices (question);
 		guint length = g_list_length (choices);
 
-		if (page->priv->choices)
-			g_free (page->priv->choices);
+		g_free (page->priv->choices);
 		page->priv->choices = random_array (gpinstruct_lesson_test_multi_choice_question_get_choices_length (question));
 
 		for (i = 0; i<length; i++)
@@ -117,8 +116,7 @@ page_reset (GPInstructLessonTestMultiChoicePage* page,
 	if (page->priv->log)
 		gpinstruct_log_close_test (page->priv->log);
 
-	if (page->priv->questions)
-		g_free (page->priv->questions);
+	g_free (page->priv->questions);
 
 	guint questions_num = gpinstruct_lesson_test_multi_choice_get_questions_length (page->priv->test);
 	page->priv->questions = random_array (questions_num);
@@ -152,11 +150,8 @@ gpinstruct_lesson_test_multi_choice_page_finalize (GObject *object)
 {
 	GPInstructLessonTestMultiChoicePage* page = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE (object);
 
-	if (page->priv->questions)
-		g_free (page->priv->questions);
-
-	if (page->priv->choices)
-		g_free (page->priv->choices);
+	g_free (page->priv->questions);
+	g_free (page->priv->choices);
 
 	if (page->priv->choice_buttons)
 		g_list_free (page->priv->choice_buttons);

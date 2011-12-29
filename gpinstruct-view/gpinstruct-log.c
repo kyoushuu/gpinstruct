@@ -163,8 +163,7 @@ void
 gpinstruct_log_set_last_name (GPInstructLog* log,
                               const gchar* last_name)
 {
-	if (log->priv->last_name)
-		g_free (log->priv->last_name);
+	g_free (log->priv->last_name);
 	log->priv->last_name = g_strdup (last_name);
 }
 
@@ -178,8 +177,7 @@ void
 gpinstruct_log_set_first_name (GPInstructLog* log,
                                const gchar* first_name)
 {
-	if (log->priv->first_name)
-		g_free (log->priv->first_name);
+	g_free (log->priv->first_name);
 	log->priv->first_name = g_strdup (first_name);
 }
 

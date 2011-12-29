@@ -90,11 +90,8 @@ gpinstruct_lesson_view_page_finalize (GObject *object)
 {
 	GPInstructLessonViewPage* page = GPINSTRUCT_LESSON_VIEW_PAGE (object);
 
-	if (page->priv->title)
-		g_free (page->priv->title);
-
-	if (page->priv->explanation)
-		g_free (page->priv->explanation);
+	g_free (page->priv->title);
+	g_free (page->priv->explanation);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_view_page_parent_class)->finalize (object);
 }
@@ -168,8 +165,7 @@ void
 gpinstruct_lesson_view_page_set_title (GPInstructLessonViewPage* page,
                                        const gchar* title)
 {
-	if (page->priv->title)
-		g_free (page->priv->title);
+	g_free (page->priv->title);
 	page->priv->title = g_strdup (title);
 }
 
@@ -244,8 +240,7 @@ void
 gpinstruct_lesson_view_page_set_explanation (GPInstructLessonViewPage* page,
                                              const gchar* explanation)
 {
-	if (page->priv->explanation)
-		g_free (page->priv->explanation);
+	g_free (page->priv->explanation);
 	page->priv->explanation = g_strdup (explanation);
 }
 

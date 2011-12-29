@@ -238,8 +238,7 @@ gpinstruct_lesson_view_finalize (GObject *object)
 	if (view->priv->pages)
 		g_list_free (view->priv->pages);
 
-	if (view->priv->explanation)
-		g_free (view->priv->explanation);
+	g_free (view->priv->explanation);
 
 	if (view->priv->lesson)
 		g_object_unref (view->priv->lesson);
@@ -308,8 +307,7 @@ gpinstruct_lesson_view_next (GPInstructLessonView* view,
 	    message == GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST ||
 	    message == GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL)
 	{
-		if (view->priv->explanation)
-			g_free (view->priv->explanation);
+		g_free (view->priv->explanation);
 		view->priv->explanation = g_strdup (gpinstruct_lesson_view_page_get_explanation (current_page));
 
 		if (view->priv->explanation == NULL ||

@@ -46,8 +46,7 @@ gpinstruct_lesson_test_order_item_finalize (GObject *object)
 {
 	GPInstructLessonTestOrderItem* item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (object);
 
-	if (item->priv->text)
-		g_free (item->priv->text);
+	g_free (item->priv->text);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_order_item_parent_class)->finalize (object);
 }
@@ -80,8 +79,7 @@ void
 gpinstruct_lesson_test_order_item_set_text (GPInstructLessonTestOrderItem* item,
                                             const gchar* text)
 {
-	if (item->priv->text)
-		g_free (item->priv->text);
+	g_free (item->priv->text);
 	item->priv->text = g_strdup (text);
 }
 

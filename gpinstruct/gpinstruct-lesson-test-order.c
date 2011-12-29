@@ -104,8 +104,7 @@ gpinstruct_lesson_test_order_finalize (GObject *object)
 {
 	GPInstructLessonTestOrder* test = GPINSTRUCT_LESSON_TEST_ORDER (object);
 
-	if (test->priv->explanation)
-		g_free (test->priv->explanation);
+	g_free (test->priv->explanation);
 
 	if (test->priv->items)
 		g_list_free_full (test->priv->items, g_object_unref);
@@ -184,8 +183,7 @@ void
 gpinstruct_lesson_test_order_set_explanation (GPInstructLessonTestOrder* test,
                                               const gchar* explanation)
 {
-	if (test->priv->explanation)
-		g_free (test->priv->explanation);
+	g_free (test->priv->explanation);
 	test->priv->explanation = g_strdup (explanation);
 }
 

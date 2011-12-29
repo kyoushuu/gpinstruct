@@ -48,11 +48,8 @@ gpinstruct_lesson_test_word_pool_question_finalize (GObject *object)
 {
 	GPInstructLessonTestWordPoolQuestion* question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (object);
 
-	if (question->priv->text)
-		g_free (question->priv->text);
-
-	if (question->priv->explanation)
-		g_free (question->priv->explanation);
+	g_free (question->priv->text);
+	g_free (question->priv->explanation);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_word_pool_question_parent_class)->finalize (object);
 }
@@ -85,8 +82,7 @@ void
 gpinstruct_lesson_test_word_pool_question_set_text (GPInstructLessonTestWordPoolQuestion* question,
                                                     const gchar* text)
 {
-	if (question->priv->text)
-		g_free (question->priv->text);
+	g_free (question->priv->text);
 	question->priv->text = g_strdup (text);
 }
 
@@ -113,7 +109,6 @@ void
 gpinstruct_lesson_test_word_pool_question_set_explanation (GPInstructLessonTestWordPoolQuestion* question,
                                                            const gchar* explanation)
 {
-	if (question->priv->explanation)
-		g_free (question->priv->explanation);
+	g_free (question->priv->explanation);
 	question->priv->explanation = g_strdup (explanation);
 }

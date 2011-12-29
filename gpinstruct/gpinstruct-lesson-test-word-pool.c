@@ -203,8 +203,7 @@ gpinstruct_lesson_test_word_pool_set_choice (GPInstructLessonTestWordPool* test,
 {
 	GList* nth_node = g_list_nth (test->priv->choices, choice);
 
-	if (nth_node->data)
-		g_free (nth_node->data);
+	g_free (nth_node->data);
 	nth_node->data = g_strdup (text);
 }
 
