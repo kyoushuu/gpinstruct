@@ -84,7 +84,7 @@ main (int argc,
 	GPInstructProject *project = gpinstruct_parser_load_from_file (parser, project_file, &error);
 	if (error)
 	{
-		printf(_("Error: %s\n"), error->message);
+		printf (_("Error: %s\n"), error->message);
 		g_error_free (error);
 		error = NULL;
 	}

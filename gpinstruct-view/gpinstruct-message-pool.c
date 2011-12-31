@@ -377,7 +377,7 @@ gpinstruct_message_pool_play_sound_random (GPInstructMessagePool *pool,
 	}
 
 	gst_element_set_state (pool->priv->pipeline, GST_STATE_NULL);
-	g_object_set(pool->priv->source, "location", (gchar*) g_list_nth_data (sounds, sound), NULL);
+	g_object_set (pool->priv->source, "location", (gchar*) g_list_nth_data (sounds, sound), NULL);
 	gst_element_set_state (pool->priv->pipeline, GST_STATE_PLAYING);
 #endif
 }

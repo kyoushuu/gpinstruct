@@ -25,7 +25,7 @@
 
 #include "gpinstruct/gpinstruct.h"
 
-#define GCHAR_TO_GBOOLEAN(a) (g_ascii_strncasecmp(a, "true", -1) == 0)?TRUE:FALSE
+#define GCHAR_TO_GBOOLEAN(a) (g_ascii_strncasecmp (a, "true", -1) == 0)?TRUE:FALSE
 
 
 GQuark
@@ -87,7 +87,7 @@ parse_multi_choice_test (xmlNode *node)
 				temp = xmlGetProp (current_node, BAD_CAST "answer");
 				if (temp)
 				{
-					gpinstruct_lesson_test_multi_choice_question_set_answer (question, atoi((gchar*) temp));
+					gpinstruct_lesson_test_multi_choice_question_set_answer (question, atoi ((gchar*) temp));
 					xmlFree (temp);
 				}
 
@@ -198,7 +198,7 @@ parse_word_pool_test (xmlNode *node)
 				temp = xmlGetProp (current_node, BAD_CAST "answer");
 				if (temp)
 				{
-					gpinstruct_lesson_test_word_pool_question_set_answer (question, atoi((gchar*) temp));
+					gpinstruct_lesson_test_word_pool_question_set_answer (question, atoi ((gchar*) temp));
 					xmlFree (temp);
 				}
 

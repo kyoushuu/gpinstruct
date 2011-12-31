@@ -407,7 +407,7 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window)
 		GPInstructProject *project = gpinstruct_parser_load_from_file (parser, project_file, &error);
 		if (error)
 		{
-			g_critical(_("Error: %s\n"), error->message);
+			g_critical (_("Error: %s\n"), error->message);
 			g_error_free (error);
 			error = NULL;
 			goto error;

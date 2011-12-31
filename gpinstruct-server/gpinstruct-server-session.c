@@ -404,7 +404,7 @@ gpinstruct_server_session_constructed (GObject *object)
 	                                                  &error);
 	if (error)
 	{
-		g_critical(_("Error: %s\n"), error->message);
+		g_critical (_("Error: %s\n"), error->message);
 		g_error_free (error);
 		goto error;
 	}
