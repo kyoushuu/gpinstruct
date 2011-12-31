@@ -125,7 +125,7 @@ free_examinee (GPInstructLogAnalyzerExaminee* examinee)
 
 
 
-G_DEFINE_TYPE (GPInstructLogAnalyzer, gpinstruct_log_analyzer, GPINSTRUCT_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructLogAnalyzer, gpinstruct_log_analyzer, G_TYPE_OBJECT);
 
 static void
 gpinstruct_log_analyzer_init (GPInstructLogAnalyzer *object)
@@ -158,7 +158,7 @@ static void
 gpinstruct_log_analyzer_class_init (GPInstructLogAnalyzerClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
+	/*GObjectClass* parent_class = G_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLogAnalyzerPrivate));
 

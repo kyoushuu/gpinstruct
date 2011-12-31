@@ -36,12 +36,12 @@ typedef struct _GPInstructMessagePool GPInstructMessagePool;
 
 struct _GPInstructMessagePoolClass
 {
-	GPInstructObjectClass parent_class;
+	GObjectClass parent_class;
 };
 
 struct _GPInstructMessagePool
 {
-	GPInstructObject parent_instance;
+	GObject parent_instance;
 
 	GPInstructMessagePoolPrivate* priv;
 };

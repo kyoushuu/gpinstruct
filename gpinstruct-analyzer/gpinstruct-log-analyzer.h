@@ -36,12 +36,12 @@ typedef struct _GPInstructLogAnalyzer GPInstructLogAnalyzer;
 
 struct _GPInstructLogAnalyzerClass
 {
-	GPInstructObjectClass parent_class;
+	GObjectClass parent_class;
 };
 
 struct _GPInstructLogAnalyzer
 {
-	GPInstructObject parent_instance;
+	GObject parent_instance;
 
 	GPInstructLogAnalyzerPrivate* priv;
 };

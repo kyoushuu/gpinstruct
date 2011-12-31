@@ -106,7 +106,7 @@ free_answers_foreach (GPInstructLogTest* test)
 
 
 
-G_DEFINE_TYPE (GPInstructLog, gpinstruct_log, GPINSTRUCT_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructLog, gpinstruct_log, G_TYPE_OBJECT);
 
 static void
 gpinstruct_log_init (GPInstructLog *object)
@@ -145,7 +145,7 @@ static void
 gpinstruct_log_class_init (GPInstructLogClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
+	/*GObjectClass* parent_class = G_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLogPrivate));
 

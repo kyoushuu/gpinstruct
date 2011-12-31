@@ -1211,7 +1211,7 @@ add_project (GPInstructProject* project)
 }
 
 
-G_DEFINE_TYPE (GPInstructParser, gpinstruct_parser, GPINSTRUCT_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructParser, gpinstruct_parser, G_TYPE_OBJECT);
 
 
 static void
@@ -1231,7 +1231,7 @@ static void
 gpinstruct_parser_class_init (GPInstructParserClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
+	/*GObjectClass* parent_class = G_OBJECT_CLASS (klass);*/
 
 	object_class->finalize = gpinstruct_parser_finalize;
 

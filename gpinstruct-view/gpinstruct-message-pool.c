@@ -91,7 +91,7 @@ on_pad_added (GstElement *element,
 #endif
 
 
-G_DEFINE_TYPE (GPInstructMessagePool, gpinstruct_message_pool, GPINSTRUCT_TYPE_OBJECT);
+G_DEFINE_TYPE (GPInstructMessagePool, gpinstruct_message_pool, G_TYPE_OBJECT);
 
 static void
 gpinstruct_message_pool_init (GPInstructMessagePool *object)
@@ -163,7 +163,7 @@ static void
 gpinstruct_message_pool_class_init (GPInstructMessagePoolClass *klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
+	/*GObjectClass* parent_class = G_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructMessagePoolPrivate));
 

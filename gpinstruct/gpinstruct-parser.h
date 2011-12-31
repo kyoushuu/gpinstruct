@@ -35,12 +35,12 @@ typedef struct _GPInstructParser GPInstructParser;
 
 struct _GPInstructParserClass
 {
-	GPInstructObjectClass parent_class;
+	GObjectClass parent_class;
 };
 
 struct _GPInstructParser
 {
-	GPInstructObject parent_instance;
+	GObject parent_instance;
 };
 
 GType gpinstruct_parser_get_type (void) G_GNUC_CONST;
