@@ -248,6 +248,8 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 
 	priv->analyzer = NULL;
 
+	g_object_set (object, "icon-name", "gpinstruct-view", NULL);
+
 	GError *error = NULL;
 
 	GtkActionEntry actions[] =

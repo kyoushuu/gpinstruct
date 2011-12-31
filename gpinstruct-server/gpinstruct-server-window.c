@@ -151,6 +151,8 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	object->priv = GPINSTRUCT_SERVER_WINDOW_GET_PRIVATE (object);
 	GPInstructServerWindowPrivate *priv = object->priv;
 
+	g_object_set (object, "icon-name", "gpinstruct-view", NULL);
+
 	GError *error = NULL;
 
 	GtkActionEntry actions[] =

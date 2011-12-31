@@ -63,6 +63,8 @@ gpinstruct_project_view_init (GPInstructProjectView *object)
 	object->priv = GPINSTRUCT_PROJECT_VIEW_GET_PRIVATE (object);
 	GPInstructProjectViewPrivate *priv = object->priv;
 
+	g_object_set (object, "icon-name", "gpinstruct-view", NULL);
+
 	priv->hashtable = g_hash_table_new (NULL, NULL);
 
 	gtk_widget_set_size_request (GTK_WIDGET (object), 600, 400);

@@ -879,6 +879,8 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 	priv->project_file = NULL;
 	priv->modified = FALSE;
 
+	g_object_set (object, "icon-name", "gpinstruct-view", NULL);
+
 	GError *error = NULL;
 
 	GtkActionEntry actions[] =
