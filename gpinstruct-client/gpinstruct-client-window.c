@@ -36,7 +36,7 @@ struct _GPInstructClientWindowPrivate
 
 	gchar *server_uri;
 	gchar *session_id;
-	
+
 	GPInstructLog *log;
 
 	gchar *lastname;

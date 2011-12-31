@@ -414,7 +414,7 @@ gpinstruct_server_session_constructed (GObject *object)
 
 	soup_server_add_handler (priv->soap_server,
 	                         "/", server_callback,
-	                         session, NULL); 
+	                         session, NULL);
 	soup_server_run_async (priv->soap_server);
 
 	error:

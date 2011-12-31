@@ -160,7 +160,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 
 				update_tree_view (GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data));
 				gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
-				
+
 				gtk_tree_model_iter_nth_child (GTK_TREE_MODEL (editor->priv->store),
 				                               &iter, NULL, gtk_tree_path_get_indices (path)[0]);
 				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view)), &iter);

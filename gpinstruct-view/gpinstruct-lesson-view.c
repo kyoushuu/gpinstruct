@@ -247,7 +247,7 @@ gpinstruct_lesson_view_finalize (GObject *object)
 		g_object_unref (view->priv->pool);
 
 	if (view->priv->log)
-		g_object_unref (view->priv->log);	
+		g_object_unref (view->priv->log);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_view_parent_class)->finalize (object);
 }
