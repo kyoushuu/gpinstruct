@@ -41,7 +41,7 @@ struct _GPInstructLessonTestMultiChoicePagePrivate
 	GtkWidget *choices_vbox;
 };
 
-#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_PAGE, GPInstructLessonTestMultiChoicePagePrivate))
+#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_PAGE, GPInstructLessonTestMultiChoicePagePrivate))
 
 
 
@@ -131,7 +131,7 @@ G_DEFINE_TYPE (GPInstructLessonTestMultiChoicePage, gpinstruct_lesson_test_multi
 static void
 gpinstruct_lesson_test_multi_choice_page_init (GPInstructLessonTestMultiChoicePage *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE_GET_PRIVATE (object);
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;

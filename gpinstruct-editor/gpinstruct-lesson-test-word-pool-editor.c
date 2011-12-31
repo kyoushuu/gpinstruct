@@ -47,7 +47,7 @@ struct _GPInstructLessonTestWordPoolEditorPrivate
 	GtkListStore *choices_store;
 };
 
-#define GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_EDITOR, GPInstructLessonTestWordPoolEditorPrivate))
+#define GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_EDITOR, GPInstructLessonTestWordPoolEditorPrivate))
 
 
 enum
@@ -430,7 +430,7 @@ G_DEFINE_TYPE (GPInstructLessonTestWordPoolEditor, gpinstruct_lesson_test_word_p
 static void
 gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_EDITOR_GET_PRIVATE (object);
 
 	object->priv->questions_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 	object->priv->choices_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);

@@ -27,7 +27,7 @@ struct _GPInstructLessonTestTextPrivate
 	GList *questions;
 };
 
-#define GPINSTRUCT_LESSON_TEST_TEXT_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT, GPInstructLessonTestTextPrivate))
+#define GPINSTRUCT_LESSON_TEST_TEXT_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT, GPInstructLessonTestTextPrivate))
 
 
 
@@ -72,7 +72,7 @@ G_DEFINE_TYPE (GPInstructLessonTestText, gpinstruct_lesson_test_text, GPINSTRUCT
 static void
 gpinstruct_lesson_test_text_init (GPInstructLessonTestText *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_GET_PRIVATE (object);
 
 	object->priv->questions = NULL;
 }

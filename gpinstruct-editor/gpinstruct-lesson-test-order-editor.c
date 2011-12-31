@@ -47,7 +47,7 @@ struct _GPInstructLessonTestOrderEditorPrivate
 	GtkListStore *store;
 };
 
-#define GPINSTRUCT_LESSON_TEST_ORDER_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_EDITOR, GPInstructLessonTestOrderEditorPrivate))
+#define GPINSTRUCT_LESSON_TEST_ORDER_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_EDITOR, GPInstructLessonTestOrderEditorPrivate))
 
 
 enum
@@ -244,7 +244,7 @@ G_DEFINE_TYPE (GPInstructLessonTestOrderEditor, gpinstruct_lesson_test_order_edi
 static void
 gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR_GET_PRIVATE (object);
 
 	object->priv->store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 

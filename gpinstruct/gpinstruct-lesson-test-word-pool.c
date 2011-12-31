@@ -28,7 +28,7 @@ struct _GPInstructLessonTestWordPoolPrivate
 	GList *choices;
 };
 
-#define GPINSTRUCT_LESSON_TEST_WORD_POOL_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL, GPInstructLessonTestWordPoolPrivate))
+#define GPINSTRUCT_LESSON_TEST_WORD_POOL_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL, GPInstructLessonTestWordPoolPrivate))
 
 
 
@@ -91,7 +91,7 @@ G_DEFINE_TYPE (GPInstructLessonTestWordPool, gpinstruct_lesson_test_word_pool, G
 static void
 gpinstruct_lesson_test_word_pool_init (GPInstructLessonTestWordPool *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_GET_PRIVATE (object);
 
 	object->priv->questions = NULL;
 	object->priv->choices = NULL;

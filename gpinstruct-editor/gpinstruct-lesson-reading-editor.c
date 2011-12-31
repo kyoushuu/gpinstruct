@@ -36,7 +36,7 @@ struct _GPInstructLessonReadingEditorPrivate
 	GtkWidget *text_view;
 };
 
-#define GPINSTRUCT_LESSON_READING_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_READING_EDITOR, GPInstructLessonReadingEditorPrivate))
+#define GPINSTRUCT_LESSON_READING_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_READING_EDITOR, GPInstructLessonReadingEditorPrivate))
 
 
 
@@ -45,7 +45,7 @@ G_DEFINE_TYPE (GPInstructLessonReadingEditor, gpinstruct_lesson_reading_editor, 
 static void
 gpinstruct_lesson_reading_editor_init (GPInstructLessonReadingEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_READING_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_READING_EDITOR_GET_PRIVATE (object);
 
 	object->priv->title_label = gtk_label_new (_("Title:"));
 	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,

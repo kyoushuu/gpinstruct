@@ -44,7 +44,7 @@ struct _GPInstructMessagePoolPrivate
 #endif
 };
 
-#define GPINSTRUCT_MESSAGE_POOL_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_MESSAGE_POOL, GPInstructMessagePoolPrivate))
+#define GPINSTRUCT_MESSAGE_POOL_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_MESSAGE_POOL, GPInstructMessagePoolPrivate))
 
 
 #if HAVE_GSTREAMER
@@ -101,7 +101,7 @@ gpinstruct_message_pool_init (GPInstructMessagePool *object)
 #endif
 	int i;
 
-	object->priv = GPINSTRUCT_MESSAGE_POOL_PRIVATE (object);
+	object->priv = GPINSTRUCT_MESSAGE_POOL_GET_PRIVATE (object);
 
 	for (i = 0; i < GPINSTRUCT_MESSAGE_TYPE_SIZE; i++)
 		object->priv->messages[i] = NULL;

@@ -27,7 +27,7 @@ struct _GPInstructLessonTestScrambledQuestionPrivate
 	gchar *answer;
 };
 
-#define GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_QUESTION, GPInstructLessonTestScrambledQuestionPrivate))
+#define GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_QUESTION, GPInstructLessonTestScrambledQuestionPrivate))
 
 
 
@@ -36,7 +36,7 @@ G_DEFINE_TYPE (GPInstructLessonTestScrambledQuestion, gpinstruct_lesson_test_scr
 static void
 gpinstruct_lesson_test_scrambled_question_init (GPInstructLessonTestScrambledQuestion *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION_GET_PRIVATE (object);
 
 	object->priv->text = g_strdup ("");
 	object->priv->explanation = g_strdup ("");

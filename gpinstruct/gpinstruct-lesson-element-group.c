@@ -30,7 +30,7 @@ struct _GPInstructLessonElementGroupPrivate
 	GList *lesson_elements;
 };
 
-#define GPINSTRUCT_LESSON_ELEMENT_GROUP_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT_GROUP, GPInstructLessonElementGroupPrivate))
+#define GPINSTRUCT_LESSON_ELEMENT_GROUP_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT_GROUP, GPInstructLessonElementGroupPrivate))
 
 
 
@@ -39,7 +39,7 @@ G_DEFINE_TYPE (GPInstructLessonElementGroup, gpinstruct_lesson_element_group, GP
 static void
 gpinstruct_lesson_element_group_init (GPInstructLessonElementGroup *object)
 {
-	object->priv = GPINSTRUCT_LESSON_ELEMENT_GROUP_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_ELEMENT_GROUP_GET_PRIVATE (object);
 
 	object->priv->directions = g_strdup ("");
 	object->priv->single_score = TRUE;

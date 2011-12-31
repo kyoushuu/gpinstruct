@@ -32,7 +32,7 @@ struct _GPInstructLessonScorePagePrivate
 	GtkWidget *percentage_label;
 };
 
-#define GPINSTRUCT_LESSON_SCORE_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_SCORE_PAGE, GPInstructLessonScorePagePrivate))
+#define GPINSTRUCT_LESSON_SCORE_PAGE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_SCORE_PAGE, GPInstructLessonScorePagePrivate))
 
 
 
@@ -49,7 +49,7 @@ G_DEFINE_TYPE (GPInstructLessonScorePage, gpinstruct_lesson_score_page, GPINSTRU
 static void
 gpinstruct_lesson_score_page_init (GPInstructLessonScorePage *object)
 {
-	object->priv = GPINSTRUCT_LESSON_SCORE_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_SCORE_PAGE_GET_PRIVATE (object);
 
 	object->priv->score = NULL;
 }

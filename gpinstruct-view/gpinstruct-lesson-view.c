@@ -51,7 +51,7 @@ struct _GPInstructLessonViewPrivate
 	gchar *explanation;
 };
 
-#define GPINSTRUCT_LESSON_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_VIEW, GPInstructLessonViewPrivate))
+#define GPINSTRUCT_LESSON_VIEW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_VIEW, GPInstructLessonViewPrivate))
 
 enum
 {
@@ -183,7 +183,7 @@ explanation_show (GtkInfoBar *info_bar,
 static void
 gpinstruct_lesson_view_init (GPInstructLessonView *object)
 {
-	object->priv = GPINSTRUCT_LESSON_VIEW_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_VIEW_GET_PRIVATE (object);
 
 	object->priv->current_page = 0;
 	object->priv->current_page_object = NULL;

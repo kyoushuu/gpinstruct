@@ -27,7 +27,7 @@ struct _GPInstructLessonTestScrambledPrivate
 	GList *questions;
 };
 
-#define GPINSTRUCT_LESSON_TEST_SCRAMBLED_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED, GPInstructLessonTestScrambledPrivate))
+#define GPINSTRUCT_LESSON_TEST_SCRAMBLED_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED, GPInstructLessonTestScrambledPrivate))
 
 
 
@@ -72,7 +72,7 @@ G_DEFINE_TYPE (GPInstructLessonTestScrambled, gpinstruct_lesson_test_scrambled, 
 static void
 gpinstruct_lesson_test_scrambled_init (GPInstructLessonTestScrambled *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_GET_PRIVATE (object);
 
 	object->priv->questions = NULL;
 }

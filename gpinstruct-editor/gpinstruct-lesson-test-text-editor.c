@@ -44,7 +44,7 @@ struct _GPInstructLessonTestTextEditorPrivate
 	GtkListStore *questions_store;
 };
 
-#define GPINSTRUCT_LESSON_TEST_TEXT_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT_EDITOR, GPInstructLessonTestTextEditorPrivate))
+#define GPINSTRUCT_LESSON_TEST_TEXT_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT_EDITOR, GPInstructLessonTestTextEditorPrivate))
 
 
 enum
@@ -271,7 +271,7 @@ G_DEFINE_TYPE (GPInstructLessonTestTextEditor, gpinstruct_lesson_test_text_edito
 static void
 gpinstruct_lesson_test_text_editor_init (GPInstructLessonTestTextEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_EDITOR_GET_PRIVATE (object);
 
 	object->priv->questions_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 

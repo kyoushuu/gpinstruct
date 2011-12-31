@@ -27,7 +27,7 @@ struct _GPInstructLessonTestWordPoolQuestionPrivate
 	guint answer;
 };
 
-#define GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_QUESTION, GPInstructLessonTestWordPoolQuestionPrivate))
+#define GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_QUESTION, GPInstructLessonTestWordPoolQuestionPrivate))
 
 
 
@@ -36,7 +36,7 @@ G_DEFINE_TYPE (GPInstructLessonTestWordPoolQuestion, gpinstruct_lesson_test_word
 static void
 gpinstruct_lesson_test_word_pool_question_init (GPInstructLessonTestWordPoolQuestion *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION_GET_PRIVATE (object);
 
 	object->priv->text = g_strdup ("");
 	object->priv->explanation = g_strdup ("");

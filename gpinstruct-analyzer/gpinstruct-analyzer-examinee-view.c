@@ -37,7 +37,7 @@ struct _GPInstructAnalyzerExamineeViewPrivate
 	GtkWidget *test_treeview;
 };
 
-#define GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_EXAMINEE_VIEW, GPInstructAnalyzerExamineeViewPrivate))
+#define GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_EXAMINEE_VIEW, GPInstructAnalyzerExamineeViewPrivate))
 
 
 
@@ -550,7 +550,7 @@ G_DEFINE_TYPE (GPInstructAnalyzerExamineeView, gpinstruct_analyzer_examinee_view
 static void
 gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 {
-	object->priv = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_PRIVATE (object);
+	object->priv = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_GET_PRIVATE (object);
 
 	GtkTreeSelection *selection;
 	GtkCellRenderer *renderer;

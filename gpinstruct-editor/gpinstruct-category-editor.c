@@ -33,7 +33,7 @@ struct _GPInstructCategoryEditorPrivate
 	GtkWidget *title_entry;
 };
 
-#define GPINSTRUCT_CATEGORY_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_CATEGORY_EDITOR, GPInstructCategoryEditorPrivate))
+#define GPINSTRUCT_CATEGORY_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_CATEGORY_EDITOR, GPInstructCategoryEditorPrivate))
 
 
 
@@ -42,7 +42,7 @@ G_DEFINE_TYPE (GPInstructCategoryEditor, gpinstruct_category_editor, GPINSTRUCT_
 static void
 gpinstruct_category_editor_init (GPInstructCategoryEditor *object)
 {
-	object->priv = GPINSTRUCT_CATEGORY_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_CATEGORY_EDITOR_GET_PRIVATE (object);
 
 	object->priv->title_label = gtk_label_new (_("Title:"));
 	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,

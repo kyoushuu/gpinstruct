@@ -29,7 +29,7 @@ struct _GPInstructLessonPrivate
 	gboolean single_score;
 };
 
-#define GPINSTRUCT_LESSON_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON, GPInstructLessonPrivate))
+#define GPINSTRUCT_LESSON_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON, GPInstructLessonPrivate))
 
 
 
@@ -38,7 +38,7 @@ G_DEFINE_TYPE (GPInstructLesson, gpinstruct_lesson, GPINSTRUCT_TYPE_OBJECT);
 static void
 gpinstruct_lesson_init (GPInstructLesson *object)
 {
-	object->priv = GPINSTRUCT_LESSON_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_GET_PRIVATE (object);
 
 	object->priv->title = g_strdup ("");
 	object->priv->lesson_elements = NULL;

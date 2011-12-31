@@ -26,7 +26,7 @@ struct _GPInstructLessonTestOrderItemPrivate
 	guint answer;
 };
 
-#define GPINSTRUCT_LESSON_TEST_ORDER_ITEM_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_ITEM, GPInstructLessonTestOrderItemPrivate))
+#define GPINSTRUCT_LESSON_TEST_ORDER_ITEM_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_ITEM, GPInstructLessonTestOrderItemPrivate))
 
 
 
@@ -35,7 +35,7 @@ G_DEFINE_TYPE (GPInstructLessonTestOrderItem, gpinstruct_lesson_test_order_item,
 static void
 gpinstruct_lesson_test_order_item_init (GPInstructLessonTestOrderItem *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_ITEM_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_ITEM_GET_PRIVATE (object);
 
 	object->priv->text = g_strdup ("");
 	object->priv->answer = 0;

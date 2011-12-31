@@ -28,7 +28,7 @@ struct _GPInstructLessonTestOrderPrivate
 	GList *items;
 };
 
-#define GPINSTRUCT_LESSON_TEST_ORDER_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER, GPInstructLessonTestOrderPrivate))
+#define GPINSTRUCT_LESSON_TEST_ORDER_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER, GPInstructLessonTestOrderPrivate))
 
 
 
@@ -93,7 +93,7 @@ G_DEFINE_TYPE (GPInstructLessonTestOrder, gpinstruct_lesson_test_order, GPINSTRU
 static void
 gpinstruct_lesson_test_order_init (GPInstructLessonTestOrder *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_GET_PRIVATE (object);
 
 	object->priv->explanation = g_strdup ("");
 	object->priv->items = NULL;

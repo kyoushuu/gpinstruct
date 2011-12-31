@@ -29,7 +29,7 @@ struct _GPInstructLessonScorePrivate
 	guint score;
 };
 
-#define GPINSTRUCT_LESSON_SCORE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_SCORE, GPInstructLessonScorePrivate))
+#define GPINSTRUCT_LESSON_SCORE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_SCORE, GPInstructLessonScorePrivate))
 
 
 
@@ -38,7 +38,7 @@ G_DEFINE_TYPE (GPInstructLessonScore, gpinstruct_lesson_score, GPINSTRUCT_TYPE_L
 static void
 gpinstruct_lesson_score_init (GPInstructLessonScore *object)
 {
-	object->priv = GPINSTRUCT_LESSON_SCORE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_SCORE_GET_PRIVATE (object);
 
 	object->priv->total = 0;
 	object->priv->score = 0;

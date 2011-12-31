@@ -28,7 +28,7 @@ struct _GPInstructProjectPrivate
 	GList *categories;
 };
 
-#define GPINSTRUCT_PROJECT_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_PROJECT, GPInstructProjectPrivate))
+#define GPINSTRUCT_PROJECT_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_PROJECT, GPInstructProjectPrivate))
 
 
 
@@ -37,7 +37,7 @@ G_DEFINE_TYPE (GPInstructProject, gpinstruct_project, GPINSTRUCT_TYPE_OBJECT);
 static void
 gpinstruct_project_init (GPInstructProject *object)
 {
-	object->priv = GPINSTRUCT_PROJECT_PRIVATE (object);
+	object->priv = GPINSTRUCT_PROJECT_GET_PRIVATE (object);
 
 	object->priv->title = g_strdup ("");
 	object->priv->categories = NULL;

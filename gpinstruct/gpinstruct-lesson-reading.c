@@ -25,7 +25,7 @@ struct _GPInstructLessonReadingPrivate
 	gchar *text;
 };
 
-#define GPINSTRUCT_LESSON_READING_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_READING, GPInstructLessonReadingPrivate))
+#define GPINSTRUCT_LESSON_READING_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_READING, GPInstructLessonReadingPrivate))
 
 
 
@@ -34,7 +34,7 @@ G_DEFINE_TYPE (GPInstructLessonReading, gpinstruct_lesson_reading, GPINSTRUCT_TY
 static void
 gpinstruct_lesson_reading_init (GPInstructLessonReading *object)
 {
-	object->priv = GPINSTRUCT_LESSON_READING_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_READING_GET_PRIVATE (object);
 
 	object->priv->text = g_strdup ("");
 }

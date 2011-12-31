@@ -34,7 +34,7 @@ struct _GPInstructLogAnalyzerPrivate
 	GList *examinees;
 };
 
-#define GPINSTRUCT_LOG_ANALYZER_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LOG_ANALYZER, GPInstructLogAnalyzerPrivate))
+#define GPINSTRUCT_LOG_ANALYZER_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LOG_ANALYZER, GPInstructLogAnalyzerPrivate))
 
 
 
@@ -130,7 +130,7 @@ G_DEFINE_TYPE (GPInstructLogAnalyzer, gpinstruct_log_analyzer, G_TYPE_OBJECT);
 static void
 gpinstruct_log_analyzer_init (GPInstructLogAnalyzer *object)
 {
-	object->priv = GPINSTRUCT_LOG_ANALYZER_PRIVATE (object);
+	object->priv = GPINSTRUCT_LOG_ANALYZER_GET_PRIVATE (object);
 
 	object->priv->aproject = NULL;
 	object->priv->project = NULL;

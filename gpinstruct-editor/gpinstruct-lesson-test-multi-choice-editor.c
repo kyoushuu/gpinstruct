@@ -47,7 +47,7 @@ struct _GPInstructLessonTestMultiChoiceEditorPrivate
 	GtkListStore *choices_store;
 };
 
-#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_EDITOR, GPInstructLessonTestMultiChoiceEditorPrivate))
+#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_EDITOR, GPInstructLessonTestMultiChoiceEditorPrivate))
 
 
 enum
@@ -486,7 +486,7 @@ G_DEFINE_TYPE (GPInstructLessonTestMultiChoiceEditor, gpinstruct_lesson_test_mul
 static void
 gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoiceEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR_GET_PRIVATE (object);
 
 	object->priv->questions_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 	object->priv->choices_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);

@@ -44,14 +44,14 @@ struct _GPInstructLessonElementGroupEditorPrivate
 	GtkWidget *directions_view;
 };
 
-#define GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT_GROUP_EDITOR, GPInstructLessonElementGroupEditorPrivate))
+#define GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT_GROUP_EDITOR, GPInstructLessonElementGroupEditorPrivate))
 
 G_DEFINE_TYPE (GPInstructLessonElementGroupEditor, gpinstruct_lesson_element_group_editor, GPINSTRUCT_TYPE_OBJECT_EDITOR);
 
 static void
 gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR_GET_PRIVATE (object);
 
 	object->priv->title_label = gtk_label_new (_("Title:"));
 	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,

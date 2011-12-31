@@ -25,7 +25,7 @@ struct _GPInstructLessonDiscussionPrivate
 	gchar *text;
 };
 
-#define GPINSTRUCT_LESSON_DISCUSSION_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_DISCUSSION, GPInstructLessonDiscussionPrivate))
+#define GPINSTRUCT_LESSON_DISCUSSION_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_DISCUSSION, GPInstructLessonDiscussionPrivate))
 
 
 
@@ -34,7 +34,7 @@ G_DEFINE_TYPE (GPInstructLessonDiscussion, gpinstruct_lesson_discussion, GPINSTR
 static void
 gpinstruct_lesson_discussion_init (GPInstructLessonDiscussion *object)
 {
-	object->priv = GPINSTRUCT_LESSON_DISCUSSION_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_DISCUSSION_GET_PRIVATE (object);
 
 	object->priv->text = g_strdup ("");
 }

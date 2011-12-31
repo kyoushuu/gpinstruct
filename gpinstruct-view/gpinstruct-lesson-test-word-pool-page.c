@@ -41,7 +41,7 @@ struct _GPInstructLessonTestWordPoolPagePrivate
 	GtkWidget *choices_treeview;
 };
 
-#define GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_PAGE, GPInstructLessonTestWordPoolPagePrivate))
+#define GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_PAGE, GPInstructLessonTestWordPoolPagePrivate))
 
 
 
@@ -110,7 +110,7 @@ G_DEFINE_TYPE (GPInstructLessonTestWordPoolPage, gpinstruct_lesson_test_word_poo
 static void
 gpinstruct_lesson_test_word_pool_page_init (GPInstructLessonTestWordPoolPage *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE_GET_PRIVATE (object);
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;

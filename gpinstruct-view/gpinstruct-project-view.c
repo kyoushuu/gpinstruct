@@ -33,7 +33,7 @@ struct _GPInstructProjectViewPrivate
 	GHashTable *hashtable;
 };
 
-#define GPINSTRUCT_PROJECT_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_PROJECT_VIEW, GPInstructProjectViewPrivate))
+#define GPINSTRUCT_PROJECT_VIEW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_PROJECT_VIEW, GPInstructProjectViewPrivate))
 
 
 
@@ -59,7 +59,7 @@ G_DEFINE_TYPE (GPInstructProjectView, gpinstruct_project_view, GTK_TYPE_WINDOW);
 static void
 gpinstruct_project_view_init (GPInstructProjectView *object)
 {
-	object->priv = GPINSTRUCT_PROJECT_VIEW_PRIVATE (object);
+	object->priv = GPINSTRUCT_PROJECT_VIEW_GET_PRIVATE (object);
 
 	object->priv->hashtable = g_hash_table_new (NULL, NULL);
 

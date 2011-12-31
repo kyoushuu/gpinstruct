@@ -38,7 +38,7 @@ struct _GPInstructServerSessionPrivate
 	SoupServer *soap_server;
 };
 
-#define GPINSTRUCT_SERVER_SESSION_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_SERVER_SESSION, GPInstructServerSessionPrivate))
+#define GPINSTRUCT_SERVER_SESSION_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_SERVER_SESSION, GPInstructServerSessionPrivate))
 
 enum
 {
@@ -358,7 +358,7 @@ G_DEFINE_TYPE (GPInstructServerSession, gpinstruct_server_session, G_TYPE_OBJECT
 static void
 gpinstruct_server_session_init (GPInstructServerSession *object)
 {
-	object->priv = GPINSTRUCT_SERVER_SESSION_PRIVATE (object);
+	object->priv = GPINSTRUCT_SERVER_SESSION_GET_PRIVATE (object);
 	GPInstructServerSessionPrivate *priv = object->priv;
 
 	priv->project_file = NULL;

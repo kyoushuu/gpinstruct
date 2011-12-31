@@ -25,7 +25,7 @@ struct _GPInstructLessonElementPrivate
 	gchar *title;
 };
 
-#define GPINSTRUCT_LESSON_ELEMENT_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT, GPInstructLessonElementPrivate))
+#define GPINSTRUCT_LESSON_ELEMENT_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT, GPInstructLessonElementPrivate))
 
 
 
@@ -34,7 +34,7 @@ G_DEFINE_TYPE (GPInstructLessonElement, gpinstruct_lesson_element, GPINSTRUCT_TY
 static void
 gpinstruct_lesson_element_init (GPInstructLessonElement *object)
 {
-	object->priv = GPINSTRUCT_LESSON_ELEMENT_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_ELEMENT_GET_PRIVATE (object);
 
 	object->priv->title = g_strdup ("");
 }

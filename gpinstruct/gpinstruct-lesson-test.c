@@ -27,7 +27,7 @@ struct _GPInstructLessonTestPrivate
 	gchar *id;
 };
 
-#define GPINSTRUCT_LESSON_TEST_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST, GPInstructLessonTestPrivate))
+#define GPINSTRUCT_LESSON_TEST_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST, GPInstructLessonTestPrivate))
 
 
 
@@ -55,7 +55,7 @@ G_DEFINE_TYPE (GPInstructLessonTest, gpinstruct_lesson_test, GPINSTRUCT_TYPE_LES
 static void
 gpinstruct_lesson_test_init (GPInstructLessonTest *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_GET_PRIVATE (object);
 
 	object->priv->directions = g_strdup ("");
 	object->priv->explain = FALSE;

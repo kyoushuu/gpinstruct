@@ -46,7 +46,7 @@ struct _GPInstructServerWindowPrivate
 	GPInstructServerSession *session;
 };
 
-#define GPINSTRUCT_SERVER_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_SERVER_WINDOW, GPInstructServerWindowPrivate))
+#define GPINSTRUCT_SERVER_WINDOW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_SERVER_WINDOW, GPInstructServerWindowPrivate))
 
 
 enum
@@ -148,7 +148,7 @@ G_DEFINE_TYPE (GPInstructServerWindow, gpinstruct_server_window, GTK_TYPE_WINDOW
 static void
 gpinstruct_server_window_init (GPInstructServerWindow *object)
 {
-	object->priv = GPINSTRUCT_SERVER_WINDOW_PRIVATE (object);
+	object->priv = GPINSTRUCT_SERVER_WINDOW_GET_PRIVATE (object);
 
 	GError *error = NULL;
 

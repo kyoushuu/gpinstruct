@@ -44,7 +44,7 @@ struct _GPInstructLessonTestScrambledEditorPrivate
 	GtkListStore *questions_store;
 };
 
-#define GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_EDITOR, GPInstructLessonTestScrambledEditorPrivate))
+#define GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_EDITOR, GPInstructLessonTestScrambledEditorPrivate))
 
 
 enum
@@ -271,7 +271,7 @@ G_DEFINE_TYPE (GPInstructLessonTestScrambledEditor, gpinstruct_lesson_test_scram
 static void
 gpinstruct_lesson_test_scrambled_editor_init (GPInstructLessonTestScrambledEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR_GET_PRIVATE (object);
 
 	object->priv->questions_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 

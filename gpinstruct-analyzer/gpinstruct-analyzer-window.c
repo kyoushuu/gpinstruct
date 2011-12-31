@@ -45,7 +45,7 @@ struct _GPInstructAnalyzerWindowPrivate
 	GPInstructLogAnalyzer *analyzer;
 };
 
-#define GPINSTRUCT_ANALYZER_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_WINDOW, GPInstructAnalyzerWindowPrivate))
+#define GPINSTRUCT_ANALYZER_WINDOW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_WINDOW, GPInstructAnalyzerWindowPrivate))
 
 
 static gboolean
@@ -221,7 +221,7 @@ G_DEFINE_TYPE (GPInstructAnalyzerWindow, gpinstruct_analyzer_window, GTK_TYPE_WI
 static void
 gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 {
-	object->priv = GPINSTRUCT_ANALYZER_WINDOW_PRIVATE (object);
+	object->priv = GPINSTRUCT_ANALYZER_WINDOW_GET_PRIVATE (object);
 
 	object->priv->analyzer = NULL;
 

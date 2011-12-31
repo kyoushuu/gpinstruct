@@ -35,7 +35,7 @@ struct _GPInstructLessonTestOrderPagePrivate
 	GtkListStore *store;
 };
 
-#define GPINSTRUCT_LESSON_TEST_ORDER_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_PAGE, GPInstructLessonTestOrderPagePrivate))
+#define GPINSTRUCT_LESSON_TEST_ORDER_PAGE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_PAGE, GPInstructLessonTestOrderPagePrivate))
 
 
 
@@ -69,7 +69,7 @@ G_DEFINE_TYPE (GPInstructLessonTestOrderPage, gpinstruct_lesson_test_order_page,
 static void
 gpinstruct_lesson_test_order_page_init (GPInstructLessonTestOrderPage *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_PAGE_GET_PRIVATE (object);
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;

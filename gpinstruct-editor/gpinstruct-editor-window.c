@@ -76,7 +76,7 @@ struct _GPInstructEditorWindowPrivate
 	GtkTreeIter iter_popup;
 };
 
-#define GPINSTRUCT_EDITOR_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_EDITOR_WINDOW, GPInstructEditorWindowPrivate))
+#define GPINSTRUCT_EDITOR_WINDOW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_EDITOR_WINDOW, GPInstructEditorWindowPrivate))
 
 
 
@@ -854,7 +854,7 @@ G_DEFINE_TYPE (GPInstructEditorWindow, gpinstruct_editor_window, GTK_TYPE_WINDOW
 static void
 gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 {
-	object->priv = GPINSTRUCT_EDITOR_WINDOW_PRIVATE (object);
+	object->priv = GPINSTRUCT_EDITOR_WINDOW_GET_PRIVATE (object);
 
 	object->priv->store = NULL;
 	object->priv->object_editor = NULL;

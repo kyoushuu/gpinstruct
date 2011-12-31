@@ -39,7 +39,7 @@ struct _GPInstructLessonTestTextPagePrivate
 	GtkWidget *answer_entry;
 };
 
-#define GPINSTRUCT_LESSON_TEST_TEXT_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT_PAGE, GPInstructLessonTestTextPagePrivate))
+#define GPINSTRUCT_LESSON_TEST_TEXT_PAGE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT_PAGE, GPInstructLessonTestTextPagePrivate))
 
 
 
@@ -87,7 +87,7 @@ G_DEFINE_TYPE (GPInstructLessonTestTextPage, gpinstruct_lesson_test_text_page, G
 static void
 gpinstruct_lesson_test_text_page_init (GPInstructLessonTestTextPage *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_PAGE_GET_PRIVATE (object);
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;

@@ -27,7 +27,7 @@ struct _GPInstructLessonTestTextQuestionPrivate
 	gchar *answer;
 };
 
-#define GPINSTRUCT_LESSON_TEST_TEXT_QUESTION_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT_QUESTION, GPInstructLessonTestTextQuestionPrivate))
+#define GPINSTRUCT_LESSON_TEST_TEXT_QUESTION_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT_QUESTION, GPInstructLessonTestTextQuestionPrivate))
 
 
 
@@ -36,7 +36,7 @@ G_DEFINE_TYPE (GPInstructLessonTestTextQuestion, gpinstruct_lesson_test_text_que
 static void
 gpinstruct_lesson_test_text_question_init (GPInstructLessonTestTextQuestion *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION_GET_PRIVATE (object);
 
 	object->priv->text = g_strdup ("");
 	object->priv->explanation = g_strdup ("");

@@ -33,7 +33,7 @@ struct _GPInstructProjectEditorPrivate
 	GtkWidget *title_entry;
 };
 
-#define GPINSTRUCT_PROJECT_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_PROJECT_EDITOR, GPInstructProjectEditorPrivate))
+#define GPINSTRUCT_PROJECT_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_PROJECT_EDITOR, GPInstructProjectEditorPrivate))
 
 
 
@@ -42,7 +42,7 @@ G_DEFINE_TYPE (GPInstructProjectEditor, gpinstruct_project_editor, GPINSTRUCT_TY
 static void
 gpinstruct_project_editor_init (GPInstructProjectEditor *object)
 {
-	object->priv = GPINSTRUCT_PROJECT_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_PROJECT_EDITOR_GET_PRIVATE (object);
 
 	object->priv->title_label = gtk_label_new (_("Title:"));
 	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,

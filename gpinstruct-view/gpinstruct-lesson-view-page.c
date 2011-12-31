@@ -36,7 +36,7 @@ struct _GPInstructLessonViewPagePrivate
 	gchar *explanation;
 };
 
-#define GPINSTRUCT_LESSON_VIEW_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_VIEW_PAGE, GPInstructLessonViewPagePrivate))
+#define GPINSTRUCT_LESSON_VIEW_PAGE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_VIEW_PAGE, GPInstructLessonViewPagePrivate))
 
 enum
 {
@@ -70,7 +70,7 @@ G_DEFINE_TYPE (GPInstructLessonViewPage, gpinstruct_lesson_view_page, GTK_TYPE_S
 static void
 gpinstruct_lesson_view_page_init (GPInstructLessonViewPage *object)
 {
-	object->priv = GPINSTRUCT_LESSON_VIEW_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_VIEW_PAGE_GET_PRIVATE (object);
 
 	object->priv->title = NULL;
 

@@ -38,7 +38,7 @@ struct _GPInstructLessonEditorPrivate
 	GtkWidget *singlescore_switch;
 };
 
-#define GPINSTRUCT_LESSON_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_EDITOR, GPInstructLessonEditorPrivate))
+#define GPINSTRUCT_LESSON_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_EDITOR, GPInstructLessonEditorPrivate))
 
 
 
@@ -47,7 +47,7 @@ G_DEFINE_TYPE (GPInstructLessonEditor, gpinstruct_lesson_editor, GPINSTRUCT_TYPE
 static void
 gpinstruct_lesson_editor_init (GPInstructLessonEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_EDITOR_GET_PRIVATE (object);
 
 	object->priv->title_label = gtk_label_new (_("Title:"));
 	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,

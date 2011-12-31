@@ -36,7 +36,7 @@ struct _GPInstructLessonDiscussionEditorPrivate
 	GtkWidget *text_view;
 };
 
-#define GPINSTRUCT_LESSON_DISCUSSION_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_DISCUSSION_EDITOR, GPInstructLessonDiscussionEditorPrivate))
+#define GPINSTRUCT_LESSON_DISCUSSION_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_DISCUSSION_EDITOR, GPInstructLessonDiscussionEditorPrivate))
 
 
 
@@ -45,7 +45,7 @@ G_DEFINE_TYPE (GPInstructLessonDiscussionEditor, gpinstruct_lesson_discussion_ed
 static void
 gpinstruct_lesson_discussion_editor_init (GPInstructLessonDiscussionEditor *object)
 {
-	object->priv = GPINSTRUCT_LESSON_DISCUSSION_EDITOR_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_DISCUSSION_EDITOR_GET_PRIVATE (object);
 
 	object->priv->title_label = gtk_label_new (_("Title:"));
 	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,

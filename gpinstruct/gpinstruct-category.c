@@ -28,7 +28,7 @@ struct _GPInstructCategoryPrivate
 	GList *lessons;
 };
 
-#define GPINSTRUCT_CATEGORY_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_CATEGORY, GPInstructCategoryPrivate))
+#define GPINSTRUCT_CATEGORY_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_CATEGORY, GPInstructCategoryPrivate))
 
 
 
@@ -37,7 +37,7 @@ G_DEFINE_TYPE (GPInstructCategory, gpinstruct_category, GPINSTRUCT_TYPE_OBJECT);
 static void
 gpinstruct_category_init (GPInstructCategory *object)
 {
-	object->priv = GPINSTRUCT_CATEGORY_PRIVATE (object);
+	object->priv = GPINSTRUCT_CATEGORY_GET_PRIVATE (object);
 
 	object->priv->title = g_strdup ("");
 	object->priv->lessons = NULL;

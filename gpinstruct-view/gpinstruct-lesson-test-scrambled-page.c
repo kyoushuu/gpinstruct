@@ -41,7 +41,7 @@ struct _GPInstructLessonTestScrambledPagePrivate
 	GtkWidget *answer_entry;
 };
 
-#define GPINSTRUCT_LESSON_TEST_SCRAMBLED_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_PAGE, GPInstructLessonTestScrambledPagePrivate))
+#define GPINSTRUCT_LESSON_TEST_SCRAMBLED_PAGE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_PAGE, GPInstructLessonTestScrambledPagePrivate))
 
 
 
@@ -94,7 +94,7 @@ G_DEFINE_TYPE (GPInstructLessonTestScrambledPage, gpinstruct_lesson_test_scrambl
 static void
 gpinstruct_lesson_test_scrambled_page_init (GPInstructLessonTestScrambledPage *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_PAGE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_PAGE_GET_PRIVATE (object);
 
 	object->priv->test = NULL;
 	object->priv->score = NULL;

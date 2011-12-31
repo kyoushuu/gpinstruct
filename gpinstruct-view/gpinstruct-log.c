@@ -42,7 +42,7 @@ struct _GPInstructLogPrivate
 	guint curr_group_element;
 };
 
-#define GPINSTRUCT_LOG_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LOG, GPInstructLogPrivate))
+#define GPINSTRUCT_LOG_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LOG, GPInstructLogPrivate))
 
 
 GQuark
@@ -111,7 +111,7 @@ G_DEFINE_TYPE (GPInstructLog, gpinstruct_log, G_TYPE_OBJECT);
 static void
 gpinstruct_log_init (GPInstructLog *object)
 {
-	object->priv = GPINSTRUCT_LOG_PRIVATE (object);
+	object->priv = GPINSTRUCT_LOG_GET_PRIVATE (object);
 
 	object->priv->tests_list = NULL;
 

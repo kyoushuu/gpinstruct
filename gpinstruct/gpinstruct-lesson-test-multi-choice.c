@@ -27,7 +27,7 @@ struct _GPInstructLessonTestMultiChoicePrivate
 	GList *questions;
 };
 
-#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE, GPInstructLessonTestMultiChoicePrivate))
+#define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE, GPInstructLessonTestMultiChoicePrivate))
 
 
 
@@ -103,7 +103,7 @@ G_DEFINE_TYPE (GPInstructLessonTestMultiChoice, gpinstruct_lesson_test_multi_cho
 static void
 gpinstruct_lesson_test_multi_choice_init (GPInstructLessonTestMultiChoice *object)
 {
-	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PRIVATE (object);
+	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_GET_PRIVATE (object);
 
 	object->priv->questions = NULL;
 }
