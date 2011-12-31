@@ -28,17 +28,17 @@
 
 struct _GPInstructLessonTestScrambledPagePrivate
 {
-	GPInstructLessonTestScrambled* test;
-	GPInstructLessonScore* score;
-	GPInstructLog* log;
+	GPInstructLessonTestScrambled *test;
+	GPInstructLessonScore *score;
+	GPInstructLog *log;
 
 	guint curr_question;
-	guint* questions;
+	guint *questions;
 
-	GtkWidget* vbox;
-	GtkWidget* question_textview;
-	GtkWidget* scrambled_entry;
-	GtkWidget* answer_entry;
+	GtkWidget *vbox;
+	GtkWidget *question_textview;
+	GtkWidget *scrambled_entry;
+	GtkWidget *answer_entry;
 };
 
 #define GPINSTRUCT_LESSON_TEST_SCRAMBLED_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_PAGE, GPInstructLessonTestScrambledPagePrivate))
@@ -46,23 +46,23 @@ struct _GPInstructLessonTestScrambledPagePrivate
 
 
 void
-scrambled_show_question (GPInstructLessonTestScrambledPage* page,
+scrambled_show_question (GPInstructLessonTestScrambledPage *page,
                          guint question_num)
 {
-	GList* questions = gpinstruct_lesson_test_scrambled_get_questions (page->priv->test);
+	GList *questions = gpinstruct_lesson_test_scrambled_get_questions (page->priv->test);
 	if (question_num < g_list_length (questions))
 	{
 		page->priv->curr_question = question_num;
 
 		gtk_entry_set_text (GTK_ENTRY (page->priv->answer_entry), "");
 
-		GPInstructLessonTestScrambledQuestion* question = g_list_nth_data (questions, page->priv->questions[question_num]);
+		GPInstructLessonTestScrambledQuestion *question = g_list_nth_data (questions, page->priv->questions[question_num]);
 
-		gchar* text = g_strdup_printf ("%d. %s", 1+question_num, gpinstruct_lesson_test_scrambled_question_get_text (question));
+		gchar *text = g_strdup_printf ("%d. %s", 1+question_num, gpinstruct_lesson_test_scrambled_question_get_text (question));
 		gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (page->priv->question_textview)), text);
 		g_free (text);
 
-		gchar* curr_answer = g_strdup (gpinstruct_lesson_test_scrambled_question_get_answer (question));
+		gchar *curr_answer = g_strdup (gpinstruct_lesson_test_scrambled_question_get_answer (question));
 		randomize_string (curr_answer);
 		gtk_entry_set_text (GTK_ENTRY (page->priv->scrambled_entry), curr_answer);
 		g_free (curr_answer);
@@ -73,7 +73,7 @@ scrambled_show_question (GPInstructLessonTestScrambledPage* page,
 }
 
 static void
-page_reset (GPInstructLessonTestScrambledPage* page,
+page_reset (GPInstructLessonTestScrambledPage *page,
             gpointer user_data)
 {
 	if (page->priv->log)
@@ -109,7 +109,7 @@ gpinstruct_lesson_test_scrambled_page_init (GPInstructLessonTestScrambledPage *o
 static void
 gpinstruct_lesson_test_scrambled_page_finalize (GObject *object)
 {
-	GPInstructLessonTestScrambledPage* page = GPINSTRUCT_LESSON_TEST_SCRAMBLED_PAGE (object);
+	GPInstructLessonTestScrambledPage *page = GPINSTRUCT_LESSON_TEST_SCRAMBLED_PAGE (object);
 
 	g_free (page->priv->questions);
 
@@ -119,8 +119,8 @@ gpinstruct_lesson_test_scrambled_page_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_scrambled_page_class_init (GPInstructLessonTestScrambledPageClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonViewPageClass *parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestScrambledPagePrivate));
 
@@ -129,24 +129,24 @@ gpinstruct_lesson_test_scrambled_page_class_init (GPInstructLessonTestScrambledP
 
 
 static gboolean
-page_show_next (GPInstructLessonTestScrambledPage* page,
+page_show_next (GPInstructLessonTestScrambledPage *page,
                 gpointer user_data)
 {
-	GList* questions = gpinstruct_lesson_test_scrambled_get_questions (page->priv->test);
+	GList *questions = gpinstruct_lesson_test_scrambled_get_questions (page->priv->test);
 	guint questions_num = g_list_length (questions);
 
 	if (questions_num == 0)
 		return FALSE;
 
 	guint question_id = page->priv->questions[page->priv->curr_question];
-	GPInstructLessonTestScrambledQuestion* question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (g_list_nth_data (questions, question_id));
+	GPInstructLessonTestScrambledQuestion *question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (g_list_nth_data (questions, question_id));
 
 	g_list_free (questions);
 
 	gpinstruct_lesson_score_increase_total (page->priv->score);
 
-	const gchar* answer = gtk_entry_get_text (GTK_ENTRY (page->priv->answer_entry));
-	const gchar* correct_answer =
+	const gchar *answer = gtk_entry_get_text (GTK_ENTRY (page->priv->answer_entry));
+	const gchar *correct_answer =
 		gpinstruct_lesson_test_scrambled_question_get_answer (question);
 
 	gboolean explain = gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (page->priv->test));
@@ -194,12 +194,12 @@ page_show_next (GPInstructLessonTestScrambledPage* page,
 }
 
 
-GPInstructLessonTestScrambledPage*
-gpinstruct_lesson_test_scrambled_page_new (GPInstructLessonTestScrambled* test,
-                                           GPInstructLessonScore* score,
-                                           GPInstructLog* log)
+GPInstructLessonTestScrambledPage *
+gpinstruct_lesson_test_scrambled_page_new (GPInstructLessonTestScrambled *test,
+                                           GPInstructLessonScore *score,
+                                           GPInstructLog *log)
 {
-	GPInstructLessonTestScrambledPage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_PAGE, NULL);
+	GPInstructLessonTestScrambledPage *page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_PAGE, NULL);
 
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 	                                       gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));

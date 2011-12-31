@@ -43,11 +43,11 @@ struct _GPInstructLessonTestOrderEditor
 {
 	GPInstructObjectEditor parent_instance;
 
-	GPInstructLessonTestOrderEditorPrivate* priv;
+	GPInstructLessonTestOrderEditorPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_order_editor_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestOrderEditor* gpinstruct_lesson_test_order_editor_new (GPInstructEditorWindow* window, GPInstructLessonTestOrder *test);
+GPInstructLessonTestOrderEditor *gpinstruct_lesson_test_order_editor_new (GPInstructEditorWindow *window, GPInstructLessonTestOrder *test);
 
 G_END_DECLS
 

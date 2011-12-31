@@ -27,16 +27,16 @@
 
 struct _GPInstructLessonTestTextPagePrivate
 {
-	GPInstructLessonTestText* test;
-	GPInstructLessonScore* score;
-	GPInstructLog* log;
+	GPInstructLessonTestText *test;
+	GPInstructLessonScore *score;
+	GPInstructLog *log;
 
 	guint curr_question;
-	guint* questions;
+	guint *questions;
 
-	GtkWidget* vbox;
-	GtkWidget* question_textview;
-	GtkWidget* answer_entry;
+	GtkWidget *vbox;
+	GtkWidget *question_textview;
+	GtkWidget *answer_entry;
 };
 
 #define GPINSTRUCT_LESSON_TEST_TEXT_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT_PAGE, GPInstructLessonTestTextPagePrivate))
@@ -44,19 +44,19 @@ struct _GPInstructLessonTestTextPagePrivate
 
 
 void
-text_show_question (GPInstructLessonTestTextPage* page,
+text_show_question (GPInstructLessonTestTextPage *page,
                          guint question_num)
 {
-	GList* questions = gpinstruct_lesson_test_text_get_questions (page->priv->test);
+	GList *questions = gpinstruct_lesson_test_text_get_questions (page->priv->test);
 	if (question_num < g_list_length (questions))
 	{
 		page->priv->curr_question = question_num;
 
 		gtk_entry_set_text (GTK_ENTRY (page->priv->answer_entry), "");
 
-		GPInstructLessonTestTextQuestion* question = g_list_nth_data (questions, page->priv->questions[question_num]);
+		GPInstructLessonTestTextQuestion *question = g_list_nth_data (questions, page->priv->questions[question_num]);
 
-		gchar* text = g_strdup_printf ("%d. %s", 1+question_num, gpinstruct_lesson_test_text_question_get_text (question));
+		gchar *text = g_strdup_printf ("%d. %s", 1+question_num, gpinstruct_lesson_test_text_question_get_text (question));
 		gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (page->priv->question_textview)), text);
 		g_free (text);
 	}
@@ -66,7 +66,7 @@ text_show_question (GPInstructLessonTestTextPage* page,
 }
 
 static void
-page_reset (GPInstructLessonTestTextPage* page,
+page_reset (GPInstructLessonTestTextPage *page,
             gpointer user_data)
 {
 	if (page->priv->log)
@@ -102,7 +102,7 @@ gpinstruct_lesson_test_text_page_init (GPInstructLessonTestTextPage *object)
 static void
 gpinstruct_lesson_test_text_page_finalize (GObject *object)
 {
-	GPInstructLessonTestTextPage* page = GPINSTRUCT_LESSON_TEST_TEXT_PAGE (object);
+	GPInstructLessonTestTextPage *page = GPINSTRUCT_LESSON_TEST_TEXT_PAGE (object);
 
 	g_free (page->priv->questions);
 
@@ -112,8 +112,8 @@ gpinstruct_lesson_test_text_page_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_text_page_class_init (GPInstructLessonTestTextPageClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonViewPageClass *parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestTextPagePrivate));
 
@@ -122,24 +122,24 @@ gpinstruct_lesson_test_text_page_class_init (GPInstructLessonTestTextPageClass *
 
 
 static gboolean
-page_show_next (GPInstructLessonTestTextPage* page,
+page_show_next (GPInstructLessonTestTextPage *page,
                 gpointer user_data)
 {
-	GList* questions = gpinstruct_lesson_test_text_get_questions (page->priv->test);
+	GList *questions = gpinstruct_lesson_test_text_get_questions (page->priv->test);
 	guint questions_num = g_list_length (questions);
 
 	if (questions_num == 0)
 		return FALSE;
 
 	guint question_id = page->priv->questions[page->priv->curr_question];
-	GPInstructLessonTestTextQuestion* question = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION (g_list_nth_data (questions, question_id));
+	GPInstructLessonTestTextQuestion *question = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION (g_list_nth_data (questions, question_id));
 
 	g_list_free (questions);
 
 	gpinstruct_lesson_score_increase_total (page->priv->score);
 
-	const gchar* answer = gtk_entry_get_text (GTK_ENTRY (page->priv->answer_entry));
-	const gchar* correct_answer =
+	const gchar *answer = gtk_entry_get_text (GTK_ENTRY (page->priv->answer_entry));
+	const gchar *correct_answer =
 		gpinstruct_lesson_test_text_question_get_answer (question);
 
 	gboolean explain = gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (page->priv->test));
@@ -187,12 +187,12 @@ page_show_next (GPInstructLessonTestTextPage* page,
 }
 
 
-GPInstructLessonTestTextPage*
-gpinstruct_lesson_test_text_page_new (GPInstructLessonTestText* test,
-                                           GPInstructLessonScore* score,
-                                           GPInstructLog* log)
+GPInstructLessonTestTextPage *
+gpinstruct_lesson_test_text_page_new (GPInstructLessonTestText *test,
+                                           GPInstructLessonScore *score,
+                                           GPInstructLog *log)
 {
-	GPInstructLessonTestTextPage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_TEXT_PAGE, NULL);
+	GPInstructLessonTestTextPage *page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_TEXT_PAGE, NULL);
 
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 	                                       gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));

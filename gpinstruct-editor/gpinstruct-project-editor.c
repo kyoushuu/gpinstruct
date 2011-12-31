@@ -26,11 +26,11 @@
 
 struct _GPInstructProjectEditorPrivate
 {
-	GPInstructEditorWindow* window;
-	GPInstructProject* project;
+	GPInstructEditorWindow *window;
+	GPInstructProject *project;
 
-	GtkWidget* title_label;
-	GtkWidget* title_entry;
+	GtkWidget *title_label;
+	GtkWidget *title_entry;
 };
 
 #define GPINSTRUCT_PROJECT_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_PROJECT_EDITOR, GPInstructProjectEditorPrivate))
@@ -67,8 +67,8 @@ gpinstruct_project_editor_finalize (GObject *object)
 static void
 gpinstruct_project_editor_class_init (GPInstructProjectEditorClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectEditorClass *parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructProjectEditorPrivate));
 
@@ -80,7 +80,7 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	GPInstructProjectEditor* editor = GPINSTRUCT_PROJECT_EDITOR (user_data);
+	GPInstructProjectEditor *editor = GPINSTRUCT_PROJECT_EDITOR (user_data);
 
 	gpinstruct_project_set_title (editor->priv->project,
 	                              gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
@@ -89,11 +89,11 @@ title_entry_activate (GtkEntry *entry,
 }
 
 
-GPInstructProjectEditor*
-gpinstruct_project_editor_new (GPInstructEditorWindow* window,
-                               GPInstructProject* project)
+GPInstructProjectEditor *
+gpinstruct_project_editor_new (GPInstructEditorWindow *window,
+                               GPInstructProject *project)
 {
-	GPInstructProjectEditor* editor = g_object_new (GPINSTRUCT_TYPE_PROJECT_EDITOR, NULL);
+	GPInstructProjectEditor *editor = g_object_new (GPINSTRUCT_TYPE_PROJECT_EDITOR, NULL);
 
 	editor->priv->window = window;
 	editor->priv->project = project;

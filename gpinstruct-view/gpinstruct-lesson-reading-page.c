@@ -44,20 +44,20 @@ gpinstruct_lesson_reading_page_finalize (GObject *object)
 static void
 gpinstruct_lesson_reading_page_class_init (GPInstructLessonReadingPageClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonViewPageClass *parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	object_class->finalize = gpinstruct_lesson_reading_page_finalize;
 }
 
 
-GPInstructLessonReadingPage*
-gpinstruct_lesson_reading_page_new (GPInstructLessonReading* reading)
+GPInstructLessonReadingPage *
+gpinstruct_lesson_reading_page_new (GPInstructLessonReading *reading)
 {
-	GPInstructLessonReadingPage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_READING_PAGE, NULL);
+	GPInstructLessonReadingPage *page = g_object_new (GPINSTRUCT_TYPE_LESSON_READING_PAGE, NULL);
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page), gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (reading)));
 
-	GtkWidget* reading_label = gtk_label_new (NULL);
+	GtkWidget *reading_label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (reading_label), gpinstruct_lesson_reading_get_text (reading));
 	gtk_label_set_line_wrap (GTK_LABEL (reading_label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (reading_label), TRUE);

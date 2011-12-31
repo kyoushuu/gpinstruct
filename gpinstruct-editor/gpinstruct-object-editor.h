@@ -44,7 +44,7 @@ struct _GPInstructObjectEditor
 };
 
 GType gpinstruct_object_editor_get_type (void) G_GNUC_CONST;
-GPInstructObjectEditor* gpinstruct_object_editor_new (void);
+GPInstructObjectEditor *gpinstruct_object_editor_new (void);
 
 G_END_DECLS
 

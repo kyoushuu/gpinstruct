@@ -43,11 +43,11 @@ struct _GPInstructLessonTestMultiChoiceEditor
 {
 	GPInstructObjectEditor parent_instance;
 
-	GPInstructLessonTestMultiChoiceEditorPrivate* priv;
+	GPInstructLessonTestMultiChoiceEditorPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_multi_choice_editor_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestMultiChoiceEditor* gpinstruct_lesson_test_multi_choice_editor_new (GPInstructEditorWindow* window, GPInstructLessonTestMultiChoice *test);
+GPInstructLessonTestMultiChoiceEditor *gpinstruct_lesson_test_multi_choice_editor_new (GPInstructEditorWindow *window, GPInstructLessonTestMultiChoice *test);
 
 G_END_DECLS
 

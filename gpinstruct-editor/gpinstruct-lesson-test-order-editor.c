@@ -28,23 +28,23 @@
 
 struct _GPInstructLessonTestOrderEditorPrivate
 {
-	GPInstructEditorWindow* window;
-	GPInstructLessonTestOrder* test;
+	GPInstructEditorWindow *window;
+	GPInstructLessonTestOrder *test;
 
-	GtkWidget* title_label;
-	GtkWidget* title_entry;
+	GtkWidget *title_label;
+	GtkWidget *title_entry;
 
-	GtkWidget* directions_label;
-	GtkWidget* directions_view;
+	GtkWidget *directions_label;
+	GtkWidget *directions_view;
 
-	GtkWidget* explain_label;
-	GtkWidget* explain_switch;
+	GtkWidget *explain_label;
+	GtkWidget *explain_switch;
 
-	GtkWidget* explanation_label;
-	GtkWidget* explanation_view;
+	GtkWidget *explanation_label;
+	GtkWidget *explanation_view;
 
-	GtkWidget* tree_view;
-	GtkListStore* store;
+	GtkWidget *tree_view;
+	GtkListStore *store;
 };
 
 #define GPINSTRUCT_LESSON_TEST_ORDER_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_EDITOR, GPInstructLessonTestOrderEditorPrivate))
@@ -58,19 +58,19 @@ enum
 };
 
 static void
-update_tree_view (GPInstructLessonTestOrderEditor* editor)
+update_tree_view (GPInstructLessonTestOrderEditor *editor)
 {
 	gtk_list_store_clear (editor->priv->store);
 
 	GtkTreeIter iterItem;
-	const gchar* text;
+	const gchar *text;
 
-	GList* items = gpinstruct_lesson_test_order_get_items (editor->priv->test);
-	GList* curr_items = items;
+	GList *items = gpinstruct_lesson_test_order_get_items (editor->priv->test);
+	GList *curr_items = items;
 
 	while (curr_items)
 	{
-		GPInstructLessonTestOrderItem* item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (curr_items->data);
+		GPInstructLessonTestOrderItem *item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (curr_items->data);
 
 		text = gpinstruct_lesson_test_order_item_get_text (item);
 		gtk_list_store_append (editor->priv->store, &iterItem);
@@ -94,9 +94,9 @@ tree_view_row_activated (GtkTreeView       *tree_view,
                          GtkTreeViewColumn *column,
                          gpointer           user_data)
 {
-	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor *editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
-	GPInstructObject* object;
+	GPInstructObject *object;
 	GtkTreeIter iter;
 	GtkWidget *scrolled_window, *text_view, *answer_spin;
 
@@ -107,16 +107,16 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 		                    -1);
 		if (GPINSTRUCT_IS_LESSON_TEST_ORDER_ITEM (object))
 		{
-			GPInstructLessonTestOrderItem* item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (object);
+			GPInstructLessonTestOrderItem *item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (object);
 			guint items_num = gpinstruct_lesson_test_order_get_items_length (editor->priv->test);
 
-			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Item Properties"),
+			GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Item Properties"),
 			                                                 GTK_WINDOW (editor->priv->window),
 			                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
 			                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 			                                                 NULL);
-			GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+			GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 			gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
 
 			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -151,7 +151,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 				GtkTextIter start, end;
 				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
 				                            &start, &end);
-				gchar* text = gtk_text_iter_get_text (&start, &end);
+				gchar *text = gtk_text_iter_get_text (&start, &end);
 				gpinstruct_lesson_test_order_item_set_text (item, text);
 				g_free (text);
 
@@ -176,9 +176,9 @@ static void
 items_add_button_clicked (GtkButton *button,
                           gpointer   user_data)
 {
-	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor *editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
-	GPInstructLessonTestOrderItem* item;
+	GPInstructLessonTestOrderItem *item;
 	GtkTreeIter iter;
 
 	item = gpinstruct_lesson_test_order_item_new ();
@@ -203,7 +203,7 @@ static void
 items_remove_button_clicked (GtkButton *button,
                              gpointer   user_data)
 {
-	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor *editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
 	GtkTreeIter iter, iterSel;
@@ -264,7 +264,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	GtkWidget* directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	object->priv->directions_view = gtk_text_view_new ();
@@ -291,7 +291,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	                  0, 1, 3, 4,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	GtkWidget* explanation_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *explanation_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (explanation_view_scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	object->priv->explanation_view = gtk_text_view_new ();
@@ -303,13 +303,13 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	                  3, 3);
 
 
-	GtkWidget* items_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *items_hbox = gtk_hbox_new (FALSE, 3);
 	gtk_table_attach (GTK_TABLE (object), items_hbox,
 	                  0, 2, 4, 5,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
 	                  3, 3);
 
-	GtkWidget* tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_view_scrolled_window),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start (GTK_BOX (items_hbox), tree_view_scrolled_window, TRUE, TRUE, 0);
@@ -320,20 +320,20 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	g_signal_connect (object->priv->tree_view, "row-activated", G_CALLBACK (tree_view_row_activated), object);
 	gtk_container_add (GTK_CONTAINER (tree_view_scrolled_window), object->priv->tree_view);
 
-	GtkTreeViewColumn* column = gtk_tree_view_column_new_with_attributes (_("Items:"), gtk_cell_renderer_text_new (),
+	GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes (_("Items:"), gtk_cell_renderer_text_new (),
 	                                                                      "text", 0,
 	                                                                      NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (object->priv->tree_view), column);
 
-	GtkWidget* items_buttonbox = gtk_vbutton_box_new ();
+	GtkWidget *items_buttonbox = gtk_vbutton_box_new ();
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (items_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (items_hbox), items_buttonbox, FALSE, TRUE, 0);
 
-	GtkWidget* items_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
+	GtkWidget *items_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (items_add_button, "clicked", G_CALLBACK (items_add_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (items_buttonbox), items_add_button, FALSE, TRUE, 0);
 
-	GtkWidget* items_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
+	GtkWidget *items_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
 	g_signal_connect (items_remove_button, "clicked", G_CALLBACK (items_remove_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (items_buttonbox), items_remove_button, FALSE, TRUE, 0);
 }
@@ -341,7 +341,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 static void
 gpinstruct_lesson_test_order_editor_finalize (GObject *object)
 {
-	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (object);
+	GPInstructLessonTestOrderEditor *editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (object);
 
 	if (editor->priv->store)
 		g_object_unref (editor->priv->store);
@@ -352,8 +352,8 @@ gpinstruct_lesson_test_order_editor_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_order_editor_class_init (GPInstructLessonTestOrderEditorClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectEditorClass *parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestOrderEditorPrivate));
 
@@ -365,7 +365,7 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor *editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (editor->priv->test),
 	                                     gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
@@ -377,10 +377,10 @@ static void
 directions_buffer_changed (GtkTextBuffer *textbuffer,
                            gpointer       user_data)
 {
-	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor *editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	GtkTextIter start, end;
-	gchar* text;
+	gchar *text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
 	gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (editor->priv->test),
@@ -394,7 +394,7 @@ explain_activate (GObject    *gobject,
                   GParamSpec *pspec,
                   gpointer    user_data)
 {
-	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor *editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->explain_switch));
 
@@ -410,10 +410,10 @@ static void
 explanation_buffer_changed (GtkTextBuffer *textbuffer,
                             gpointer       user_data)
 {
-	GPInstructLessonTestOrderEditor* editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
+	GPInstructLessonTestOrderEditor *editor = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR (user_data);
 
 	GtkTextIter start, end;
-	gchar* text;
+	gchar *text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
 	gpinstruct_lesson_test_order_set_explanation (editor->priv->test,
@@ -423,13 +423,13 @@ explanation_buffer_changed (GtkTextBuffer *textbuffer,
 }
 
 
-GPInstructLessonTestOrderEditor*
-gpinstruct_lesson_test_order_editor_new (GPInstructEditorWindow* window,
+GPInstructLessonTestOrderEditor *
+gpinstruct_lesson_test_order_editor_new (GPInstructEditorWindow *window,
                                          GPInstructLessonTestOrder *test)
 {
-	GPInstructLessonTestOrderEditor* editor = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_ORDER_EDITOR, NULL);
+	GPInstructLessonTestOrderEditor *editor = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_ORDER_EDITOR, NULL);
 
-	GtkTextBuffer* buffer;
+	GtkTextBuffer *buffer;
 
 	editor->priv->window = window;
 	editor->priv->test = test;

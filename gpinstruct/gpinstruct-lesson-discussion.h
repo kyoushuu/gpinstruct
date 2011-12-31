@@ -43,13 +43,13 @@ struct _GPInstructLessonDiscussion
 {
 	GPInstructLessonElement parent_instance;
 
-	GPInstructLessonDiscussionPrivate* priv;
+	GPInstructLessonDiscussionPrivate *priv;
 };
 
 GType gpinstruct_lesson_discussion_get_type (void) G_GNUC_CONST;
-GPInstructLessonDiscussion* gpinstruct_lesson_discussion_new (void);
-const gchar* gpinstruct_lesson_discussion_get_text (GPInstructLessonDiscussion* discussion);
-void gpinstruct_lesson_discussion_set_text (GPInstructLessonDiscussion* discussion, const gchar* text);
+GPInstructLessonDiscussion *gpinstruct_lesson_discussion_new (void);
+const gchar *gpinstruct_lesson_discussion_get_text (GPInstructLessonDiscussion *discussion);
+void gpinstruct_lesson_discussion_set_text (GPInstructLessonDiscussion *discussion, const gchar *text);
 
 G_END_DECLS
 

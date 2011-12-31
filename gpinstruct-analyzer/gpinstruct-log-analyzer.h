@@ -43,7 +43,7 @@ struct _GPInstructLogAnalyzer
 {
 	GObject parent_instance;
 
-	GPInstructLogAnalyzerPrivate* priv;
+	GPInstructLogAnalyzerPrivate *priv;
 };
 
 typedef struct _GPInstructLogAnalyzerProject GPInstructLogAnalyzerProject;
@@ -60,12 +60,12 @@ typedef struct _GPInstructLogAnalyzerExaminee GPInstructLogAnalyzerExaminee;
 
 struct _GPInstructLogAnalyzerProject
 {
-	GList* categories; /* GPInstructLogAnalyzerCategory */
-	GPInstructProject* object;
-	GData* tests_list;
-	GPInstructCategory* last_category;
-	GPInstructLesson* last_lesson;
-	GPInstructLessonElementGroup* last_group;
+	GList *categories; /* GPInstructLogAnalyzerCategory */
+	GPInstructProject *object;
+	GData *tests_list;
+	GPInstructCategory *last_category;
+	GPInstructLesson *last_lesson;
+	GPInstructLessonElementGroup *last_group;
 
 	guint times_taken;
 	gdouble time_spent;
@@ -75,9 +75,9 @@ struct _GPInstructLogAnalyzerProject
 
 struct _GPInstructLogAnalyzerCategory
 {
-	GPInstructLogAnalyzerProject* project;
-	GList* lessons; /* GPInstructLogAnalyzerLesson */
-	GPInstructCategory* object;
+	GPInstructLogAnalyzerProject *project;
+	GList *lessons; /* GPInstructLogAnalyzerLesson */
+	GPInstructCategory *object;
 
 	guint times_taken;
 	gdouble time_spent;
@@ -87,9 +87,9 @@ struct _GPInstructLogAnalyzerCategory
 
 struct _GPInstructLogAnalyzerLesson
 {
-	GPInstructLogAnalyzerCategory* category;
-	GList* elements; /* GPInstructLogAnalyzerLessonElement */
-	GPInstructLesson* object;
+	GPInstructLogAnalyzerCategory *category;
+	GList *elements; /* GPInstructLogAnalyzerLessonElement */
+	GPInstructLesson *object;
 
 	guint times_taken;
 	gdouble time_spent;
@@ -99,17 +99,17 @@ struct _GPInstructLogAnalyzerLesson
 
 struct _GPInstructLogAnalyzerLessonElement
 {
-	GPInstructLogAnalyzerLesson* lesson;
+	GPInstructLogAnalyzerLesson *lesson;
 	gboolean is_test;
-	GPInstructLogAnalyzerTest* test;
-	GPInstructLogAnalyzerGroup* group;
+	GPInstructLogAnalyzerTest *test;
+	GPInstructLogAnalyzerGroup *group;
 };
 
 struct _GPInstructLogAnalyzerGroup
 {
-	GPInstructLogAnalyzerLesson* lesson;
-	GList* tests; /* GPInstructLogAnalyzerTest */
-	GPInstructLessonElementGroup* object;
+	GPInstructLogAnalyzerLesson *lesson;
+	GList *tests; /* GPInstructLogAnalyzerTest */
+	GPInstructLessonElementGroup *object;
 
 	guint times_taken;
 	gdouble time_spent;
@@ -119,11 +119,11 @@ struct _GPInstructLogAnalyzerGroup
 
 struct _GPInstructLogAnalyzerTest
 {
-	GPInstructLogAnalyzerLesson* lesson;
-	GPInstructLogAnalyzerGroup* group;
-	GList* items; /* GPInstructLogAnalyzerItem */
+	GPInstructLogAnalyzerLesson *lesson;
+	GPInstructLogAnalyzerGroup *group;
+	GList *items; /* GPInstructLogAnalyzerItem */
 	GQuark id;
-	GPInstructLessonTest* object;
+	GPInstructLessonTest *object;
 	gboolean is_string;
 
 	guint times_taken;
@@ -134,11 +134,11 @@ struct _GPInstructLogAnalyzerTest
 
 struct _GPInstructLogAnalyzerItem
 {
-	GPInstructLogAnalyzerTest* test;
-	GList* choices;
+	GPInstructLogAnalyzerTest *test;
+	GList *choices;
 	guint id;
 	guint answer;
-	gchar* answer_string;
+	gchar *answer_string;
 
 	guint times_answered;
 	gdouble time_spent;
@@ -148,10 +148,10 @@ struct _GPInstructLogAnalyzerItem
 
 struct _GPInstructLogAnalyzerChoice
 {
-	GPInstructLogAnalyzerItem* item;
-	GList* answers;
+	GPInstructLogAnalyzerItem *item;
+	GList *answers;
 	guint id;
-	gchar* string;
+	gchar *string;
 
 	guint times_chosen;
 	gdouble time_spent;
@@ -160,25 +160,25 @@ struct _GPInstructLogAnalyzerChoice
 
 struct _GPInstructLogAnalyzerAnswer
 {
-	GPInstructLogAnalyzerChoice* choice;
-	GPInstructLogAnalyzerExaminee* examinee;
+	GPInstructLogAnalyzerChoice *choice;
+	GPInstructLogAnalyzerExaminee *examinee;
 
 	gdouble time_spent;
 };
 
 struct _GPInstructLogAnalyzerExaminee
 {
-	gchar* first_name;
-	gchar* last_name;
+	gchar *first_name;
+	gchar *last_name;
 
-	GPInstructLogAnalyzerProject* project;
+	GPInstructLogAnalyzerProject *project;
 };
 
 GType gpinstruct_log_analyzer_get_type (void) G_GNUC_CONST;
-GPInstructLogAnalyzer* gpinstruct_log_analyzer_new (GPInstructProject* project);
-void gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer* analyzer, GPInstructLog* log);
-GPInstructLogAnalyzerProject* gpinstruct_log_analyzer_get_project (GPInstructLogAnalyzer* analyzer);
-GList* gpinstruct_log_analyzer_get_examinees (GPInstructLogAnalyzer* analyzer);
+GPInstructLogAnalyzer *gpinstruct_log_analyzer_new (GPInstructProject *project);
+void gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer *analyzer, GPInstructLog *log);
+GPInstructLogAnalyzerProject *gpinstruct_log_analyzer_get_project (GPInstructLogAnalyzer *analyzer);
+GList *gpinstruct_log_analyzer_get_examinees (GPInstructLogAnalyzer *analyzer);
 
 G_END_DECLS
 

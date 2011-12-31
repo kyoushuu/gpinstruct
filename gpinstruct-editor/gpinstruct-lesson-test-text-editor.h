@@ -43,11 +43,11 @@ struct _GPInstructLessonTestTextEditor
 {
 	GPInstructObjectEditor parent_instance;
 
-	GPInstructLessonTestTextEditorPrivate* priv;
+	GPInstructLessonTestTextEditorPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_text_editor_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestTextEditor* gpinstruct_lesson_test_text_editor_new (GPInstructEditorWindow* window, GPInstructLessonTestText *test);
+GPInstructLessonTestTextEditor *gpinstruct_lesson_test_text_editor_new (GPInstructEditorWindow *window, GPInstructLessonTestText *test);
 
 G_END_DECLS
 

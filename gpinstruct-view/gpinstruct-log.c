@@ -31,12 +31,12 @@
 
 struct _GPInstructLogPrivate
 {
-	GList* tests_list;
-	GTimer* timer;
+	GList *tests_list;
+	GTimer *timer;
 	GQuark last_test;
 
-	gchar* last_name;
-	gchar* first_name;
+	gchar *last_name;
+	gchar *first_name;
 
 	guint group_elements;
 	guint curr_group_element;
@@ -54,13 +54,13 @@ gpinstruct_log_error_quark (void)
 
 
 typedef struct {
-	GPInstructLog* log;
+	GPInstructLog *log;
 	GPInstructLogForeachFunc func;
 	gpointer user_data;
 } GPInstructLogForeachFuncData;
 
 static void
-add_answer_node (GPInstructLogAnswer* answer,
+add_answer_node (GPInstructLogAnswer *answer,
                  xmlNodePtr test_node)
 {
 	gchar *item_id = g_strdup_printf ("%d", answer->item_id);
@@ -80,7 +80,7 @@ add_answer_node (GPInstructLogAnswer* answer,
 }
 
 static void
-add_test_node (GPInstructLogTest* test,
+add_test_node (GPInstructLogTest *test,
                xmlNodePtr log_node)
 {
 	xmlNodePtr current_node = xmlNewChild (log_node, NULL, BAD_CAST "test", NULL);
@@ -90,14 +90,14 @@ add_test_node (GPInstructLogTest* test,
 }
 
 static void
-free_answer (GPInstructLogAnswer* answer)
+free_answer (GPInstructLogAnswer *answer)
 {
 	g_free (answer->answer_string);
 	g_free (answer);
 }
 
 static void
-free_answers_foreach (GPInstructLogTest* test)
+free_answers_foreach (GPInstructLogTest *test)
 {
 	g_list_foreach (test->answers, (GFunc) free_answer, NULL);
 	g_list_free (test->answers);
@@ -129,7 +129,7 @@ gpinstruct_log_init (GPInstructLog *object)
 static void
 gpinstruct_log_finalize (GObject *object)
 {
-	GPInstructLog* log = GPINSTRUCT_LOG (object);
+	GPInstructLog *log = GPINSTRUCT_LOG (object);
 
 	g_list_free_full (log->priv->tests_list, (GDestroyNotify)free_answers_foreach);
 
@@ -144,8 +144,8 @@ gpinstruct_log_finalize (GObject *object)
 static void
 gpinstruct_log_class_init (GPInstructLogClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GObjectClass* parent_class = G_OBJECT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GObjectClass *parent_class = G_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLogPrivate));
 
@@ -153,42 +153,42 @@ gpinstruct_log_class_init (GPInstructLogClass *klass)
 }
 
 
-GPInstructLog*
+GPInstructLog *
 gpinstruct_log_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LOG, NULL);
 }
 
 void
-gpinstruct_log_set_last_name (GPInstructLog* log,
-                              const gchar* last_name)
+gpinstruct_log_set_last_name (GPInstructLog *log,
+                              const gchar *last_name)
 {
 	g_free (log->priv->last_name);
 	log->priv->last_name = g_strdup (last_name);
 }
 
-const gchar*
-gpinstruct_log_get_last_name (GPInstructLog* log)
+const gchar *
+gpinstruct_log_get_last_name (GPInstructLog *log)
 {
 	return log->priv->last_name;
 }
 
 void
-gpinstruct_log_set_first_name (GPInstructLog* log,
-                               const gchar* first_name)
+gpinstruct_log_set_first_name (GPInstructLog *log,
+                               const gchar *first_name)
 {
 	g_free (log->priv->first_name);
 	log->priv->first_name = g_strdup (first_name);
 }
 
-const gchar*
-gpinstruct_log_get_first_name (GPInstructLog* log)
+const gchar *
+gpinstruct_log_get_first_name (GPInstructLog *log)
 {
 	return log->priv->first_name;
 }
 
 void
-gpinstruct_log_set_group (GPInstructLog* log,
+gpinstruct_log_set_group (GPInstructLog *log,
                           guint elements)
 {
 	if (elements == 0)
@@ -199,13 +199,13 @@ gpinstruct_log_set_group (GPInstructLog* log,
 }
 
 void
-gpinstruct_log_add_choice (GPInstructLog* log,
-                           GPInstructLessonTest* test,
+gpinstruct_log_add_choice (GPInstructLog *log,
+                           GPInstructLessonTest *test,
                            guint item_id, guint answer_id)
 {
 	GQuark test_quark = g_quark_from_string (gpinstruct_lesson_test_get_id (test));
 
-	GPInstructLogAnswer* answer = g_new0 (GPInstructLogAnswer, 1);
+	GPInstructLogAnswer *answer = g_new0 (GPInstructLogAnswer, 1);
 	answer->item_id = item_id;
 	answer->answer_id = answer_id;
 	answer->time_spent = g_timer_elapsed (log->priv->timer, NULL);
@@ -218,13 +218,13 @@ gpinstruct_log_add_choice (GPInstructLog* log,
 
 	if (log->priv->last_test == test_quark)
 	{
-		GList* last_test = g_list_last (log->priv->tests_list);
-		last_test->data = g_list_append ((GList*)last_test->data, answer);
+		GList *last_test = g_list_last (log->priv->tests_list);
+		last_test->data = g_list_append ((GList*) last_test->data, answer);
 	}
 	else
 	{
-		GList* answers_list = g_list_append (NULL, answer);
-		GPInstructLogTest* test = g_new (GPInstructLogTest, 1);
+		GList *answers_list = g_list_append (NULL, answer);
+		GPInstructLogTest *test = g_new (GPInstructLogTest, 1);
 		test->id = test_quark;
 		test->answers = answers_list;
 		log->priv->tests_list = g_list_append (log->priv->tests_list, test);
@@ -233,13 +233,13 @@ gpinstruct_log_add_choice (GPInstructLog* log,
 }
 
 void
-gpinstruct_log_add_string (GPInstructLog* log,
-                           GPInstructLessonTest* test,
-                           guint item_id, const gchar* answer_string)
+gpinstruct_log_add_string (GPInstructLog *log,
+                           GPInstructLessonTest *test,
+                           guint item_id, const gchar *answer_string)
 {
 	GQuark test_quark = g_quark_from_string (gpinstruct_lesson_test_get_id (test));
 
-	GPInstructLogAnswer* answer = g_new0 (GPInstructLogAnswer, 1);
+	GPInstructLogAnswer *answer = g_new0 (GPInstructLogAnswer, 1);
 	answer->item_id = item_id;
 	answer->answer_string = g_strdup (answer_string);
 	answer->time_spent = g_timer_elapsed (log->priv->timer, NULL);
@@ -252,13 +252,13 @@ gpinstruct_log_add_string (GPInstructLog* log,
 
 	if (log->priv->last_test == test_quark)
 	{
-		GList* last_test = g_list_last (log->priv->tests_list);
-		last_test->data = g_list_append ((GList*)last_test->data, answer);
+		GList *last_test = g_list_last (log->priv->tests_list);
+		last_test->data = g_list_append ((GList*) last_test->data, answer);
 	}
 	else
 	{
-		GList* answers_list = g_list_append (NULL, answer);
-		GPInstructLogTest* test = g_new (GPInstructLogTest, 1);
+		GList *answers_list = g_list_append (NULL, answer);
+		GPInstructLogTest *test = g_new (GPInstructLogTest, 1);
 		test->id = test_quark;
 		test->answers = answers_list;
 		log->priv->tests_list = g_list_append (log->priv->tests_list, test);
@@ -267,31 +267,31 @@ gpinstruct_log_add_string (GPInstructLog* log,
 }
 
 void
-gpinstruct_log_close_test (GPInstructLog* log)
+gpinstruct_log_close_test (GPInstructLog *log)
 {
 	log->priv->last_test = 0;
 }
 
 void
-gpinstruct_log_timer_start (GPInstructLog* log)
+gpinstruct_log_timer_start (GPInstructLog *log)
 {
 	g_timer_start (log->priv->timer);
 }
 
 void
-gpinstruct_log_timer_stop (GPInstructLog* log)
+gpinstruct_log_timer_stop (GPInstructLog *log)
 {
 	g_timer_stop (log->priv->timer);
 }
 
-GList*
-gpinstruct_log_get_tests (GPInstructLog* log)
+GList *
+gpinstruct_log_get_tests (GPInstructLog *log)
 {
 	return g_list_copy (log->priv->tests_list);
 }
 
 gboolean
-load_log_from_xml_document (GPInstructLog* log,
+load_log_from_xml_document (GPInstructLog *log,
                             xmlDocPtr doc)
 {
 	xmlNode *current_node, *parent_node;
@@ -308,14 +308,14 @@ load_log_from_xml_document (GPInstructLog* log,
 			temp = xmlGetProp (current_node, BAD_CAST "last-name");
 			if (temp)
 			{
-				gpinstruct_log_set_last_name (log, (gchar*)temp);
+				gpinstruct_log_set_last_name (log, (gchar*) temp);
 				xmlFree (temp);
 			}
 
 			temp = xmlGetProp (current_node, BAD_CAST "first-name");
 			if (temp)
 			{
-				gpinstruct_log_set_first_name (log, (gchar*)temp);
+				gpinstruct_log_set_first_name (log, (gchar*) temp);
 				xmlFree (temp);
 			}
 
@@ -327,13 +327,13 @@ load_log_from_xml_document (GPInstructLog* log,
 				if (current_node->type == XML_ELEMENT_NODE &&
 				    xmlStrEqual (current_node->name, BAD_CAST "test"))
 				{
-					GPInstructLogTest* test = g_new0 (GPInstructLogTest, 1);
+					GPInstructLogTest *test = g_new0 (GPInstructLogTest, 1);
 					log->priv->tests_list = g_list_append (log->priv->tests_list, test);
 
 					temp = xmlGetProp (current_node, BAD_CAST "id");
 					if (temp)
 					{
-						test->id = g_quark_from_string ((gchar*)temp);
+						test->id = g_quark_from_string ((gchar*) temp);
 						xmlFree (temp);
 					}
 
@@ -345,34 +345,34 @@ load_log_from_xml_document (GPInstructLog* log,
 						if (current_node->type == XML_ELEMENT_NODE &&
 						    xmlStrEqual (current_node->name, BAD_CAST "item"))
 						{
-							GPInstructLogAnswer* answer = g_new0 (GPInstructLogAnswer, 1);
+							GPInstructLogAnswer *answer = g_new0 (GPInstructLogAnswer, 1);
 							test->answers = g_list_append (test->answers, answer);
 
 							temp = xmlGetProp (current_node, BAD_CAST "id");
 							if (temp)
 							{
-								answer->item_id = atoi ((gchar*)temp);
+								answer->item_id = atoi ((gchar*) temp);
 								xmlFree (temp);
 							}
 
 							temp = xmlGetProp (current_node, BAD_CAST "answer-id");
 							if (temp)
 							{
-								answer->answer_id = atoi ((gchar*)temp);
+								answer->answer_id = atoi ((gchar*) temp);
 								xmlFree (temp);
 							}
 
 							temp = xmlGetProp (current_node, BAD_CAST "answer-string");
 							if (temp)
 							{
-								answer->answer_string = g_strdup ((gchar*)temp);
+								answer->answer_string = g_strdup ((gchar*) temp);
 								xmlFree (temp);
 							}
 
 							temp = xmlGetProp (current_node, BAD_CAST "time-spent");
 							if (temp)
 							{
-								answer->time_spent = g_ascii_strtod ((gchar*)temp, NULL);
+								answer->time_spent = g_ascii_strtod ((gchar*) temp, NULL);
 								xmlFree (temp);
 							}
 						}
@@ -394,7 +394,7 @@ load_log_from_xml_document (GPInstructLog* log,
 }
 
 xmlDocPtr
-create_xml_document_from_log (GPInstructLog* log)
+create_xml_document_from_log (GPInstructLog *log)
 {
 	xmlNodePtr current_node;
 
@@ -415,9 +415,9 @@ create_xml_document_from_log (GPInstructLog* log)
 }
 
 gboolean
-gpinstruct_log_load_from_file (GPInstructLog* log,
-                               const gchar* file,
-                               GError** error)
+gpinstruct_log_load_from_file (GPInstructLog *log,
+                               const gchar *file,
+                               GError **error)
 {
 	gboolean load;
 
@@ -445,9 +445,9 @@ gpinstruct_log_load_from_file (GPInstructLog* log,
 }
 
 gboolean
-gpinstruct_log_load_from_string (GPInstructLog* log,
-                                 const gchar* contents,
-                                 GError** error)
+gpinstruct_log_load_from_string (GPInstructLog *log,
+                                 const gchar *contents,
+                                 GError **error)
 {
 	gboolean load;
 
@@ -475,9 +475,9 @@ gpinstruct_log_load_from_string (GPInstructLog* log,
 }
 
 void
-gpinstruct_log_save_to_file (GPInstructLog* log,
-                             const gchar* file,
-                             GError** error)
+gpinstruct_log_save_to_file (GPInstructLog *log,
+                             const gchar *file,
+                             GError **error)
 {
 	xmlDocPtr doc = create_xml_document_from_log (log);
 
@@ -495,12 +495,12 @@ gpinstruct_log_save_to_file (GPInstructLog* log,
 	xmlFreeDoc (doc);
 }
 
-gchar*
-gpinstruct_log_save_to_string (GPInstructLog* log,
-                               GError** error)
+gchar *
+gpinstruct_log_save_to_string (GPInstructLog *log,
+                               GError **error)
 {
-	xmlChar* buffer;
-	gchar* contents;
+	xmlChar *buffer;
+	gchar *contents;
 
 	xmlDocPtr doc = create_xml_document_from_log (log);
 

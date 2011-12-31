@@ -43,21 +43,21 @@ struct _GPInstructLessonElementGroup
 {
 	GPInstructLessonElement parent_instance;
 
-	GPInstructLessonElementGroupPrivate* priv;
+	GPInstructLessonElementGroupPrivate *priv;
 };
 
 GType gpinstruct_lesson_element_group_get_type (void) G_GNUC_CONST;
-GPInstructLessonElementGroup* gpinstruct_lesson_element_group_new (void);
-const gchar* gpinstruct_lesson_element_group_get_directions (GPInstructLessonElementGroup* group);
-void gpinstruct_lesson_element_group_set_directions (GPInstructLessonElementGroup* group, const gchar* directions);
-gboolean gpinstruct_lesson_element_group_get_single_score (GPInstructLessonElementGroup* group);
-void gpinstruct_lesson_element_group_set_single_score (GPInstructLessonElementGroup* group, gboolean single_score);
-gboolean gpinstruct_lesson_element_group_get_single_directions (GPInstructLessonElementGroup* group);
-void gpinstruct_lesson_element_group_set_single_directions (GPInstructLessonElementGroup* group, gboolean single_directions);
-void gpinstruct_lesson_element_group_add_lesson_element (GPInstructLessonElementGroup* group, GPInstructLessonElement* lesson_element);
-void gpinstruct_lesson_element_group_remove_lesson_element (GPInstructLessonElementGroup* group, guint lesson_element);
-GList* gpinstruct_lesson_element_group_get_lesson_elements (GPInstructLessonElementGroup* group);
-guint gpinstruct_lesson_element_group_get_lesson_elements_length (GPInstructLessonElementGroup* group);
+GPInstructLessonElementGroup *gpinstruct_lesson_element_group_new (void);
+const gchar *gpinstruct_lesson_element_group_get_directions (GPInstructLessonElementGroup *group);
+void gpinstruct_lesson_element_group_set_directions (GPInstructLessonElementGroup *group, const gchar *directions);
+gboolean gpinstruct_lesson_element_group_get_single_score (GPInstructLessonElementGroup *group);
+void gpinstruct_lesson_element_group_set_single_score (GPInstructLessonElementGroup *group, gboolean single_score);
+gboolean gpinstruct_lesson_element_group_get_single_directions (GPInstructLessonElementGroup *group);
+void gpinstruct_lesson_element_group_set_single_directions (GPInstructLessonElementGroup *group, gboolean single_directions);
+void gpinstruct_lesson_element_group_add_lesson_element (GPInstructLessonElementGroup *group, GPInstructLessonElement *lesson_element);
+void gpinstruct_lesson_element_group_remove_lesson_element (GPInstructLessonElementGroup *group, guint lesson_element);
+GList *gpinstruct_lesson_element_group_get_lesson_elements (GPInstructLessonElementGroup *group);
+guint gpinstruct_lesson_element_group_get_lesson_elements_length (GPInstructLessonElementGroup *group);
 
 G_END_DECLS
 

@@ -43,11 +43,11 @@ struct _GPInstructAnalyzerExamineeView
 {
 	GtkHPaned parent_instance;
 
-	GPInstructAnalyzerExamineeViewPrivate* priv;
+	GPInstructAnalyzerExamineeViewPrivate *priv;
 };
 
 GType gpinstruct_analyzer_examinee_view_get_type (void) G_GNUC_CONST;
-GtkWidget* gpinstruct_analyzer_examinee_view_new (GPInstructLogAnalyzer* analyzer);
+GtkWidget *gpinstruct_analyzer_examinee_view_new (GPInstructLogAnalyzer *analyzer);
 
 G_END_DECLS
 

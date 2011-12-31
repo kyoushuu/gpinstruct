@@ -43,11 +43,11 @@ struct _GPInstructLessonTestMultiChoicePage
 {
 	GPInstructLessonViewPage parent_instance;
 
-	GPInstructLessonTestMultiChoicePagePrivate* priv;
+	GPInstructLessonTestMultiChoicePagePrivate *priv;
 };
 
 GType gpinstruct_lesson_test_multi_choice_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestMultiChoicePage* gpinstruct_lesson_test_multi_choice_page_new (GPInstructLessonTestMultiChoice* test, GPInstructLessonScore* score, GPInstructLog* log);
+GPInstructLessonTestMultiChoicePage *gpinstruct_lesson_test_multi_choice_page_new (GPInstructLessonTestMultiChoice *test, GPInstructLessonScore *score, GPInstructLog *log);
 
 G_END_DECLS
 

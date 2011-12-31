@@ -43,11 +43,11 @@ struct _GPInstructLessonTestScrambledPage
 {
 	GPInstructLessonViewPage parent_instance;
 
-	GPInstructLessonTestScrambledPagePrivate* priv;
+	GPInstructLessonTestScrambledPagePrivate *priv;
 };
 
 GType gpinstruct_lesson_test_scrambled_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestScrambledPage* gpinstruct_lesson_test_scrambled_page_new (GPInstructLessonTestScrambled* test, GPInstructLessonScore* score, GPInstructLog* log);
+GPInstructLessonTestScrambledPage *gpinstruct_lesson_test_scrambled_page_new (GPInstructLessonTestScrambled *test, GPInstructLessonScore *score, GPInstructLog *log);
 
 G_END_DECLS
 

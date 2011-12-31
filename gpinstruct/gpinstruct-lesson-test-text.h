@@ -43,17 +43,17 @@ struct _GPInstructLessonTestText
 {
 	GPInstructLessonTest parent_instance;
 
-	GPInstructLessonTestTextPrivate* priv;
+	GPInstructLessonTestTextPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_text_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestText* gpinstruct_lesson_test_text_new (void);
-void gpinstruct_lesson_test_text_add_question (GPInstructLessonTestText* test, GPInstructLessonTestTextQuestion* question);
-void gpinstruct_lesson_test_text_remove_question (GPInstructLessonTestText* test, guint question);
-GPInstructLessonTestTextQuestion* gpinstruct_lesson_test_text_get_question (GPInstructLessonTestText* test, guint question);
-GList* gpinstruct_lesson_test_text_get_questions (GPInstructLessonTestText* test);
-guint gpinstruct_lesson_test_text_get_questions_length (GPInstructLessonTestText* test);
-gboolean gpinstruct_lesson_test_text_is_correct (GPInstructLessonTestText* test, guint item, gchar* answer);
+GPInstructLessonTestText *gpinstruct_lesson_test_text_new (void);
+void gpinstruct_lesson_test_text_add_question (GPInstructLessonTestText *test, GPInstructLessonTestTextQuestion *question);
+void gpinstruct_lesson_test_text_remove_question (GPInstructLessonTestText *test, guint question);
+GPInstructLessonTestTextQuestion *gpinstruct_lesson_test_text_get_question (GPInstructLessonTestText *test, guint question);
+GList *gpinstruct_lesson_test_text_get_questions (GPInstructLessonTestText *test);
+guint gpinstruct_lesson_test_text_get_questions_length (GPInstructLessonTestText *test);
+gboolean gpinstruct_lesson_test_text_is_correct (GPInstructLessonTestText *test, guint item, gchar *answer);
 
 G_END_DECLS
 

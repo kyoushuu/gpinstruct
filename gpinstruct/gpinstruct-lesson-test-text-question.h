@@ -43,17 +43,17 @@ struct _GPInstructLessonTestTextQuestion
 {
 	GPInstructObject parent_instance;
 
-	GPInstructLessonTestTextQuestionPrivate* priv;
+	GPInstructLessonTestTextQuestionPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_text_question_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestTextQuestion* gpinstruct_lesson_test_text_question_new (void);
-const gchar* gpinstruct_lesson_test_text_question_get_text (GPInstructLessonTestTextQuestion* question);
-void gpinstruct_lesson_test_text_question_set_text (GPInstructLessonTestTextQuestion* question, const gchar* text);
-const gchar* gpinstruct_lesson_test_text_question_get_answer (GPInstructLessonTestTextQuestion* question);
-void gpinstruct_lesson_test_text_question_set_answer (GPInstructLessonTestTextQuestion* question, const gchar* answer);
-const gchar* gpinstruct_lesson_test_text_question_get_explanation (GPInstructLessonTestTextQuestion* question);
-void gpinstruct_lesson_test_text_question_set_explanation (GPInstructLessonTestTextQuestion* question, const gchar* explanation);
+GPInstructLessonTestTextQuestion *gpinstruct_lesson_test_text_question_new (void);
+const gchar *gpinstruct_lesson_test_text_question_get_text (GPInstructLessonTestTextQuestion *question);
+void gpinstruct_lesson_test_text_question_set_text (GPInstructLessonTestTextQuestion *question, const gchar *text);
+const gchar *gpinstruct_lesson_test_text_question_get_answer (GPInstructLessonTestTextQuestion *question);
+void gpinstruct_lesson_test_text_question_set_answer (GPInstructLessonTestTextQuestion *question, const gchar *answer);
+const gchar *gpinstruct_lesson_test_text_question_get_explanation (GPInstructLessonTestTextQuestion *question);
+void gpinstruct_lesson_test_text_question_set_explanation (GPInstructLessonTestTextQuestion *question, const gchar *explanation);
 
 G_END_DECLS
 

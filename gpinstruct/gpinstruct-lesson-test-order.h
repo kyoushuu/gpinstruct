@@ -43,19 +43,19 @@ struct _GPInstructLessonTestOrder
 {
 	GPInstructLessonTest parent_instance;
 
-	GPInstructLessonTestOrderPrivate* priv;
+	GPInstructLessonTestOrderPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_order_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestOrder* gpinstruct_lesson_test_order_new (void);
-void gpinstruct_lesson_test_order_add_item (GPInstructLessonTestOrder* test, GPInstructLessonTestOrderItem* item);
-void gpinstruct_lesson_test_order_remove_item (GPInstructLessonTestOrder* test, guint item);
-GPInstructLessonTestOrderItem* gpinstruct_lesson_test_order_get_item (GPInstructLessonTestOrder* test, guint item);
-GList* gpinstruct_lesson_test_order_get_items (GPInstructLessonTestOrder* test);
-guint gpinstruct_lesson_test_order_get_items_length (GPInstructLessonTestOrder* test);
-const gchar* gpinstruct_lesson_test_order_get_explanation (GPInstructLessonTestOrder* test);
-void gpinstruct_lesson_test_order_set_explanation (GPInstructLessonTestOrder* test, const gchar* explanation);
-gboolean gpinstruct_lesson_test_order_is_correct (GPInstructLessonTestOrder* test, guint item, guint answer);
+GPInstructLessonTestOrder *gpinstruct_lesson_test_order_new (void);
+void gpinstruct_lesson_test_order_add_item (GPInstructLessonTestOrder *test, GPInstructLessonTestOrderItem *item);
+void gpinstruct_lesson_test_order_remove_item (GPInstructLessonTestOrder *test, guint item);
+GPInstructLessonTestOrderItem *gpinstruct_lesson_test_order_get_item (GPInstructLessonTestOrder *test, guint item);
+GList *gpinstruct_lesson_test_order_get_items (GPInstructLessonTestOrder *test);
+guint gpinstruct_lesson_test_order_get_items_length (GPInstructLessonTestOrder *test);
+const gchar *gpinstruct_lesson_test_order_get_explanation (GPInstructLessonTestOrder *test);
+void gpinstruct_lesson_test_order_set_explanation (GPInstructLessonTestOrder *test, const gchar *explanation);
+gboolean gpinstruct_lesson_test_order_is_correct (GPInstructLessonTestOrder *test, guint item, guint answer);
 
 G_END_DECLS
 

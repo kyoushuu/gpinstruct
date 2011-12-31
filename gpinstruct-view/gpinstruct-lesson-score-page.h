@@ -43,11 +43,11 @@ struct _GPInstructLessonScorePage
 {
 	GPInstructLessonViewPage parent_instance;
 
-	GPInstructLessonScorePagePrivate* priv;
+	GPInstructLessonScorePagePrivate *priv;
 };
 
 GType gpinstruct_lesson_score_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonScorePage* gpinstruct_lesson_score_page_new (GPInstructLessonScore* score);
+GPInstructLessonScorePage *gpinstruct_lesson_score_page_new (GPInstructLessonScore *score);
 
 G_END_DECLS
 

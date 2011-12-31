@@ -47,7 +47,7 @@ struct _GPInstructClientWindow
 };
 
 GType gpinstruct_client_window_get_type (void) G_GNUC_CONST;
-GtkWidget * gpinstruct_client_window_new (void);
+GtkWidget *gpinstruct_client_window_new (void);
 
 G_END_DECLS
 

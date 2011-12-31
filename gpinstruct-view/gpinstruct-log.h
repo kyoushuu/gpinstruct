@@ -43,12 +43,12 @@ struct _GPInstructLog
 {
 	GObject parent_instance;
 
-	GPInstructLogPrivate* priv;
+	GPInstructLogPrivate *priv;
 };
 
 typedef struct {
 	GQuark id;
-	GList* answers;
+	GList *answers;
 } GPInstructLogTest;
 
 typedef struct {
@@ -58,27 +58,27 @@ typedef struct {
 	gdouble time_spent;
 } GPInstructLogAnswer;
 
-typedef void            (*GPInstructLogForeachFunc) (const gchar* test_id,
-                                                 GList* answers,
+typedef void            (*GPInstructLogForeachFunc) (const gchar *test_id,
+                                                 GList *answers,
                                                  gpointer user_data);
 
 GType gpinstruct_log_get_type (void) G_GNUC_CONST;
-GPInstructLog* gpinstruct_log_new (void);
-void gpinstruct_log_set_last_name (GPInstructLog* log, const gchar* last_name);
-const gchar* gpinstruct_log_get_last_name (GPInstructLog* log);
-void gpinstruct_log_set_first_name (GPInstructLog* log, const gchar* first_name);
-const gchar* gpinstruct_log_get_first_name (GPInstructLog* log);
-void gpinstruct_log_set_group (GPInstructLog* log, guint elements);
-void gpinstruct_log_add_choice (GPInstructLog* log, GPInstructLessonTest* test, guint item_id, guint answer_id);
-void gpinstruct_log_add_string (GPInstructLog* log, GPInstructLessonTest* test, guint item_id, const gchar* answer_string);
-void gpinstruct_log_close_test (GPInstructLog* log);
-void gpinstruct_log_timer_start (GPInstructLog* log);
-void gpinstruct_log_timer_stop (GPInstructLog* log);
-GList* gpinstruct_log_get_tests (GPInstructLog* log);
-gboolean gpinstruct_log_load_from_file (GPInstructLog* log, const gchar* file, GError** error);
-gboolean gpinstruct_log_load_from_string (GPInstructLog* log, const gchar* contents, GError** error);
-void gpinstruct_log_save_to_file (GPInstructLog* log, const gchar* file, GError** error);
-gchar* gpinstruct_log_save_to_string (GPInstructLog* log, GError** error);
+GPInstructLog *gpinstruct_log_new (void);
+void gpinstruct_log_set_last_name (GPInstructLog *log, const gchar *last_name);
+const gchar *gpinstruct_log_get_last_name (GPInstructLog *log);
+void gpinstruct_log_set_first_name (GPInstructLog *log, const gchar *first_name);
+const gchar *gpinstruct_log_get_first_name (GPInstructLog *log);
+void gpinstruct_log_set_group (GPInstructLog *log, guint elements);
+void gpinstruct_log_add_choice (GPInstructLog *log, GPInstructLessonTest *test, guint item_id, guint answer_id);
+void gpinstruct_log_add_string (GPInstructLog *log, GPInstructLessonTest *test, guint item_id, const gchar *answer_string);
+void gpinstruct_log_close_test (GPInstructLog *log);
+void gpinstruct_log_timer_start (GPInstructLog *log);
+void gpinstruct_log_timer_stop (GPInstructLog *log);
+GList *gpinstruct_log_get_tests (GPInstructLog *log);
+gboolean gpinstruct_log_load_from_file (GPInstructLog *log, const gchar *file, GError **error);
+gboolean gpinstruct_log_load_from_string (GPInstructLog *log, const gchar *contents, GError **error);
+void gpinstruct_log_save_to_file (GPInstructLog *log, const gchar *file, GError **error);
+gchar *gpinstruct_log_save_to_string (GPInstructLog *log, GError **error);
 
 typedef enum
 {

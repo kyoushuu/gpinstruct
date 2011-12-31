@@ -23,10 +23,10 @@
 
 #include "gpinstruct-view-private.h"
 
-guint*
+guint *
 random_array (guint length)
 {
-	guint* array = g_new (guint, length);
+	guint *array = g_new (guint, length);
 	guint array_temp[length];
 	guint index, curr_length;
 	int i;
@@ -51,9 +51,9 @@ random_array (guint length)
 void
 randomize_string (gchar *string)
 {
-	gchar* original = g_strdup (string);
+	gchar *original = g_strdup (string);
 	gsize length = strlen (string);
-	guint* array = random_array (length);
+	guint *array = random_array (length);
 
 	gint i;
 	for (i=0; i<length; i++)

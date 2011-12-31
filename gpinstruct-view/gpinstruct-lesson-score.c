@@ -53,8 +53,8 @@ gpinstruct_lesson_score_finalize (GObject *object)
 static void
 gpinstruct_lesson_score_class_init (GPInstructLessonScoreClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonElementClass* parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonElementClass *parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonScorePrivate));
 
@@ -62,38 +62,38 @@ gpinstruct_lesson_score_class_init (GPInstructLessonScoreClass *klass)
 }
 
 
-GPInstructLessonScore*
+GPInstructLessonScore *
 gpinstruct_lesson_score_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_SCORE, NULL);
 }
 
 void
-gpinstruct_lesson_score_increase_total (GPInstructLessonScore* score)
+gpinstruct_lesson_score_increase_total (GPInstructLessonScore *score)
 {
 	score->priv->total++;
 }
 
 guint
-gpinstruct_lesson_score_get_total (GPInstructLessonScore* score)
+gpinstruct_lesson_score_get_total (GPInstructLessonScore *score)
 {
 	return score->priv->total;
 }
 
 void
-gpinstruct_lesson_score_increase_score (GPInstructLessonScore* score)
+gpinstruct_lesson_score_increase_score (GPInstructLessonScore *score)
 {
 	score->priv->score++;
 }
 
 guint
-gpinstruct_lesson_score_get_score (GPInstructLessonScore* score)
+gpinstruct_lesson_score_get_score (GPInstructLessonScore *score)
 {
 	return score->priv->score;
 }
 
 void
-gpinstruct_lesson_score_clear (GPInstructLessonScore* score)
+gpinstruct_lesson_score_clear (GPInstructLessonScore *score)
 {
 	score->priv->total = 0;
 	score->priv->score = 0;

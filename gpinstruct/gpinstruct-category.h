@@ -43,17 +43,17 @@ struct _GPInstructCategory
 {
 	GPInstructObject parent_instance;
 
-	GPInstructCategoryPrivate* priv;
+	GPInstructCategoryPrivate *priv;
 };
 
 GType gpinstruct_category_get_type (void) G_GNUC_CONST;
-GPInstructCategory* gpinstruct_category_new (void);
-const gchar* gpinstruct_category_get_title (GPInstructCategory* category);
-void gpinstruct_category_set_title (GPInstructCategory* category, const gchar *title);
-guint gpinstruct_category_get_lessons_length (GPInstructCategory* category);
-void gpinstruct_category_add_lesson (GPInstructCategory* category, GPInstructLesson* lesson);
-void gpinstruct_category_remove_lesson (GPInstructCategory* category, guint lesson);
-GList* gpinstruct_category_get_lessons (GPInstructCategory* category);
+GPInstructCategory *gpinstruct_category_new (void);
+const gchar *gpinstruct_category_get_title (GPInstructCategory *category);
+void gpinstruct_category_set_title (GPInstructCategory *category, const gchar *title);
+guint gpinstruct_category_get_lessons_length (GPInstructCategory *category);
+void gpinstruct_category_add_lesson (GPInstructCategory *category, GPInstructLesson *lesson);
+void gpinstruct_category_remove_lesson (GPInstructCategory *category, guint lesson);
+GList *gpinstruct_category_get_lessons (GPInstructCategory *category);
 
 G_END_DECLS
 

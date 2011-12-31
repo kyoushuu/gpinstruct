@@ -43,11 +43,11 @@ struct _GPInstructLessonTestWordPoolEditor
 {
 	GPInstructObjectEditor parent_instance;
 
-	GPInstructLessonTestWordPoolEditorPrivate* priv;
+	GPInstructLessonTestWordPoolEditorPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_word_pool_editor_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestWordPoolEditor* gpinstruct_lesson_test_word_pool_editor_new (GPInstructEditorWindow* window, GPInstructLessonTestWordPool *test);
+GPInstructLessonTestWordPoolEditor *gpinstruct_lesson_test_word_pool_editor_new (GPInstructEditorWindow *window, GPInstructLessonTestWordPool *test);
 
 G_END_DECLS
 

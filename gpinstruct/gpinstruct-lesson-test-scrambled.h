@@ -43,17 +43,17 @@ struct _GPInstructLessonTestScrambled
 {
 	GPInstructLessonTest parent_instance;
 
-	GPInstructLessonTestScrambledPrivate* priv;
+	GPInstructLessonTestScrambledPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_scrambled_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestScrambled* gpinstruct_lesson_test_scrambled_new (void);
-void gpinstruct_lesson_test_scrambled_add_question (GPInstructLessonTestScrambled* test, GPInstructLessonTestScrambledQuestion* question);
-void gpinstruct_lesson_test_scrambled_remove_question (GPInstructLessonTestScrambled* test, guint question);
-GPInstructLessonTestScrambledQuestion* gpinstruct_lesson_test_scrambled_get_question (GPInstructLessonTestScrambled* test, guint question);
-GList* gpinstruct_lesson_test_scrambled_get_questions (GPInstructLessonTestScrambled* test);
-guint gpinstruct_lesson_test_scrambled_get_questions_length (GPInstructLessonTestScrambled* test);
-gboolean gpinstruct_lesson_test_scrambled_is_correct (GPInstructLessonTestScrambled* test, guint item, gchar* answer);
+GPInstructLessonTestScrambled *gpinstruct_lesson_test_scrambled_new (void);
+void gpinstruct_lesson_test_scrambled_add_question (GPInstructLessonTestScrambled *test, GPInstructLessonTestScrambledQuestion *question);
+void gpinstruct_lesson_test_scrambled_remove_question (GPInstructLessonTestScrambled *test, guint question);
+GPInstructLessonTestScrambledQuestion *gpinstruct_lesson_test_scrambled_get_question (GPInstructLessonTestScrambled *test, guint question);
+GList *gpinstruct_lesson_test_scrambled_get_questions (GPInstructLessonTestScrambled *test);
+guint gpinstruct_lesson_test_scrambled_get_questions_length (GPInstructLessonTestScrambled *test);
+gboolean gpinstruct_lesson_test_scrambled_is_correct (GPInstructLessonTestScrambled *test, guint item, gchar *answer);
 
 G_END_DECLS
 

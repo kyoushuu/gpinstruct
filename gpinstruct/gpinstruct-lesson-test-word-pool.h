@@ -43,23 +43,23 @@ struct _GPInstructLessonTestWordPool
 {
 	GPInstructLessonTest parent_instance;
 
-	GPInstructLessonTestWordPoolPrivate* priv;
+	GPInstructLessonTestWordPoolPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_word_pool_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestWordPool* gpinstruct_lesson_test_word_pool_new (void);
-void gpinstruct_lesson_test_word_pool_add_question (GPInstructLessonTestWordPool* test, GPInstructLessonTestWordPoolQuestion* question);
-void gpinstruct_lesson_test_word_pool_remove_question (GPInstructLessonTestWordPool* test, guint question);
-GPInstructLessonTestWordPoolQuestion* gpinstruct_lesson_test_word_pool_get_question (GPInstructLessonTestWordPool* test, guint question);
-GList* gpinstruct_lesson_test_word_pool_get_questions (GPInstructLessonTestWordPool* test);
-guint gpinstruct_lesson_test_word_pool_get_questions_length (GPInstructLessonTestWordPool* test);
-void gpinstruct_lesson_test_word_pool_add_choice (GPInstructLessonTestWordPool* test, const gchar* choice);
-void gpinstruct_lesson_test_word_pool_remove_choice (GPInstructLessonTestWordPool* test, guint choice);
-const gchar* gpinstruct_lesson_test_word_pool_get_choice (GPInstructLessonTestWordPool* test, guint choice);
-void gpinstruct_lesson_test_word_pool_set_choice (GPInstructLessonTestWordPool* test, guint choice, const gchar* text);
-GList* gpinstruct_lesson_test_word_pool_get_choices (GPInstructLessonTestWordPool* test);
-guint gpinstruct_lesson_test_word_pool_get_choices_length (GPInstructLessonTestWordPool* test);
-gboolean gpinstruct_lesson_test_word_pool_is_correct (GPInstructLessonTestWordPool* test, guint item, guint answer);
+GPInstructLessonTestWordPool *gpinstruct_lesson_test_word_pool_new (void);
+void gpinstruct_lesson_test_word_pool_add_question (GPInstructLessonTestWordPool *test, GPInstructLessonTestWordPoolQuestion *question);
+void gpinstruct_lesson_test_word_pool_remove_question (GPInstructLessonTestWordPool *test, guint question);
+GPInstructLessonTestWordPoolQuestion *gpinstruct_lesson_test_word_pool_get_question (GPInstructLessonTestWordPool *test, guint question);
+GList *gpinstruct_lesson_test_word_pool_get_questions (GPInstructLessonTestWordPool *test);
+guint gpinstruct_lesson_test_word_pool_get_questions_length (GPInstructLessonTestWordPool *test);
+void gpinstruct_lesson_test_word_pool_add_choice (GPInstructLessonTestWordPool *test, const gchar *choice);
+void gpinstruct_lesson_test_word_pool_remove_choice (GPInstructLessonTestWordPool *test, guint choice);
+const gchar *gpinstruct_lesson_test_word_pool_get_choice (GPInstructLessonTestWordPool *test, guint choice);
+void gpinstruct_lesson_test_word_pool_set_choice (GPInstructLessonTestWordPool *test, guint choice, const gchar *text);
+GList *gpinstruct_lesson_test_word_pool_get_choices (GPInstructLessonTestWordPool *test);
+guint gpinstruct_lesson_test_word_pool_get_choices_length (GPInstructLessonTestWordPool *test);
+gboolean gpinstruct_lesson_test_word_pool_is_correct (GPInstructLessonTestWordPool *test, guint item, guint answer);
 
 G_END_DECLS
 

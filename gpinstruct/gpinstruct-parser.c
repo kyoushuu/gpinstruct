@@ -35,10 +35,10 @@ gpinstruct_parser_error_quark (void)
 }
 
 
-static GPInstructLessonTestMultiChoice*
+static GPInstructLessonTestMultiChoice *
 parse_multi_choice_test (xmlNode *node)
 {
-	GPInstructLessonTestMultiChoice* test = gpinstruct_lesson_test_multi_choice_new ();
+	GPInstructLessonTestMultiChoice *test = gpinstruct_lesson_test_multi_choice_new ();
 
 	xmlNode *current_node, *parent_node;
 	xmlChar *temp;
@@ -46,21 +46,21 @@ parse_multi_choice_test (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "id");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "explain");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*) temp));
 		xmlFree (temp);
 	}
 
@@ -75,19 +75,19 @@ parse_multi_choice_test (xmlNode *node)
 				temp = xmlNodeGetContent (current_node);
 				if (temp)
 				{
-					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 					xmlFree (temp);
 				}
 			}
 			else if (xmlStrEqual (current_node->name, BAD_CAST "question"))
 			{
-				GPInstructLessonTestMultiChoiceQuestion* question = gpinstruct_lesson_test_multi_choice_question_new ();
+				GPInstructLessonTestMultiChoiceQuestion *question = gpinstruct_lesson_test_multi_choice_question_new ();
 				gpinstruct_lesson_test_multi_choice_add_question (test, question);
 
 				temp = xmlGetProp (current_node, BAD_CAST "answer");
 				if (temp)
 				{
-					gpinstruct_lesson_test_multi_choice_question_set_answer (question, atoi((gchar*)temp));
+					gpinstruct_lesson_test_multi_choice_question_set_answer (question, atoi((gchar*) temp));
 					xmlFree (temp);
 				}
 
@@ -103,7 +103,7 @@ parse_multi_choice_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_multi_choice_question_set_text (question, (gchar*)temp);
+								gpinstruct_lesson_test_multi_choice_question_set_text (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -112,7 +112,7 @@ parse_multi_choice_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_multi_choice_question_set_explanation (question, (gchar*)temp);
+								gpinstruct_lesson_test_multi_choice_question_set_explanation (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -121,7 +121,7 @@ parse_multi_choice_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_multi_choice_question_add_choice (question, (gchar*)temp);
+								gpinstruct_lesson_test_multi_choice_question_add_choice (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -137,10 +137,10 @@ parse_multi_choice_test (xmlNode *node)
 	return test;
 }
 
-static GPInstructLessonTestWordPool*
+static GPInstructLessonTestWordPool *
 parse_word_pool_test (xmlNode *node)
 {
-	GPInstructLessonTestWordPool* test = gpinstruct_lesson_test_word_pool_new ();
+	GPInstructLessonTestWordPool *test = gpinstruct_lesson_test_word_pool_new ();
 
 	xmlNode *current_node, *parent_node;
 	xmlChar *temp;
@@ -148,21 +148,21 @@ parse_word_pool_test (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "id");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "explain");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*) temp));
 		xmlFree (temp);
 	}
 
@@ -177,7 +177,7 @@ parse_word_pool_test (xmlNode *node)
 				temp = xmlNodeGetContent (current_node);
 				if (temp)
 				{
-					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 					xmlFree (temp);
 				}
 			}
@@ -186,19 +186,19 @@ parse_word_pool_test (xmlNode *node)
 				temp = xmlNodeGetContent (current_node);
 				if (temp)
 				{
-					gpinstruct_lesson_test_word_pool_add_choice (test, (gchar*)temp);
+					gpinstruct_lesson_test_word_pool_add_choice (test, (gchar*) temp);
 					xmlFree (temp);
 				}
 			}
 			else if (xmlStrEqual (current_node->name, BAD_CAST "question"))
 			{
-				GPInstructLessonTestWordPoolQuestion* question = gpinstruct_lesson_test_word_pool_question_new ();
+				GPInstructLessonTestWordPoolQuestion *question = gpinstruct_lesson_test_word_pool_question_new ();
 				gpinstruct_lesson_test_word_pool_add_question (test, question);
 
 				temp = xmlGetProp (current_node, BAD_CAST "answer");
 				if (temp)
 				{
-					gpinstruct_lesson_test_word_pool_question_set_answer (question, atoi((gchar*)temp));
+					gpinstruct_lesson_test_word_pool_question_set_answer (question, atoi((gchar*) temp));
 					xmlFree (temp);
 				}
 
@@ -214,7 +214,7 @@ parse_word_pool_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_word_pool_question_set_text (question, (gchar*)temp);
+								gpinstruct_lesson_test_word_pool_question_set_text (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -223,7 +223,7 @@ parse_word_pool_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_word_pool_question_set_explanation (question, (gchar*)temp);
+								gpinstruct_lesson_test_word_pool_question_set_explanation (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -239,10 +239,10 @@ parse_word_pool_test (xmlNode *node)
 	return test;
 }
 
-static GPInstructLessonTestOrder*
+static GPInstructLessonTestOrder *
 parse_order_test (xmlNode *node)
 {
-	GPInstructLessonTestOrder* test = gpinstruct_lesson_test_order_new ();
+	GPInstructLessonTestOrder *test = gpinstruct_lesson_test_order_new ();
 
 	xmlNode *current_node;
 	xmlChar *temp;
@@ -250,21 +250,21 @@ parse_order_test (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "id");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "explain");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*) temp));
 		xmlFree (temp);
 	}
 
@@ -279,26 +279,26 @@ parse_order_test (xmlNode *node)
 				temp = xmlNodeGetContent (current_node);
 				if (temp)
 				{
-					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 					xmlFree (temp);
 				}
 			}
 			else if (xmlStrEqual (current_node->name, BAD_CAST "item"))
 			{
-				GPInstructLessonTestOrderItem* item = gpinstruct_lesson_test_order_item_new ();
+				GPInstructLessonTestOrderItem *item = gpinstruct_lesson_test_order_item_new ();
 				gpinstruct_lesson_test_order_add_item (test, item);
 
 				temp = xmlGetProp (current_node, BAD_CAST "answer");
 				if (temp)
 				{
-					gpinstruct_lesson_test_order_item_set_answer (item, atoi ((gchar*)temp));
+					gpinstruct_lesson_test_order_item_set_answer (item, atoi ((gchar*) temp));
 					xmlFree (temp);
 				}
 
 				temp = xmlNodeGetContent (current_node);
 				if (temp)
 				{
-					gpinstruct_lesson_test_order_item_set_text (item, (gchar*)temp);
+					gpinstruct_lesson_test_order_item_set_text (item, (gchar*) temp);
 					xmlFree (temp);
 				}
 			}
@@ -307,7 +307,7 @@ parse_order_test (xmlNode *node)
 				temp = xmlNodeGetContent (current_node);
 				if (temp)
 				{
-					gpinstruct_lesson_test_order_set_explanation (test, (gchar*)temp);
+					gpinstruct_lesson_test_order_set_explanation (test, (gchar*) temp);
 					xmlFree (temp);
 				}
 			}
@@ -317,10 +317,10 @@ parse_order_test (xmlNode *node)
 	return test;
 }
 
-static GPInstructLessonTestText*
+static GPInstructLessonTestText *
 parse_text_test (xmlNode *node)
 {
-	GPInstructLessonTestText* test = gpinstruct_lesson_test_text_new ();
+	GPInstructLessonTestText *test = gpinstruct_lesson_test_text_new ();
 
 	xmlNode *current_node, *parent_node;
 	xmlChar *temp;
@@ -328,21 +328,21 @@ parse_text_test (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "id");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "explain");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*) temp));
 		xmlFree (temp);
 	}
 
@@ -357,19 +357,19 @@ parse_text_test (xmlNode *node)
 				temp = xmlNodeGetContent (current_node);
 				if (temp)
 				{
-					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 					xmlFree (temp);
 				}
 			}
 			else if (xmlStrEqual (current_node->name, BAD_CAST "question"))
 			{
-				GPInstructLessonTestTextQuestion* question = gpinstruct_lesson_test_text_question_new ();
+				GPInstructLessonTestTextQuestion *question = gpinstruct_lesson_test_text_question_new ();
 				gpinstruct_lesson_test_text_add_question (test, question);
 
 				temp = xmlGetProp (current_node, BAD_CAST "answer");
 				if (temp)
 				{
-					gpinstruct_lesson_test_text_question_set_answer (question, (gchar*)temp);
+					gpinstruct_lesson_test_text_question_set_answer (question, (gchar*) temp);
 					xmlFree (temp);
 				}
 
@@ -385,7 +385,7 @@ parse_text_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_text_question_set_text (question, (gchar*)temp);
+								gpinstruct_lesson_test_text_question_set_text (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -394,7 +394,7 @@ parse_text_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_text_question_set_explanation (question, (gchar*)temp);
+								gpinstruct_lesson_test_text_question_set_explanation (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -410,10 +410,10 @@ parse_text_test (xmlNode *node)
 	return test;
 }
 
-static GPInstructLessonTestScrambled*
+static GPInstructLessonTestScrambled *
 parse_scrambled_test (xmlNode *node)
 {
-	GPInstructLessonTestScrambled* test = gpinstruct_lesson_test_scrambled_new ();
+	GPInstructLessonTestScrambled *test = gpinstruct_lesson_test_scrambled_new ();
 
 	xmlNode *current_node, *parent_node;
 	xmlChar *temp;
@@ -421,21 +421,21 @@ parse_scrambled_test (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*)temp);
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "id");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+		gpinstruct_lesson_test_set_id (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "explain");
 	if (temp)
 	{
-		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		gpinstruct_lesson_test_set_explain (GPINSTRUCT_LESSON_TEST (test), GCHAR_TO_GBOOLEAN ((gchar*) temp));
 		xmlFree (temp);
 	}
 
@@ -450,19 +450,19 @@ parse_scrambled_test (xmlNode *node)
 				temp = xmlNodeGetContent (current_node);
 				if (temp)
 				{
-					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*)temp);
+					gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (test), (gchar*) temp);
 					xmlFree (temp);
 				}
 			}
 			else if (xmlStrEqual (current_node->name, BAD_CAST "question"))
 			{
-				GPInstructLessonTestScrambledQuestion* question = gpinstruct_lesson_test_scrambled_question_new ();
+				GPInstructLessonTestScrambledQuestion *question = gpinstruct_lesson_test_scrambled_question_new ();
 				gpinstruct_lesson_test_scrambled_add_question (test, question);
 
 				temp = xmlGetProp (current_node, BAD_CAST "answer");
 				if (temp)
 				{
-					gpinstruct_lesson_test_scrambled_question_set_answer (question, (gchar*)temp);
+					gpinstruct_lesson_test_scrambled_question_set_answer (question, (gchar*) temp);
 					xmlFree (temp);
 				}
 
@@ -478,7 +478,7 @@ parse_scrambled_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_scrambled_question_set_text (question, (gchar*)temp);
+								gpinstruct_lesson_test_scrambled_question_set_text (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -487,7 +487,7 @@ parse_scrambled_test (xmlNode *node)
 							temp = xmlNodeGetContent (current_node);
 							if (temp)
 							{
-								gpinstruct_lesson_test_scrambled_question_set_explanation (question, (gchar*)temp);
+								gpinstruct_lesson_test_scrambled_question_set_explanation (question, (gchar*) temp);
 								xmlFree (temp);
 							}
 						}
@@ -503,58 +503,58 @@ parse_scrambled_test (xmlNode *node)
 	return test;
 }
 
-static GPInstructLessonDiscussion*
+static GPInstructLessonDiscussion *
 parse_discussion (xmlNode *node)
 {
-	GPInstructLessonDiscussion* discussion = gpinstruct_lesson_discussion_new ();
+	GPInstructLessonDiscussion *discussion = gpinstruct_lesson_discussion_new ();
 
 	xmlChar *temp;
 
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (discussion), (gchar*)temp);
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (discussion), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlNodeGetContent (node);
 	if (temp)
 	{
-		gpinstruct_lesson_discussion_set_text (discussion, (gchar*)temp);
+		gpinstruct_lesson_discussion_set_text (discussion, (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	return discussion;
 }
 
-static GPInstructLessonReading*
+static GPInstructLessonReading *
 parse_reading (xmlNode *node)
 {
-	GPInstructLessonReading* reading = gpinstruct_lesson_reading_new ();
+	GPInstructLessonReading *reading = gpinstruct_lesson_reading_new ();
 
 	xmlChar *temp;
 
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (reading), (gchar*)temp);
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (reading), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlNodeGetContent (node);
 	if (temp)
 	{
-		gpinstruct_lesson_reading_set_text (reading, (gchar*)temp);
+		gpinstruct_lesson_reading_set_text (reading, (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	return reading;
 }
 
-static GPInstructLessonElementGroup*
+static GPInstructLessonElementGroup *
 parse_group (xmlNode *node)
 {
-	GPInstructLessonElementGroup* group = gpinstruct_lesson_element_group_new ();
+	GPInstructLessonElementGroup *group = gpinstruct_lesson_element_group_new ();
 
 	xmlNode *current_node;
 	xmlChar *temp;
@@ -562,28 +562,28 @@ parse_group (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (group), (gchar*)temp);
+		gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (group), (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "directions");
 	if (temp)
 	{
-		gpinstruct_lesson_element_group_set_directions (group, (gchar*)temp);
+		gpinstruct_lesson_element_group_set_directions (group, (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "single-score");
 	if (temp)
 	{
-		gpinstruct_lesson_element_group_set_single_score (group, GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		gpinstruct_lesson_element_group_set_single_score (group, GCHAR_TO_GBOOLEAN ((gchar*) temp));
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "single-directions");
 	if (temp)
 	{
-		gpinstruct_lesson_element_group_set_single_directions (group, GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		gpinstruct_lesson_element_group_set_single_directions (group, GCHAR_TO_GBOOLEAN ((gchar*) temp));
 		xmlFree (temp);
 	}
 
@@ -620,10 +620,10 @@ parse_group (xmlNode *node)
 	return group;
 }
 
-static GPInstructLesson*
+static GPInstructLesson *
 parse_lesson (xmlNode *node)
 {
-	GPInstructLesson* lesson = gpinstruct_lesson_new ();
+	GPInstructLesson *lesson = gpinstruct_lesson_new ();
 
 	xmlNode *current_node;
 	xmlChar *temp;
@@ -631,14 +631,14 @@ parse_lesson (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_lesson_set_title (lesson, (gchar*)temp);
+		gpinstruct_lesson_set_title (lesson, (gchar*) temp);
 		xmlFree (temp);
 	}
 
 	temp = xmlGetProp (node, BAD_CAST "single-score");
 	if (temp)
 	{
-		gpinstruct_lesson_set_single_score (lesson, GCHAR_TO_GBOOLEAN ((gchar*)temp));
+		gpinstruct_lesson_set_single_score (lesson, GCHAR_TO_GBOOLEAN ((gchar*) temp));
 		xmlFree (temp);
 	}
 
@@ -678,10 +678,10 @@ parse_lesson (xmlNode *node)
 	return lesson;
 }
 
-static GPInstructCategory*
+static GPInstructCategory *
 parse_category (xmlNode *node)
 {
-	GPInstructCategory* category = gpinstruct_category_new ();
+	GPInstructCategory *category = gpinstruct_category_new ();
 
 	xmlNode *current_node;
 	xmlChar *temp;
@@ -689,7 +689,7 @@ parse_category (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_category_set_title (category, (gchar*)temp);
+		gpinstruct_category_set_title (category, (gchar*) temp);
 		xmlFree (temp);
 	}
 
@@ -708,10 +708,10 @@ parse_category (xmlNode *node)
 	return category;
 }
 
-static GPInstructProject*
+static GPInstructProject *
 parse_project (xmlNode *node)
 {
-	GPInstructProject* project = gpinstruct_project_new ();
+	GPInstructProject *project = gpinstruct_project_new ();
 
 	xmlNode *current_node;
 	xmlChar *temp;
@@ -719,7 +719,7 @@ parse_project (xmlNode *node)
 	temp = xmlGetProp (node, BAD_CAST "title");
 	if (temp)
 	{
-		gpinstruct_project_set_title (project, (gchar*)temp);
+		gpinstruct_project_set_title (project, (gchar*) temp);
 		xmlFree (temp);
 	}
 
@@ -740,7 +740,7 @@ parse_project (xmlNode *node)
 
 
 static xmlNodePtr
-add_discussion (GPInstructLessonDiscussion* discussion,
+add_discussion (GPInstructLessonDiscussion *discussion,
                 xmlNodePtr parent_node)
 {
 	xmlNodePtr node = xmlNewChild (parent_node, NULL, BAD_CAST "discussion",
@@ -752,7 +752,7 @@ add_discussion (GPInstructLessonDiscussion* discussion,
 }
 
 static xmlNodePtr
-add_reading (GPInstructLessonReading* reading,
+add_reading (GPInstructLessonReading *reading,
              xmlNodePtr parent_node)
 {
 	xmlNodePtr node = xmlNewChild (parent_node, NULL, BAD_CAST "reading",
@@ -764,10 +764,10 @@ add_reading (GPInstructLessonReading* reading,
 }
 
 static xmlNodePtr
-add_multi_choice_test (GPInstructLessonTestMultiChoice* test,
+add_multi_choice_test (GPInstructLessonTestMultiChoice *test,
                        xmlNodePtr parent_node)
 {
-	GPInstructLessonTestMultiChoiceQuestion* curr_question;
+	GPInstructLessonTestMultiChoiceQuestion *curr_question;
 
 	GList *questions, *curr_questions;
 	GList *choices, *curr_choices;
@@ -830,10 +830,10 @@ add_multi_choice_test (GPInstructLessonTestMultiChoice* test,
 }
 
 static xmlNodePtr
-add_word_pool_test (GPInstructLessonTestWordPool* test,
+add_word_pool_test (GPInstructLessonTestWordPool *test,
                     xmlNodePtr parent_node)
 {
-	GPInstructLessonTestWordPoolQuestion* curr_question;
+	GPInstructLessonTestWordPoolQuestion *curr_question;
 
 	GList *questions, *curr_questions;
 	GList *choices, *curr_choices;
@@ -895,10 +895,10 @@ add_word_pool_test (GPInstructLessonTestWordPool* test,
 }
 
 static xmlNodePtr
-add_order_test (GPInstructLessonTestOrder* test,
+add_order_test (GPInstructLessonTestOrder *test,
                 xmlNodePtr parent_node)
 {
-	GPInstructLessonTestOrderItem* curr_item;
+	GPInstructLessonTestOrderItem *curr_item;
 
 	GList *items, *curr_items;
 
@@ -943,10 +943,10 @@ add_order_test (GPInstructLessonTestOrder* test,
 }
 
 static xmlNodePtr
-add_text_test (GPInstructLessonTestText* test,
+add_text_test (GPInstructLessonTestText *test,
                xmlNodePtr parent_node)
 {
-	GPInstructLessonTestTextQuestion* curr_question;
+	GPInstructLessonTestTextQuestion *curr_question;
 
 	GList *questions, *curr_questions;
 
@@ -990,10 +990,10 @@ add_text_test (GPInstructLessonTestText* test,
 }
 
 static xmlNodePtr
-add_scrambled_test (GPInstructLessonTestScrambled* test,
+add_scrambled_test (GPInstructLessonTestScrambled *test,
                     xmlNodePtr parent_node)
 {
-	GPInstructLessonTestScrambledQuestion* curr_question;
+	GPInstructLessonTestScrambledQuestion *curr_question;
 
 	GList *questions, *curr_questions;
 
@@ -1037,10 +1037,10 @@ add_scrambled_test (GPInstructLessonTestScrambled* test,
 }
 
 static xmlNodePtr
-add_group (GPInstructLessonElementGroup* group,
+add_group (GPInstructLessonElementGroup *group,
            xmlNodePtr parent_node)
 {
-	GPInstructLessonElement* curr_lesson_element;
+	GPInstructLessonElement *curr_lesson_element;
 
 	GList *lesson_elements;
 	GList *curr_lesson_elements;
@@ -1095,10 +1095,10 @@ add_group (GPInstructLessonElementGroup* group,
 }
 
 static xmlNodePtr
-add_lesson (GPInstructLesson* lesson,
+add_lesson (GPInstructLesson *lesson,
             xmlNodePtr parent_node)
 {
-	GPInstructLessonElement* curr_lesson_element;
+	GPInstructLessonElement *curr_lesson_element;
 
 	GList *lesson_elements;
 	GList *curr_lesson_elements;
@@ -1151,10 +1151,10 @@ add_lesson (GPInstructLesson* lesson,
 }
 
 static xmlNodePtr
-add_category (GPInstructCategory* category,
+add_category (GPInstructCategory *category,
               xmlNodePtr parent_node)
 {
-	GPInstructLesson* curr_lesson;
+	GPInstructLesson *curr_lesson;
 	GList *lessons, *curr_lessons;
 
 	xmlNodePtr node = xmlNewChild (parent_node, NULL,
@@ -1180,9 +1180,9 @@ add_category (GPInstructCategory* category,
 }
 
 static xmlNodePtr
-add_project (GPInstructProject* project)
+add_project (GPInstructProject *project)
 {
-	GPInstructCategory* curr_category;
+	GPInstructCategory *curr_category;
 	GList *categories, *curr_categories;
 
 	xmlNodePtr node = xmlNewNode (NULL, BAD_CAST "project");
@@ -1230,8 +1230,8 @@ gpinstruct_parser_finalize (GObject *object)
 static void
 gpinstruct_parser_class_init (GPInstructParserClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GObjectClass* parent_class = G_OBJECT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GObjectClass *parent_class = G_OBJECT_CLASS (klass);*/
 
 	object_class->finalize = gpinstruct_parser_finalize;
 
@@ -1239,14 +1239,14 @@ gpinstruct_parser_class_init (GPInstructParserClass *klass)
 }
 
 
-GPInstructParser*
+GPInstructParser *
 gpinstruct_parser_new (void)
 {
-	GPInstructParser* parser = g_object_new (GPINSTRUCT_TYPE_PARSER, NULL);
+	GPInstructParser *parser = g_object_new (GPINSTRUCT_TYPE_PARSER, NULL);
 	return parser;
 }
 
-GPInstructProject*
+GPInstructProject *
 create_project_from_xml_document (xmlDocPtr doc)
 {
 	xmlNode *current_node;
@@ -1265,7 +1265,7 @@ create_project_from_xml_document (xmlDocPtr doc)
 }
 
 xmlDocPtr
-create_xml_document_from_project (GPInstructProject* project)
+create_xml_document_from_project (GPInstructProject *project)
 {
 	xmlNodePtr current_node = add_project (project);
 
@@ -1277,12 +1277,12 @@ create_xml_document_from_project (GPInstructProject* project)
 	return doc;
 }
 
-GPInstructProject*
-gpinstruct_parser_load_from_file (GPInstructParser* parser,
-                                  const gchar* file,
-                                  GError** error)
+GPInstructProject *
+gpinstruct_parser_load_from_file (GPInstructParser *parser,
+                                  const gchar *file,
+                                  GError **error)
 {
-	GPInstructProject* curr_project;
+	GPInstructProject *curr_project;
 
 	xmlDocPtr doc = xmlParseFile (file);
 
@@ -1300,12 +1300,12 @@ gpinstruct_parser_load_from_file (GPInstructParser* parser,
 	return curr_project;
 }
 
-GPInstructProject*
-gpinstruct_parser_load_from_string (GPInstructParser* parser,
-                                    const gchar* contents,
-                                    GError** error)
+GPInstructProject *
+gpinstruct_parser_load_from_string (GPInstructParser *parser,
+                                    const gchar *contents,
+                                    GError **error)
 {
-	GPInstructProject* curr_project;
+	GPInstructProject *curr_project;
 
 	xmlDocPtr doc = xmlParseDoc (BAD_CAST contents);
 
@@ -1324,10 +1324,10 @@ gpinstruct_parser_load_from_string (GPInstructParser* parser,
 }
 
 void
-gpinstruct_parser_save_to_file (GPInstructParser* parser,
-                                GPInstructProject* project,
-                                const gchar* file,
-                                GError** error)
+gpinstruct_parser_save_to_file (GPInstructParser *parser,
+                                GPInstructProject *project,
+                                const gchar *file,
+                                GError **error)
 {
 	xmlDocPtr doc = create_xml_document_from_project (project);
 
@@ -1345,13 +1345,13 @@ gpinstruct_parser_save_to_file (GPInstructParser* parser,
 	xmlFreeDoc (doc);
 }
 
-gchar*
-gpinstruct_parser_save_to_string (GPInstructParser* parser,
-                                  GPInstructProject* project,
-                                  GError** error)
+gchar *
+gpinstruct_parser_save_to_string (GPInstructParser *parser,
+                                  GPInstructProject *project,
+                                  GError **error)
 {
-	xmlChar* buffer;
-	gchar* contents;
+	xmlChar *buffer;
+	gchar *contents;
 
 	xmlDocPtr doc = create_xml_document_from_project (project);
 

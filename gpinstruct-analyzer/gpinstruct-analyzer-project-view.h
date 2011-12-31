@@ -43,11 +43,11 @@ struct _GPInstructAnalyzerProjectView
 {
 	GtkVPaned parent_instance;
 
-	GPInstructAnalyzerProjectViewPrivate* priv;
+	GPInstructAnalyzerProjectViewPrivate *priv;
 };
 
 GType gpinstruct_analyzer_project_view_get_type (void) G_GNUC_CONST;
-GtkWidget* gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer);
+GtkWidget *gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer);
 
 G_END_DECLS
 

@@ -43,21 +43,21 @@ struct _GPInstructEditorWindow
 {
 	GtkWindow parent_instance;
 
-	GPInstructEditorWindowPrivate* priv;
+	GPInstructEditorWindowPrivate *priv;
 };
 
 GType gpinstruct_editor_window_get_type (void) G_GNUC_CONST;
-GtkWidget* gpinstruct_editor_window_new (void);
-const gchar* gpinstruct_editor_window_get_filename (GPInstructEditorWindow* window);
-gboolean gpinstruct_editor_window_get_modified (GPInstructEditorWindow* window);
-void gpinstruct_editor_window_set_modified (GPInstructEditorWindow* window, gboolean modified);
-void gpinstruct_editor_window_new_file (GPInstructEditorWindow* window);
-void gpinstruct_editor_window_open_file (GPInstructEditorWindow* window, const gchar* file);
-gboolean gpinstruct_editor_window_close_current_file (GPInstructEditorWindow* window);
-gboolean gpinstruct_editor_window_save_file (GPInstructEditorWindow* window);
-gboolean gpinstruct_editor_window_save_file_as (GPInstructEditorWindow* window, const gchar* file);
-void gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window, GPInstructObject* object);
-gboolean gpinstruct_editor_window_quit (GPInstructEditorWindow* window);
+GtkWidget *gpinstruct_editor_window_new (void);
+const gchar *gpinstruct_editor_window_get_filename (GPInstructEditorWindow *window);
+gboolean gpinstruct_editor_window_get_modified (GPInstructEditorWindow *window);
+void gpinstruct_editor_window_set_modified (GPInstructEditorWindow *window, gboolean modified);
+void gpinstruct_editor_window_new_file (GPInstructEditorWindow *window);
+void gpinstruct_editor_window_open_file (GPInstructEditorWindow *window, const gchar *file);
+gboolean gpinstruct_editor_window_close_current_file (GPInstructEditorWindow *window);
+gboolean gpinstruct_editor_window_save_file (GPInstructEditorWindow *window);
+gboolean gpinstruct_editor_window_save_file_as (GPInstructEditorWindow *window, const gchar *file);
+void gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window, GPInstructObject *object);
+gboolean gpinstruct_editor_window_quit (GPInstructEditorWindow *window);
 
 G_END_DECLS
 

@@ -43,11 +43,11 @@ struct _GPInstructLessonTestOrderPage
 {
 	GPInstructLessonViewPage parent_instance;
 
-	GPInstructLessonTestOrderPagePrivate* priv;
+	GPInstructLessonTestOrderPagePrivate *priv;
 };
 
 GType gpinstruct_lesson_test_order_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestOrderPage* gpinstruct_lesson_test_order_page_new (GPInstructLessonTestOrder* test, GPInstructLessonScore* score, GPInstructLog* log);
+GPInstructLessonTestOrderPage *gpinstruct_lesson_test_order_page_new (GPInstructLessonTestOrder *test, GPInstructLessonScore *score, GPInstructLog *log);
 
 G_END_DECLS
 

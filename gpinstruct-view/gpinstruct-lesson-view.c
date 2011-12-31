@@ -30,25 +30,25 @@
 
 struct _GPInstructLessonViewPrivate
 {
-	GPInstructLesson* lesson;
-	GPInstructMessagePool* pool;
-	GPInstructLog* log;
+	GPInstructLesson *lesson;
+	GPInstructMessagePool *pool;
+	GPInstructLog *log;
 
 	gint current_page;
-	GPInstructLessonViewPage* current_page_object;
+	GPInstructLessonViewPage *current_page_object;
 
-	GtkWidget* next;
-	GtkWidget* back;
+	GtkWidget *next;
+	GtkWidget *back;
 
-	GtkWidget* contents;
-	GList* pages;
-	GtkSizeGroup* pages_size_group;
+	GtkWidget *contents;
+	GList *pages;
+	GtkSizeGroup *pages_size_group;
 
-	GtkWidget* infobar;
-	GtkWidget* infobar_label;
-	GtkWidget* explain_button;
+	GtkWidget *infobar;
+	GtkWidget *infobar_label;
+	GtkWidget *explain_button;
 
-	gchar* explanation;
+	gchar *explanation;
 };
 
 #define GPINSTRUCT_LESSON_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_VIEW, GPInstructLessonViewPrivate))
@@ -75,14 +75,14 @@ show_page (GPInstructLessonView *view,
 
 	if (page_num < num_pages)
 	{
-		GPInstructLessonViewPage* page = g_list_nth_data (view->priv->pages, page_num);
+		GPInstructLessonViewPage *page = g_list_nth_data (view->priv->pages, page_num);
 		view->priv->current_page = page_num;
 		view->priv->current_page_object = page;
 
 		gpinstruct_lesson_view_page_show_current (page);
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (view->priv->contents), page_num);
 
-		gchar* title = g_strdup_printf ("%s - %s",
+		gchar *title = g_strdup_printf ("%s - %s",
 		                                gpinstruct_lesson_get_title (view->priv->lesson),
 		                                gpinstruct_lesson_view_page_get_title (page));
 		gtk_window_set_title (GTK_WINDOW (view), title);
@@ -117,12 +117,12 @@ back_button_clicked (GtkButton *button,
 }
 
 void
-view_show (GtkWidget* widget,
+view_show (GtkWidget *widget,
            gpointer   user_data)
 {
-	GPInstructLessonView* view = GPINSTRUCT_LESSON_VIEW (widget);
+	GPInstructLessonView *view = GPINSTRUCT_LESSON_VIEW (widget);
 
-	GList* current_pages = view->priv->pages;
+	GList *current_pages = view->priv->pages;
 
 	while (current_pages)
 	{
@@ -143,9 +143,9 @@ explanation_show (GtkInfoBar *info_bar,
                   gint        response_id,
                   gpointer    user_data)
 {
-	GPInstructLessonView* view = GPINSTRUCT_LESSON_VIEW (user_data);
+	GPInstructLessonView *view = GPINSTRUCT_LESSON_VIEW (user_data);
 
-	GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Explanation"),
+	GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Explanation"),
 	                                                 GTK_WINDOW (view),
 	                                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 	                                                 GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
@@ -153,21 +153,21 @@ explanation_show (GtkInfoBar *info_bar,
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 800, 600);
 	gtk_widget_set_size_request (GTK_WIDGET (dialog), 600, 400);
 
-	GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
-	GtkWidget* explanation_label = gtk_label_new (NULL);
+	GtkWidget *explanation_label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (explanation_label),
 	                      _("<b><big>Explanation:</big></b>"));
 	gtk_box_pack_start (GTK_BOX (content_area),
 	                    explanation_label, FALSE, TRUE, 3);
 
-	GtkWidget* scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start (GTK_BOX (content_area),
 	                    scrolled_window, TRUE, TRUE, 3);
 
-	GtkWidget* explanation = gtk_text_view_new ();
+	GtkWidget *explanation = gtk_text_view_new ();
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (explanation), GTK_WRAP_WORD);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (explanation), FALSE);
 	gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (explanation)),
@@ -190,8 +190,8 @@ gpinstruct_lesson_view_init (GPInstructLessonView *object)
 	object->priv->pages = NULL;
 	object->priv->explanation = g_strdup ("");
 
-	GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
-	GtkWidget* action_area = gtk_dialog_get_action_area (GTK_DIALOG (object));
+	GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
+	GtkWidget *action_area = gtk_dialog_get_action_area (GTK_DIALOG (object));
 
 	object->priv->contents = gtk_notebook_new ();
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (object->priv->contents), FALSE);
@@ -233,7 +233,7 @@ gpinstruct_lesson_view_init (GPInstructLessonView *object)
 static void
 gpinstruct_lesson_view_finalize (GObject *object)
 {
-	GPInstructLessonView* view = GPINSTRUCT_LESSON_VIEW (object);
+	GPInstructLessonView *view = GPINSTRUCT_LESSON_VIEW (object);
 
 	if (view->priv->pages)
 		g_list_free (view->priv->pages);
@@ -253,10 +253,10 @@ gpinstruct_lesson_view_finalize (GObject *object)
 }
 
 static gboolean
-gpinstruct_lesson_view_next (GPInstructLessonView* view,
+gpinstruct_lesson_view_next (GPInstructLessonView *view,
                              gpointer user_data)
 {
-	GPInstructLessonViewPage* current_page = view->priv->current_page_object;
+	GPInstructLessonViewPage *current_page = view->priv->current_page_object;
 
 	if (view->priv->log)
 		gpinstruct_log_timer_stop (view->priv->log);
@@ -331,7 +331,7 @@ gpinstruct_lesson_view_next (GPInstructLessonView* view,
 }
 
 static gboolean
-gpinstruct_lesson_view_back (GPInstructLessonView* view,
+gpinstruct_lesson_view_back (GPInstructLessonView *view,
                              gpointer user_data)
 {
 	if (!gpinstruct_lesson_view_page_show_previous (view->priv->current_page_object))
@@ -343,8 +343,8 @@ gpinstruct_lesson_view_back (GPInstructLessonView* view,
 static void
 gpinstruct_lesson_view_class_init (GPInstructLessonViewClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkDialogClass* parent_class = GTK_DIALOG_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkDialogClass *parent_class = GTK_DIALOG_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonViewPrivate));
 
@@ -373,24 +373,24 @@ gpinstruct_lesson_view_class_init (GPInstructLessonViewClass *klass)
 }
 
 
-GPInstructLessonView*
-gpinstruct_lesson_view_new (GPInstructLesson* lesson,
-                            GPInstructMessagePool* pool,
-                            GPInstructLog* log)
+GPInstructLessonView *
+gpinstruct_lesson_view_new (GPInstructLesson *lesson,
+                            GPInstructMessagePool *pool,
+                            GPInstructLog *log)
 {
-	GPInstructLessonView* view = g_object_new (GPINSTRUCT_TYPE_LESSON_VIEW, NULL);
+	GPInstructLessonView *view = g_object_new (GPINSTRUCT_TYPE_LESSON_VIEW, NULL);
 
-	GPInstructLessonElementGroup* curr_element_group;
-	GPInstructLessonElement* curr_group_element;
-	GPInstructLessonElement* curr_element;
-	GPInstructLessonDiscussion* curr_discussion;
-	GPInstructLessonReading* curr_reading;
-	GPInstructLessonTestMultiChoice* curr_test_multi_choice;
-	GPInstructLessonTestWordPool* curr_test_word_pool;
-	GPInstructLessonTestOrder* curr_test_order;
-	GPInstructLessonTestText* curr_test_text;
-	GPInstructLessonTestScrambled* curr_test_scrambled;
-	GPInstructLessonScore* curr_score;
+	GPInstructLessonElementGroup *curr_element_group;
+	GPInstructLessonElement *curr_group_element;
+	GPInstructLessonElement *curr_element;
+	GPInstructLessonDiscussion *curr_discussion;
+	GPInstructLessonReading *curr_reading;
+	GPInstructLessonTestMultiChoice *curr_test_multi_choice;
+	GPInstructLessonTestWordPool *curr_test_word_pool;
+	GPInstructLessonTestOrder *curr_test_order;
+	GPInstructLessonTestText *curr_test_text;
+	GPInstructLessonTestScrambled *curr_test_scrambled;
+	GPInstructLessonScore *curr_score;
 
 	gboolean single_score, group_single_score, single_directions;
 
@@ -400,13 +400,13 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	if (log)
 		view->priv->log = g_object_ref (log);
 
-	gchar* title;
-	const gchar* lesson_title = gpinstruct_lesson_get_title (lesson);
+	gchar *title;
+	const gchar *lesson_title = gpinstruct_lesson_get_title (lesson);
 
-	GPInstructLessonViewPage* finish_page = gpinstruct_lesson_view_page_new ();
+	GPInstructLessonViewPage *finish_page = gpinstruct_lesson_view_page_new ();
 	gpinstruct_lesson_view_page_set_title (finish_page, _("End"));
 
-	GtkWidget* finish_label = gtk_label_new (NULL);
+	GtkWidget *finish_label = gtk_label_new (NULL);
 	title = g_strdup_printf (_("End of\n<b><big>%s</big></b>"), lesson_title);
 	gtk_label_set_markup (GTK_LABEL (finish_label), title);
 	g_free (title);
@@ -414,10 +414,10 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 	gpinstruct_lesson_view_append_page (view, finish_page);
 
-	GPInstructLessonViewPage* welcome_page = gpinstruct_lesson_view_page_new ();
+	GPInstructLessonViewPage *welcome_page = gpinstruct_lesson_view_page_new ();
 	gpinstruct_lesson_view_page_set_title (welcome_page, _("Welcome"));
 
-	GtkWidget* welcome_label = gtk_label_new (NULL);
+	GtkWidget *welcome_label = gtk_label_new (NULL);
 	title = g_strdup_printf (_("Welcome to\n<b><big>%s</big></b>"), lesson_title);
 	gtk_label_set_markup (GTK_LABEL (welcome_label), title);
 	g_free (title);
@@ -430,8 +430,8 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 	if (single_score)
 		curr_score = gpinstruct_lesson_score_new ();
 
-	GList* lesson_elements = gpinstruct_lesson_get_lesson_elements (lesson);
-	GList* curr_lesson_elements = lesson_elements;
+	GList *lesson_elements = gpinstruct_lesson_get_lesson_elements (lesson);
+	GList *curr_lesson_elements = lesson_elements;
 
 	while (curr_lesson_elements)
 	{
@@ -441,14 +441,14 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 		{
 			curr_discussion = GPINSTRUCT_LESSON_DISCUSSION (curr_element);
 
-			GPInstructLessonDiscussionPage* page = gpinstruct_lesson_discussion_page_new (curr_discussion);
+			GPInstructLessonDiscussionPage *page = gpinstruct_lesson_discussion_page_new (curr_discussion);
 			gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (page));
 		}
 		else if (GPINSTRUCT_IS_LESSON_READING (curr_element))
 		{
 			curr_reading = GPINSTRUCT_LESSON_READING (curr_element);
 
-			GPInstructLessonReadingPage* page = gpinstruct_lesson_reading_page_new (curr_reading);
+			GPInstructLessonReadingPage *page = gpinstruct_lesson_reading_page_new (curr_reading);
 			gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (page));
 		}
 		else if (GPINSTRUCT_IS_LESSON_TEST (curr_element))
@@ -460,66 +460,66 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 			{
 				curr_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (curr_element);
 
-				GPInstructLessonDirectionsPage* directions_page =
+				GPInstructLessonDirectionsPage *directions_page =
 					gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_element),
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestMultiChoicePage* question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, view->priv->log);
+				GPInstructLessonTestMultiChoicePage *question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, view->priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (curr_element))
 			{
 				curr_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (curr_element);
 
-				GPInstructLessonDirectionsPage* directions_page =
+				GPInstructLessonDirectionsPage *directions_page =
 					gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_element),
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestWordPoolPage* question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, view->priv->log);
+				GPInstructLessonTestWordPoolPage *question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, view->priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (curr_element))
 			{
 				curr_test_order = GPINSTRUCT_LESSON_TEST_ORDER (curr_element);
 
-				GPInstructLessonDirectionsPage* directions_page =
+				GPInstructLessonDirectionsPage *directions_page =
 					gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_element),
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestOrderPage* question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, view->priv->log);
+				GPInstructLessonTestOrderPage *question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, view->priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (curr_element))
 			{
 				curr_test_text = GPINSTRUCT_LESSON_TEST_TEXT (curr_element);
 
-				GPInstructLessonDirectionsPage* directions_page =
+				GPInstructLessonDirectionsPage *directions_page =
 					gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_element),
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestTextPage* question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, view->priv->log);
+				GPInstructLessonTestTextPage *question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, view->priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (curr_element))
 			{
 				curr_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (curr_element);
 
-				GPInstructLessonDirectionsPage* directions_page =
+				GPInstructLessonDirectionsPage *directions_page =
 					gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_element),
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestScrambledPage* question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, view->priv->log);
+				GPInstructLessonTestScrambledPage *question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, view->priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 
 			if (!single_score)
 			{
-				GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
+				GPInstructLessonScorePage *score_page = gpinstruct_lesson_score_page_new (curr_score);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
 				title = g_strdup_printf ("%s - %s",
 				                         gpinstruct_lesson_element_get_title (curr_element),
@@ -537,7 +537,7 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 			if (single_directions)
 			{
-				GPInstructLessonDirectionsPage* directions_page =
+				GPInstructLessonDirectionsPage *directions_page =
 					gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_element),
 					                                       gpinstruct_lesson_element_group_get_directions (curr_element_group));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
@@ -546,8 +546,8 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 			if (!single_score && group_single_score)
 				curr_score = gpinstruct_lesson_score_new ();
 
-			GList* lesson_elements_group = gpinstruct_lesson_element_group_get_lesson_elements (curr_element_group);
-			GList* curr_lesson_elements_group = lesson_elements_group;
+			GList *lesson_elements_group = gpinstruct_lesson_element_group_get_lesson_elements (curr_element_group);
+			GList *curr_lesson_elements_group = lesson_elements_group;
 
 			while (curr_lesson_elements_group)
 			{
@@ -557,14 +557,14 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 				{
 					curr_discussion = GPINSTRUCT_LESSON_DISCUSSION (curr_group_element);
 
-					GPInstructLessonDiscussionPage* page = gpinstruct_lesson_discussion_page_new (curr_discussion);
+					GPInstructLessonDiscussionPage *page = gpinstruct_lesson_discussion_page_new (curr_discussion);
 					gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (page));
 				}
 				else if (GPINSTRUCT_IS_LESSON_READING (curr_group_element))
 				{
 					curr_reading = GPINSTRUCT_LESSON_READING (curr_group_element);
 
-					GPInstructLessonReadingPage* page = gpinstruct_lesson_reading_page_new (curr_reading);
+					GPInstructLessonReadingPage *page = gpinstruct_lesson_reading_page_new (curr_reading);
 					gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (page));
 				}
 				else if (GPINSTRUCT_IS_LESSON_TEST (curr_group_element))
@@ -578,13 +578,13 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 						if (!single_directions)
 						{
-							GPInstructLessonDirectionsPage* directions_page =
+							GPInstructLessonDirectionsPage *directions_page =
 								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
 								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestMultiChoicePage* question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, view->priv->log);
+						GPInstructLessonTestMultiChoicePage *question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, view->priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 					else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (curr_group_element))
@@ -593,13 +593,13 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 						if (!single_directions)
 						{
-							GPInstructLessonDirectionsPage* directions_page =
+							GPInstructLessonDirectionsPage *directions_page =
 								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
 								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestWordPoolPage* question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, view->priv->log);
+						GPInstructLessonTestWordPoolPage *question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, view->priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 					else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (curr_group_element))
@@ -608,13 +608,13 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 						if (!single_directions)
 						{
-							GPInstructLessonDirectionsPage* directions_page =
+							GPInstructLessonDirectionsPage *directions_page =
 								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
 								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestOrderPage* question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, view->priv->log);
+						GPInstructLessonTestOrderPage *question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, view->priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 					else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (curr_group_element))
@@ -623,13 +623,13 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 						if (!single_directions)
 						{
-							GPInstructLessonDirectionsPage* directions_page =
+							GPInstructLessonDirectionsPage *directions_page =
 								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
 								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestTextPage* question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, view->priv->log);
+						GPInstructLessonTestTextPage *question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, view->priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 					else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (curr_group_element))
@@ -638,19 +638,19 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 						if (!single_directions)
 						{
-							GPInstructLessonDirectionsPage* directions_page =
+							GPInstructLessonDirectionsPage *directions_page =
 								gpinstruct_lesson_directions_page_new (gpinstruct_lesson_element_get_title (curr_group_element),
 								                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_group_element)));
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestScrambledPage* question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, view->priv->log);
+						GPInstructLessonTestScrambledPage *question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, view->priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 
 					if (!single_score && !group_single_score)
 					{
-						GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
+						GPInstructLessonScorePage *score_page = gpinstruct_lesson_score_page_new (curr_score);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
 						title = g_strdup_printf ("%s - %s",
 						                         gpinstruct_lesson_element_get_title (curr_group_element),
@@ -665,7 +665,7 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 			if (!single_score && group_single_score)
 			{
-				GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
+				GPInstructLessonScorePage *score_page = gpinstruct_lesson_score_page_new (curr_score);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
 				title = g_strdup_printf ("%s - %s",
 				                         gpinstruct_lesson_element_get_title (curr_element),
@@ -682,7 +682,7 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 
 	if (single_score)
 	{
-		GPInstructLessonScorePage* score_page = gpinstruct_lesson_score_page_new (curr_score);
+		GPInstructLessonScorePage *score_page = gpinstruct_lesson_score_page_new (curr_score);
 		gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (score_page));
 		gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (score_page), _("Score"));
 	}
@@ -693,8 +693,8 @@ gpinstruct_lesson_view_new (GPInstructLesson* lesson,
 }
 
 void
-gpinstruct_lesson_view_append_page (GPInstructLessonView* view,
-                                    GPInstructLessonViewPage* page)
+gpinstruct_lesson_view_append_page (GPInstructLessonView *view,
+                                    GPInstructLessonViewPage *page)
 {
 	guint page_num = g_list_length (view->priv->pages) -1;
 
@@ -708,20 +708,20 @@ gpinstruct_lesson_view_append_page (GPInstructLessonView* view,
 }
 
 guint
-gpinstruct_lesson_view_get_current_page (GPInstructLessonView* view)
+gpinstruct_lesson_view_get_current_page (GPInstructLessonView *view)
 {
 	return view->priv->current_page;
 }
 
 void
-gpinstruct_lesson_view_set_current_page (GPInstructLessonView* view,
+gpinstruct_lesson_view_set_current_page (GPInstructLessonView *view,
                                          guint page)
 {
 	show_page (view, page);
 }
 
-GPInstructLessonViewPage*
-gpinstruct_lesson_view_get_current_page_object (GPInstructLessonView* view)
+GPInstructLessonViewPage *
+gpinstruct_lesson_view_get_current_page_object (GPInstructLessonView *view)
 {
 	return view->priv->current_page_object;
 }

@@ -43,11 +43,11 @@ struct _GPInstructLessonTestScrambledEditor
 {
 	GPInstructObjectEditor parent_instance;
 
-	GPInstructLessonTestScrambledEditorPrivate* priv;
+	GPInstructLessonTestScrambledEditorPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_scrambled_editor_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestScrambledEditor* gpinstruct_lesson_test_scrambled_editor_new (GPInstructEditorWindow* window, GPInstructLessonTestScrambled *test);
+GPInstructLessonTestScrambledEditor *gpinstruct_lesson_test_scrambled_editor_new (GPInstructEditorWindow *window, GPInstructLessonTestScrambled *test);
 
 G_END_DECLS
 

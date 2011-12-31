@@ -27,18 +27,18 @@
 
 struct _GPInstructLessonTestWordPoolPagePrivate
 {
-	GPInstructLessonTestWordPool* test;
-	GPInstructLessonScore* score;
-	GPInstructLog* log;
+	GPInstructLessonTestWordPool *test;
+	GPInstructLessonScore *score;
+	GPInstructLog *log;
 
 	guint curr_question;
-	guint* questions;
-	guint* choices;
+	guint *questions;
+	guint *choices;
 
-	GtkWidget* vbox;
-	GtkListStore* store;
-	GtkWidget* question_textview;
-	GtkWidget* choices_treeview;
+	GtkWidget *vbox;
+	GtkListStore *store;
+	GtkWidget *question_textview;
+	GtkWidget *choices_treeview;
 };
 
 #define GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_PAGE, GPInstructLessonTestWordPoolPagePrivate))
@@ -46,10 +46,10 @@ struct _GPInstructLessonTestWordPoolPagePrivate
 
 
 void
-word_pool_show_question (GPInstructLessonTestWordPoolPage* page,
+word_pool_show_question (GPInstructLessonTestWordPoolPage *page,
                          guint question_num)
 {
-	GList* questions = gpinstruct_lesson_test_word_pool_get_questions (page->priv->test);
+	GList *questions = gpinstruct_lesson_test_word_pool_get_questions (page->priv->test);
 	if (question_num < g_list_length (questions))
 	{
 		page->priv->curr_question = question_num;
@@ -58,9 +58,9 @@ word_pool_show_question (GPInstructLessonTestWordPoolPage* page,
 		gtk_tree_selection_select_path (gtk_tree_view_get_selection (GTK_TREE_VIEW (page->priv->choices_treeview)), path);
 		gtk_tree_path_free (path);
 
-		GPInstructLessonTestWordPoolQuestion* question = g_list_nth_data (questions, page->priv->questions[question_num]);
+		GPInstructLessonTestWordPoolQuestion *question = g_list_nth_data (questions, page->priv->questions[question_num]);
 
-		gchar* text = g_strdup_printf ("%d. %s", 1+question_num, gpinstruct_lesson_test_word_pool_question_get_text (question));
+		gchar *text = g_strdup_printf ("%d. %s", 1+question_num, gpinstruct_lesson_test_word_pool_question_get_text (question));
 		gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (page->priv->question_textview)), text);
 		g_free (text);
 	}
@@ -70,7 +70,7 @@ word_pool_show_question (GPInstructLessonTestWordPoolPage* page,
 }
 
 static void
-page_reset (GPInstructLessonTestWordPoolPage* page,
+page_reset (GPInstructLessonTestWordPoolPage *page,
             gpointer user_data)
 {
 	if (page->priv->log)
@@ -81,7 +81,7 @@ page_reset (GPInstructLessonTestWordPoolPage* page,
 	guint questions_num = gpinstruct_lesson_test_word_pool_get_questions_length (page->priv->test);
 	page->priv->questions = random_array (questions_num);
 
-	GList* choices = gpinstruct_lesson_test_word_pool_get_choices (page->priv->test);
+	GList *choices = gpinstruct_lesson_test_word_pool_get_choices (page->priv->test);
 	guint length = g_list_length (choices);
 
 	g_free (page->priv->choices);
@@ -89,11 +89,11 @@ page_reset (GPInstructLessonTestWordPoolPage* page,
 
 	gtk_list_store_clear (page->priv->store);
 
-	gchar* text;
+	gchar *text;
 	int i;
 	for (i = 0; i<length; i++)
 	{
-		text = g_strdup_printf ("%c. %s", 'a'+i, (gchar*)g_list_nth_data (choices, page->priv->choices[i]));
+		text = g_strdup_printf ("%c. %s", 'a'+i, (gchar*) g_list_nth_data (choices, page->priv->choices[i]));
 		gtk_list_store_insert_with_values (page->priv->store, NULL, -1, 0, text, -1);
 		g_free (text);
 	}
@@ -127,7 +127,7 @@ gpinstruct_lesson_test_word_pool_page_init (GPInstructLessonTestWordPoolPage *ob
 static void
 gpinstruct_lesson_test_word_pool_page_finalize (GObject *object)
 {
-	GPInstructLessonTestWordPoolPage* page = GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE (object);
+	GPInstructLessonTestWordPoolPage *page = GPINSTRUCT_LESSON_TEST_WORD_POOL_PAGE (object);
 
 	g_free (page->priv->questions);
 	g_free (page->priv->choices);
@@ -141,8 +141,8 @@ gpinstruct_lesson_test_word_pool_page_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_word_pool_page_class_init (GPInstructLessonTestWordPoolPageClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonViewPageClass *parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestWordPoolPagePrivate));
 
@@ -151,25 +151,25 @@ gpinstruct_lesson_test_word_pool_page_class_init (GPInstructLessonTestWordPoolPa
 
 
 static gboolean
-page_show_next (GPInstructLessonTestWordPoolPage* page,
+page_show_next (GPInstructLessonTestWordPoolPage *page,
                 gpointer user_data)
 {
-	GList* questions = gpinstruct_lesson_test_word_pool_get_questions (page->priv->test);
+	GList *questions = gpinstruct_lesson_test_word_pool_get_questions (page->priv->test);
 	guint questions_num = g_list_length (questions);
 
 	if (questions_num == 0)
 		return FALSE;
 
 	guint question_id = page->priv->questions[page->priv->curr_question];
-	GPInstructLessonTestWordPoolQuestion* question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, question_id));
+	GPInstructLessonTestWordPoolQuestion *question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (g_list_nth_data (questions, question_id));
 
 	g_list_free (questions);
 
 	gpinstruct_lesson_score_increase_total (page->priv->score);
 
-	GtkTreeSelection* tsel = gtk_tree_view_get_selection (GTK_TREE_VIEW (page->priv->choices_treeview));
+	GtkTreeSelection *tsel = gtk_tree_view_get_selection (GTK_TREE_VIEW (page->priv->choices_treeview));
 	GtkTreeIter iter;
-	GtkTreeModel* tm;
+	GtkTreeModel *tm;
 	gint selected;
 
 	if (gtk_tree_selection_get_selected (tsel, &tm, &iter))
@@ -217,14 +217,14 @@ page_show_next (GPInstructLessonTestWordPoolPage* page,
 			{
 				GString *explanation_answer = g_string_new (gpinstruct_lesson_test_word_pool_question_get_text (question));
 
-				GList* choices = gpinstruct_lesson_test_word_pool_get_choices (page->priv->test);
+				GList *choices = gpinstruct_lesson_test_word_pool_get_choices (page->priv->test);
 				guint length = g_list_length (choices);
 				for (i = 0; i<length; i++)
 				{
 					g_string_append_printf (explanation_answer,
 							                correct_choice==i? "\n<i>%c. %s</i>":"\n%c. %s",
 							                'a'+i,
-							                (gchar*)g_list_nth_data (choices, page->priv->choices[i]));
+							                (gchar*) g_list_nth_data (choices, page->priv->choices[i]));
 				}
 				g_list_free (choices);
 
@@ -248,12 +248,12 @@ page_show_next (GPInstructLessonTestWordPoolPage* page,
 }
 
 
-GPInstructLessonTestWordPoolPage*
-gpinstruct_lesson_test_word_pool_page_new (GPInstructLessonTestWordPool* test,
-                                           GPInstructLessonScore* score,
-                                           GPInstructLog* log)
+GPInstructLessonTestWordPoolPage *
+gpinstruct_lesson_test_word_pool_page_new (GPInstructLessonTestWordPool *test,
+                                           GPInstructLessonScore *score,
+                                           GPInstructLog *log)
 {
-	GPInstructLessonTestWordPoolPage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_PAGE, NULL);
+	GPInstructLessonTestWordPoolPage *page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_WORD_POOL_PAGE, NULL);
 
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 	                                       gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
@@ -274,7 +274,7 @@ gpinstruct_lesson_test_word_pool_page_new (GPInstructLessonTestWordPool* test,
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (page->priv->question_textview), FALSE);
 	gtk_box_pack_start (GTK_BOX (page->priv->vbox), page->priv->question_textview, TRUE, TRUE, 3);
 
-	GtkWidget* scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 	                                GTK_POLICY_AUTOMATIC,
 	                                GTK_POLICY_AUTOMATIC);

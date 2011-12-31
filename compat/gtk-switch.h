@@ -44,7 +44,7 @@ struct _GtkSwitch
 };
 
 GType gtk_switch_get_type (void) G_GNUC_CONST;
-GtkWidget* gtk_switch_new (void);
+GtkWidget *gtk_switch_new (void);
 void gtk_switch_set_active (GtkSwitch *sw, gboolean is_active);
 gboolean gtk_switch_get_active (GtkSwitch *sw);
 

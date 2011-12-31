@@ -31,18 +31,18 @@
 
 struct _GPInstructAnalyzerWindowPrivate
 {
-	GtkWidget* main_vbox;
+	GtkWidget *main_vbox;
 
-	GtkUIManager* manager;
-	GtkActionGroup* action_group;
+	GtkUIManager *manager;
+	GtkActionGroup *action_group;
 
-	GtkWidget* view_combobox;
+	GtkWidget *view_combobox;
 
-	GtkWidget* view;
+	GtkWidget *view;
 
-	GtkWidget* statusbar;
+	GtkWidget *statusbar;
 
-	GPInstructLogAnalyzer* analyzer;
+	GPInstructLogAnalyzer *analyzer;
 };
 
 #define GPINSTRUCT_ANALYZER_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_WINDOW, GPInstructAnalyzerWindowPrivate))
@@ -53,7 +53,7 @@ window_delete_event (GtkWidget *widget,
                      GdkEvent  *event,
                      gpointer   user_data)
 {
-	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (widget);
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (widget);
 
 	if (gpinstruct_analyzer_window_quit (window))
 		return FALSE;
@@ -70,7 +70,7 @@ view_combobox_changed (GtkComboBox *widget,
 	if (active < 0)
 		return;
 
-	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
 	if (window->priv->analyzer == NULL)
 		return;
@@ -99,7 +99,7 @@ static void
 file_new_action (GtkAction *action,
                  gpointer   user_data)
 {
-	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
 	gpinstruct_analyzer_window_new_session (window);
 }
@@ -109,9 +109,9 @@ static void
 file_add_action (GtkAction *action,
                  gpointer   user_data)
 {
-	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
-	GtkWidget* dialog = gtk_file_chooser_dialog_new (_("Choose Log Files"),
+	GtkWidget *dialog = gtk_file_chooser_dialog_new (_("Choose Log Files"),
 	                                                 GTK_WINDOW (window),
 	                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
 	                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -126,8 +126,8 @@ file_add_action (GtkAction *action,
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
-		GSList* log_files = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
-		GSList* current_log_files = log_files;
+		GSList *log_files = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (dialog));
+		GSList *current_log_files = log_files;
 
 		while (current_log_files)
 		{
@@ -152,7 +152,7 @@ static void
 file_close_action (GtkAction *action,
                    gpointer   user_data)
 {
-	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
 	gpinstruct_analyzer_window_close_session (window);
 }
@@ -162,7 +162,7 @@ static void
 file_quit_action (GtkAction *action,
                   gpointer   user_data)
 {
-	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
 	if (gpinstruct_analyzer_window_quit (window))
 		gtk_widget_destroy (GTK_WIDGET (window));
@@ -180,10 +180,10 @@ static void
 help_about_action (GtkAction *action,
                    gpointer   user_data)
 {
-	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
-	static gchar* authors[] = {"Arnel A. Borja <kyoushuu@yahoo.com>", NULL};
-	gchar* license = _(
+	static gchar *authors[] = {"Arnel A. Borja <kyoushuu@yahoo.com>", NULL};
+	gchar *license = _(
 	                   "This program is free software; you can redistribute it and/or modify "
 	                   "it under the terms of the GNU General Public License as published by "
 	                   "the Free Software Foundation; either version 3 of the License, or "
@@ -225,7 +225,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 
 	object->priv->analyzer = NULL;
 
-	GError* error = NULL;
+	GError *error = NULL;
 
 	GtkActionEntry actions[] =
 	{
@@ -240,7 +240,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 		{"help-about", GTK_STOCK_ABOUT, NULL, "F1", NULL, G_CALLBACK (help_about_action)}
 	};
 
-	gchar* ui =
+	gchar *ui =
 		"<ui>"
 		"  <menubar name=\"menubar\">"
 		"    <menu name=\"FileMenu\" action=\"file\">"
@@ -301,31 +301,31 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 		g_error_free (error);
 	}
 
-	GtkWidget* main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
+	GtkWidget *main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), main_menu, FALSE, TRUE, 0);
 
-	GtkWidget* toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
+	GtkWidget *toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
 #if GTK_MAJOR_VERSION >= 3
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
 	                             GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 #endif
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), toolbar, FALSE, TRUE, 0);
 
-	GtkWidget* view_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *view_hbox = gtk_hbox_new (FALSE, 3);
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), view_hbox, FALSE, TRUE, 0);
 
-	GtkWidget* view_label = gtk_label_new (_("Select View:"));
+	GtkWidget *view_label = gtk_label_new (_("Select View:"));
 	gtk_box_pack_start (GTK_BOX (view_hbox), view_label, FALSE, TRUE, 0);
 
 	GtkTreeIter view_iter;
-	GtkListStore* view_store = gtk_list_store_new (1, G_TYPE_STRING);
+	GtkListStore *view_store = gtk_list_store_new (1, G_TYPE_STRING);
 
 	gtk_list_store_append (view_store, &view_iter);
 	gtk_list_store_set (view_store, &view_iter, 0, "Whole Project", -1);
 	gtk_list_store_append (view_store, &view_iter);
 	gtk_list_store_set (view_store, &view_iter, 0, "Examinee", -1);
 
-	GtkWidget* view_combobox = gtk_combo_box_new_with_model (GTK_TREE_MODEL (view_store));
+	GtkWidget *view_combobox = gtk_combo_box_new_with_model (GTK_TREE_MODEL (view_store));
 	gtk_widget_set_sensitive (view_combobox, FALSE);
 	g_signal_connect (view_combobox, "changed", G_CALLBACK (view_combobox_changed), object);
 	gtk_box_pack_start (GTK_BOX (view_hbox), view_combobox, TRUE, TRUE, 0);
@@ -333,7 +333,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 
 	g_object_unref (view_store);
 
-	GtkCellRenderer* view_textrenderer = gtk_cell_renderer_text_new ();
+	GtkCellRenderer *view_textrenderer = gtk_cell_renderer_text_new ();
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (view_combobox), view_textrenderer, TRUE);
 	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (view_combobox), view_textrenderer, "text", 0);
 
@@ -349,7 +349,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 static void
 gpinstruct_analyzer_window_finalize (GObject *object)
 {
-	GPInstructAnalyzerWindow* window = GPINSTRUCT_ANALYZER_WINDOW (object);
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (object);
 
 	if (window->priv->action_group)
 		g_object_unref (window->priv->action_group);
@@ -360,8 +360,8 @@ gpinstruct_analyzer_window_finalize (GObject *object)
 static void
 gpinstruct_analyzer_window_class_init (GPInstructAnalyzerWindowClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkWindowClass* parent_class = GTK_WINDOW_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkWindowClass *parent_class = GTK_WINDOW_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructAnalyzerWindowPrivate));
 
@@ -369,14 +369,14 @@ gpinstruct_analyzer_window_class_init (GPInstructAnalyzerWindowClass *klass)
 }
 
 
-GtkWidget*
+GtkWidget *
 gpinstruct_analyzer_window_new (void)
 {
 	return GTK_WIDGET (g_object_new (GPINSTRUCT_TYPE_ANALYZER_WINDOW, NULL));
 }
 
 void
-gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
+gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window)
 {
 	if (window->priv->analyzer)
 	{
@@ -384,7 +384,7 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
 			return;
 	}
 
-	GtkWidget* dialog = gtk_file_chooser_dialog_new (_("Choose Project File"),
+	GtkWidget *dialog = gtk_file_chooser_dialog_new (_("Choose Project File"),
 	                                                 GTK_WINDOW (window),
 	                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
 	                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -399,12 +399,12 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
-		GError* error = NULL;
+		GError *error = NULL;
 
-		GPInstructParser* parser = gpinstruct_parser_new ();
+		GPInstructParser *parser = gpinstruct_parser_new ();
 
-		gchar* project_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		GPInstructProject* project = gpinstruct_parser_load_from_file (parser, project_file, &error);
+		gchar *project_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		GPInstructProject *project = gpinstruct_parser_load_from_file (parser, project_file, &error);
 		if (error)
 		{
 			g_critical(_("Error: %s\n"), error->message);
@@ -437,7 +437,7 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window)
 }
 
 gboolean
-gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow* window)
+gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow *window)
 {
 	if (window->priv->analyzer == NULL)
 		return FALSE;
@@ -462,13 +462,13 @@ gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow* window)
 
 
 gboolean
-gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow* window,
-                                         const gchar* file)
+gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow *window,
+                                         const gchar *file)
 {
 	if (window->priv->analyzer == NULL)
 		return FALSE;
 
-	GPInstructLog* log = gpinstruct_log_new ();
+	GPInstructLog *log = gpinstruct_log_new ();
 	if (gpinstruct_log_load_from_file (log, file, NULL) == FALSE)
 	{
 		g_object_unref (log);
@@ -486,7 +486,7 @@ gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow* window,
 }
 
 gboolean
-gpinstruct_analyzer_window_quit (GPInstructAnalyzerWindow* window)
+gpinstruct_analyzer_window_quit (GPInstructAnalyzerWindow *window)
 {
 	if (window->priv->analyzer)
 	{

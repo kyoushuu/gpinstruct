@@ -30,47 +30,47 @@
 
 struct _GPInstructEditorWindowPrivate
 {
-	GtkWidget* main_vbox;
+	GtkWidget *main_vbox;
 
-	GtkUIManager* manager;
-	GtkActionGroup* action_group;
+	GtkUIManager *manager;
+	GtkActionGroup *action_group;
 
-	GtkWidget* infobar;
-	GtkWidget* infobarlabel;
+	GtkWidget *infobar;
+	GtkWidget *infobarlabel;
 
 
-	GtkWidget* hpaned;
+	GtkWidget *hpaned;
 
 	GtkWidget *tree_view;
-	GtkTreeStore* store;
+	GtkTreeStore *store;
 	GtkTreeViewColumn *column;
 
 	GtkWidget *scrolled_window;
-	GtkWidget* object_editor;
+	GtkWidget *object_editor;
 
 
-	GtkWidget* statusbar;
+	GtkWidget *statusbar;
 
 
-	GtkWidget* popup_menu;
+	GtkWidget *popup_menu;
 
-	GtkWidget* popup_new_category_menu_item;
-	GtkWidget* popup_new_lesson_menu_item;
-	GtkWidget* popup_new_group_menu_item;
-	GtkWidget* popup_new_discussion_menu_item;
-	GtkWidget* popup_new_reading_menu_item;
-	GtkWidget* popup_new_test_multi_choice_menu_item;
-	GtkWidget* popup_new_test_word_pool_menu_item;
-	GtkWidget* popup_new_test_order_menu_item;
-	GtkWidget* popup_new_test_text_menu_item;
-	GtkWidget* popup_new_test_scrambled_menu_item;
+	GtkWidget *popup_new_category_menu_item;
+	GtkWidget *popup_new_lesson_menu_item;
+	GtkWidget *popup_new_group_menu_item;
+	GtkWidget *popup_new_discussion_menu_item;
+	GtkWidget *popup_new_reading_menu_item;
+	GtkWidget *popup_new_test_multi_choice_menu_item;
+	GtkWidget *popup_new_test_word_pool_menu_item;
+	GtkWidget *popup_new_test_order_menu_item;
+	GtkWidget *popup_new_test_text_menu_item;
+	GtkWidget *popup_new_test_scrambled_menu_item;
 
-	GtkWidget* popup_remove_menu_item;
+	GtkWidget *popup_remove_menu_item;
 
 
-	GPInstructParser* parser;
+	GPInstructParser *parser;
 	GPInstructProject *project;
-	gchar* project_file;
+	gchar *project_file;
 	gboolean modified;
 
 	GtkTreeIter iter_popup;
@@ -92,7 +92,7 @@ static void gpinstruct_editor_window_log (const gchar *log_domain,
                                           const gchar *message,
                                           gpointer user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	GtkMessageType type = GTK_MESSAGE_INFO;
 	if (log_level & G_LOG_LEVEL_CRITICAL)
@@ -126,7 +126,7 @@ window_delete_event (GtkWidget *widget,
                      GdkEvent  *event,
                      gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (widget);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (widget);
 
 	if (gpinstruct_editor_window_quit (window))
 		return FALSE;
@@ -140,14 +140,14 @@ tree_view_press_event (GtkWidget *widget,
                        GdkEvent *event,
                        gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 	GdkEventButton *event_button = NULL;
 	GdkEventKey *event_key;
 
-	GtkTreePath* path = NULL;
+	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
 
-	GPInstructObject* object_popup;
+	GPInstructObject *object_popup;
 
 	gboolean show_popup = FALSE;
 	guint button = 0;
@@ -284,7 +284,7 @@ static void
 tree_view_selection_changed (GtkTreeSelection *treeselection,
                              gpointer          user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	GPInstructObject *object;
@@ -369,7 +369,7 @@ tree_view_selection_changed (GtkTreeSelection *treeselection,
 
 
 typedef struct {
-	GPInstructEditorWindow* window;
+	GPInstructEditorWindow *window;
 	gpointer data;
 } TreeViewSetCursorObjectData;
 
@@ -379,14 +379,14 @@ tree_view_set_cursor_object (GtkTreeModel *model,
                              GtkTreeIter *iter,
                              gpointer data)
 {
-	GPInstructEditorWindow* window = ((TreeViewSetCursorObjectData*)data)->window;
+	GPInstructEditorWindow *window = ((TreeViewSetCursorObjectData*) data)->window;
 
 	gpointer current_data;
 	gtk_tree_model_get (model, iter,
 	                    DATA_COLUMN, &current_data,
 	                    -1);
 
-	if (current_data == ((TreeViewSetCursorObjectData*)data)->data)
+	if (current_data == ((TreeViewSetCursorObjectData*) data)->data)
 	{
 		gtk_tree_view_set_cursor (GTK_TREE_VIEW (window->priv->tree_view),
 		                          path, NULL, FALSE);
@@ -401,7 +401,7 @@ static void
 file_new_action (GtkAction *action,
                  gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	gpinstruct_editor_window_new_file (window);
 }
@@ -411,7 +411,7 @@ static void
 file_open_action (GtkAction *action,
                   gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	GtkWidget *dialog;
 	dialog = gtk_file_chooser_dialog_new (_("Open File"),
@@ -441,7 +441,7 @@ static void
 file_save_action (GtkAction *action,
                   gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	gpinstruct_editor_window_save_file (window);
 }
@@ -451,7 +451,7 @@ static void
 file_saveas_action (GtkAction *action,
                     gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 	if (window->priv->project == NULL)
 		return;
 
@@ -472,7 +472,7 @@ file_saveas_action (GtkAction *action,
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
-		gchar* filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
 		gpinstruct_editor_window_save_file_as (window, filename);
 		g_free (filename);
 	}
@@ -485,7 +485,7 @@ static void
 file_close_action (GtkAction *action,
                    gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	gpinstruct_editor_window_close_current_file (window);
 }
@@ -495,7 +495,7 @@ static void
 file_quit_action (GtkAction *action,
                   gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
 	if (gpinstruct_editor_window_quit (window))
 		gtk_widget_destroy (GTK_WIDGET (window));
@@ -506,19 +506,19 @@ static void
 view_execute_action (GtkAction *action,
                      gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
-	GPInstructMessagePool* message_pool = gpinstruct_message_pool_new ();
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructMessagePool *message_pool = gpinstruct_message_pool_new ();
 
 	if (message_pool)
 	{
 #ifdef G_OS_WIN32
-		gchar* prefix = g_win32_get_package_installation_directory_of_module (NULL);
-		gchar* datadir = g_build_filename (prefix, "share", PACKAGE, NULL);
+		gchar *prefix = g_win32_get_package_installation_directory_of_module (NULL);
+		gchar *datadir = g_build_filename (prefix, "share", PACKAGE, NULL);
 #else
-		gchar* datadir = g_strdup (PACKAGE_DATA_DIR);
+		gchar *datadir = g_strdup (PACKAGE_DATA_DIR);
 #endif
 
-		gchar* message_file = g_build_filename (datadir, "messages.ini", NULL);
+		gchar *message_file = g_build_filename (datadir, "messages.ini", NULL);
 		gpinstruct_message_pool_load_from_file (message_pool, message_file);
 		g_free (message_file);
 
@@ -528,7 +528,7 @@ view_execute_action (GtkAction *action,
 		g_free (datadir);
 	}
 
-	GtkWidget* preview_window = gpinstruct_project_view_new (window->priv->project, message_pool, NULL);
+	GtkWidget *preview_window = gpinstruct_project_view_new (window->priv->project, message_pool, NULL);
 
 	g_object_unref (message_pool);
 
@@ -552,10 +552,10 @@ static void
 help_about_action (GtkAction *action,
                    gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
 
-	static gchar* authors[] = {"Arnel A. Borja <kyoushuu@yahoo.com>", NULL};
-	gchar* license = _(
+	static gchar *authors[] = {"Arnel A. Borja <kyoushuu@yahoo.com>", NULL};
+	gchar *license = _(
 	                   "This program is free software; you can redistribute it and/or modify "
 	                   "it under the terms of the GNU General Public License as published by "
 	                   "the Free Software Foundation; either version 3 of the License, or "
@@ -591,11 +591,11 @@ static void
 new_object_activate (GtkWidget *menuitem,
                      gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
-	GPInstructObject* object_popup;
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructObject *object_popup;
 	GtkTreeIter iter;
-	GtkTreePath* path;
-	gchar* title;
+	GtkTreePath *path;
+	gchar *title;
 
 	gtk_tree_model_get (GTK_TREE_MODEL (window->priv->store), &window->priv->iter_popup,
 	                    DATA_COLUMN, &object_popup,
@@ -603,7 +603,7 @@ new_object_activate (GtkWidget *menuitem,
 
 	if (menuitem == window->priv->popup_new_category_menu_item)
 	{
-		GPInstructCategory* category = gpinstruct_category_new ();
+		GPInstructCategory *category = gpinstruct_category_new ();
 		gpinstruct_project_add_category (GPINSTRUCT_PROJECT (object_popup), category);
 
 		title = g_strdup_printf (_("Category: \"%s\""), _("Untitled"));
@@ -616,7 +616,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_lesson_menu_item)
 	{
-		GPInstructLesson* lesson = gpinstruct_lesson_new ();
+		GPInstructLesson *lesson = gpinstruct_lesson_new ();
 		gpinstruct_category_add_lesson (GPINSTRUCT_CATEGORY (object_popup), lesson);
 
 		title = g_strdup_printf (_("Lesson: \"%s\""), _("Untitled"));
@@ -629,7 +629,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_group_menu_item)
 	{
-		GPInstructLessonElementGroup* group = gpinstruct_lesson_element_group_new ();
+		GPInstructLessonElementGroup *group = gpinstruct_lesson_element_group_new ();
 		gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
 		                                      GPINSTRUCT_LESSON_ELEMENT (group));
 
@@ -643,7 +643,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_discussion_menu_item)
 	{
-		GPInstructLessonDiscussion* discussion = gpinstruct_lesson_discussion_new ();
+		GPInstructLessonDiscussion *discussion = gpinstruct_lesson_discussion_new ();
 		if (GPINSTRUCT_IS_LESSON (object_popup))
 			gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
 			                                      GPINSTRUCT_LESSON_ELEMENT (discussion));
@@ -661,7 +661,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_reading_menu_item)
 	{
-		GPInstructLessonReading* reading = gpinstruct_lesson_reading_new ();
+		GPInstructLessonReading *reading = gpinstruct_lesson_reading_new ();
 		if (GPINSTRUCT_IS_LESSON (object_popup))
 			gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
 			                                      GPINSTRUCT_LESSON_ELEMENT (reading));
@@ -679,7 +679,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_test_multi_choice_menu_item)
 	{
-		GPInstructLessonTestMultiChoice* test = gpinstruct_lesson_test_multi_choice_new ();
+		GPInstructLessonTestMultiChoice *test = gpinstruct_lesson_test_multi_choice_new ();
 		if (GPINSTRUCT_IS_LESSON (object_popup))
 			gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
 			                                      GPINSTRUCT_LESSON_ELEMENT (test));
@@ -697,7 +697,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_test_word_pool_menu_item)
 	{
-		GPInstructLessonTestWordPool* test = gpinstruct_lesson_test_word_pool_new ();
+		GPInstructLessonTestWordPool *test = gpinstruct_lesson_test_word_pool_new ();
 		if (GPINSTRUCT_IS_LESSON (object_popup))
 			gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
 			                                      GPINSTRUCT_LESSON_ELEMENT (test));
@@ -715,7 +715,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_test_order_menu_item)
 	{
-		GPInstructLessonTestOrder* test = gpinstruct_lesson_test_order_new ();
+		GPInstructLessonTestOrder *test = gpinstruct_lesson_test_order_new ();
 		if (GPINSTRUCT_IS_LESSON (object_popup))
 			gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
 			                                      GPINSTRUCT_LESSON_ELEMENT (test));
@@ -733,7 +733,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_test_text_menu_item)
 	{
-		GPInstructLessonTestText* test = gpinstruct_lesson_test_text_new ();
+		GPInstructLessonTestText *test = gpinstruct_lesson_test_text_new ();
 		if (GPINSTRUCT_IS_LESSON (object_popup))
 			gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
 			                                      GPINSTRUCT_LESSON_ELEMENT (test));
@@ -751,7 +751,7 @@ new_object_activate (GtkWidget *menuitem,
 	}
 	else if (menuitem == window->priv->popup_new_test_scrambled_menu_item)
 	{
-		GPInstructLessonTestScrambled* test = gpinstruct_lesson_test_scrambled_new ();
+		GPInstructLessonTestScrambled *test = gpinstruct_lesson_test_scrambled_new ();
 		if (GPINSTRUCT_IS_LESSON (object_popup))
 			gpinstruct_lesson_add_lesson_element (GPINSTRUCT_LESSON (object_popup),
 			                                      GPINSTRUCT_LESSON_ELEMENT (test));
@@ -783,8 +783,8 @@ static void
 remove_object_activate (GtkWidget *menuitem,
                         gpointer   user_data)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (user_data);
-	GPInstructObject* object_popup;
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (user_data);
+	GPInstructObject *object_popup;
 	GtkTreeIter iter, iterSel;
 	gboolean select = FALSE;
 
@@ -810,9 +810,9 @@ remove_object_activate (GtkWidget *menuitem,
 			gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view)),
 			                                &iterSel);
 
-		GtkTreePath* path = gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->store),
+		GtkTreePath *path = gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->store),
 		                                             &window->priv->iter_popup);
-		gint* indices = gtk_tree_path_get_indices (path);
+		gint *indices = gtk_tree_path_get_indices (path);
 
 		gtk_tree_model_get (GTK_TREE_MODEL (window->priv->store), &iter,
 		                    DATA_COLUMN, &object_popup,
@@ -864,7 +864,7 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 	object->priv->project_file = NULL;
 	object->priv->modified = FALSE;
 
-	GError* error = NULL;
+	GError *error = NULL;
 
 	GtkActionEntry actions[] =
 	{
@@ -883,7 +883,7 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 		{"help-about", GTK_STOCK_ABOUT, NULL, "F1", NULL, G_CALLBACK (help_about_action)}
 	};
 
-	gchar* ui =
+	gchar *ui =
 		"<ui>"
 		"  <menubar name=\"menubar\">"
 		"    <menu name=\"FileMenu\" action=\"file\">"
@@ -962,10 +962,10 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 		g_error_free (error);
 	}
 
-	GtkWidget* main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
+	GtkWidget *main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), main_menu, FALSE, TRUE, 0);
 
-	GtkWidget* toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
+	GtkWidget *toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
 #if GTK_MAJOR_VERSION >= 3
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
 	                             GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
@@ -1092,7 +1092,7 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 static void
 gpinstruct_editor_window_finalize (GObject *object)
 {
-	GPInstructEditorWindow* window = GPINSTRUCT_EDITOR_WINDOW (object);
+	GPInstructEditorWindow *window = GPINSTRUCT_EDITOR_WINDOW (object);
 
 	if (window->priv->action_group)
 		g_object_unref (window->priv->action_group);
@@ -1111,8 +1111,8 @@ gpinstruct_editor_window_finalize (GObject *object)
 static void
 gpinstruct_editor_window_class_init (GPInstructEditorWindowClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkWindowClass* parent_class = GTK_WINDOW_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkWindowClass *parent_class = GTK_WINDOW_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructEditorWindowPrivate));
 
@@ -1120,41 +1120,41 @@ gpinstruct_editor_window_class_init (GPInstructEditorWindowClass *klass)
 }
 
 
-GtkWidget*
+GtkWidget *
 gpinstruct_editor_window_new (void)
 {
 	return GTK_WIDGET (g_object_new (GPINSTRUCT_TYPE_EDITOR_WINDOW, NULL));
 }
 
-const gchar*
-gpinstruct_editor_window_get_filename (GPInstructEditorWindow* window)
+const gchar *
+gpinstruct_editor_window_get_filename (GPInstructEditorWindow *window)
 {
 	return window->priv->project_file;
 }
 
 static void
-gpinstruct_editor_window_set_filename (GPInstructEditorWindow* window,
-                                       const gchar* file)
+gpinstruct_editor_window_set_filename (GPInstructEditorWindow *window,
+                                       const gchar *file)
 {
 	g_free (window->priv->project_file);
 	window->priv->project_file = g_strdup (file);
 }
 
 gboolean
-gpinstruct_editor_window_get_modified (GPInstructEditorWindow* window)
+gpinstruct_editor_window_get_modified (GPInstructEditorWindow *window)
 {
 	return window->priv->modified;
 }
 
 void
-gpinstruct_editor_window_set_modified (GPInstructEditorWindow* window,
+gpinstruct_editor_window_set_modified (GPInstructEditorWindow *window,
                                        gboolean modified)
 {
-	gchar* title;
+	gchar *title;
 
 	if (window->priv->project)
 	{
-		gchar* file;
+		gchar *file;
 		if (window->priv->project_file)
 			file = g_path_get_basename (window->priv->project_file);
 		else
@@ -1178,7 +1178,7 @@ gpinstruct_editor_window_set_modified (GPInstructEditorWindow* window,
 }
 
 void
-gpinstruct_editor_window_new_file (GPInstructEditorWindow* window)
+gpinstruct_editor_window_new_file (GPInstructEditorWindow *window)
 {
 	if (window->priv->project)
 	{
@@ -1206,10 +1206,10 @@ gpinstruct_editor_window_new_file (GPInstructEditorWindow* window)
 }
 
 void
-gpinstruct_editor_window_open_file (GPInstructEditorWindow* window,
-                                    const gchar* file)
+gpinstruct_editor_window_open_file (GPInstructEditorWindow *window,
+                                    const gchar *file)
 {
-	GError* error = NULL;
+	GError *error = NULL;
 
 	if (window->priv->project)
 	{
@@ -1242,7 +1242,7 @@ gpinstruct_editor_window_open_file (GPInstructEditorWindow* window,
 }
 
 gboolean
-gpinstruct_editor_window_close_current_file (GPInstructEditorWindow* window)
+gpinstruct_editor_window_close_current_file (GPInstructEditorWindow *window)
 {
 	if (window->priv->project == NULL)
 		return FALSE;
@@ -1295,12 +1295,12 @@ gpinstruct_editor_window_close_current_file (GPInstructEditorWindow* window)
 }
 
 gboolean
-gpinstruct_editor_window_save_file (GPInstructEditorWindow* window)
+gpinstruct_editor_window_save_file (GPInstructEditorWindow *window)
 {
 	if (window->priv->project == NULL)
 		return FALSE;
 
-	gchar* filename = NULL;
+	gchar *filename = NULL;
 
 	if (window->priv->project_file == NULL)
 	{
@@ -1335,7 +1335,7 @@ gpinstruct_editor_window_save_file (GPInstructEditorWindow* window)
 	else
 		filename = g_strdup (window->priv->project_file);
 
-	GError* error = NULL;
+	GError *error = NULL;
 
 	gpinstruct_parser_save_to_file (window->priv->parser, window->priv->project, filename, &error);
 
@@ -1360,8 +1360,8 @@ gpinstruct_editor_window_save_file (GPInstructEditorWindow* window)
 }
 
 gboolean
-gpinstruct_editor_window_save_file_as (GPInstructEditorWindow* window,
-                                       const gchar* file)
+gpinstruct_editor_window_save_file_as (GPInstructEditorWindow *window,
+                                       const gchar *file)
 {
 	gpinstruct_editor_window_set_filename (window, file);
 
@@ -1369,8 +1369,8 @@ gpinstruct_editor_window_save_file_as (GPInstructEditorWindow* window,
 }
 
 void
-gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
-                                            GPInstructObject* object)
+gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
+                                            GPInstructObject *object)
 {
 	gtk_tree_store_clear (window->priv->store);
 
@@ -1378,9 +1378,9 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 		return;
 
 	GtkTreeIter iterProject, iterCategory, iterLesson, iterLessonElement, iterLessonElementGroup;
-	gchar* title;
+	gchar *title;
 
-	GPInstructProject* project = window->priv->project;
+	GPInstructProject *project = window->priv->project;
 
 	title = g_strdup_printf (_("Project: \"%s\""), gpinstruct_project_get_title (project));
 	gtk_tree_store_append (window->priv->store, &iterProject, NULL);
@@ -1395,7 +1395,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 
 	while (curr_categories)
 	{
-		GPInstructCategory* category = GPINSTRUCT_CATEGORY (curr_categories->data);
+		GPInstructCategory *category = GPINSTRUCT_CATEGORY (curr_categories->data);
 
 		title = g_strdup_printf (_("Category: \"%s\""), gpinstruct_category_get_title (category));
 		gtk_tree_store_append (window->priv->store, &iterCategory, &iterProject);
@@ -1410,7 +1410,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 
 		while (curr_lessons)
 		{
-			GPInstructLesson* lesson = GPINSTRUCT_LESSON (curr_lessons->data);
+			GPInstructLesson *lesson = GPINSTRUCT_LESSON (curr_lessons->data);
 
 			title = g_strdup_printf (_("Lesson: \"%s\""), gpinstruct_lesson_get_title (lesson));
 			gtk_tree_store_append (window->priv->store, &iterLesson, &iterCategory);
@@ -1425,11 +1425,11 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 
 			while (curr_lesson_elements)
 			{
-				GPInstructLessonElement* lesson_element = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements->data);
+				GPInstructLessonElement *lesson_element = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements->data);
 
 				if (GPINSTRUCT_IS_LESSON_DISCUSSION (lesson_element))
 				{
-					/*GPInstructLessonDiscussion* lesson_discussion = GPINSTRUCT_LESSON_DISCUSSION (lesson_element);*/
+					/*GPInstructLessonDiscussion *lesson_discussion = GPINSTRUCT_LESSON_DISCUSSION (lesson_element);*/
 
 					title = g_strdup_printf (_("Lesson Discussion: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
@@ -1441,7 +1441,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 				}
 				else if (GPINSTRUCT_IS_LESSON_READING (lesson_element))
 				{
-					/*GPInstructLessonReading* lesson_reading = GPINSTRUCT_LESSON_READING (lesson_element);*/
+					/*GPInstructLessonReading *lesson_reading = GPINSTRUCT_LESSON_READING (lesson_element);*/
 
 					title = g_strdup_printf (_("Lesson Reading: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
@@ -1453,7 +1453,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 				}
 				else if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (lesson_element))
 				{
-					/*GPInstructLessonTestMultiChoice* lesson_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (lesson_element);*/
+					/*GPInstructLessonTestMultiChoice *lesson_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (lesson_element);*/
 
 					title = g_strdup_printf (_("Lesson Test (Multi-Choice): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
@@ -1465,7 +1465,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 				}
 				else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (lesson_element))
 				{
-					/*GPInstructLessonTestWordPool* lesson_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (lesson_element);*/
+					/*GPInstructLessonTestWordPool *lesson_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (lesson_element);*/
 
 					title = g_strdup_printf (_("Lesson Test (Word Pool): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
@@ -1477,7 +1477,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 				}
 				else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (lesson_element))
 				{
-					/*GPInstructLessonTestOrder* lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (lesson_element);*/
+					/*GPInstructLessonTestOrder *lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (lesson_element);*/
 
 					title = g_strdup_printf (_("Lesson Test (Order): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
@@ -1489,7 +1489,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 				}
 				else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (lesson_element))
 				{
-					/*GPInstructLessonTestText* lesson_test_text = GPINSTRUCT_LESSON_TEST_TEXT (lesson_element);*/
+					/*GPInstructLessonTestText *lesson_test_text = GPINSTRUCT_LESSON_TEST_TEXT (lesson_element);*/
 
 					title = g_strdup_printf (_("Lesson Test (Text): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
@@ -1501,7 +1501,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 				}
 				else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (lesson_element))
 				{
-					/*GPInstructLessonTestScrambled* lesson_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (lesson_element);*/
+					/*GPInstructLessonTestScrambled *lesson_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (lesson_element);*/
 
 					title = g_strdup_printf (_("Lesson Test (Scrambled): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLesson);
@@ -1513,7 +1513,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 				}
 				else if (GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (lesson_element))
 				{
-					GPInstructLessonElementGroup* lesson_element_group = GPINSTRUCT_LESSON_ELEMENT_GROUP (lesson_element);
+					GPInstructLessonElementGroup *lesson_element_group = GPINSTRUCT_LESSON_ELEMENT_GROUP (lesson_element);
 
 					title = g_strdup_printf (_("Group: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (window->priv->store, &iterLessonElementGroup, &iterLesson);
@@ -1528,11 +1528,11 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 
 					while (curr_lesson_elements_group)
 					{
-						GPInstructLessonElement* lesson_element_group = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements_group->data);
+						GPInstructLessonElement *lesson_element_group = GPINSTRUCT_LESSON_ELEMENT (curr_lesson_elements_group->data);
 
 						if (GPINSTRUCT_IS_LESSON_DISCUSSION (lesson_element_group))
 						{
-							/*GPInstructLessonDiscussion* lesson_discussion = GPINSTRUCT_LESSON_DISCUSSION (lesson_element_group);*/
+							/*GPInstructLessonDiscussion *lesson_discussion = GPINSTRUCT_LESSON_DISCUSSION (lesson_element_group);*/
 
 							title = g_strdup_printf (_("Lesson Discussion: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
@@ -1544,7 +1544,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 						}
 						else if (GPINSTRUCT_IS_LESSON_READING (lesson_element_group))
 						{
-							/*GPInstructLessonReading* lesson_reading = GPINSTRUCT_LESSON_READING (lesson_element_group);*/
+							/*GPInstructLessonReading *lesson_reading = GPINSTRUCT_LESSON_READING (lesson_element_group);*/
 
 							title = g_strdup_printf (_("Lesson Reading: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
@@ -1556,7 +1556,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 						}
 						else if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (lesson_element_group))
 						{
-							/*GPInstructLessonTestMultiChoice* lesson_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (lesson_element_group);*/
+							/*GPInstructLessonTestMultiChoice *lesson_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (lesson_element_group);*/
 
 							title = g_strdup_printf (_("Lesson Test (Multi-Choice): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
@@ -1568,7 +1568,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 						}
 						else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (lesson_element_group))
 						{
-							/*GPInstructLessonTestWordPool* lesson_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (lesson_element_group);*/
+							/*GPInstructLessonTestWordPool *lesson_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (lesson_element_group);*/
 
 							title = g_strdup_printf (_("Lesson Test (Word Pool): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
@@ -1580,7 +1580,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 						}
 						else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (lesson_element_group))
 						{
-							/*GPInstructLessonTestOrder* lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (lesson_element_group);*/
+							/*GPInstructLessonTestOrder *lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (lesson_element_group);*/
 
 							title = g_strdup_printf (_("Lesson Test (Order): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
@@ -1592,7 +1592,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 						}
 						else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (lesson_element_group))
 						{
-							/*GPInstructLessonTestText* lesson_test_text = GPINSTRUCT_LESSON_TEST_TEXT (lesson_element_group);*/
+							/*GPInstructLessonTestText *lesson_test_text = GPINSTRUCT_LESSON_TEST_TEXT (lesson_element_group);*/
 
 							title = g_strdup_printf (_("Lesson Test (Text): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
@@ -1604,7 +1604,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 						}
 						else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (lesson_element_group))
 						{
-							/*GPInstructLessonTestScrambled* lesson_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (lesson_element_group);*/
+							/*GPInstructLessonTestScrambled *lesson_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (lesson_element_group);*/
 
 							title = g_strdup_printf (_("Lesson Test (Scrambled): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (window->priv->store, &iterLessonElement, &iterLessonElementGroup);
@@ -1647,7 +1647,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow* window,
 }
 
 gboolean
-gpinstruct_editor_window_quit (GPInstructEditorWindow* window)
+gpinstruct_editor_window_quit (GPInstructEditorWindow *window)
 {
 	if (window->priv->project)
 	{

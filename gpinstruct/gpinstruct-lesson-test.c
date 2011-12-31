@@ -22,23 +22,23 @@
 
 struct _GPInstructLessonTestPrivate
 {
-	gchar* directions;
+	gchar *directions;
 	gboolean explain;
-	gchar* id;
+	gchar *id;
 };
 
 #define GPINSTRUCT_LESSON_TEST_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST, GPInstructLessonTestPrivate))
 
 
 
-gchar*
+gchar *
 create_id ()
 {
 	static const gint length = 8;
 	static const char lookup_table[] = "0123456789abcdefghijklmnopqrstuvwxyz";
 	static const gint lookup_table_elements = G_N_ELEMENTS (lookup_table);
 
-	gchar* id = g_new (gchar, length+1);
+	gchar *id = g_new (gchar, length+1);
 	id[length] = 0;
 
 	int i;
@@ -65,7 +65,7 @@ gpinstruct_lesson_test_init (GPInstructLessonTest *object)
 static void
 gpinstruct_lesson_test_finalize (GObject *object)
 {
-	GPInstructLessonTest* test = GPINSTRUCT_LESSON_TEST (object);
+	GPInstructLessonTest *test = GPINSTRUCT_LESSON_TEST (object);
 
 	g_free (test->priv->directions);
 	g_free (test->priv->id);
@@ -76,8 +76,8 @@ gpinstruct_lesson_test_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_class_init (GPInstructLessonTestClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonElementClass* parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonElementClass *parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
 
 	klass->answer_is_string = FALSE;
 	klass->get_item = NULL;
@@ -93,41 +93,41 @@ gpinstruct_lesson_test_class_init (GPInstructLessonTestClass *klass)
 }
 
 
-GPInstructLessonTest*
+GPInstructLessonTest *
 gpinstruct_lesson_test_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_TEST, NULL);
 }
 
-const gchar*
-gpinstruct_lesson_test_get_directions (GPInstructLessonTest* test)
+const gchar *
+gpinstruct_lesson_test_get_directions (GPInstructLessonTest *test)
 {
 	return test->priv->directions;
 }
 
 void
-gpinstruct_lesson_test_set_directions (GPInstructLessonTest* test,
-                                       const gchar* directions)
+gpinstruct_lesson_test_set_directions (GPInstructLessonTest *test,
+                                       const gchar *directions)
 {
 	g_free (test->priv->directions);
 	test->priv->directions = g_strdup (directions);
 }
 
 gboolean
-gpinstruct_lesson_test_get_explain (GPInstructLessonTest* test)
+gpinstruct_lesson_test_get_explain (GPInstructLessonTest *test)
 {
 	return test->priv->explain;
 }
 
 void
-gpinstruct_lesson_test_set_explain (GPInstructLessonTest* test,
+gpinstruct_lesson_test_set_explain (GPInstructLessonTest *test,
                                     gboolean explain)
 {
 	test->priv->explain = explain;
 }
 
-const gchar*
-gpinstruct_lesson_test_get_id (GPInstructLessonTest* test)
+const gchar *
+gpinstruct_lesson_test_get_id (GPInstructLessonTest *test)
 {
 	if (test->priv->id == NULL)
 		test->priv->id = create_id ();
@@ -135,18 +135,18 @@ gpinstruct_lesson_test_get_id (GPInstructLessonTest* test)
 }
 
 void
-gpinstruct_lesson_test_set_id (GPInstructLessonTest* test,
-                               const gchar* id)
+gpinstruct_lesson_test_set_id (GPInstructLessonTest *test,
+                               const gchar *id)
 {
 	g_free (test->priv->id);
 	test->priv->id = g_strdup (id);
 }
 
-gchar*
-gpinstruct_lesson_test_get_item (GPInstructLessonTest* test,
+gchar *
+gpinstruct_lesson_test_get_item (GPInstructLessonTest *test,
                                  guint item)
 {
-	gchar*(* get_item) (GPInstructLessonTest* test, guint item) =
+	gchar*(* get_item) (GPInstructLessonTest *test, guint item) =
 		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->get_item;
 	if (get_item)
 		return get_item (test, item);
@@ -154,12 +154,12 @@ gpinstruct_lesson_test_get_item (GPInstructLessonTest* test,
 		return NULL;
 }
 
-gchar*
-gpinstruct_lesson_test_get_choice (GPInstructLessonTest* test,
+gchar *
+gpinstruct_lesson_test_get_choice (GPInstructLessonTest *test,
                                    guint item,
                                    guint choice)
 {
-	gchar*(* get_choice) (GPInstructLessonTest* test, guint item, guint choice) =
+	gchar*(* get_choice) (GPInstructLessonTest *test, guint item, guint choice) =
 		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->get_choice;
 	if (get_choice)
 		return get_choice (test, item, choice);
@@ -168,9 +168,9 @@ gpinstruct_lesson_test_get_choice (GPInstructLessonTest* test,
 }
 
 guint
-gpinstruct_lesson_test_get_items_length (GPInstructLessonTest* test)
+gpinstruct_lesson_test_get_items_length (GPInstructLessonTest *test)
 {
-	guint(* get_items_length) (GPInstructLessonTest* test) =
+	guint(* get_items_length) (GPInstructLessonTest *test) =
 		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->get_items_length;
 	if (get_items_length)
 		return get_items_length (test);
@@ -179,7 +179,7 @@ gpinstruct_lesson_test_get_items_length (GPInstructLessonTest* test)
 }
 
 gboolean
-gpinstruct_lesson_test_get_answer_is_string (GPInstructLessonTest* test)
+gpinstruct_lesson_test_get_answer_is_string (GPInstructLessonTest *test)
 {
 	gboolean answer_is_string =
 		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->answer_is_string;
@@ -187,10 +187,10 @@ gpinstruct_lesson_test_get_answer_is_string (GPInstructLessonTest* test)
 }
 
 guint
-gpinstruct_lesson_test_get_choices_length (GPInstructLessonTest* test,
+gpinstruct_lesson_test_get_choices_length (GPInstructLessonTest *test,
                                            guint item)
 {
-	guint(* get_choices_length) (GPInstructLessonTest* test, guint item) =
+	guint(* get_choices_length) (GPInstructLessonTest *test, guint item) =
 		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->get_choices_length;
 	if (get_choices_length)
 		return get_choices_length (test, item);
@@ -199,10 +199,10 @@ gpinstruct_lesson_test_get_choices_length (GPInstructLessonTest* test,
 }
 
 guint
-gpinstruct_lesson_test_get_item_correct_choice (GPInstructLessonTest* test,
+gpinstruct_lesson_test_get_item_correct_choice (GPInstructLessonTest *test,
                                                 guint item)
 {
-	guint(* get_item_correct_choice) (GPInstructLessonTest* test, guint item) =
+	guint(* get_item_correct_choice) (GPInstructLessonTest *test, guint item) =
 		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->get_item_correct_choice;
 	if (get_item_correct_choice)
 		return get_item_correct_choice (test, item);
@@ -210,11 +210,11 @@ gpinstruct_lesson_test_get_item_correct_choice (GPInstructLessonTest* test,
 		return 0;
 }
 
-gchar*
-gpinstruct_lesson_test_get_item_correct_string (GPInstructLessonTest* test,
+gchar *
+gpinstruct_lesson_test_get_item_correct_string (GPInstructLessonTest *test,
                                                 guint item)
 {
-	gchar*(* get_item_correct_string) (GPInstructLessonTest* test, guint item) =
+	gchar*(* get_item_correct_string) (GPInstructLessonTest *test, guint item) =
 		GPINSTRUCT_LESSON_TEST_GET_CLASS (test)->get_item_correct_string;
 	if (get_item_correct_string)
 		return get_item_correct_string (test, item);

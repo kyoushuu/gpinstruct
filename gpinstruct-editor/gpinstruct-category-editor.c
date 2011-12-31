@@ -26,11 +26,11 @@
 
 struct _GPInstructCategoryEditorPrivate
 {
-	GPInstructEditorWindow* window;
-	GPInstructCategory* category;
+	GPInstructEditorWindow *window;
+	GPInstructCategory *category;
 
-	GtkWidget* title_label;
-	GtkWidget* title_entry;
+	GtkWidget *title_label;
+	GtkWidget *title_entry;
 };
 
 #define GPINSTRUCT_CATEGORY_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_CATEGORY_EDITOR, GPInstructCategoryEditorPrivate))
@@ -65,8 +65,8 @@ gpinstruct_category_editor_finalize (GObject *object)
 static void
 gpinstruct_category_editor_class_init (GPInstructCategoryEditorClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectEditorClass *parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructCategoryEditorPrivate));
 
@@ -78,7 +78,7 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	GPInstructCategoryEditor* editor = GPINSTRUCT_CATEGORY_EDITOR (user_data);
+	GPInstructCategoryEditor *editor = GPINSTRUCT_CATEGORY_EDITOR (user_data);
 
 	gpinstruct_category_set_title (editor->priv->category,
 	                               gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
@@ -87,11 +87,11 @@ title_entry_activate (GtkEntry *entry,
 }
 
 
-GPInstructCategoryEditor*
-gpinstruct_category_editor_new (GPInstructEditorWindow* window,
-                                GPInstructCategory* category)
+GPInstructCategoryEditor *
+gpinstruct_category_editor_new (GPInstructEditorWindow *window,
+                                GPInstructCategory *category)
 {
-	GPInstructCategoryEditor* editor = g_object_new (GPINSTRUCT_TYPE_CATEGORY_EDITOR, NULL);
+	GPInstructCategoryEditor *editor = g_object_new (GPINSTRUCT_TYPE_CATEGORY_EDITOR, NULL);
 
 	editor->priv->window = window;
 	editor->priv->category = category;

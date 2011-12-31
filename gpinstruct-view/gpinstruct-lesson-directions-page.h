@@ -44,7 +44,7 @@ struct _GPInstructLessonDirectionsPage
 };
 
 GType gpinstruct_lesson_directions_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonDirectionsPage* gpinstruct_lesson_directions_page_new (const gchar* title, const gchar* text);
+GPInstructLessonDirectionsPage *gpinstruct_lesson_directions_page_new (const gchar *title, const gchar *text);
 
 G_END_DECLS
 

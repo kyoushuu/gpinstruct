@@ -28,23 +28,23 @@
 
 struct _GPInstructLessonTestMultiChoiceEditorPrivate
 {
-	GPInstructEditorWindow* window;
-	GPInstructLessonTestMultiChoice* test;
+	GPInstructEditorWindow *window;
+	GPInstructLessonTestMultiChoice *test;
 
-	GtkWidget* title_label;
-	GtkWidget* title_entry;
+	GtkWidget *title_label;
+	GtkWidget *title_entry;
 
-	GtkWidget* directions_label;
-	GtkWidget* directions_view;
+	GtkWidget *directions_label;
+	GtkWidget *directions_view;
 
-	GtkWidget* explain_label;
-	GtkWidget* explain_switch;
+	GtkWidget *explain_label;
+	GtkWidget *explain_switch;
 
-	GtkWidget* questions_tree_view;
-	GtkListStore* questions_store;
+	GtkWidget *questions_tree_view;
+	GtkListStore *questions_store;
 
-	GtkWidget* choices_tree_view;
-	GtkListStore* choices_store;
+	GtkWidget *choices_tree_view;
+	GtkListStore *choices_store;
 };
 
 #define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_EDITOR, GPInstructLessonTestMultiChoiceEditorPrivate))
@@ -58,19 +58,19 @@ enum
 };
 
 static void
-update_questions_tree_view (GPInstructLessonTestMultiChoiceEditor* editor)
+update_questions_tree_view (GPInstructLessonTestMultiChoiceEditor *editor)
 {
 	gtk_list_store_clear (editor->priv->questions_store);
 
 	GtkTreeIter iterQuestion;
-	const gchar* text;
+	const gchar *text;
 
-	GList* questions = gpinstruct_lesson_test_multi_choice_get_questions (editor->priv->test);
-	GList* curr_questions = questions;
+	GList *questions = gpinstruct_lesson_test_multi_choice_get_questions (editor->priv->test);
+	GList *curr_questions = questions;
 
 	while (curr_questions)
 	{
-		GPInstructLessonTestMultiChoiceQuestion* question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (curr_questions->data);
+		GPInstructLessonTestMultiChoiceQuestion *question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (curr_questions->data);
 
 		text = gpinstruct_lesson_test_multi_choice_question_get_text (question);
 		gtk_list_store_append (editor->priv->questions_store, &iterQuestion);
@@ -92,9 +92,9 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
                                    GtkTreeViewColumn *column,
                                    gpointer           user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
-	GPInstructObject* object;
+	GPInstructObject *object;
 	GtkTreeIter iter;
 	GtkWidget *scrolled_window, *text_view, *explanation_view, *answer_combobox;
 
@@ -105,16 +105,16 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 		                    -1);
 		if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE_QUESTION (object))
 		{
-			GPInstructLessonTestMultiChoiceQuestion* question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
+			GPInstructLessonTestMultiChoiceQuestion *question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
 			guint choices_num = gpinstruct_lesson_test_multi_choice_question_get_choices_length (question);
 
-			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Question Properties"),
+			GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Question Properties"),
 			                                                 GTK_WINDOW (editor->priv->window),
 			                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
 			                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 			                                                 NULL);
-			GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+			GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 			gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
 
 			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -171,7 +171,7 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 			if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 			{
 				GtkTextIter start, end;
-				gchar* text;
+				gchar *text;
 
 				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
 				                            &start, &end);
@@ -207,9 +207,9 @@ static void
 questions_add_button_clicked (GtkButton *button,
                               gpointer   user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
-	GPInstructLessonTestMultiChoiceQuestion* question;
+	GPInstructLessonTestMultiChoiceQuestion *question;
 	GtkTreeIter iter;
 
 	question = gpinstruct_lesson_test_multi_choice_question_new ();
@@ -232,7 +232,7 @@ static void
 questions_remove_button_clicked (GtkButton *button,
                                  gpointer   user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
 	GtkTreeIter iter, iterSel;
@@ -269,9 +269,9 @@ questions_remove_button_clicked (GtkButton *button,
 
 
 static gpointer
-questions_tree_view_get_current_data (GPInstructLessonTestMultiChoiceEditor* editor)
+questions_tree_view_get_current_data (GPInstructLessonTestMultiChoiceEditor *editor)
 {
-	GPInstructObject* object;
+	GPInstructObject *object;
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
 
@@ -289,19 +289,19 @@ questions_tree_view_get_current_data (GPInstructLessonTestMultiChoiceEditor* edi
 
 
 static void
-update_choices_tree_view (GPInstructLessonTestMultiChoiceEditor* editor)
+update_choices_tree_view (GPInstructLessonTestMultiChoiceEditor *editor)
 {
 	gtk_list_store_clear (editor->priv->choices_store);
 
 	GtkTreeIter iterChoice;
-	const gchar* text;
+	const gchar *text;
 
-	GPInstructLessonTestMultiChoiceQuestion* question = questions_tree_view_get_current_data (editor);
+	GPInstructLessonTestMultiChoiceQuestion *question = questions_tree_view_get_current_data (editor);
 
 	if (question)
 	{
-		GList* choices = gpinstruct_lesson_test_multi_choice_question_get_choices (question);
-		GList* curr_choices = choices;
+		GList *choices = gpinstruct_lesson_test_multi_choice_question_get_choices (question);
+		GList *curr_choices = choices;
 
 		while (curr_choices)
 		{
@@ -327,9 +327,9 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
                                  GtkTreeViewColumn *column,
                                  gpointer           user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
-	GPInstructObject* object;
+	GPInstructObject *object;
 	GtkTreeIter iter;
 	GtkWidget *scrolled_window, *text_view;
 
@@ -339,15 +339,15 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
 		if (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE_QUESTION (object))
 		{
 			guint choice = gtk_tree_path_get_indices (path)[0];
-			GPInstructLessonTestMultiChoiceQuestion* question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
+			GPInstructLessonTestMultiChoiceQuestion *question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
 
-			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Choice Properties"),
+			GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Choice Properties"),
 			                                                 GTK_WINDOW (editor->priv->window),
 			                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
 			                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 			                                                 NULL);
-			GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+			GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 			gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
 
 			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -372,7 +372,7 @@ choices_tree_view_row_activated (GtkTreeView       *tree_view,
 				GtkTextIter start, end;
 				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
 				                            &start, &end);
-				gchar* text = gtk_text_iter_get_text (&start, &end);
+				gchar *text = gtk_text_iter_get_text (&start, &end);
 				gpinstruct_lesson_test_multi_choice_question_set_choice (question, choice, text);
 				g_free (text);
 
@@ -395,9 +395,9 @@ static void
 choices_add_button_clicked (GtkButton *button,
                             gpointer   user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
-	GPInstructLessonTestMultiChoiceQuestion* question;
+	GPInstructLessonTestMultiChoiceQuestion *question;
 	GtkTreeSelection *selection;
 	GtkTreeIter iter;
 
@@ -428,9 +428,9 @@ static void
 choices_remove_button_clicked (GtkButton *button,
                                gpointer   user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
-	GPInstructLessonTestMultiChoiceQuestion* question;
+	GPInstructLessonTestMultiChoiceQuestion *question;
 	GtkTreeSelection *selection;
 	GtkTreeIter iter, iterSel;
 	GtkTreePath *path;
@@ -507,7 +507,7 @@ gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoice
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	GtkWidget* directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	object->priv->directions_view = gtk_text_view_new ();
@@ -530,13 +530,13 @@ gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoice
 	                  3, 3);
 
 
-	GtkWidget* questions_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *questions_hbox = gtk_hbox_new (FALSE, 3);
 	gtk_table_attach (GTK_TABLE (object), questions_hbox,
 	                  0, 2, 3, 4,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
 	                  3, 3);
 
-	GtkWidget* questions_tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *questions_tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (questions_tree_view_scrolled_window),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_tree_view_scrolled_window, TRUE, TRUE, 0);
@@ -548,31 +548,31 @@ gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoice
 	g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (object->priv->questions_tree_view)), "changed", G_CALLBACK (questions_tree_selection_changed), object);
 	gtk_container_add (GTK_CONTAINER (questions_tree_view_scrolled_window), object->priv->questions_tree_view);
 
-	GtkTreeViewColumn* questions_column = gtk_tree_view_column_new_with_attributes (_("Questions:"), gtk_cell_renderer_text_new (),
+	GtkTreeViewColumn *questions_column = gtk_tree_view_column_new_with_attributes (_("Questions:"), gtk_cell_renderer_text_new (),
 	                                                                                "text", 0,
 	                                                                                NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (object->priv->questions_tree_view), questions_column);
 
-	GtkWidget* questions_buttonbox = gtk_vbutton_box_new ();
+	GtkWidget *questions_buttonbox = gtk_vbutton_box_new ();
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (questions_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_buttonbox, FALSE, TRUE, 0);
 
-	GtkWidget* questions_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
+	GtkWidget *questions_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (questions_add_button, "clicked", G_CALLBACK (questions_add_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (questions_buttonbox), questions_add_button, FALSE, TRUE, 0);
 
-	GtkWidget* questions_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
+	GtkWidget *questions_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
 	g_signal_connect (questions_remove_button, "clicked", G_CALLBACK (questions_remove_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (questions_buttonbox), questions_remove_button, FALSE, TRUE, 0);
 
 
-	GtkWidget* choices_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *choices_hbox = gtk_hbox_new (FALSE, 3);
 	gtk_table_attach (GTK_TABLE (object), choices_hbox,
 	                  0, 2, 4, 5,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
 	                  3, 3);
 
-	GtkWidget* choices_tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *choices_tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (choices_tree_view_scrolled_window),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start (GTK_BOX (choices_hbox), choices_tree_view_scrolled_window, TRUE, TRUE, 0);
@@ -583,20 +583,20 @@ gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoice
 	g_signal_connect (object->priv->choices_tree_view, "row-activated", G_CALLBACK (choices_tree_view_row_activated), object);
 	gtk_container_add (GTK_CONTAINER (choices_tree_view_scrolled_window), object->priv->choices_tree_view);
 
-	GtkTreeViewColumn* choices_column = gtk_tree_view_column_new_with_attributes (_("Choices:"), gtk_cell_renderer_text_new (),
+	GtkTreeViewColumn *choices_column = gtk_tree_view_column_new_with_attributes (_("Choices:"), gtk_cell_renderer_text_new (),
 	                                                                              "text", 0,
 	                                                                              NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (object->priv->choices_tree_view), choices_column);
 
-	GtkWidget* choices_buttonbox = gtk_vbutton_box_new ();
+	GtkWidget *choices_buttonbox = gtk_vbutton_box_new ();
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (choices_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (choices_hbox), choices_buttonbox, FALSE, TRUE, 0);
 
-	GtkWidget* choices_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
+	GtkWidget *choices_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (choices_add_button, "clicked", G_CALLBACK (choices_add_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (choices_buttonbox), choices_add_button, FALSE, TRUE, 0);
 
-	GtkWidget* choices_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
+	GtkWidget *choices_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
 	g_signal_connect (choices_remove_button, "clicked", G_CALLBACK (choices_remove_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (choices_buttonbox), choices_remove_button, FALSE, TRUE, 0);
 }
@@ -604,7 +604,7 @@ gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoice
 static void
 gpinstruct_lesson_test_multi_choice_editor_finalize (GObject *object)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (object);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (object);
 
 	if (editor->priv->questions_store)
 		g_object_unref (editor->priv->questions_store);
@@ -618,8 +618,8 @@ gpinstruct_lesson_test_multi_choice_editor_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_multi_choice_editor_class_init (GPInstructLessonTestMultiChoiceEditorClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectEditorClass *parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestMultiChoiceEditorPrivate));
 
@@ -631,7 +631,7 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (editor->priv->test),
 	                                     gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
@@ -643,10 +643,10 @@ static void
 directions_buffer_changed (GtkTextBuffer *textbuffer,
                            gpointer       user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	GtkTextIter start, end;
-	gchar* text;
+	gchar *text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
 	gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (editor->priv->test),
@@ -660,7 +660,7 @@ explain_activate (GObject    *gobject,
                   GParamSpec *pspec,
                   gpointer    user_data)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
+	GPInstructLessonTestMultiChoiceEditor *editor = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR (user_data);
 
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->explain_switch));
 
@@ -673,11 +673,11 @@ explain_activate (GObject    *gobject,
 }
 
 
-GPInstructLessonTestMultiChoiceEditor*
-gpinstruct_lesson_test_multi_choice_editor_new (GPInstructEditorWindow* window,
+GPInstructLessonTestMultiChoiceEditor *
+gpinstruct_lesson_test_multi_choice_editor_new (GPInstructEditorWindow *window,
                                                 GPInstructLessonTestMultiChoice *test)
 {
-	GPInstructLessonTestMultiChoiceEditor* editor = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_EDITOR, NULL);
+	GPInstructLessonTestMultiChoiceEditor *editor = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_EDITOR, NULL);
 
 	editor->priv->window = window;
 	editor->priv->test = test;
@@ -687,7 +687,7 @@ gpinstruct_lesson_test_multi_choice_editor_new (GPInstructEditorWindow* window,
 	g_signal_connect (editor->priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
-	GtkTextBuffer* buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->directions_view));
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->directions_view));
 	gtk_text_buffer_set_text (buffer,
 	                          gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)), -1);
 	g_signal_connect (buffer, "changed",

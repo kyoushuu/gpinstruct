@@ -43,13 +43,13 @@ struct _GPInstructLessonReading
 {
 	GPInstructLessonElement parent_instance;
 
-	GPInstructLessonReadingPrivate* priv;
+	GPInstructLessonReadingPrivate *priv;
 };
 
 GType gpinstruct_lesson_reading_get_type (void) G_GNUC_CONST;
-GPInstructLessonReading* gpinstruct_lesson_reading_new (void);
-const gchar* gpinstruct_lesson_reading_get_text (GPInstructLessonReading* reading);
-void gpinstruct_lesson_reading_set_text (GPInstructLessonReading* reading, const gchar* text);
+GPInstructLessonReading *gpinstruct_lesson_reading_new (void);
+const gchar *gpinstruct_lesson_reading_get_text (GPInstructLessonReading *reading);
+void gpinstruct_lesson_reading_set_text (GPInstructLessonReading *reading, const gchar *text);
 
 G_END_DECLS
 

@@ -43,16 +43,16 @@ struct _GPInstructLessonScore
 {
 	GPInstructLessonElement parent_instance;
 
-	GPInstructLessonScorePrivate* priv;
+	GPInstructLessonScorePrivate *priv;
 };
 
 GType gpinstruct_lesson_score_get_type (void) G_GNUC_CONST;
-GPInstructLessonScore* gpinstruct_lesson_score_new (void);
-void gpinstruct_lesson_score_increase_total (GPInstructLessonScore* score);
-guint gpinstruct_lesson_score_get_total (GPInstructLessonScore* score);
-void gpinstruct_lesson_score_increase_score (GPInstructLessonScore* score);
-guint gpinstruct_lesson_score_get_score (GPInstructLessonScore* score);
-void gpinstruct_lesson_score_clear (GPInstructLessonScore* score);
+GPInstructLessonScore *gpinstruct_lesson_score_new (void);
+void gpinstruct_lesson_score_increase_total (GPInstructLessonScore *score);
+guint gpinstruct_lesson_score_get_total (GPInstructLessonScore *score);
+void gpinstruct_lesson_score_increase_score (GPInstructLessonScore *score);
+guint gpinstruct_lesson_score_get_score (GPInstructLessonScore *score);
+void gpinstruct_lesson_score_clear (GPInstructLessonScore *score);
 
 G_END_DECLS
 

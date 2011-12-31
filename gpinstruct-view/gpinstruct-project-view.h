@@ -43,11 +43,11 @@ struct _GPInstructProjectView
 {
 	GtkWindow parent_instance;
 
-	GPInstructProjectViewPrivate* priv;
+	GPInstructProjectViewPrivate *priv;
 };
 
 GType gpinstruct_project_view_get_type (void) G_GNUC_CONST;
-GtkWidget* gpinstruct_project_view_new (GPInstructProject* project, GPInstructMessagePool* pool, GPInstructLog* log);
+GtkWidget *gpinstruct_project_view_new (GPInstructProject *project, GPInstructMessagePool *pool, GPInstructLog *log);
 
 G_END_DECLS
 

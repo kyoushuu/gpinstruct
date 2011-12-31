@@ -28,20 +28,20 @@
 
 struct _GPInstructLessonTestScrambledEditorPrivate
 {
-	GPInstructEditorWindow* window;
-	GPInstructLessonTestScrambled* test;
+	GPInstructEditorWindow *window;
+	GPInstructLessonTestScrambled *test;
 
-	GtkWidget* title_label;
-	GtkWidget* title_entry;
+	GtkWidget *title_label;
+	GtkWidget *title_entry;
 
-	GtkWidget* directions_label;
-	GtkWidget* directions_view;
+	GtkWidget *directions_label;
+	GtkWidget *directions_view;
 
-	GtkWidget* explain_label;
-	GtkWidget* explain_switch;
+	GtkWidget *explain_label;
+	GtkWidget *explain_switch;
 
-	GtkWidget* questions_tree_view;
-	GtkListStore* questions_store;
+	GtkWidget *questions_tree_view;
+	GtkListStore *questions_store;
 };
 
 #define GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_EDITOR, GPInstructLessonTestScrambledEditorPrivate))
@@ -55,19 +55,19 @@ enum
 };
 
 static void
-update_questions_tree_view (GPInstructLessonTestScrambledEditor* editor)
+update_questions_tree_view (GPInstructLessonTestScrambledEditor *editor)
 {
 	gtk_list_store_clear (editor->priv->questions_store);
 
 	GtkTreeIter iterQuestion;
-	const gchar* text;
+	const gchar *text;
 
-	GList* questions = gpinstruct_lesson_test_scrambled_get_questions (editor->priv->test);
-	GList* curr_questions = questions;
+	GList *questions = gpinstruct_lesson_test_scrambled_get_questions (editor->priv->test);
+	GList *curr_questions = questions;
 
 	while (curr_questions)
 	{
-		GPInstructLessonTestScrambledQuestion* question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (curr_questions->data);
+		GPInstructLessonTestScrambledQuestion *question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (curr_questions->data);
 
 		text = gpinstruct_lesson_test_scrambled_question_get_text (question);
 		gtk_list_store_append (editor->priv->questions_store, &iterQuestion);
@@ -91,9 +91,9 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
                                    GtkTreeViewColumn *column,
                                    gpointer           user_data)
 {
-	GPInstructLessonTestScrambledEditor* editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
+	GPInstructLessonTestScrambledEditor *editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
 
-	GPInstructObject* object;
+	GPInstructObject *object;
 	GtkTreeIter iter;
 	GtkWidget *scrolled_window, *text_view, *explanation_view, *answer_view;
 
@@ -104,15 +104,15 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 		                    -1);
 		if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED_QUESTION (object))
 		{
-			GPInstructLessonTestScrambledQuestion* question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (object);
+			GPInstructLessonTestScrambledQuestion *question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (object);
 
-			GtkWidget* dialog = gtk_dialog_new_with_buttons (_("Question Properties"),
+			GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Question Properties"),
 			                                                 GTK_WINDOW (editor->priv->window),
 			                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
 			                                                 GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 			                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 			                                                 NULL);
-			GtkWidget* content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+			GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 			gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 300);
 
 			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -171,7 +171,7 @@ questions_tree_view_row_activated (GtkTreeView       *tree_view,
 
 				gtk_text_buffer_get_bounds (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
 				                            &start, &end);
-				gchar* text = gtk_text_iter_get_text (&start, &end);
+				gchar *text = gtk_text_iter_get_text (&start, &end);
 				gpinstruct_lesson_test_scrambled_question_set_text (question, text);
 				g_free (text);
 
@@ -205,9 +205,9 @@ static void
 questions_add_button_clicked (GtkButton *button,
                               gpointer   user_data)
 {
-	GPInstructLessonTestScrambledEditor* editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
+	GPInstructLessonTestScrambledEditor *editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
 
-	GPInstructLessonTestScrambledQuestion* question;
+	GPInstructLessonTestScrambledQuestion *question;
 	GtkTreeIter iter;
 
 	question = gpinstruct_lesson_test_scrambled_question_new ();
@@ -230,7 +230,7 @@ static void
 questions_remove_button_clicked (GtkButton *button,
                                  gpointer   user_data)
 {
-	GPInstructLessonTestScrambledEditor* editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
+	GPInstructLessonTestScrambledEditor *editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
 
 	GtkTreeSelection *selection;
 	GtkTreeIter iter, iterSel;
@@ -291,7 +291,7 @@ gpinstruct_lesson_test_scrambled_editor_init (GPInstructLessonTestScrambledEdito
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	GtkWidget* directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	object->priv->directions_view = gtk_text_view_new ();
@@ -313,13 +313,13 @@ gpinstruct_lesson_test_scrambled_editor_init (GPInstructLessonTestScrambledEdito
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	GtkWidget* questions_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *questions_hbox = gtk_hbox_new (FALSE, 3);
 	gtk_table_attach (GTK_TABLE (object), questions_hbox,
 	                  0, 2, 3, 4,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
 	                  3, 3);
 
-	GtkWidget* questions_tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *questions_tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (questions_tree_view_scrolled_window),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_tree_view_scrolled_window, TRUE, TRUE, 0);
@@ -330,20 +330,20 @@ gpinstruct_lesson_test_scrambled_editor_init (GPInstructLessonTestScrambledEdito
 	g_signal_connect (object->priv->questions_tree_view, "row-activated", G_CALLBACK (questions_tree_view_row_activated), object);
 	gtk_container_add (GTK_CONTAINER (questions_tree_view_scrolled_window), object->priv->questions_tree_view);
 
-	GtkTreeViewColumn* questions_column = gtk_tree_view_column_new_with_attributes (_("Questions:"), gtk_cell_renderer_text_new (),
+	GtkTreeViewColumn *questions_column = gtk_tree_view_column_new_with_attributes (_("Questions:"), gtk_cell_renderer_text_new (),
 	                                                                                "text", 0,
 	                                                                                NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (object->priv->questions_tree_view), questions_column);
 
-	GtkWidget* questions_buttonbox = gtk_vbutton_box_new ();
+	GtkWidget *questions_buttonbox = gtk_vbutton_box_new ();
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (questions_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_buttonbox, FALSE, TRUE, 0);
 
-	GtkWidget* questions_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
+	GtkWidget *questions_add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
 	g_signal_connect (questions_add_button, "clicked", G_CALLBACK (questions_add_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (questions_buttonbox), questions_add_button, FALSE, TRUE, 0);
 
-	GtkWidget* questions_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
+	GtkWidget *questions_remove_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
 	g_signal_connect (questions_remove_button, "clicked", G_CALLBACK (questions_remove_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (questions_buttonbox), questions_remove_button, FALSE, TRUE, 0);
 }
@@ -351,7 +351,7 @@ gpinstruct_lesson_test_scrambled_editor_init (GPInstructLessonTestScrambledEdito
 static void
 gpinstruct_lesson_test_scrambled_editor_finalize (GObject *object)
 {
-	GPInstructLessonTestScrambledEditor* editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (object);
+	GPInstructLessonTestScrambledEditor *editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (object);
 
 	if (editor->priv->questions_store)
 		g_object_unref (editor->priv->questions_store);
@@ -362,8 +362,8 @@ gpinstruct_lesson_test_scrambled_editor_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_scrambled_editor_class_init (GPInstructLessonTestScrambledEditorClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectEditorClass *parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestScrambledEditorPrivate));
 
@@ -375,7 +375,7 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	GPInstructLessonTestScrambledEditor* editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
+	GPInstructLessonTestScrambledEditor *editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
 
 	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (editor->priv->test),
 	                                     gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
@@ -387,10 +387,10 @@ static void
 directions_buffer_changed (GtkTextBuffer *textbuffer,
                            gpointer       user_data)
 {
-	GPInstructLessonTestScrambledEditor* editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
+	GPInstructLessonTestScrambledEditor *editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
 
 	GtkTextIter start, end;
-	gchar* text;
+	gchar *text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
 	gpinstruct_lesson_test_set_directions (GPINSTRUCT_LESSON_TEST (editor->priv->test),
@@ -404,7 +404,7 @@ explain_activate (GObject    *gobject,
                   GParamSpec *pspec,
                   gpointer    user_data)
 {
-	GPInstructLessonTestScrambledEditor* editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
+	GPInstructLessonTestScrambledEditor *editor = GPINSTRUCT_LESSON_TEST_SCRAMBLED_EDITOR (user_data);
 
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->explain_switch));
 
@@ -417,11 +417,11 @@ explain_activate (GObject    *gobject,
 }
 
 
-GPInstructLessonTestScrambledEditor*
-gpinstruct_lesson_test_scrambled_editor_new (GPInstructEditorWindow* window,
+GPInstructLessonTestScrambledEditor *
+gpinstruct_lesson_test_scrambled_editor_new (GPInstructEditorWindow *window,
                                              GPInstructLessonTestScrambled *test)
 {
-	GPInstructLessonTestScrambledEditor* editor = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_EDITOR, NULL);
+	GPInstructLessonTestScrambledEditor *editor = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_SCRAMBLED_EDITOR, NULL);
 
 	editor->priv->window = window;
 	editor->priv->test = test;
@@ -431,7 +431,7 @@ gpinstruct_lesson_test_scrambled_editor_new (GPInstructEditorWindow* window,
 	g_signal_connect (editor->priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
-	GtkTextBuffer* buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->directions_view));
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->directions_view));
 	gtk_text_buffer_set_text (buffer,
 	                          gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)), -1);
 	g_signal_connect (buffer, "changed",

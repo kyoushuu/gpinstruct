@@ -43,13 +43,13 @@ struct _GPInstructLessonElement
 {
 	GPInstructObject parent_instance;
 
-	GPInstructLessonElementPrivate* priv;
+	GPInstructLessonElementPrivate *priv;
 };
 
 GType gpinstruct_lesson_element_get_type (void) G_GNUC_CONST;
-GPInstructLessonElement* gpinstruct_lesson_element_new (void);
-const gchar* gpinstruct_lesson_element_get_title (GPInstructLessonElement* element);
-void gpinstruct_lesson_element_set_title (GPInstructLessonElement* element, const gchar *title);
+GPInstructLessonElement *gpinstruct_lesson_element_new (void);
+const gchar *gpinstruct_lesson_element_get_title (GPInstructLessonElement *element);
+void gpinstruct_lesson_element_set_title (GPInstructLessonElement *element, const gchar *title);
 
 G_END_DECLS
 

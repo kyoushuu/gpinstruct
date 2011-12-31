@@ -22,7 +22,7 @@
 
 struct _GPInstructLessonTestOrderItemPrivate
 {
-	gchar* text;
+	gchar *text;
 	guint answer;
 };
 
@@ -44,7 +44,7 @@ gpinstruct_lesson_test_order_item_init (GPInstructLessonTestOrderItem *object)
 static void
 gpinstruct_lesson_test_order_item_finalize (GObject *object)
 {
-	GPInstructLessonTestOrderItem* item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (object);
+	GPInstructLessonTestOrderItem *item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (object);
 
 	g_free (item->priv->text);
 
@@ -54,8 +54,8 @@ gpinstruct_lesson_test_order_item_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_order_item_class_init (GPInstructLessonTestOrderItemClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectClass *parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestOrderItemPrivate));
 
@@ -63,34 +63,34 @@ gpinstruct_lesson_test_order_item_class_init (GPInstructLessonTestOrderItemClass
 }
 
 
-GPInstructLessonTestOrderItem*
+GPInstructLessonTestOrderItem *
 gpinstruct_lesson_test_order_item_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_ORDER_ITEM, NULL);
 }
 
-const gchar*
-gpinstruct_lesson_test_order_item_get_text (GPInstructLessonTestOrderItem* item)
+const gchar *
+gpinstruct_lesson_test_order_item_get_text (GPInstructLessonTestOrderItem *item)
 {
 	return item->priv->text;
 }
 
 void
-gpinstruct_lesson_test_order_item_set_text (GPInstructLessonTestOrderItem* item,
-                                            const gchar* text)
+gpinstruct_lesson_test_order_item_set_text (GPInstructLessonTestOrderItem *item,
+                                            const gchar *text)
 {
 	g_free (item->priv->text);
 	item->priv->text = g_strdup (text);
 }
 
 guint
-gpinstruct_lesson_test_order_item_get_answer (GPInstructLessonTestOrderItem* item)
+gpinstruct_lesson_test_order_item_get_answer (GPInstructLessonTestOrderItem *item)
 {
 	return item->priv->answer;
 }
 
 void
-gpinstruct_lesson_test_order_item_set_answer (GPInstructLessonTestOrderItem* item,
+gpinstruct_lesson_test_order_item_set_answer (GPInstructLessonTestOrderItem *item,
                                               guint answer)
 {
 	item->priv->answer = answer;

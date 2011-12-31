@@ -22,7 +22,7 @@
 
 struct _GPInstructLessonElementPrivate
 {
-	gchar* title;
+	gchar *title;
 };
 
 #define GPINSTRUCT_LESSON_ELEMENT_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT, GPInstructLessonElementPrivate))
@@ -42,7 +42,7 @@ gpinstruct_lesson_element_init (GPInstructLessonElement *object)
 static void
 gpinstruct_lesson_element_finalize (GObject *object)
 {
-	GPInstructLessonElement* element = GPINSTRUCT_LESSON_ELEMENT (object);
+	GPInstructLessonElement *element = GPINSTRUCT_LESSON_ELEMENT (object);
 
 	g_free (element->priv->title);
 
@@ -52,8 +52,8 @@ gpinstruct_lesson_element_finalize (GObject *object)
 static void
 gpinstruct_lesson_element_class_init (GPInstructLessonElementClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectClass *parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonElementPrivate));
 
@@ -61,20 +61,20 @@ gpinstruct_lesson_element_class_init (GPInstructLessonElementClass *klass)
 }
 
 
-GPInstructLessonElement*
+GPInstructLessonElement *
 gpinstruct_lesson_element_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_ELEMENT, NULL);
 }
 
-const gchar*
-gpinstruct_lesson_element_get_title (GPInstructLessonElement* element)
+const gchar *
+gpinstruct_lesson_element_get_title (GPInstructLessonElement *element)
 {
 	return element->priv->title;
 }
 
 void
-gpinstruct_lesson_element_set_title (GPInstructLessonElement* element,
+gpinstruct_lesson_element_set_title (GPInstructLessonElement *element,
                                      const gchar *title)
 {
 	g_free (element->priv->title);

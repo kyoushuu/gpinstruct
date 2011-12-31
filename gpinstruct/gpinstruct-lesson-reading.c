@@ -22,7 +22,7 @@
 
 struct _GPInstructLessonReadingPrivate
 {
-	gchar* text;
+	gchar *text;
 };
 
 #define GPINSTRUCT_LESSON_READING_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_READING, GPInstructLessonReadingPrivate))
@@ -42,7 +42,7 @@ gpinstruct_lesson_reading_init (GPInstructLessonReading *object)
 static void
 gpinstruct_lesson_reading_finalize (GObject *object)
 {
-	GPInstructLessonReading* reading = GPINSTRUCT_LESSON_READING (object);
+	GPInstructLessonReading *reading = GPINSTRUCT_LESSON_READING (object);
 
 	g_free (reading->priv->text);
 
@@ -52,8 +52,8 @@ gpinstruct_lesson_reading_finalize (GObject *object)
 static void
 gpinstruct_lesson_reading_class_init (GPInstructLessonReadingClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonElementClass* parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonElementClass *parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonReadingPrivate));
 
@@ -61,21 +61,21 @@ gpinstruct_lesson_reading_class_init (GPInstructLessonReadingClass *klass)
 }
 
 
-GPInstructLessonReading*
+GPInstructLessonReading *
 gpinstruct_lesson_reading_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_READING, NULL);
 }
 
-const gchar*
-gpinstruct_lesson_reading_get_text (GPInstructLessonReading* reading)
+const gchar *
+gpinstruct_lesson_reading_get_text (GPInstructLessonReading *reading)
 {
 	return reading->priv->text;
 }
 
 void
-gpinstruct_lesson_reading_set_text (GPInstructLessonReading* reading,
-                                    const gchar* text)
+gpinstruct_lesson_reading_set_text (GPInstructLessonReading *reading,
+                                    const gchar *text)
 {
 	g_free (reading->priv->text);
 	reading->priv->text = g_strdup (text);

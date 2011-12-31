@@ -43,17 +43,17 @@ struct _GPInstructLessonTestWordPoolQuestion
 {
 	GPInstructObject parent_instance;
 
-	GPInstructLessonTestWordPoolQuestionPrivate* priv;
+	GPInstructLessonTestWordPoolQuestionPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_word_pool_question_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestWordPoolQuestion* gpinstruct_lesson_test_word_pool_question_new (void);
-const gchar* gpinstruct_lesson_test_word_pool_question_get_text (GPInstructLessonTestWordPoolQuestion* question);
-void gpinstruct_lesson_test_word_pool_question_set_text (GPInstructLessonTestWordPoolQuestion* question, const gchar* text);
-guint gpinstruct_lesson_test_word_pool_question_get_answer (GPInstructLessonTestWordPoolQuestion* question);
-void gpinstruct_lesson_test_word_pool_question_set_answer (GPInstructLessonTestWordPoolQuestion* question, guint answer);
-const gchar* gpinstruct_lesson_test_word_pool_question_get_explanation (GPInstructLessonTestWordPoolQuestion* question);
-void gpinstruct_lesson_test_word_pool_question_set_explanation (GPInstructLessonTestWordPoolQuestion* question, const gchar* explanation);
+GPInstructLessonTestWordPoolQuestion *gpinstruct_lesson_test_word_pool_question_new (void);
+const gchar *gpinstruct_lesson_test_word_pool_question_get_text (GPInstructLessonTestWordPoolQuestion *question);
+void gpinstruct_lesson_test_word_pool_question_set_text (GPInstructLessonTestWordPoolQuestion *question, const gchar *text);
+guint gpinstruct_lesson_test_word_pool_question_get_answer (GPInstructLessonTestWordPoolQuestion *question);
+void gpinstruct_lesson_test_word_pool_question_set_answer (GPInstructLessonTestWordPoolQuestion *question, guint answer);
+const gchar *gpinstruct_lesson_test_word_pool_question_get_explanation (GPInstructLessonTestWordPoolQuestion *question);
+void gpinstruct_lesson_test_word_pool_question_set_explanation (GPInstructLessonTestWordPoolQuestion *question, const gchar *explanation);
 
 G_END_DECLS
 

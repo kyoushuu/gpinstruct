@@ -27,11 +27,11 @@
 
 struct _GPInstructAnalyzerProjectViewPrivate
 {
-	GtkTreeStore* project_store;
-	GtkWidget* project_treeview;
+	GtkTreeStore *project_store;
+	GtkWidget *project_treeview;
 
-	GtkTreeStore* test_store;
-	GtkWidget* test_treeview;
+	GtkTreeStore *test_store;
+	GtkWidget *test_treeview;
 };
 
 #define GPINSTRUCT_ANALYZER_PROJECT_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_PROJECT_VIEW, GPInstructAnalyzerProjectViewPrivate))
@@ -79,12 +79,12 @@ static void
 tree_selection_changed_cb (GtkTreeSelection *selection,
                            gpointer user_data)
 {
-	GPInstructAnalyzerProjectView* view = GPINSTRUCT_ANALYZER_PROJECT_VIEW (user_data);
+	GPInstructAnalyzerProjectView *view = GPINSTRUCT_ANALYZER_PROJECT_VIEW (user_data);
 
 	GtkTreeIter iter, iterItem, iterChoice;
 	GtkTreeModel *model;
 	guint struct_type;
-	GPInstructLogAnalyzerTest* test;
+	GPInstructLogAnalyzerTest *test;
 
 	guint min;
 	gdouble sec;
@@ -106,12 +106,12 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 
 		if (struct_type == STRUCT_TYPE_TEST)
 		{
-			GList* items = test->items;
+			GList *items = test->items;
 			guint item_num = 0;
 
 			while (items)
 			{
-				GPInstructLogAnalyzerItem* item = items->data;
+				GPInstructLogAnalyzerItem *item = items->data;
 
 				children = item->choices_length;
 				frequency = item->times_answered;
@@ -153,12 +153,12 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 				g_free (time_text);
 				g_free (ave_time_text);
 
-				GList* choices = item->choices;
+				GList *choices = item->choices;
 				guint choice_num = 0;
 
 				while (choices)
 				{
-					GPInstructLogAnalyzerChoice* choice = choices->data;
+					GPInstructLogAnalyzerChoice *choice = choices->data;
 
 					if (test->is_string)
 						title_text = g_strdup (choice->string);
@@ -196,11 +196,11 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 					g_free (time_text);
 					g_free (ave_time_text);
 
-					GList* answers = choice->answers;
+					GList *answers = choice->answers;
 
 					while (answers)
 					{
-						GPInstructLogAnalyzerAnswer* answer = answers->data;
+						GPInstructLogAnalyzerAnswer *answer = answers->data;
 
 						time_spent = answer->time_spent;
 
@@ -245,10 +245,10 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	object->priv = GPINSTRUCT_ANALYZER_PROJECT_VIEW_PRIVATE (object);
 
 	GtkTreeSelection *selection;
-	GtkCellRenderer* renderer;
+	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 
-	GtkWidget* project_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *project_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (project_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack1 (GTK_PANED (object), project_scrolledwindow, TRUE, TRUE);
@@ -265,7 +265,7 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	                                                  G_TYPE_UINT,
 	                                                  G_TYPE_POINTER);
 
-	GtkWidget* project_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->project_store));
+	GtkWidget *project_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->project_store));
 	gtk_container_add (GTK_CONTAINER (project_scrolledwindow), project_treeview);
 	object->priv->project_treeview = project_treeview;
 
@@ -348,7 +348,7 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	gtk_tree_view_column_set_resizable (column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (project_treeview), column);
 
-	GtkWidget* test_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *test_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (test_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack2 (GTK_PANED (object), test_scrolledwindow, TRUE, TRUE);
@@ -365,7 +365,7 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	                                               G_TYPE_UINT,
 	                                               G_TYPE_POINTER);
 
-	GtkWidget* test_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->test_store));
+	GtkWidget *test_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->test_store));
 	gtk_container_add (GTK_CONTAINER (test_scrolledwindow), test_treeview);
 	object->priv->test_treeview = test_treeview;
 
@@ -441,7 +441,7 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 static void
 gpinstruct_analyzer_project_view_finalize (GObject *object)
 {
-	GPInstructAnalyzerProjectView* view = GPINSTRUCT_ANALYZER_PROJECT_VIEW (object);
+	GPInstructAnalyzerProjectView *view = GPINSTRUCT_ANALYZER_PROJECT_VIEW (object);
 
 	if (view->priv->project_store)
 		g_object_unref (view->priv->project_store);
@@ -455,8 +455,8 @@ gpinstruct_analyzer_project_view_finalize (GObject *object)
 static void
 gpinstruct_analyzer_project_view_class_init (GPInstructAnalyzerProjectViewClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkVPanedClass* parent_class = GTK_VPANED_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkVPanedClass *parent_class = GTK_VPANED_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructAnalyzerProjectViewPrivate));
 
@@ -464,10 +464,10 @@ gpinstruct_analyzer_project_view_class_init (GPInstructAnalyzerProjectViewClass 
 }
 
 
-GtkWidget*
-gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
+GtkWidget *
+gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 {
-	GPInstructAnalyzerProjectView* view = g_object_new (GPINSTRUCT_TYPE_ANALYZER_PROJECT_VIEW, NULL);
+	GPInstructAnalyzerProjectView *view = g_object_new (GPINSTRUCT_TYPE_ANALYZER_PROJECT_VIEW, NULL);
 
 	GtkTreeIter iterProject, iterCategory, iterLesson, iterGroup;
 
@@ -479,7 +479,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
 
 	gchar *items_text, *frequency_text, *score_text, *ave_score_text, *percentage_text, *time_text, *ave_time_text;
 
-	GPInstructLogAnalyzerProject* project = gpinstruct_log_analyzer_get_project (analyzer);
+	GPInstructLogAnalyzerProject *project = gpinstruct_log_analyzer_get_project (analyzer);
 
 	items = project->items_length;
 	frequency = project->times_taken;
@@ -522,11 +522,11 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
 	g_free (time_text);
 	g_free (ave_time_text);
 
-	GList* categories = project->categories;
+	GList *categories = project->categories;
 
 	while (categories)
 	{
-		GPInstructLogAnalyzerCategory* category = (GPInstructLogAnalyzerCategory*)categories->data;
+		GPInstructLogAnalyzerCategory *category = (GPInstructLogAnalyzerCategory*) categories->data;
 
 		items = category->items_length;
 		frequency = category->times_taken;
@@ -569,11 +569,11 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
 		g_free (time_text);
 		g_free (ave_time_text);
 
-		GList* lessons = category->lessons;
+		GList *lessons = category->lessons;
 
 		while (lessons)
 		{
-			GPInstructLogAnalyzerLesson* lesson = (GPInstructLogAnalyzerLesson*)lessons->data;
+			GPInstructLogAnalyzerLesson *lesson = (GPInstructLogAnalyzerLesson*) lessons->data;
 
 			items = lesson->items_length;
 			frequency = lesson->times_taken;
@@ -616,13 +616,13 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
 			g_free (time_text);
 			g_free (ave_time_text);
 
-			GList* elements = lesson->elements;
+			GList *elements = lesson->elements;
 
 			while (elements)
 			{
-				if (((GPInstructLogAnalyzerLessonElement*)elements->data)->is_test)
+				if (((GPInstructLogAnalyzerLessonElement*) elements->data)->is_test)
 				{
-					GPInstructLogAnalyzerTest* test = ((GPInstructLogAnalyzerLessonElement*)elements->data)->test;
+					GPInstructLogAnalyzerTest *test = ((GPInstructLogAnalyzerLessonElement*) elements->data)->test;
 
 					items = test->items_length;
 					frequency = test->times_taken;
@@ -667,7 +667,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
 				}
 				else
 				{
-					GPInstructLogAnalyzerGroup* group = ((GPInstructLogAnalyzerLessonElement*)elements->data)->group;
+					GPInstructLogAnalyzerGroup *group = ((GPInstructLogAnalyzerLessonElement*) elements->data)->group;
 
 					items = group->items_length;
 					frequency = group->times_taken;
@@ -710,11 +710,11 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer* analyzer)
 					g_free (time_text);
 					g_free (ave_time_text);
 
-					GList* tests = group->tests;
+					GList *tests = group->tests;
 
 					while (tests)
 					{
-						GPInstructLogAnalyzerTest* test = (GPInstructLogAnalyzerTest*)tests->data;
+						GPInstructLogAnalyzerTest *test = (GPInstructLogAnalyzerTest*) tests->data;
 
 						items = test->items_length;
 						frequency = test->times_taken;

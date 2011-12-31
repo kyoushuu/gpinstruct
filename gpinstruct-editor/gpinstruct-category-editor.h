@@ -43,11 +43,11 @@ struct _GPInstructCategoryEditor
 {
 	GPInstructObjectEditor parent_instance;
 
-	GPInstructCategoryEditorPrivate* priv;
+	GPInstructCategoryEditorPrivate *priv;
 };
 
 GType gpinstruct_category_editor_get_type (void) G_GNUC_CONST;
-GPInstructCategoryEditor* gpinstruct_category_editor_new (GPInstructEditorWindow* window, GPInstructCategory* category);
+GPInstructCategoryEditor *gpinstruct_category_editor_new (GPInstructEditorWindow *window, GPInstructCategory *category);
 
 G_END_DECLS
 

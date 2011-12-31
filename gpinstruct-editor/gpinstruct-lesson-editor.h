@@ -43,11 +43,11 @@ struct _GPInstructLessonEditor
 {
 	GPInstructObjectEditor parent_instance;
 
-	GPInstructLessonEditorPrivate* priv;
+	GPInstructLessonEditorPrivate *priv;
 };
 
 GType gpinstruct_lesson_editor_get_type (void) G_GNUC_CONST;
-GPInstructLessonEditor* gpinstruct_lesson_editor_new (GPInstructEditorWindow* window, GPInstructLesson* lesson);
+GPInstructLessonEditor *gpinstruct_lesson_editor_new (GPInstructEditorWindow *window, GPInstructLesson *lesson);
 
 G_END_DECLS
 

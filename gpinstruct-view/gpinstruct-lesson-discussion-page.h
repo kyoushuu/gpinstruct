@@ -44,7 +44,7 @@ struct _GPInstructLessonDiscussionPage
 };
 
 GType gpinstruct_lesson_discussion_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonDiscussionPage* gpinstruct_lesson_discussion_page_new (GPInstructLessonDiscussion *discussion);
+GPInstructLessonDiscussionPage *gpinstruct_lesson_discussion_page_new (GPInstructLessonDiscussion *discussion);
 
 G_END_DECLS
 

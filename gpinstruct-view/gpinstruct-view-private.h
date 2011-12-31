@@ -16,5 +16,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-guint* random_array (guint length);
+guint *random_array (guint length);
 void randomize_string (gchar *string);

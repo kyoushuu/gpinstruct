@@ -86,35 +86,35 @@ gtk_text_buffer_real_insert_markup (GtkTextBuffer *buffer,
       tag = gtk_text_tag_new(NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_LANGUAGE)))
-        g_object_set(tag, "language", pango_language_to_string(((PangoAttrLanguage*)attr)->value), NULL);
+        g_object_set(tag, "language", pango_language_to_string(((PangoAttrLanguage*) attr)->value), NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_FAMILY)))
-        g_object_set(tag, "family", ((PangoAttrString*)attr)->value, NULL);
+        g_object_set(tag, "family", ((PangoAttrString*) attr)->value, NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_STYLE)))
-        g_object_set(tag, "style", ((PangoAttrInt*)attr)->value, NULL);
+        g_object_set(tag, "style", ((PangoAttrInt*) attr)->value, NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_WEIGHT)))
-        g_object_set(tag, "weight", ((PangoAttrInt*)attr)->value, NULL);
+        g_object_set(tag, "weight", ((PangoAttrInt*) attr)->value, NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_VARIANT)))
-        g_object_set(tag, "variant", ((PangoAttrInt*)attr)->value, NULL);
+        g_object_set(tag, "variant", ((PangoAttrInt*) attr)->value, NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_STRETCH)))
-        g_object_set(tag, "stretch", ((PangoAttrInt*)attr)->value, NULL);
+        g_object_set(tag, "stretch", ((PangoAttrInt*) attr)->value, NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_SIZE)))
-        g_object_set(tag, "size", ((PangoAttrInt*)attr)->value, NULL);
+        g_object_set(tag, "size", ((PangoAttrInt*) attr)->value, NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_FONT_DESC)))
-        g_object_set(tag, "font-desc", ((PangoAttrFontDesc*)attr)->desc, NULL);
+        g_object_set(tag, "font-desc", ((PangoAttrFontDesc*) attr)->desc, NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_FOREGROUND)))
         {
           GdkColor col = { 0,
-                           ((PangoAttrColor*)attr)->color.red,
-                           ((PangoAttrColor*)attr)->color.green,
-                           ((PangoAttrColor*)attr)->color.blue
+                           ((PangoAttrColor*) attr)->color.red,
+                           ((PangoAttrColor*) attr)->color.green,
+                           ((PangoAttrColor*) attr)->color.blue
                          };
 
           g_object_set(tag, "foreground-gdk", &col, NULL);
@@ -123,27 +123,27 @@ gtk_text_buffer_real_insert_markup (GtkTextBuffer *buffer,
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_BACKGROUND)))
         {
           GdkColor col = { 0,
-                           ((PangoAttrColor*)attr)->color.red,
-                           ((PangoAttrColor*)attr)->color.green,
-                           ((PangoAttrColor*)attr)->color.blue
+                           ((PangoAttrColor*) attr)->color.red,
+                           ((PangoAttrColor*) attr)->color.green,
+                           ((PangoAttrColor*) attr)->color.blue
                          };
 
           g_object_set(tag, "background-gdk", &col, NULL);
         }
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_UNDERLINE)))
-        g_object_set(tag, "underline", ((PangoAttrInt*)attr)->value, NULL);
+        g_object_set(tag, "underline", ((PangoAttrInt*) attr)->value, NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_STRIKETHROUGH)))
-        g_object_set(tag, "strikethrough", (gboolean)(((PangoAttrInt*)attr)->value != 0), NULL);
+        g_object_set(tag, "strikethrough", (gboolean)(((PangoAttrInt*) attr)->value != 0), NULL);
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_RISE)))
-        g_object_set(tag, "rise", ((PangoAttrInt*)attr)->value, NULL);
+        g_object_set(tag, "rise", ((PangoAttrInt*) attr)->value, NULL);
 
       /* PANGO_ATTR_SHAPE cannot be defined via markup text */
 
       if ((attr = pango_attr_iterator_get(paiter, PANGO_ATTR_SCALE)))
-        g_object_set(tag, "scale", ((PangoAttrFloat*)attr)->value, NULL);
+        g_object_set(tag, "scale", ((PangoAttrFloat*) attr)->value, NULL);
 
       gtk_text_tag_table_add(gtk_text_buffer_get_tag_table(buffer), tag);
 

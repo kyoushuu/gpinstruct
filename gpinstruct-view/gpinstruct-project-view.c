@@ -26,11 +26,11 @@
 
 struct _GPInstructProjectViewPrivate
 {
-	GPInstructProject* project;
-	GPInstructMessagePool* pool;
-	GPInstructLog* log;
+	GPInstructProject *project;
+	GPInstructMessagePool *pool;
+	GPInstructLog *log;
 
-	GHashTable* hashtable;
+	GHashTable *hashtable;
 };
 
 #define GPINSTRUCT_PROJECT_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_PROJECT_VIEW, GPInstructProjectViewPrivate))
@@ -41,9 +41,9 @@ void
 lesson_button_clicked (GtkButton *button,
                        gpointer   user_data)
 {
-	GPInstructProjectView* view = GPINSTRUCT_PROJECT_VIEW (user_data);
+	GPInstructProjectView *view = GPINSTRUCT_PROJECT_VIEW (user_data);
 
-	GPInstructLessonView* lesson_view = g_hash_table_lookup (view->priv->hashtable, button);
+	GPInstructLessonView *lesson_view = g_hash_table_lookup (view->priv->hashtable, button);
 
 	if (lesson_view)
 	{
@@ -69,16 +69,16 @@ gpinstruct_project_view_init (GPInstructProjectView *object)
 static void
 gpinstruct_project_view_finalize (GObject *object)
 {
-	GPInstructProjectView* view = GPINSTRUCT_PROJECT_VIEW (object);
+	GPInstructProjectView *view = GPINSTRUCT_PROJECT_VIEW (object);
 
 	if (view->priv->hashtable)
 	{
-		GList* views = g_hash_table_get_values (view->priv->hashtable);
-		GList* current_views = views;
+		GList *views = g_hash_table_get_values (view->priv->hashtable);
+		GList *current_views = views;
 
 		while (current_views)
 		{
-			GtkWidget* view = GTK_WIDGET (current_views->data);
+			GtkWidget *view = GTK_WIDGET (current_views->data);
 			gtk_widget_destroy (view);
 			current_views = current_views->next;
 		}
@@ -103,8 +103,8 @@ gpinstruct_project_view_finalize (GObject *object)
 static void
 gpinstruct_project_view_class_init (GPInstructProjectViewClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkWindowClass* parent_class = GTK_WINDOW_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkWindowClass *parent_class = GTK_WINDOW_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructProjectViewPrivate));
 
@@ -112,14 +112,14 @@ gpinstruct_project_view_class_init (GPInstructProjectViewClass *klass)
 }
 
 
-GtkWidget*
-gpinstruct_project_view_new (GPInstructProject* project,
-                             GPInstructMessagePool* pool,
-                             GPInstructLog* log)
+GtkWidget *
+gpinstruct_project_view_new (GPInstructProject *project,
+                             GPInstructMessagePool *pool,
+                             GPInstructLog *log)
 {
 	g_return_val_if_fail (project != NULL, NULL);
 
-	GPInstructProjectView* view = g_object_new (GPINSTRUCT_TYPE_PROJECT_VIEW, NULL);
+	GPInstructProjectView *view = g_object_new (GPINSTRUCT_TYPE_PROJECT_VIEW, NULL);
 
 	if (pool)
 		view->priv->pool = g_object_ref (pool);
@@ -145,23 +145,23 @@ gpinstruct_project_view_new (GPInstructProject* project,
 	gtk_window_set_default_size (GTK_WINDOW (view), 600, 400);
 	gtk_window_set_title (GTK_WINDOW (view), gpinstruct_project_get_title (project));
 
-	GtkWidget* scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 	                                GTK_POLICY_AUTOMATIC,
 	                                GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (view), scrolled_window);
 
-	GtkWidget* main_vbox = gtk_hbox_new (TRUE, 3);
+	GtkWidget *main_vbox = gtk_hbox_new (TRUE, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), main_vbox);
 
 	GtkWidget *category_frame, *category_label, *category_vbox, *lesson_button;
 
 	GList *categories, *curr_categories, *lessons, *curr_lessons;
 
-	GPInstructCategory* category;
-	GPInstructLesson* lesson;
+	GPInstructCategory *category;
+	GPInstructLesson *lesson;
 
-	gchar* title;
+	gchar *title;
 
 	categories = gpinstruct_project_get_categories (project);
 	curr_categories = categories;
@@ -195,7 +195,7 @@ gpinstruct_project_view_new (GPInstructProject* project,
 			gtk_box_pack_start (GTK_BOX (category_vbox), lesson_button, FALSE, FALSE, 3);
 			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), view);
 
-			GPInstructLessonView* lesson_view = gpinstruct_lesson_view_new (lesson, view->priv->pool, view->priv->log);
+			GPInstructLessonView *lesson_view = gpinstruct_lesson_view_new (lesson, view->priv->pool, view->priv->log);
 
 			g_hash_table_insert (view->priv->hashtable, lesson_button, lesson_view);
 

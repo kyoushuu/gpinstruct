@@ -45,20 +45,20 @@ gpinstruct_lesson_discussion_page_finalize (GObject *object)
 static void
 gpinstruct_lesson_discussion_page_class_init (GPInstructLessonDiscussionPageClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonViewPageClass *parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	object_class->finalize = gpinstruct_lesson_discussion_page_finalize;
 }
 
 
-GPInstructLessonDiscussionPage*
+GPInstructLessonDiscussionPage *
 gpinstruct_lesson_discussion_page_new (GPInstructLessonDiscussion *discussion)
 {
-	GPInstructLessonDiscussionPage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_DISCUSSION_PAGE, NULL);
+	GPInstructLessonDiscussionPage *page = g_object_new (GPINSTRUCT_TYPE_LESSON_DISCUSSION_PAGE, NULL);
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page), gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (discussion)));
 
-	GtkWidget* discussion_textview = gtk_text_view_new ();
+	GtkWidget *discussion_textview = gtk_text_view_new ();
 	gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (discussion_textview)),
 	                            gpinstruct_lesson_discussion_get_text (discussion));
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (discussion_textview), GTK_WRAP_WORD);

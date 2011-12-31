@@ -43,11 +43,11 @@ struct _GPInstructLessonTestWordPoolPage
 {
 	GPInstructLessonViewPage parent_instance;
 
-	GPInstructLessonTestWordPoolPagePrivate* priv;
+	GPInstructLessonTestWordPoolPagePrivate *priv;
 };
 
 GType gpinstruct_lesson_test_word_pool_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestWordPoolPage* gpinstruct_lesson_test_word_pool_page_new (GPInstructLessonTestWordPool* test, GPInstructLessonScore* score, GPInstructLog* log);
+GPInstructLessonTestWordPoolPage *gpinstruct_lesson_test_word_pool_page_new (GPInstructLessonTestWordPool *test, GPInstructLessonScore *score, GPInstructLog *log);
 
 G_END_DECLS
 

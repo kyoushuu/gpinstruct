@@ -27,18 +27,18 @@
 
 struct _GPInstructLessonTestMultiChoicePagePrivate
 {
-	GPInstructLessonTestMultiChoice* test;
-	GPInstructLessonScore* score;
-	GPInstructLog* log;
+	GPInstructLessonTestMultiChoice *test;
+	GPInstructLessonScore *score;
+	GPInstructLog *log;
 
 	guint curr_question;
-	guint* questions;
-	guint* choices;
-	GList* choice_buttons;
+	guint *questions;
+	guint *choices;
+	GList *choice_buttons;
 
-	GtkWidget* vbox;
-	GtkWidget* question_textview;
-	GtkWidget* choices_vbox;
+	GtkWidget *vbox;
+	GtkWidget *question_textview;
+	GtkWidget *choices_vbox;
 };
 
 #define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_PAGE, GPInstructLessonTestMultiChoicePagePrivate))
@@ -46,18 +46,18 @@ struct _GPInstructLessonTestMultiChoicePagePrivate
 
 
 void
-multi_choice_show_question (GPInstructLessonTestMultiChoicePage* page,
+multi_choice_show_question (GPInstructLessonTestMultiChoicePage *page,
                             guint question_num)
 {
-	GList* questions = gpinstruct_lesson_test_multi_choice_get_questions (page->priv->test);
+	GList *questions = gpinstruct_lesson_test_multi_choice_get_questions (page->priv->test);
 	if (question_num < g_list_length (questions))
 	{
 		page->priv->curr_question = question_num;
 
-		gchar* text;
+		gchar *text;
 		int i;
 
-		GPInstructLessonTestMultiChoiceQuestion* question = g_list_nth_data (questions, page->priv->questions[question_num]);
+		GPInstructLessonTestMultiChoiceQuestion *question = g_list_nth_data (questions, page->priv->questions[question_num]);
 
 		text = g_strdup_printf ("%d. %s", 1+question_num, gpinstruct_lesson_test_multi_choice_question_get_text (question));
 		gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (page->priv->question_textview)), text);
@@ -69,8 +69,8 @@ multi_choice_show_question (GPInstructLessonTestMultiChoicePage* page,
 		page->priv->choices_vbox = gtk_vbox_new (FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (page->priv->vbox), page->priv->choices_vbox, FALSE, TRUE, 3);
 
-		GtkWidget* choice_radio_button;
-		GtkWidget* last_radio_button = NULL;
+		GtkWidget *choice_radio_button;
+		GtkWidget *last_radio_button = NULL;
 
 		if (page->priv->choice_buttons)
 		{
@@ -78,7 +78,7 @@ multi_choice_show_question (GPInstructLessonTestMultiChoicePage* page,
 			page->priv->choice_buttons = NULL;
 		}
 
-		GList* choices = gpinstruct_lesson_test_multi_choice_question_get_choices (question);
+		GList *choices = gpinstruct_lesson_test_multi_choice_question_get_choices (question);
 		guint length = g_list_length (choices);
 
 		g_free (page->priv->choices);
@@ -86,7 +86,7 @@ multi_choice_show_question (GPInstructLessonTestMultiChoicePage* page,
 
 		for (i = 0; i<length; i++)
 		{
-			text = g_strdup_printf ("_%c. %s", 'a'+i, (gchar*)g_list_nth_data (choices, page->priv->choices[i]));
+			text = g_strdup_printf ("_%c. %s", 'a'+i, (gchar*) g_list_nth_data (choices, page->priv->choices[i]));
 			choice_radio_button = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (last_radio_button),
 			                                                                      text);
 			g_free (text);
@@ -110,7 +110,7 @@ multi_choice_show_question (GPInstructLessonTestMultiChoicePage* page,
 }
 
 static void
-page_reset (GPInstructLessonTestMultiChoicePage* page,
+page_reset (GPInstructLessonTestMultiChoicePage *page,
             gpointer user_data)
 {
 	if (page->priv->log)
@@ -148,7 +148,7 @@ gpinstruct_lesson_test_multi_choice_page_init (GPInstructLessonTestMultiChoicePa
 static void
 gpinstruct_lesson_test_multi_choice_page_finalize (GObject *object)
 {
-	GPInstructLessonTestMultiChoicePage* page = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE (object);
+	GPInstructLessonTestMultiChoicePage *page = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PAGE (object);
 
 	g_free (page->priv->questions);
 	g_free (page->priv->choices);
@@ -162,8 +162,8 @@ gpinstruct_lesson_test_multi_choice_page_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_multi_choice_page_class_init (GPInstructLessonTestMultiChoicePageClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonViewPageClass *parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestMultiChoicePagePrivate));
 
@@ -172,17 +172,17 @@ gpinstruct_lesson_test_multi_choice_page_class_init (GPInstructLessonTestMultiCh
 
 
 static gboolean
-page_show_next (GPInstructLessonTestMultiChoicePage* page,
+page_show_next (GPInstructLessonTestMultiChoicePage *page,
                 gpointer user_data)
 {
-	GList* questions = gpinstruct_lesson_test_multi_choice_get_questions (page->priv->test);
+	GList *questions = gpinstruct_lesson_test_multi_choice_get_questions (page->priv->test);
 	guint questions_num = g_list_length (questions);
 
 	if (questions_num == 0)
 		return FALSE;
 
 	guint question_id = page->priv->questions[page->priv->curr_question];
-	GPInstructLessonTestMultiChoiceQuestion* question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (g_list_nth_data (questions, question_id));
+	GPInstructLessonTestMultiChoiceQuestion *question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (g_list_nth_data (questions, question_id));
 
 	g_list_free (questions);
 
@@ -201,7 +201,7 @@ page_show_next (GPInstructLessonTestMultiChoicePage* page,
 		}
 	}
 
-	GList* choice_buttons = page->priv->choice_buttons;
+	GList *choice_buttons = page->priv->choice_buttons;
 	guint choice = -1;
 
 	for (i=0; choice_buttons; i++, choice_buttons = choice_buttons->next)
@@ -242,14 +242,14 @@ page_show_next (GPInstructLessonTestMultiChoicePage* page,
 			{
 				GString *explanation_answer = g_string_new (gpinstruct_lesson_test_multi_choice_question_get_text (question));
 
-				GList* choices = gpinstruct_lesson_test_multi_choice_question_get_choices (question);
+				GList *choices = gpinstruct_lesson_test_multi_choice_question_get_choices (question);
 				guint length = g_list_length (choices);
 				for (i = 0; i<length; i++)
 				{
 					g_string_append_printf (explanation_answer,
 							                correct_choice==i? "\n<i>%c. %s</i>":"\n%c. %s",
 							                'a'+i,
-							                (gchar*)g_list_nth_data (choices, page->priv->choices[i]));
+							                (gchar*) g_list_nth_data (choices, page->priv->choices[i]));
 				}
 				g_list_free (choices);
 
@@ -273,12 +273,12 @@ page_show_next (GPInstructLessonTestMultiChoicePage* page,
 }
 
 
-GPInstructLessonTestMultiChoicePage*
-gpinstruct_lesson_test_multi_choice_page_new (GPInstructLessonTestMultiChoice* test,
-                                              GPInstructLessonScore* score,
-                                              GPInstructLog* log)
+GPInstructLessonTestMultiChoicePage *
+gpinstruct_lesson_test_multi_choice_page_new (GPInstructLessonTestMultiChoice *test,
+                                              GPInstructLessonScore *score,
+                                              GPInstructLog *log)
 {
-	GPInstructLessonTestMultiChoicePage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_PAGE, NULL);
+	GPInstructLessonTestMultiChoicePage *page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE_PAGE, NULL);
 
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 	                                       gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));

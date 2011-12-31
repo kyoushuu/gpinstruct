@@ -43,14 +43,14 @@ struct _GPInstructServerWindow
 {
 	GtkWindow parent_instance;
 
-	GPInstructServerWindowPrivate* priv;
+	GPInstructServerWindowPrivate *priv;
 };
 
 GType gpinstruct_server_window_get_type (void) G_GNUC_CONST;
-GtkWidget* gpinstruct_server_window_new (void);
-void gpinstruct_server_window_new_session (GPInstructServerWindow* window);
-gboolean gpinstruct_server_window_close_session (GPInstructServerWindow* window);
-gboolean gpinstruct_server_window_quit (GPInstructServerWindow* window);
+GtkWidget *gpinstruct_server_window_new (void);
+void gpinstruct_server_window_new_session (GPInstructServerWindow *window);
+gboolean gpinstruct_server_window_close_session (GPInstructServerWindow *window);
+gboolean gpinstruct_server_window_quit (GPInstructServerWindow *window);
 
 G_END_DECLS
 

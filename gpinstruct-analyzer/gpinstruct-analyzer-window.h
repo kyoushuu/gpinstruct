@@ -43,15 +43,15 @@ struct _GPInstructAnalyzerWindow
 {
 	GtkWindow parent_instance;
 
-	GPInstructAnalyzerWindowPrivate* priv;
+	GPInstructAnalyzerWindowPrivate *priv;
 };
 
 GType gpinstruct_analyzer_window_get_type (void) G_GNUC_CONST;
-GtkWidget* gpinstruct_analyzer_window_new (void);
-void gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow* window);
-gboolean gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow* window);
-gboolean gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow* window, const gchar* file);
-gboolean gpinstruct_analyzer_window_quit (GPInstructAnalyzerWindow* window);
+GtkWidget *gpinstruct_analyzer_window_new (void);
+void gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window);
+gboolean gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow *window);
+gboolean gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow *window, const gchar *file);
+gboolean gpinstruct_analyzer_window_quit (GPInstructAnalyzerWindow *window);
 
 G_END_DECLS
 

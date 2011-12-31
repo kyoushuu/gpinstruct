@@ -24,18 +24,18 @@
 
 struct _GPInstructLessonTestMultiChoicePrivate
 {
-	GList* questions;
+	GList *questions;
 };
 
 #define GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE, GPInstructLessonTestMultiChoicePrivate))
 
 
 
-static gchar*
-get_item (GPInstructLessonTest* test,
+static gchar *
+get_item (GPInstructLessonTest *test,
           guint item)
 {
-	GPInstructLessonTestMultiChoiceQuestion* question =
+	GPInstructLessonTestMultiChoiceQuestion *question =
 		gpinstruct_lesson_test_multi_choice_get_question (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (test),
 		                                                  item);
 
@@ -46,12 +46,12 @@ get_item (GPInstructLessonTest* test,
 }
 
 
-static gchar*
-get_choice (GPInstructLessonTest* test,
+static gchar *
+get_choice (GPInstructLessonTest *test,
             guint item,
             guint choice)
 {
-	GPInstructLessonTestMultiChoiceQuestion* question =
+	GPInstructLessonTestMultiChoiceQuestion *question =
 		gpinstruct_lesson_test_multi_choice_get_question (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (test),
 		                                                  item);
 
@@ -63,17 +63,17 @@ get_choice (GPInstructLessonTest* test,
 
 
 static guint
-get_items_length (GPInstructLessonTest* test)
+get_items_length (GPInstructLessonTest *test)
 {
 	return gpinstruct_lesson_test_multi_choice_get_questions_length (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (test));
 }
 
 
 static guint
-get_choices_length (GPInstructLessonTest* test,
+get_choices_length (GPInstructLessonTest *test,
                     guint item)
 {
-	GPInstructLessonTestMultiChoiceQuestion* question =
+	GPInstructLessonTestMultiChoiceQuestion *question =
 		gpinstruct_lesson_test_multi_choice_get_question (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (test),
 		                                                  item);
 
@@ -85,10 +85,10 @@ get_choices_length (GPInstructLessonTest* test,
 
 
 static guint
-get_item_correct_choice (GPInstructLessonTest* test,
+get_item_correct_choice (GPInstructLessonTest *test,
                          guint item)
 {
-	GPInstructLessonTestMultiChoiceQuestion* question =
+	GPInstructLessonTestMultiChoiceQuestion *question =
 		gpinstruct_lesson_test_multi_choice_get_question (GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (test), item);
 	if (question)
 		return gpinstruct_lesson_test_multi_choice_question_get_answer (question);
@@ -111,7 +111,7 @@ gpinstruct_lesson_test_multi_choice_init (GPInstructLessonTestMultiChoice *objec
 static void
 gpinstruct_lesson_test_multi_choice_finalize (GObject *object)
 {
-	GPInstructLessonTestMultiChoice* test = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (object);
+	GPInstructLessonTestMultiChoice *test = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (object);
 
 	if (test->priv->questions)
 		g_list_free_full (test->priv->questions, g_object_unref);
@@ -122,8 +122,8 @@ gpinstruct_lesson_test_multi_choice_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_multi_choice_class_init (GPInstructLessonTestMultiChoiceClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GPInstructLessonTestClass* parent_class = GPINSTRUCT_LESSON_TEST_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GPInstructLessonTestClass *parent_class = GPINSTRUCT_LESSON_TEST_CLASS (klass);
 
 	parent_class->get_item = get_item;
 	parent_class->get_choice = get_choice;
@@ -137,15 +137,15 @@ gpinstruct_lesson_test_multi_choice_class_init (GPInstructLessonTestMultiChoiceC
 }
 
 
-GPInstructLessonTestMultiChoice*
+GPInstructLessonTestMultiChoice *
 gpinstruct_lesson_test_multi_choice_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_MULTI_CHOICE, NULL);
 }
 
 void
-gpinstruct_lesson_test_multi_choice_add_question (GPInstructLessonTestMultiChoice* test,
-                                                  GPInstructLessonTestMultiChoiceQuestion* question)
+gpinstruct_lesson_test_multi_choice_add_question (GPInstructLessonTestMultiChoice *test,
+                                                  GPInstructLessonTestMultiChoiceQuestion *question)
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (test));
 
@@ -153,39 +153,39 @@ gpinstruct_lesson_test_multi_choice_add_question (GPInstructLessonTestMultiChoic
 }
 
 void
-gpinstruct_lesson_test_multi_choice_remove_question (GPInstructLessonTestMultiChoice* test,
+gpinstruct_lesson_test_multi_choice_remove_question (GPInstructLessonTestMultiChoice *test,
                                                      guint question)
 {
-	GList* nth_link = g_list_nth (test->priv->questions, question);
+	GList *nth_link = g_list_nth (test->priv->questions, question);
 	g_object_unref (nth_link->data);
 	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
 }
 
-GPInstructLessonTestMultiChoiceQuestion*
-gpinstruct_lesson_test_multi_choice_get_question (GPInstructLessonTestMultiChoice* test,
+GPInstructLessonTestMultiChoiceQuestion *
+gpinstruct_lesson_test_multi_choice_get_question (GPInstructLessonTestMultiChoice *test,
                                                   guint question)
 {
 	return g_list_nth_data (test->priv->questions, question);
 }
 
-GList*
-gpinstruct_lesson_test_multi_choice_get_questions (GPInstructLessonTestMultiChoice* test)
+GList *
+gpinstruct_lesson_test_multi_choice_get_questions (GPInstructLessonTestMultiChoice *test)
 {
 	return g_list_copy (test->priv->questions);
 }
 
 guint
-gpinstruct_lesson_test_multi_choice_get_questions_length (GPInstructLessonTestMultiChoice* test)
+gpinstruct_lesson_test_multi_choice_get_questions_length (GPInstructLessonTestMultiChoice *test)
 {
 	return g_list_length (test->priv->questions);
 }
 
 gboolean
-gpinstruct_lesson_test_multi_choice_is_correct (GPInstructLessonTestMultiChoice* test,
+gpinstruct_lesson_test_multi_choice_is_correct (GPInstructLessonTestMultiChoice *test,
                                                 guint item,
                                                 guint answer)
 {
-	GPInstructLessonTestMultiChoiceQuestion* question = gpinstruct_lesson_test_multi_choice_get_question (test, item);
+	GPInstructLessonTestMultiChoiceQuestion *question = gpinstruct_lesson_test_multi_choice_get_question (test, item);
 
 	if (question == NULL)
 		return FALSE;

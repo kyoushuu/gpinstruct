@@ -27,23 +27,23 @@
 
 struct _GPInstructServerWindowPrivate
 {
-	GtkWidget* main_vbox;
+	GtkWidget *main_vbox;
 
-	GtkUIManager* manager;
-	GtkActionGroup* action_group;
-
-
-	GtkWidget* title_entry;
-	GtkWidget* port_entry;
-
-	GtkWidget* tree_view;
-	GtkTreeStore* store;
+	GtkUIManager *manager;
+	GtkActionGroup *action_group;
 
 
-	GtkWidget* statusbar;
+	GtkWidget *title_entry;
+	GtkWidget *port_entry;
+
+	GtkWidget *tree_view;
+	GtkTreeStore *store;
 
 
-	GPInstructServerSession* session;
+	GtkWidget *statusbar;
+
+
+	GPInstructServerSession *session;
 };
 
 #define GPINSTRUCT_SERVER_WINDOW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_SERVER_WINDOW, GPInstructServerWindowPrivate))
@@ -69,7 +69,7 @@ static void
 file_new_action (GtkAction *action,
                  gpointer   user_data)
 {
-	GPInstructServerWindow* window = GPINSTRUCT_SERVER_WINDOW (user_data);
+	GPInstructServerWindow *window = GPINSTRUCT_SERVER_WINDOW (user_data);
 
 	gpinstruct_server_window_new_session (window);
 }
@@ -79,7 +79,7 @@ static void
 file_close_action (GtkAction *action,
                    gpointer   user_data)
 {
-	GPInstructServerWindow* window = GPINSTRUCT_SERVER_WINDOW (user_data);
+	GPInstructServerWindow *window = GPINSTRUCT_SERVER_WINDOW (user_data);
 
 	gpinstruct_server_window_close_session (window);
 }
@@ -89,7 +89,7 @@ static void
 file_quit_action (GtkAction *action,
                   gpointer   user_data)
 {
-	GPInstructServerWindow* window = GPINSTRUCT_SERVER_WINDOW (user_data);
+	GPInstructServerWindow *window = GPINSTRUCT_SERVER_WINDOW (user_data);
 
 	if (gpinstruct_server_window_quit (window))
 		gtk_widget_destroy (GTK_WIDGET (window));
@@ -107,10 +107,10 @@ static void
 help_about_action (GtkAction *action,
                    gpointer   user_data)
 {
-	GPInstructServerWindow* window = GPINSTRUCT_SERVER_WINDOW (user_data);
+	GPInstructServerWindow *window = GPINSTRUCT_SERVER_WINDOW (user_data);
 
-	static gchar* authors[] = {"Arnel A. Borja <kyoushuu@yahoo.com>", NULL};
-	gchar* license = _(
+	static gchar *authors[] = {"Arnel A. Borja <kyoushuu@yahoo.com>", NULL};
+	gchar *license = _(
 	                   "This program is free software; you can redistribute it and/or modify "
 	                   "it under the terms of the GNU General Public License as published by "
 	                   "the Free Software Foundation; either version 3 of the License, or "
@@ -150,7 +150,7 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 {
 	object->priv = GPINSTRUCT_SERVER_WINDOW_PRIVATE (object);
 
-	GError* error = NULL;
+	GError *error = NULL;
 
 	GtkActionEntry actions[] =
 	{
@@ -164,7 +164,7 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 		{"help-about", GTK_STOCK_ABOUT, NULL, "F1", NULL, G_CALLBACK (help_about_action)}
 	};
 
-	gchar* ui =
+	gchar *ui =
 		"<ui>"
 		"  <menubar name=\"menubar\">"
 		"    <menu name=\"FileMenu\" action=\"file\">"
@@ -222,10 +222,10 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 		g_error_free (error);
 	}
 
-	GtkWidget* main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
+	GtkWidget *main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), main_menu, FALSE, TRUE, 0);
 
-	GtkWidget* toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
+	GtkWidget *toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
 #if GTK_MAJOR_VERSION >= 3
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
 	                             GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
@@ -233,14 +233,14 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), toolbar, FALSE, TRUE, 0);
 
 
-	GtkWidget* info_frame = gtk_frame_new (_("Project Information"));
+	GtkWidget *info_frame = gtk_frame_new (_("Project Information"));
 	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), info_frame,
 	                    FALSE, TRUE, 0);
 
-	GtkWidget* info_table = gtk_table_new (2, 2, FALSE);
+	GtkWidget *info_table = gtk_table_new (2, 2, FALSE);
 	gtk_container_add (GTK_CONTAINER (info_frame), info_table);
 
-	GtkWidget* title_label = gtk_label_new (_("Title:"));
+	GtkWidget *title_label = gtk_label_new (_("Title:"));
 	gtk_table_attach (GTK_TABLE (info_table), title_label,
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
@@ -252,7 +252,7 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  0, 0);
 
-	GtkWidget* port_label = gtk_label_new (_("Port:"));
+	GtkWidget *port_label = gtk_label_new (_("Port:"));
 	gtk_table_attach (GTK_TABLE (info_table), port_label,
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
@@ -288,8 +288,8 @@ gpinstruct_server_window_finalize (GObject *object)
 static void
 gpinstruct_server_window_class_init (GPInstructServerWindowClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkWindowClass* parent_class = GTK_WINDOW_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkWindowClass *parent_class = GTK_WINDOW_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructServerWindowPrivate));
 
@@ -297,14 +297,14 @@ gpinstruct_server_window_class_init (GPInstructServerWindowClass *klass)
 }
 
 
-GtkWidget*
+GtkWidget *
 gpinstruct_server_window_new (void)
 {
 	return GTK_WIDGET (g_object_new (GPINSTRUCT_TYPE_SERVER_WINDOW, NULL));
 }
 
 void
-gpinstruct_server_window_new_session (GPInstructServerWindow* window)
+gpinstruct_server_window_new_session (GPInstructServerWindow *window)
 {
 	if (window->priv->session)
 	{
@@ -331,7 +331,7 @@ gpinstruct_server_window_new_session (GPInstructServerWindow* window)
 	                  GTK_FILL, GTK_FILL,
 	                  0, 0);
 
-	GtkWidget* project_file_chooser =
+	GtkWidget *project_file_chooser =
 		gtk_file_chooser_button_new (_("Choose Project File"),
 		                             GTK_FILE_CHOOSER_ACTION_OPEN);
 
@@ -353,7 +353,7 @@ gpinstruct_server_window_new_session (GPInstructServerWindow* window)
 	                  GTK_FILL, GTK_FILL,
 	                  0, 0);
 
-	GtkWidget* log_folder_chooser =
+	GtkWidget *log_folder_chooser =
 		gtk_file_chooser_button_new (_("Choose Log Folder"),
 		                             GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 
@@ -400,7 +400,7 @@ gpinstruct_server_window_new_session (GPInstructServerWindow* window)
 }
 
 gboolean
-gpinstruct_server_window_close_session (GPInstructServerWindow* window)
+gpinstruct_server_window_close_session (GPInstructServerWindow *window)
 {
 	if (window->priv->session == NULL)
 		return FALSE;
@@ -418,7 +418,7 @@ gpinstruct_server_window_close_session (GPInstructServerWindow* window)
 }
 
 gboolean
-gpinstruct_server_window_quit (GPInstructServerWindow* window)
+gpinstruct_server_window_quit (GPInstructServerWindow *window)
 {
 	if (window->priv->session)
 	{

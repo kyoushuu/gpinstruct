@@ -32,39 +32,39 @@
 
 struct _GPInstructClientWindowPrivate
 {
-	SoupSession* session;
+	SoupSession *session;
 
-	gchar* server_uri;
-	gchar* session_id;
+	gchar *server_uri;
+	gchar *session_id;
 	
-	GPInstructLog* log;
+	GPInstructLog *log;
 
-	gchar* lastname;
-	gchar* firstname;
-	gchar* password;;
+	gchar *lastname;
+	gchar *firstname;
+	gchar *password;;
 
-	GtkWidget* server_address_entry;
-	GtkWidget* lastname_entry;
-	GtkWidget* firstname_entry;
-	GtkWidget* password_entry;
+	GtkWidget *server_address_entry;
+	GtkWidget *lastname_entry;
+	GtkWidget *firstname_entry;
+	GtkWidget *password_entry;
 
-	GtkWidget* info_bar;
-	GtkWidget* info_bar_label;
-	GtkWidget* info_bar_spinner;
+	GtkWidget *info_bar;
+	GtkWidget *info_bar_label;
+	GtkWidget *info_bar_spinner;
 
-	GtkWidget* create_session_button;
-	GtkWidget* get_project_button;
-	GtkWidget* set_log_button;
-	GtkWidget* close_session_button;
+	GtkWidget *create_session_button;
+	GtkWidget *get_project_button;
+	GtkWidget *set_log_button;
+	GtkWidget *close_session_button;
 };
 
 #define GPINSTRUCT_CLIENT_WINDOW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_CLIENT_WINDOW, GPInstructClientWindowPrivate))
 
 
-static void create_session (GPInstructClientWindow* window);
-static void get_project (GPInstructClientWindow* window);
-static void set_log (GPInstructClientWindow* window);
-static void close_session (GPInstructClientWindow* window);
+static void create_session (GPInstructClientWindow *window);
+static void get_project (GPInstructClientWindow *window);
+static void set_log (GPInstructClientWindow *window);
+static void close_session (GPInstructClientWindow *window);
 
 static void got_create_session_response (SoupSession *session, SoupMessage *msg, gpointer user_data);
 static void got_get_project_response (SoupSession *session, SoupMessage *msg, gpointer user_data);
@@ -158,10 +158,10 @@ set_message (GPInstructClientWindow *window,
 
 
 static void
-create_session (GPInstructClientWindow* window)
+create_session (GPInstructClientWindow *window)
 {
 	GPInstructClientWindowPrivate *priv = window->priv;
-	GError* error = NULL;
+	GError *error = NULL;
 
 	set_message (window,
 	             GTK_MESSAGE_INFO,
@@ -169,7 +169,7 @@ create_session (GPInstructClientWindow* window)
 	             TRUE,
 	             _("Logging in"));
 
-	SoupMessage* msg = soup_message_new ("POST", priv->server_uri);
+	SoupMessage *msg = soup_message_new ("POST", priv->server_uri);
 	if (!msg)
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
@@ -211,10 +211,10 @@ create_session (GPInstructClientWindow* window)
 
 
 static void
-get_project (GPInstructClientWindow* window)
+get_project (GPInstructClientWindow *window)
 {
 	GPInstructClientWindowPrivate *priv = window->priv;
-	GError* error = NULL;
+	GError *error = NULL;
 
 	set_message (window,
 	             GTK_MESSAGE_INFO,
@@ -222,7 +222,7 @@ get_project (GPInstructClientWindow* window)
 	             TRUE,
 	             _("Getting project data"));
 
-	SoupMessage* msg = soup_message_new ("POST", priv->server_uri);
+	SoupMessage *msg = soup_message_new ("POST", priv->server_uri);
 	if (!msg)
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
@@ -262,10 +262,10 @@ get_project (GPInstructClientWindow* window)
 
 
 static void
-set_log (GPInstructClientWindow* window)
+set_log (GPInstructClientWindow *window)
 {
 	GPInstructClientWindowPrivate *priv = window->priv;
-	GError* error = NULL;
+	GError *error = NULL;
 
 	set_message (window,
 	             GTK_MESSAGE_INFO,
@@ -273,10 +273,10 @@ set_log (GPInstructClientWindow* window)
 	             TRUE,
 	             _("Sending log to server"));
 
-	gchar* log = gpinstruct_log_save_to_string (priv->log, &error);
+	gchar *log = gpinstruct_log_save_to_string (priv->log, &error);
 	if (error) goto error;
 
-	SoupMessage* msg = soup_message_new ("POST", priv->server_uri);
+	SoupMessage *msg = soup_message_new ("POST", priv->server_uri);
 	if (!msg)
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
@@ -319,10 +319,10 @@ set_log (GPInstructClientWindow* window)
 
 
 static void
-close_session (GPInstructClientWindow* window)
+close_session (GPInstructClientWindow *window)
 {
 	GPInstructClientWindowPrivate *priv = window->priv;
-	GError* error = NULL;
+	GError *error = NULL;
 
 	set_message (window,
 	             GTK_MESSAGE_INFO,
@@ -330,7 +330,7 @@ close_session (GPInstructClientWindow* window)
 	             TRUE,
 	             _("Closing session"));
 
-	SoupMessage* msg = soup_message_new ("POST", priv->server_uri);
+	SoupMessage *msg = soup_message_new ("POST", priv->server_uri);
 	if (!msg)
 	{
 		g_set_error_literal (&error, GPINSTRUCT_CLIENT_ERROR,
@@ -372,8 +372,8 @@ close_session (GPInstructClientWindow* window)
 static gboolean
 parse_response (SoupMessage *msg,
                 SoupSoapMessage **response_return,
-                GPInstructClientWindow* window,
-                GError** error)
+                GPInstructClientWindow *window,
+                GError **error)
 {
 	SoupSoapMessage *response = NULL;
 	SoupSoapParam *param;
@@ -392,7 +392,7 @@ parse_response (SoupMessage *msg,
 
 		param = soup_soap_param_group_get (soup_soap_message_get_params (response),
 		                                   "faultstring");
-		gchar* faultstring = soup_soap_param_get_string (param, NULL);
+		gchar *faultstring = soup_soap_param_get_string (param, NULL);
 
 		g_set_error (error, GPINSTRUCT_CLIENT_ERROR,
 		             GPINSTRUCT_CLIENT_ERROR_SERVER_ERROR,
@@ -436,8 +436,8 @@ got_close_session_response (SoupSession *session,
 	SoupSoapParam *param;
 	GPInstructClientWindow *window = user_data;
 
-	GError* error = NULL;
-	GtkWidget* dialog;
+	GError *error = NULL;
+	GtkWidget *dialog;
 
 	if (!parse_response (msg, &response, window, &error))
 		goto error;
@@ -495,7 +495,7 @@ got_set_log_response (SoupSession *session,
 	SoupSoapParam *param;
 	GPInstructClientWindow *window = user_data;
 
-	GError* error = NULL;
+	GError *error = NULL;
 
 	if (!parse_response (msg, &response, window, &error))
 		goto error;
@@ -558,7 +558,7 @@ got_get_project_response (SoupSession *session,
 	GPInstructClientWindow *window = user_data;
 	GPInstructClientWindowPrivate *priv = window->priv;
 
-	GError* error = NULL;
+	GError *error = NULL;
 
 	if (!parse_response (msg, &response, window, &error))
 		goto error;
@@ -573,8 +573,8 @@ got_get_project_response (SoupSession *session,
 	}
 
 	gsize project_size;
-	gchar* project_string;
-	guchar* project_bin = soup_soap_param_get_base64_binary (param, &project_size, &error);
+	gchar *project_string;
+	guchar *project_bin = soup_soap_param_get_base64_binary (param, &project_size, &error);
 	if (error) goto error;
 
 	/* Check if compressed using GZip */
@@ -606,13 +606,13 @@ got_get_project_response (SoupSession *session,
 	}
 	else
 	{
-		project_string = g_strndup ((gchar*)project_bin, project_size);
+		project_string = g_strndup ((gchar*) project_bin, project_size);
 		g_free (project_bin);
 	}
 
-	GPInstructParser* parser = gpinstruct_parser_new ();
+	GPInstructParser *parser = gpinstruct_parser_new ();
 
-	GPInstructProject* project = gpinstruct_parser_load_from_string (parser,
+	GPInstructProject *project = gpinstruct_parser_load_from_string (parser,
 	                                                                 project_string,
 	                                                                 &error);
 	if (error) goto error;
@@ -626,15 +626,15 @@ got_get_project_response (SoupSession *session,
 	gpinstruct_log_set_first_name (priv->log, priv->firstname);
 
 #ifdef G_OS_WIN32
-	gchar* prefix = g_win32_get_package_installation_directory_of_module (NULL);
-	gchar* datadir = g_build_filename (prefix, "share", PACKAGE, NULL);
+	gchar *prefix = g_win32_get_package_installation_directory_of_module (NULL);
+	gchar *datadir = g_build_filename (prefix, "share", PACKAGE, NULL);
 #else
-	gchar* datadir = g_strdup (PACKAGE_DATA_DIR);
+	gchar *datadir = g_strdup (PACKAGE_DATA_DIR);
 #endif
 
-	gchar* message_file = g_build_filename (datadir, "messages.ini", NULL);
+	gchar *message_file = g_build_filename (datadir, "messages.ini", NULL);
 
-	GPInstructMessagePool* message_pool = gpinstruct_message_pool_new ();
+	GPInstructMessagePool *message_pool = gpinstruct_message_pool_new ();
 	if (g_file_test (message_file, G_FILE_TEST_IS_REGULAR))
 		gpinstruct_message_pool_load_from_file (message_pool, message_file);
 	else
@@ -649,7 +649,7 @@ got_get_project_response (SoupSession *session,
 #endif
 	g_free (datadir);
 
-	GtkWidget* view = gpinstruct_project_view_new (project,
+	GtkWidget *view = gpinstruct_project_view_new (project,
 	                                               message_pool,
 	                                               priv->log);
 
@@ -691,7 +691,7 @@ got_create_session_response (SoupSession *session,
 	GPInstructClientWindow *window = user_data;
 	GPInstructClientWindowPrivate *priv = window->priv;
 
-	GError* error = NULL;
+	GError *error = NULL;
 
 	if (!parse_response (msg, &response, window, &error))
 		goto error;
@@ -800,10 +800,10 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	priv->firstname = NULL;
 	priv->password = NULL;
 
-	GtkWidget* main_vbox = gtk_vbox_new (FALSE, 3);
+	GtkWidget *main_vbox = gtk_vbox_new (FALSE, 3);
 	gtk_container_add (GTK_CONTAINER (object), main_vbox);
 
-	GtkWidget* content_area = gtk_vbox_new (FALSE, 3);
+	GtkWidget *content_area = gtk_vbox_new (FALSE, 3);
 	gtk_box_pack_start (GTK_BOX (main_vbox),
 	                    content_area,
 	                    FALSE, FALSE, 3);
@@ -844,12 +844,12 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	                    priv->info_bar_label,
 	                    FALSE, FALSE, 3);
 
-	GtkWidget* main_table = gtk_table_new (3, 2, FALSE);
+	GtkWidget *main_table = gtk_table_new (3, 2, FALSE);
 	gtk_box_pack_start (GTK_BOX (content_area),
 	                    main_table,
 	                    FALSE, FALSE, 3);
 
-	GtkWidget* server_address_label = gtk_label_new (_("Server Address:"));
+	GtkWidget *server_address_label = gtk_label_new (_("Server Address:"));
 	gtk_table_attach (GTK_TABLE (main_table),
 	                  server_address_label,
 	                  0, 1, 0, 1,
@@ -863,7 +863,7 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	                  GTK_EXPAND | GTK_FILL, GTK_FILL,
 	                  0, 0);
 
-	GtkWidget* lastname_label = gtk_label_new (_("Last name:"));
+	GtkWidget *lastname_label = gtk_label_new (_("Last name:"));
 	gtk_table_attach (GTK_TABLE (main_table),
 	                  lastname_label,
 	                  0, 1, 1, 2,
@@ -877,7 +877,7 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	                  GTK_EXPAND | GTK_FILL, GTK_FILL,
 	                  0, 0);
 
-	GtkWidget* firstname_label = gtk_label_new (_("First name:"));
+	GtkWidget *firstname_label = gtk_label_new (_("First name:"));
 	gtk_table_attach (GTK_TABLE (main_table),
 	                  firstname_label,
 	                  0, 1, 2, 3,
@@ -891,7 +891,7 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	                  GTK_EXPAND | GTK_FILL, GTK_FILL,
 	                  0, 0);
 
-	GtkWidget* password_label = gtk_label_new (_("Password:"));
+	GtkWidget *password_label = gtk_label_new (_("Password:"));
 	gtk_table_attach (GTK_TABLE (main_table),
 	                  password_label,
 	                  0, 1, 3, 4,
@@ -919,20 +919,20 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 		gtk_entry_set_text (GTK_ENTRY (priv->password_entry),
 			                priv->password);
 
-	GtkWidget* action_area = gtk_hbutton_box_new ();
+	GtkWidget *action_area = gtk_hbutton_box_new ();
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (action_area), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (main_vbox),
 	                    action_area,
 	                    FALSE, FALSE, 3);
 
-	GtkWidget* ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
+	GtkWidget *ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 	g_signal_connect (ok_button, "clicked",
 	                  G_CALLBACK (ok_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (action_area),
 	                    ok_button,
 	                    FALSE, FALSE, 3);
 
-	GtkWidget* cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	GtkWidget *cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 	g_signal_connect (cancel_button, "clicked",
 	                  G_CALLBACK (cancel_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (action_area),
@@ -960,8 +960,8 @@ gpinstruct_client_window_finalize (GObject *object)
 static void
 gpinstruct_client_window_class_init (GPInstructClientWindowClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkWindowClass* parent_class = GTK_WINDOW_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkWindowClass *parent_class = GTK_WINDOW_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructClientWindowPrivate));
 

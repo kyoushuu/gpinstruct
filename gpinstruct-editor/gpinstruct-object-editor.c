@@ -44,14 +44,14 @@ gpinstruct_object_editor_finalize (GObject *object)
 static void
 gpinstruct_object_editor_class_init (GPInstructObjectEditorClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkVBoxClass* parent_class = GTK_TABLE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkVBoxClass *parent_class = GTK_TABLE_CLASS (klass);*/
 
 	object_class->finalize = gpinstruct_object_editor_finalize;
 }
 
 
-GPInstructObjectEditor*
+GPInstructObjectEditor *
 gpinstruct_object_editor_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_OBJECT_EDITOR, NULL);

@@ -45,37 +45,37 @@ gpinstruct_lesson_directions_page_finalize (GObject *object)
 static void
 gpinstruct_lesson_directions_page_class_init (GPInstructLessonDirectionsPageClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonViewPageClass *parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	object_class->finalize = gpinstruct_lesson_directions_page_finalize;
 }
 
 
-GPInstructLessonDirectionsPage*
-gpinstruct_lesson_directions_page_new (const gchar* title,
-                                       const gchar* text)
+GPInstructLessonDirectionsPage *
+gpinstruct_lesson_directions_page_new (const gchar *title,
+                                       const gchar *text)
 {
-	GPInstructLessonDirectionsPage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_DIRECTIONS_PAGE, NULL);
+	GPInstructLessonDirectionsPage *page = g_object_new (GPINSTRUCT_TYPE_LESSON_DIRECTIONS_PAGE, NULL);
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page), title);
 	gpinstruct_lesson_view_page_set_show_back_button (GPINSTRUCT_LESSON_VIEW_PAGE (page), FALSE);
 
-	GtkWidget* vbox = gtk_vbox_new (FALSE, 3);
+	GtkWidget *vbox = gtk_vbox_new (FALSE, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), vbox);
 
-	GtkWidget* title_label = gtk_label_new (NULL);
-	gchar* title_text = g_strdup_printf ("<b><big>%s</big></b>", title);
+	GtkWidget *title_label = gtk_label_new (NULL);
+	gchar *title_text = g_strdup_printf ("<b><big>%s</big></b>", title);
 	gtk_label_set_markup (GTK_LABEL (title_label), title_text);
 	g_free (title_text);
 	gtk_misc_set_alignment (GTK_MISC (title_label), 0.0, 0.5);
 	gtk_box_pack_start (GTK_BOX (vbox), title_label, FALSE, TRUE, 3);
 
-	GtkWidget* directions_label_top = gtk_label_new (NULL);
+	GtkWidget *directions_label_top = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (directions_label_top), _("<b>Directions:</b>"));
 	gtk_misc_set_alignment (GTK_MISC (directions_label_top), 0.0, 0.5);
 	gtk_box_pack_start (GTK_BOX (vbox), directions_label_top, FALSE, TRUE, 3);
 
-	GtkWidget* directions_label = gtk_label_new (NULL);
+	GtkWidget *directions_label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (directions_label), text);
 	gtk_label_set_line_wrap (GTK_LABEL (directions_label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (directions_label), TRUE);

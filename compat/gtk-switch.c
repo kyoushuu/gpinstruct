@@ -42,8 +42,8 @@ gtk_switch_finalize (GObject *object)
 static void
 gtk_switch_class_init (GtkSwitchClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkToggleButtonClass* parent_class = GTK_TOGGLE_BUTTON_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkToggleButtonClass *parent_class = GTK_TOGGLE_BUTTON_CLASS (klass);*/
 
 	object_class->finalize = gtk_switch_finalize;
 }
@@ -57,10 +57,10 @@ gtk_switch_activate (GtkToggleButton *togglebutton,
 	gtk_button_set_label (GTK_BUTTON (togglebutton), active? GTK_STOCK_YES:GTK_STOCK_NO);
 }
 
-GtkWidget*
+GtkWidget *
 gtk_switch_new (void)
 {
-	GtkSwitch* sw = g_object_new (GTK_TYPE_SWITCH, NULL);
+	GtkSwitch *sw = g_object_new (GTK_TYPE_SWITCH, NULL);
 
 	g_signal_connect (GTK_TOGGLE_BUTTON (sw), "toggled",
 	                  G_CALLBACK (gtk_switch_activate), NULL);

@@ -28,14 +28,14 @@
 
 struct _GPInstructLessonEditorPrivate
 {
-	GPInstructEditorWindow* window;
-	GPInstructLesson* lesson;
+	GPInstructEditorWindow *window;
+	GPInstructLesson *lesson;
 
-	GtkWidget* title_label;
-	GtkWidget* title_entry;
+	GtkWidget *title_label;
+	GtkWidget *title_entry;
 
-	GtkWidget* singlescore_label;
-	GtkWidget* singlescore_switch;
+	GtkWidget *singlescore_label;
+	GtkWidget *singlescore_switch;
 };
 
 #define GPINSTRUCT_LESSON_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_EDITOR, GPInstructLessonEditorPrivate))
@@ -81,8 +81,8 @@ gpinstruct_lesson_editor_finalize (GObject *object)
 static void
 gpinstruct_lesson_editor_class_init (GPInstructLessonEditorClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectEditorClass *parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonEditorPrivate));
 
@@ -94,7 +94,7 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	GPInstructLessonEditor* editor = GPINSTRUCT_LESSON_EDITOR (user_data);
+	GPInstructLessonEditor *editor = GPINSTRUCT_LESSON_EDITOR (user_data);
 
 	gpinstruct_lesson_set_title (editor->priv->lesson,
 	                             gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
@@ -107,7 +107,7 @@ singlescore_activate (GObject    *gobject,
                       GParamSpec *pspec,
                       gpointer    user_data)
 {
-	GPInstructLessonEditor* editor = GPINSTRUCT_LESSON_EDITOR (user_data);
+	GPInstructLessonEditor *editor = GPINSTRUCT_LESSON_EDITOR (user_data);
 
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->singlescore_switch));
 
@@ -120,11 +120,11 @@ singlescore_activate (GObject    *gobject,
 }
 
 
-GPInstructLessonEditor*
-gpinstruct_lesson_editor_new (GPInstructEditorWindow* window,
-                              GPInstructLesson* lesson)
+GPInstructLessonEditor *
+gpinstruct_lesson_editor_new (GPInstructEditorWindow *window,
+                              GPInstructLesson *lesson)
 {
-	GPInstructLessonEditor* editor = g_object_new (GPINSTRUCT_TYPE_LESSON_EDITOR, NULL);
+	GPInstructLessonEditor *editor = g_object_new (GPINSTRUCT_TYPE_LESSON_EDITOR, NULL);
 
 	editor->priv->window = window;
 	editor->priv->lesson = lesson;

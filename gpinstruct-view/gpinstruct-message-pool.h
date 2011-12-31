@@ -43,7 +43,7 @@ struct _GPInstructMessagePool
 {
 	GObject parent_instance;
 
-	GPInstructMessagePoolPrivate* priv;
+	GPInstructMessagePoolPrivate *priv;
 };
 
 typedef enum
@@ -60,14 +60,14 @@ typedef enum
 } GPInstructMessageType;
 
 GType gpinstruct_message_pool_get_type (void) G_GNUC_CONST;
-GPInstructMessagePool* gpinstruct_message_pool_new (void);
-void gpinstruct_message_pool_load_from_file (GPInstructMessagePool* pool, const gchar *file);
-const gchar* gpinstruct_message_pool_get_random (GPInstructMessagePool* pool, GPInstructMessageType type);
-void gpinstruct_message_pool_add (GPInstructMessagePool* pool, GPInstructMessageType type, const gchar* message);
-void gpinstruct_message_pool_add_multiple (GPInstructMessagePool* pool, ...);
-void gpinstruct_message_pool_remove (GPInstructMessagePool* pool, GPInstructMessageType type, guint message);
-const gchar* gpinstruct_message_pool_get (GPInstructMessagePool* pool, GPInstructMessageType type, guint message);
-void gpinstruct_message_pool_play_sound_random (GPInstructMessagePool* pool, GPInstructMessageType type);
+GPInstructMessagePool *gpinstruct_message_pool_new (void);
+void gpinstruct_message_pool_load_from_file (GPInstructMessagePool *pool, const gchar *file);
+const gchar *gpinstruct_message_pool_get_random (GPInstructMessagePool *pool, GPInstructMessageType type);
+void gpinstruct_message_pool_add (GPInstructMessagePool *pool, GPInstructMessageType type, const gchar *message);
+void gpinstruct_message_pool_add_multiple (GPInstructMessagePool *pool, ...);
+void gpinstruct_message_pool_remove (GPInstructMessagePool *pool, GPInstructMessageType type, guint message);
+const gchar *gpinstruct_message_pool_get (GPInstructMessagePool *pool, GPInstructMessageType type, guint message);
+void gpinstruct_message_pool_play_sound_random (GPInstructMessagePool *pool, GPInstructMessageType type);
 
 G_END_DECLS
 

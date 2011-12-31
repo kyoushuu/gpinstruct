@@ -39,25 +39,25 @@ struct _GPInstructLessonViewClass
 	GtkDialogClass parent_class;
 
 	/* Signals */
-	gboolean(* next) (GPInstructLessonView* view, gpointer user_data);
-	gboolean(* back) (GPInstructLessonView* view, gpointer user_data);
+	gboolean(* next) (GPInstructLessonView *view, gpointer user_data);
+	gboolean(* back) (GPInstructLessonView *view, gpointer user_data);
 };
 
 struct _GPInstructLessonView
 {
 	GtkDialog parent_instance;
 
-	GPInstructLessonViewPrivate* priv;
+	GPInstructLessonViewPrivate *priv;
 };
 
 GType gpinstruct_lesson_view_get_type (void) G_GNUC_CONST;
-GPInstructLessonView* gpinstruct_lesson_view_new (GPInstructLesson* lesson, GPInstructMessagePool* pool, GPInstructLog* log);
-void gpinstruct_lesson_view_append_page (GPInstructLessonView* view, GPInstructLessonViewPage* page);
-guint gpinstruct_lesson_view_get_current_page (GPInstructLessonView* view);
-void gpinstruct_lesson_view_set_current_page (GPInstructLessonView* view, guint page);
-GPInstructLessonViewPage* gpinstruct_lesson_view_get_current_page_object (GPInstructLessonView* view);
-void gpinstruct_lesson_view_set_explanation (GPInstructLessonView* view, const gchar* explanation);
-const gchar* gpinstruct_lesson_view_get_explanation (GPInstructLessonView* view);
+GPInstructLessonView *gpinstruct_lesson_view_new (GPInstructLesson *lesson, GPInstructMessagePool *pool, GPInstructLog *log);
+void gpinstruct_lesson_view_append_page (GPInstructLessonView *view, GPInstructLessonViewPage *page);
+guint gpinstruct_lesson_view_get_current_page (GPInstructLessonView *view);
+void gpinstruct_lesson_view_set_current_page (GPInstructLessonView *view, guint page);
+GPInstructLessonViewPage *gpinstruct_lesson_view_get_current_page_object (GPInstructLessonView *view);
+void gpinstruct_lesson_view_set_explanation (GPInstructLessonView *view, const gchar *explanation);
+const gchar *gpinstruct_lesson_view_get_explanation (GPInstructLessonView *view);
 
 G_END_DECLS
 

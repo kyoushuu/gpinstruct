@@ -43,17 +43,17 @@ struct _GPInstructLessonTestMultiChoice
 {
 	GPInstructLessonTest parent_instance;
 
-	GPInstructLessonTestMultiChoicePrivate* priv;
+	GPInstructLessonTestMultiChoicePrivate *priv;
 };
 
 GType gpinstruct_lesson_test_multi_choice_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestMultiChoice* gpinstruct_lesson_test_multi_choice_new (void);
-void gpinstruct_lesson_test_multi_choice_add_question (GPInstructLessonTestMultiChoice* test, GPInstructLessonTestMultiChoiceQuestion* question);
-void gpinstruct_lesson_test_multi_choice_remove_question (GPInstructLessonTestMultiChoice* test, guint question);
-GPInstructLessonTestMultiChoiceQuestion* gpinstruct_lesson_test_multi_choice_get_question (GPInstructLessonTestMultiChoice* test, guint question);
-GList* gpinstruct_lesson_test_multi_choice_get_questions (GPInstructLessonTestMultiChoice* test);
-guint gpinstruct_lesson_test_multi_choice_get_questions_length (GPInstructLessonTestMultiChoice* test);
-gboolean gpinstruct_lesson_test_multi_choice_is_correct (GPInstructLessonTestMultiChoice* test, guint item, guint answer);
+GPInstructLessonTestMultiChoice *gpinstruct_lesson_test_multi_choice_new (void);
+void gpinstruct_lesson_test_multi_choice_add_question (GPInstructLessonTestMultiChoice *test, GPInstructLessonTestMultiChoiceQuestion *question);
+void gpinstruct_lesson_test_multi_choice_remove_question (GPInstructLessonTestMultiChoice *test, guint question);
+GPInstructLessonTestMultiChoiceQuestion *gpinstruct_lesson_test_multi_choice_get_question (GPInstructLessonTestMultiChoice *test, guint question);
+GList *gpinstruct_lesson_test_multi_choice_get_questions (GPInstructLessonTestMultiChoice *test);
+guint gpinstruct_lesson_test_multi_choice_get_questions_length (GPInstructLessonTestMultiChoice *test);
+gboolean gpinstruct_lesson_test_multi_choice_is_correct (GPInstructLessonTestMultiChoice *test, guint item, guint answer);
 
 G_END_DECLS
 

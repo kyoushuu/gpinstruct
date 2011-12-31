@@ -27,14 +27,14 @@
 
 struct _GPInstructAnalyzerExamineeViewPrivate
 {
-	GtkListStore* examinee_store;
-	GtkWidget* examinee_treeview;
+	GtkListStore *examinee_store;
+	GtkWidget *examinee_treeview;
 
-	GtkTreeStore* project_store;
-	GtkWidget* project_treeview;
+	GtkTreeStore *project_store;
+	GtkWidget *project_treeview;
 
-	GtkTreeStore* test_store;
-	GtkWidget* test_treeview;
+	GtkTreeStore *test_store;
+	GtkWidget *test_treeview;
 };
 
 #define GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_EXAMINEE_VIEW, GPInstructAnalyzerExamineeViewPrivate))
@@ -89,9 +89,9 @@ static void
 examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
                                     gpointer user_data)
 {
-	GPInstructAnalyzerExamineeView* view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (user_data);
+	GPInstructAnalyzerExamineeView *view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (user_data);
 
-	GPInstructLogAnalyzerExaminee* examinee;
+	GPInstructLogAnalyzerExaminee *examinee;
 
 	GtkTreeIter iter, iterProject, iterCategory, iterLesson, iterGroup;
 	GtkTreeModel *model;
@@ -114,7 +114,7 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
 
 		if (examinee)
 		{
-			GPInstructLogAnalyzerProject* project = examinee->project;
+			GPInstructLogAnalyzerProject *project = examinee->project;
 
 			items = project->items_length;
 			frequency = project->times_taken;
@@ -157,11 +157,11 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
 			g_free (time_text);
 			g_free (ave_time_text);
 
-			GList* categories = project->categories;
+			GList *categories = project->categories;
 
 			while (categories)
 			{
-				GPInstructLogAnalyzerCategory* category = (GPInstructLogAnalyzerCategory*)categories->data;
+				GPInstructLogAnalyzerCategory *category = (GPInstructLogAnalyzerCategory*) categories->data;
 
 				items = category->items_length;
 				frequency = category->times_taken;
@@ -204,11 +204,11 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
 				g_free (time_text);
 				g_free (ave_time_text);
 
-				GList* lessons = category->lessons;
+				GList *lessons = category->lessons;
 
 				while (lessons)
 				{
-					GPInstructLogAnalyzerLesson* lesson = (GPInstructLogAnalyzerLesson*)lessons->data;
+					GPInstructLogAnalyzerLesson *lesson = (GPInstructLogAnalyzerLesson*) lessons->data;
 
 					items = lesson->items_length;
 					frequency = lesson->times_taken;
@@ -251,13 +251,13 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
 					g_free (time_text);
 					g_free (ave_time_text);
 
-					GList* elements = lesson->elements;
+					GList *elements = lesson->elements;
 
 					while (elements)
 					{
-						if (((GPInstructLogAnalyzerLessonElement*)elements->data)->is_test)
+						if (((GPInstructLogAnalyzerLessonElement*) elements->data)->is_test)
 						{
-							GPInstructLogAnalyzerTest* test = ((GPInstructLogAnalyzerLessonElement*)elements->data)->test;
+							GPInstructLogAnalyzerTest *test = ((GPInstructLogAnalyzerLessonElement*) elements->data)->test;
 
 							items = test->items_length;
 							frequency = test->times_taken;
@@ -302,7 +302,7 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
 						}
 						else
 						{
-							GPInstructLogAnalyzerGroup* group = ((GPInstructLogAnalyzerLessonElement*)elements->data)->group;
+							GPInstructLogAnalyzerGroup *group = ((GPInstructLogAnalyzerLessonElement*) elements->data)->group;
 
 							items = group->items_length;
 							frequency = group->times_taken;
@@ -345,11 +345,11 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
 							g_free (time_text);
 							g_free (ave_time_text);
 
-							GList* tests = group->tests;
+							GList *tests = group->tests;
 
 							while (tests)
 							{
-								GPInstructLogAnalyzerTest* test = (GPInstructLogAnalyzerTest*)tests->data;
+								GPInstructLogAnalyzerTest *test = (GPInstructLogAnalyzerTest*) tests->data;
 
 								items = test->items_length;
 								frequency = test->times_taken;
@@ -415,12 +415,12 @@ static void
 project_tree_selection_changed_cb (GtkTreeSelection *selection,
                                    gpointer user_data)
 {
-	GPInstructAnalyzerExamineeView* view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (user_data);
+	GPInstructAnalyzerExamineeView *view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (user_data);
 
 	GtkTreeIter iter, iterItem, iterChoice;
 	GtkTreeModel *model;
 	guint struct_type;
-	GPInstructLogAnalyzerTest* test;
+	GPInstructLogAnalyzerTest *test;
 
 	guint min;
 	gdouble sec;
@@ -442,12 +442,12 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection,
 
 		if (struct_type == STRUCT_TYPE_TEST)
 		{
-			GList* items = test->items;
+			GList *items = test->items;
 			guint item_num = 0;
 
 			while (items)
 			{
-				GPInstructLogAnalyzerItem* item = items->data;
+				GPInstructLogAnalyzerItem *item = items->data;
 
 				children = item->choices_length;
 				frequency = item->times_answered;
@@ -489,12 +489,12 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection,
 				g_free (time_text);
 				g_free (ave_time_text);
 
-				GList* choices = item->choices;
+				GList *choices = item->choices;
 				guint choice_num = 0;
 
 				while (choices)
 				{
-					GPInstructLogAnalyzerChoice* choice = choices->data;
+					GPInstructLogAnalyzerChoice *choice = choices->data;
 
 					if (test->is_string)
 						title_text = g_strdup (choice->string);
@@ -553,12 +553,12 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	object->priv = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_PRIVATE (object);
 
 	GtkTreeSelection *selection;
-	GtkCellRenderer* renderer;
+	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 
 	gtk_paned_set_position (GTK_PANED (object), 200);
 
-	GtkWidget* examinee_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *examinee_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (examinee_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack1 (GTK_PANED (object), examinee_scrolledwindow, FALSE, TRUE);
@@ -567,7 +567,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	                                                   G_TYPE_STRING,
 	                                                   G_TYPE_POINTER);
 
-	GtkWidget* examinee_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->examinee_store));
+	GtkWidget *examinee_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->examinee_store));
 	gtk_container_add (GTK_CONTAINER (examinee_scrolledwindow), examinee_treeview);
 	object->priv->examinee_treeview = examinee_treeview;
 
@@ -587,10 +587,10 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	gtk_tree_view_column_set_resizable (column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (examinee_treeview), column);
 
-	GtkWidget* vpaned = gtk_vpaned_new ();
+	GtkWidget *vpaned = gtk_vpaned_new ();
 	gtk_paned_pack2 (GTK_PANED (object), vpaned, TRUE, TRUE);
 
-	GtkWidget* project_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *project_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (project_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack1 (GTK_PANED (vpaned), project_scrolledwindow, TRUE, TRUE);
@@ -607,7 +607,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	                                                  G_TYPE_UINT,
 	                                                  G_TYPE_POINTER);
 
-	GtkWidget* project_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->project_store));
+	GtkWidget *project_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->project_store));
 	gtk_container_add (GTK_CONTAINER (project_scrolledwindow), project_treeview);
 	object->priv->project_treeview = project_treeview;
 
@@ -690,7 +690,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	gtk_tree_view_column_set_resizable (column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (project_treeview), column);
 
-	GtkWidget* test_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *test_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (test_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack2 (GTK_PANED (vpaned), test_scrolledwindow, TRUE, TRUE);
@@ -707,7 +707,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	                                               G_TYPE_UINT,
 	                                               G_TYPE_POINTER);
 
-	GtkWidget* test_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->test_store));
+	GtkWidget *test_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->test_store));
 	gtk_container_add (GTK_CONTAINER (test_scrolledwindow), test_treeview);
 	object->priv->test_treeview = test_treeview;
 
@@ -783,7 +783,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 static void
 gpinstruct_analyzer_examinee_view_finalize (GObject *object)
 {
-	GPInstructAnalyzerExamineeView* view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (object);
+	GPInstructAnalyzerExamineeView *view = GPINSTRUCT_ANALYZER_EXAMINEE_VIEW (object);
 
 	if (view->priv->examinee_store)
 		g_object_unref (view->priv->examinee_store);
@@ -800,8 +800,8 @@ gpinstruct_analyzer_examinee_view_finalize (GObject *object)
 static void
 gpinstruct_analyzer_examinee_view_class_init (GPInstructAnalyzerExamineeViewClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GtkHPanedClass* parent_class = GTK_HPANED_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GtkHPanedClass *parent_class = GTK_HPANED_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructAnalyzerExamineeViewPrivate));
 
@@ -809,19 +809,19 @@ gpinstruct_analyzer_examinee_view_class_init (GPInstructAnalyzerExamineeViewClas
 }
 
 
-GtkWidget*
-gpinstruct_analyzer_examinee_view_new (GPInstructLogAnalyzer* analyzer)
+GtkWidget *
+gpinstruct_analyzer_examinee_view_new (GPInstructLogAnalyzer *analyzer)
 {
-	GPInstructAnalyzerExamineeView* view = g_object_new (GPINSTRUCT_TYPE_ANALYZER_EXAMINEE_VIEW, NULL);
+	GPInstructAnalyzerExamineeView *view = g_object_new (GPINSTRUCT_TYPE_ANALYZER_EXAMINEE_VIEW, NULL);
 
-	gchar* name;
+	gchar *name;
 
-	GList* examinees = gpinstruct_log_analyzer_get_examinees (analyzer);
-	GList* current_examinees = examinees;
+	GList *examinees = gpinstruct_log_analyzer_get_examinees (analyzer);
+	GList *current_examinees = examinees;
 
 	while (current_examinees)
 	{
-		GPInstructLogAnalyzerExaminee* examinee = current_examinees->data;
+		GPInstructLogAnalyzerExaminee *examinee = current_examinees->data;
 
 		name = g_strdup_printf ("%s, %s",
 		                        examinee->last_name,

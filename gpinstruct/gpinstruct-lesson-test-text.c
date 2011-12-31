@@ -24,18 +24,18 @@
 
 struct _GPInstructLessonTestTextPrivate
 {
-	GList* questions;
+	GList *questions;
 };
 
 #define GPINSTRUCT_LESSON_TEST_TEXT_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT, GPInstructLessonTestTextPrivate))
 
 
 
-static gchar*
-get_item (GPInstructLessonTest* test,
+static gchar *
+get_item (GPInstructLessonTest *test,
           guint item)
 {
-	GPInstructLessonTestTextQuestion* question =
+	GPInstructLessonTestTextQuestion *question =
 		gpinstruct_lesson_test_text_get_question (GPINSTRUCT_LESSON_TEST_TEXT (test),
 		                                          item);
 
@@ -47,17 +47,17 @@ get_item (GPInstructLessonTest* test,
 
 
 static guint
-get_items_length (GPInstructLessonTest* test)
+get_items_length (GPInstructLessonTest *test)
 {
 	return gpinstruct_lesson_test_text_get_questions_length (GPINSTRUCT_LESSON_TEST_TEXT (test));
 }
 
 
-static gchar*
-get_item_correct_string (GPInstructLessonTest* test,
+static gchar *
+get_item_correct_string (GPInstructLessonTest *test,
                          guint item)
 {
-	GPInstructLessonTestTextQuestion* question =
+	GPInstructLessonTestTextQuestion *question =
 		gpinstruct_lesson_test_text_get_question (GPINSTRUCT_LESSON_TEST_TEXT (test), item);
 	if (question)
 		return g_strdup (gpinstruct_lesson_test_text_question_get_answer (question));
@@ -80,7 +80,7 @@ gpinstruct_lesson_test_text_init (GPInstructLessonTestText *object)
 static void
 gpinstruct_lesson_test_text_finalize (GObject *object)
 {
-	GPInstructLessonTestText* test = GPINSTRUCT_LESSON_TEST_TEXT (object);
+	GPInstructLessonTestText *test = GPINSTRUCT_LESSON_TEST_TEXT (object);
 
 	if (test->priv->questions)
 		g_list_free_full (test->priv->questions, g_object_unref);
@@ -91,8 +91,8 @@ gpinstruct_lesson_test_text_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_text_class_init (GPInstructLessonTestTextClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	GPInstructLessonTestClass* parent_class = GPINSTRUCT_LESSON_TEST_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GPInstructLessonTestClass *parent_class = GPINSTRUCT_LESSON_TEST_CLASS (klass);
 
 	parent_class->answer_is_string = TRUE;
 	parent_class->get_item = get_item;
@@ -105,15 +105,15 @@ gpinstruct_lesson_test_text_class_init (GPInstructLessonTestTextClass *klass)
 }
 
 
-GPInstructLessonTestText*
+GPInstructLessonTestText *
 gpinstruct_lesson_test_text_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_TEXT, NULL);
 }
 
 void
-gpinstruct_lesson_test_text_add_question (GPInstructLessonTestText* test,
-                                          GPInstructLessonTestTextQuestion* question)
+gpinstruct_lesson_test_text_add_question (GPInstructLessonTestText *test,
+                                          GPInstructLessonTestTextQuestion *question)
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_TEXT (test));
 
@@ -121,39 +121,39 @@ gpinstruct_lesson_test_text_add_question (GPInstructLessonTestText* test,
 }
 
 void
-gpinstruct_lesson_test_text_remove_question (GPInstructLessonTestText* test,
+gpinstruct_lesson_test_text_remove_question (GPInstructLessonTestText *test,
                                              guint question)
 {
-	GList* nth_link = g_list_nth (test->priv->questions, question);
+	GList *nth_link = g_list_nth (test->priv->questions, question);
 	g_object_unref (nth_link->data);
 	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
 }
 
-GPInstructLessonTestTextQuestion*
-gpinstruct_lesson_test_text_get_question (GPInstructLessonTestText* test,
+GPInstructLessonTestTextQuestion *
+gpinstruct_lesson_test_text_get_question (GPInstructLessonTestText *test,
                                           guint question)
 {
 	return g_list_nth_data (test->priv->questions, question);
 }
 
-GList*
-gpinstruct_lesson_test_text_get_questions (GPInstructLessonTestText* test)
+GList *
+gpinstruct_lesson_test_text_get_questions (GPInstructLessonTestText *test)
 {
 	return g_list_copy (test->priv->questions);
 }
 
 guint
-gpinstruct_lesson_test_text_get_questions_length (GPInstructLessonTestText* test)
+gpinstruct_lesson_test_text_get_questions_length (GPInstructLessonTestText *test)
 {
 	return g_list_length (test->priv->questions);
 }
 
 gboolean
-gpinstruct_lesson_test_text_is_correct (GPInstructLessonTestText* test,
+gpinstruct_lesson_test_text_is_correct (GPInstructLessonTestText *test,
                                         guint item,
-                                        gchar* answer)
+                                        gchar *answer)
 {
-	GPInstructLessonTestTextQuestion* question = gpinstruct_lesson_test_text_get_question (test, item);
+	GPInstructLessonTestTextQuestion *question = gpinstruct_lesson_test_text_get_question (test, item);
 
 	if (question == NULL)
 		return FALSE;

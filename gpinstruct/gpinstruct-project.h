@@ -44,17 +44,17 @@ struct _GPInstructProject
 {
 	GPInstructObject parent_instance;
 
-	GPInstructProjectPrivate* priv;
+	GPInstructProjectPrivate *priv;
 };
 
 GType gpinstruct_project_get_type (void) G_GNUC_CONST;
-GPInstructProject* gpinstruct_project_new (void);
-const gchar* gpinstruct_project_get_title (GPInstructProject* project);
-void gpinstruct_project_set_title (GPInstructProject* project, const gchar *title);
-guint gpinstruct_project_get_categories_length (GPInstructProject* project);
-void gpinstruct_project_add_category (GPInstructProject* project, GPInstructCategory* category);
-void gpinstruct_project_remove_category (GPInstructProject* project, guint category);
-GList* gpinstruct_project_get_categories (GPInstructProject* project);
+GPInstructProject *gpinstruct_project_new (void);
+const gchar *gpinstruct_project_get_title (GPInstructProject *project);
+void gpinstruct_project_set_title (GPInstructProject *project, const gchar *title);
+guint gpinstruct_project_get_categories_length (GPInstructProject *project);
+void gpinstruct_project_add_category (GPInstructProject *project, GPInstructCategory *category);
+void gpinstruct_project_remove_category (GPInstructProject *project, guint category);
+GList *gpinstruct_project_get_categories (GPInstructProject *project);
 
 G_END_DECLS
 

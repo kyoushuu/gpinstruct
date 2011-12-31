@@ -44,7 +44,7 @@ struct _GPInstructLessonReadingPage
 };
 
 GType gpinstruct_lesson_reading_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonReadingPage* gpinstruct_lesson_reading_page_new (GPInstructLessonReading* reading);
+GPInstructLessonReadingPage *gpinstruct_lesson_reading_page_new (GPInstructLessonReading *reading);
 
 G_END_DECLS
 

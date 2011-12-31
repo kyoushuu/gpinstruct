@@ -22,9 +22,9 @@
 
 struct _GPInstructLessonTestTextQuestionPrivate
 {
-	gchar* text;
-	gchar* explanation;
-	gchar* answer;
+	gchar *text;
+	gchar *explanation;
+	gchar *answer;
 };
 
 #define GPINSTRUCT_LESSON_TEST_TEXT_QUESTION_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_TEXT_QUESTION, GPInstructLessonTestTextQuestionPrivate))
@@ -46,7 +46,7 @@ gpinstruct_lesson_test_text_question_init (GPInstructLessonTestTextQuestion *obj
 static void
 gpinstruct_lesson_test_text_question_finalize (GObject *object)
 {
-	GPInstructLessonTestTextQuestion* question = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION (object);
+	GPInstructLessonTestTextQuestion *question = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION (object);
 
 	g_free (question->priv->text);
 	g_free (question->priv->explanation);
@@ -58,8 +58,8 @@ gpinstruct_lesson_test_text_question_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_text_question_class_init (GPInstructLessonTestTextQuestionClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectClass* parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectClass *parent_class = GPINSTRUCT_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestTextQuestionPrivate));
 
@@ -67,49 +67,49 @@ gpinstruct_lesson_test_text_question_class_init (GPInstructLessonTestTextQuestio
 }
 
 
-GPInstructLessonTestTextQuestion*
+GPInstructLessonTestTextQuestion *
 gpinstruct_lesson_test_text_question_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_TEXT_QUESTION, NULL);
 }
 
-const gchar*
-gpinstruct_lesson_test_text_question_get_text (GPInstructLessonTestTextQuestion* question)
+const gchar *
+gpinstruct_lesson_test_text_question_get_text (GPInstructLessonTestTextQuestion *question)
 {
 	return question->priv->text;
 }
 
 void
-gpinstruct_lesson_test_text_question_set_text (GPInstructLessonTestTextQuestion* question,
-                                               const gchar* text)
+gpinstruct_lesson_test_text_question_set_text (GPInstructLessonTestTextQuestion *question,
+                                               const gchar *text)
 {
 	g_free (question->priv->text);
 	question->priv->text = g_strdup (text);
 }
 
-const gchar*
-gpinstruct_lesson_test_text_question_get_answer (GPInstructLessonTestTextQuestion* question)
+const gchar *
+gpinstruct_lesson_test_text_question_get_answer (GPInstructLessonTestTextQuestion *question)
 {
 	return question->priv->answer;
 }
 
 void
-gpinstruct_lesson_test_text_question_set_answer (GPInstructLessonTestTextQuestion* question,
-                                                 const gchar* answer)
+gpinstruct_lesson_test_text_question_set_answer (GPInstructLessonTestTextQuestion *question,
+                                                 const gchar *answer)
 {
 	g_free (question->priv->answer);
 	question->priv->answer = g_strdup (answer);
 }
 
-const gchar*
-gpinstruct_lesson_test_text_question_get_explanation (GPInstructLessonTestTextQuestion* question)
+const gchar *
+gpinstruct_lesson_test_text_question_get_explanation (GPInstructLessonTestTextQuestion *question)
 {
 	return question->priv->explanation;
 }
 
 void
-gpinstruct_lesson_test_text_question_set_explanation (GPInstructLessonTestTextQuestion* question,
-                                                      const gchar* explanation)
+gpinstruct_lesson_test_text_question_set_explanation (GPInstructLessonTestTextQuestion *question,
+                                                      const gchar *explanation)
 {
 	g_free (question->priv->explanation);
 	question->priv->explanation = g_strdup (explanation);

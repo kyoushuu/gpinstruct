@@ -39,35 +39,35 @@ struct _GPInstructLessonViewPageClass
 	GtkScrolledWindowClass parent_class;
 
 	/* Signals */
-	gboolean(* show_next) (GPInstructLessonViewPage* view, gpointer user_data);
-	gboolean(* show_previous) (GPInstructLessonViewPage* view, gpointer user_data);
-	void(* show_current) (GPInstructLessonViewPage* view, gpointer user_data);
-	void(* reset) (GPInstructLessonViewPage* view, gpointer user_data);
+	gboolean(* show_next) (GPInstructLessonViewPage *view, gpointer user_data);
+	gboolean(* show_previous) (GPInstructLessonViewPage *view, gpointer user_data);
+	void(* show_current) (GPInstructLessonViewPage *view, gpointer user_data);
+	void(* reset) (GPInstructLessonViewPage *view, gpointer user_data);
 };
 
 struct _GPInstructLessonViewPage
 {
 	GtkScrolledWindow parent_instance;
 
-	GPInstructLessonViewPagePrivate* priv;
+	GPInstructLessonViewPagePrivate *priv;
 };
 
 GType gpinstruct_lesson_view_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonViewPage* gpinstruct_lesson_view_page_new (void);
-const gchar* gpinstruct_lesson_view_page_get_title (GPInstructLessonViewPage* page);
-void gpinstruct_lesson_view_page_set_title (GPInstructLessonViewPage* page, const gchar* title);
-GPInstructMessageType gpinstruct_lesson_view_page_get_message (GPInstructLessonViewPage* page);
-void gpinstruct_lesson_view_page_set_message (GPInstructLessonViewPage* page, GPInstructMessageType message);
-const gchar* gpinstruct_lesson_view_page_get_explanation (GPInstructLessonViewPage* page);
-void gpinstruct_lesson_view_page_set_explanation (GPInstructLessonViewPage* page, const gchar* explanation);
-gboolean gpinstruct_lesson_view_page_get_show_next_button (GPInstructLessonViewPage* page);
-void gpinstruct_lesson_view_page_set_show_next_button (GPInstructLessonViewPage* page, gboolean show);
-gboolean gpinstruct_lesson_view_page_get_show_back_button (GPInstructLessonViewPage* page);
-void gpinstruct_lesson_view_page_set_show_back_button (GPInstructLessonViewPage* page, gboolean show);
-gboolean gpinstruct_lesson_view_page_show_next (GPInstructLessonViewPage* page);
-gboolean gpinstruct_lesson_view_page_show_previous (GPInstructLessonViewPage* page);
-void gpinstruct_lesson_view_page_show_current (GPInstructLessonViewPage* page);
-void gpinstruct_lesson_view_page_reset (GPInstructLessonViewPage* page);
+GPInstructLessonViewPage *gpinstruct_lesson_view_page_new (void);
+const gchar *gpinstruct_lesson_view_page_get_title (GPInstructLessonViewPage *page);
+void gpinstruct_lesson_view_page_set_title (GPInstructLessonViewPage *page, const gchar *title);
+GPInstructMessageType gpinstruct_lesson_view_page_get_message (GPInstructLessonViewPage *page);
+void gpinstruct_lesson_view_page_set_message (GPInstructLessonViewPage *page, GPInstructMessageType message);
+const gchar *gpinstruct_lesson_view_page_get_explanation (GPInstructLessonViewPage *page);
+void gpinstruct_lesson_view_page_set_explanation (GPInstructLessonViewPage *page, const gchar *explanation);
+gboolean gpinstruct_lesson_view_page_get_show_next_button (GPInstructLessonViewPage *page);
+void gpinstruct_lesson_view_page_set_show_next_button (GPInstructLessonViewPage *page, gboolean show);
+gboolean gpinstruct_lesson_view_page_get_show_back_button (GPInstructLessonViewPage *page);
+void gpinstruct_lesson_view_page_set_show_back_button (GPInstructLessonViewPage *page, gboolean show);
+gboolean gpinstruct_lesson_view_page_show_next (GPInstructLessonViewPage *page);
+gboolean gpinstruct_lesson_view_page_show_previous (GPInstructLessonViewPage *page);
+void gpinstruct_lesson_view_page_show_current (GPInstructLessonViewPage *page);
+void gpinstruct_lesson_view_page_reset (GPInstructLessonViewPage *page);
 
 G_END_DECLS
 

@@ -26,13 +26,13 @@
 
 struct _GPInstructLessonTestOrderPagePrivate
 {
-	GPInstructLessonTestOrder* test;
-	GPInstructLessonScore* score;
-	GPInstructLog* log;
+	GPInstructLessonTestOrder *test;
+	GPInstructLessonScore *score;
+	GPInstructLog *log;
 
-	guint* items;
+	guint *items;
 
-	GtkListStore* store;
+	GtkListStore *store;
 };
 
 #define GPINSTRUCT_LESSON_TEST_ORDER_PAGE_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_TEST_ORDER_PAGE, GPInstructLessonTestOrderPagePrivate))
@@ -40,13 +40,13 @@ struct _GPInstructLessonTestOrderPagePrivate
 
 
 static void
-page_reset (GPInstructLessonTestOrderPage* page,
+page_reset (GPInstructLessonTestOrderPage *page,
             gpointer user_data)
 {
 	if (page->priv->log)
 		gpinstruct_log_close_test (page->priv->log);
 
-	GList* items = gpinstruct_lesson_test_order_get_items (page->priv->test);
+	GList *items = gpinstruct_lesson_test_order_get_items (page->priv->test);
 	guint length = g_list_length (items);
 
 	g_free (page->priv->items);
@@ -81,7 +81,7 @@ gpinstruct_lesson_test_order_page_init (GPInstructLessonTestOrderPage *object)
 static void
 gpinstruct_lesson_test_order_page_finalize (GObject *object)
 {
-	GPInstructLessonTestOrderPage* page = GPINSTRUCT_LESSON_TEST_ORDER_PAGE (object);
+	GPInstructLessonTestOrderPage *page = GPINSTRUCT_LESSON_TEST_ORDER_PAGE (object);
 
 	g_free (page->priv->items);
 
@@ -94,8 +94,8 @@ gpinstruct_lesson_test_order_page_finalize (GObject *object)
 static void
 gpinstruct_lesson_test_order_page_class_init (GPInstructLessonTestOrderPageClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonViewPageClass* parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonViewPageClass *parent_class = GPINSTRUCT_LESSON_VIEW_PAGE_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonTestOrderPagePrivate));
 
@@ -105,7 +105,7 @@ gpinstruct_lesson_test_order_page_class_init (GPInstructLessonTestOrderPageClass
 
 
 static gboolean
-page_show_next (GPInstructLessonTestOrderPage* page,
+page_show_next (GPInstructLessonTestOrderPage *page,
                 gpointer user_data)
 {
 	GtkTreeIter iter;
@@ -166,13 +166,13 @@ page_show_next (GPInstructLessonTestOrderPage* page,
 			{
 				GString *explanation_answer = g_string_new (NULL);
 
-				GList* items = gpinstruct_lesson_test_order_get_items (page->priv->test);
+				GList *items = gpinstruct_lesson_test_order_get_items (page->priv->test);
 				guint length = g_list_length (items);
 				const gchar *answers[length];
 				int i;
 				for (i = 0; i<length; i++)
 				{
-					GPInstructLessonTestOrderItem* item = g_list_nth_data (items, i);
+					GPInstructLessonTestOrderItem *item = g_list_nth_data (items, i);
 					answers[gpinstruct_lesson_test_order_item_get_answer (item)] =
 						gpinstruct_lesson_test_order_item_get_text (item);
 				}
@@ -200,12 +200,12 @@ page_show_next (GPInstructLessonTestOrderPage* page,
 }
 
 
-GPInstructLessonTestOrderPage*
-gpinstruct_lesson_test_order_page_new (GPInstructLessonTestOrder* test,
-                                       GPInstructLessonScore* score,
-                                       GPInstructLog* log)
+GPInstructLessonTestOrderPage *
+gpinstruct_lesson_test_order_page_new (GPInstructLessonTestOrder *test,
+                                       GPInstructLessonScore *score,
+                                       GPInstructLog *log)
 {
-	GPInstructLessonTestOrderPage* page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_ORDER_PAGE, NULL);
+	GPInstructLessonTestOrderPage *page = g_object_new (GPINSTRUCT_TYPE_LESSON_TEST_ORDER_PAGE, NULL);
 
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 	                                       gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
@@ -218,7 +218,7 @@ gpinstruct_lesson_test_order_page_new (GPInstructLessonTestOrder* test,
 	page->priv->score = score;
 	page->priv->log = log;
 
-	GtkWidget* treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (page->priv->store));
+	GtkWidget *treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (page->priv->store));
 	gtk_tree_view_set_reorderable (GTK_TREE_VIEW (treeview), TRUE);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), treeview);

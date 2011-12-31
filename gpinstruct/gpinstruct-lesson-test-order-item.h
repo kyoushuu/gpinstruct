@@ -43,15 +43,15 @@ struct _GPInstructLessonTestOrderItem
 {
 	GPInstructObject parent_instance;
 
-	GPInstructLessonTestOrderItemPrivate* priv;
+	GPInstructLessonTestOrderItemPrivate *priv;
 };
 
 GType gpinstruct_lesson_test_order_item_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestOrderItem* gpinstruct_lesson_test_order_item_new (void);
-const gchar* gpinstruct_lesson_test_order_item_get_text (GPInstructLessonTestOrderItem* item);
-void gpinstruct_lesson_test_order_item_set_text (GPInstructLessonTestOrderItem* item, const gchar* text);
-guint gpinstruct_lesson_test_order_item_get_answer (GPInstructLessonTestOrderItem* item);
-void gpinstruct_lesson_test_order_item_set_answer (GPInstructLessonTestOrderItem* item, guint answer);
+GPInstructLessonTestOrderItem *gpinstruct_lesson_test_order_item_new (void);
+const gchar *gpinstruct_lesson_test_order_item_get_text (GPInstructLessonTestOrderItem *item);
+void gpinstruct_lesson_test_order_item_set_text (GPInstructLessonTestOrderItem *item, const gchar *text);
+guint gpinstruct_lesson_test_order_item_get_answer (GPInstructLessonTestOrderItem *item);
+void gpinstruct_lesson_test_order_item_set_answer (GPInstructLessonTestOrderItem *item, guint answer);
 
 G_END_DECLS
 

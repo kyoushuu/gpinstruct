@@ -29,9 +29,9 @@
 
 struct _GPInstructLogAnalyzerPrivate
 {
-	GPInstructLogAnalyzerProject* aproject;
-	GPInstructProject* project;
-	GList* examinees;
+	GPInstructLogAnalyzerProject *aproject;
+	GPInstructProject *project;
+	GList *examinees;
 };
 
 #define GPINSTRUCT_LOG_ANALYZER_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LOG_ANALYZER, GPInstructLogAnalyzerPrivate))
@@ -39,14 +39,14 @@ struct _GPInstructLogAnalyzerPrivate
 
 
 static void
-free_answer (GPInstructLogAnalyzerAnswer* answer)
+free_answer (GPInstructLogAnalyzerAnswer *answer)
 {
 	g_free (answer);
 }
 
 
 static void
-free_choice (GPInstructLogAnalyzerChoice* choice)
+free_choice (GPInstructLogAnalyzerChoice *choice)
 {
 	g_list_free_full (choice->answers, (GDestroyNotify)free_answer);
 	g_free (choice);
@@ -54,7 +54,7 @@ free_choice (GPInstructLogAnalyzerChoice* choice)
 
 
 static void
-free_item (GPInstructLogAnalyzerItem* item)
+free_item (GPInstructLogAnalyzerItem *item)
 {
 	g_list_free_full (item->choices, (GDestroyNotify)free_choice);
 	g_free (item);
@@ -62,7 +62,7 @@ free_item (GPInstructLogAnalyzerItem* item)
 
 
 static void
-free_test (GPInstructLogAnalyzerTest* test)
+free_test (GPInstructLogAnalyzerTest *test)
 {
 	g_list_free_full (test->items, (GDestroyNotify)free_item);
 	g_free (test);
@@ -70,7 +70,7 @@ free_test (GPInstructLogAnalyzerTest* test)
 
 
 static void
-free_group (GPInstructLogAnalyzerGroup* group)
+free_group (GPInstructLogAnalyzerGroup *group)
 {
 	g_list_free_full (group->tests, (GDestroyNotify)free_test);
 	g_free (group);
@@ -78,7 +78,7 @@ free_group (GPInstructLogAnalyzerGroup* group)
 
 
 static void
-free_lesson_element (GPInstructLogAnalyzerLessonElement* element)
+free_lesson_element (GPInstructLogAnalyzerLessonElement *element)
 {
 	if (element->is_test)
 		free_test (element->test);
@@ -90,7 +90,7 @@ free_lesson_element (GPInstructLogAnalyzerLessonElement* element)
 
 
 static void
-free_lesson (GPInstructLogAnalyzerLesson* lesson)
+free_lesson (GPInstructLogAnalyzerLesson *lesson)
 {
 	g_list_free_full (lesson->elements, (GDestroyNotify)free_lesson_element);
 	g_free (lesson);
@@ -98,7 +98,7 @@ free_lesson (GPInstructLogAnalyzerLesson* lesson)
 
 
 static void
-free_category (GPInstructLogAnalyzerCategory* category)
+free_category (GPInstructLogAnalyzerCategory *category)
 {
 	g_list_free_full (category->lessons, (GDestroyNotify)free_lesson);
 	g_free (category);
@@ -106,7 +106,7 @@ free_category (GPInstructLogAnalyzerCategory* category)
 
 
 static void
-free_project (GPInstructLogAnalyzerProject* project)
+free_project (GPInstructLogAnalyzerProject *project)
 {
 	g_list_free_full (project->categories, (GDestroyNotify)free_category);
 	g_datalist_clear (&project->tests_list);
@@ -115,7 +115,7 @@ free_project (GPInstructLogAnalyzerProject* project)
 
 
 static void
-free_examinee (GPInstructLogAnalyzerExaminee* examinee)
+free_examinee (GPInstructLogAnalyzerExaminee *examinee)
 {
 	free_project (examinee->project);
 	g_free (examinee->last_name);
@@ -140,7 +140,7 @@ gpinstruct_log_analyzer_init (GPInstructLogAnalyzer *object)
 static void
 gpinstruct_log_analyzer_finalize (GObject *object)
 {
-	GPInstructLogAnalyzer* analyzer = GPINSTRUCT_LOG_ANALYZER (object);
+	GPInstructLogAnalyzer *analyzer = GPINSTRUCT_LOG_ANALYZER (object);
 
 	if (analyzer->priv->aproject)
 		free_project (analyzer->priv->aproject);
@@ -157,8 +157,8 @@ gpinstruct_log_analyzer_finalize (GObject *object)
 static void
 gpinstruct_log_analyzer_class_init (GPInstructLogAnalyzerClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GObjectClass* parent_class = G_OBJECT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GObjectClass *parent_class = G_OBJECT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLogAnalyzerPrivate));
 
@@ -166,9 +166,9 @@ gpinstruct_log_analyzer_class_init (GPInstructLogAnalyzerClass *klass)
 }
 
 
-static GPInstructLogAnalyzerProject*
-create_project_tree (GPInstructLogAnalyzer* analyzer,
-                     GPInstructProject* project)
+static GPInstructLogAnalyzerProject *
+create_project_tree (GPInstructLogAnalyzer *analyzer,
+                     GPInstructProject *project)
 {
 	GPInstructCategory*				curr_category;
 	GPInstructLesson*				curr_lesson;
@@ -184,7 +184,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 
 	int i, j;
 
-	GPInstructLogAnalyzerProject* aproject = g_new0 (GPInstructLogAnalyzerProject, 1);
+	GPInstructLogAnalyzerProject *aproject = g_new0 (GPInstructLogAnalyzerProject, 1);
 	aproject->object = project;
 	g_datalist_init (&aproject->tests_list);
 
@@ -195,7 +195,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 	{
 		curr_category = GPINSTRUCT_CATEGORY (curr_categories->data);
 
-		GPInstructLogAnalyzerCategory* acategory = g_new0 (GPInstructLogAnalyzerCategory, 1);
+		GPInstructLogAnalyzerCategory *acategory = g_new0 (GPInstructLogAnalyzerCategory, 1);
 		acategory->object = curr_category;
 		acategory->project = aproject;
 
@@ -208,7 +208,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 		{
 			curr_lesson = GPINSTRUCT_LESSON (curr_lessons->data);
 
-			GPInstructLogAnalyzerLesson* alesson = g_new0 (GPInstructLogAnalyzerLesson, 1);
+			GPInstructLogAnalyzerLesson *alesson = g_new0 (GPInstructLogAnalyzerLesson, 1);
 			alesson->object = curr_lesson;
 			alesson->category = acategory;
 
@@ -225,12 +225,12 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 				{
 					curr_lesson_test = GPINSTRUCT_LESSON_TEST (curr_lesson_element);
 
-					GPInstructLogAnalyzerLessonElement* aelement = g_new0 (GPInstructLogAnalyzerLessonElement, 1);
+					GPInstructLogAnalyzerLessonElement *aelement = g_new0 (GPInstructLogAnalyzerLessonElement, 1);
 					aelement->is_test = TRUE;
 
 					alesson->elements = g_list_append (alesson->elements, aelement);
 
-					GPInstructLogAnalyzerTest* atest = g_new0 (GPInstructLogAnalyzerTest, 1);
+					GPInstructLogAnalyzerTest *atest = g_new0 (GPInstructLogAnalyzerTest, 1);
 					atest->object = curr_lesson_test;
 					atest->lesson = alesson;
 					atest->id = g_quark_from_string (gpinstruct_lesson_test_get_id (curr_lesson_test));
@@ -246,7 +246,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 
 					for (i=0; i<items_num; i++)
 					{
-						GPInstructLogAnalyzerItem* aitem = g_new0 (GPInstructLogAnalyzerItem, 1);
+						GPInstructLogAnalyzerItem *aitem = g_new0 (GPInstructLogAnalyzerItem, 1);
 						aitem->id = i;
 						aitem->test = atest;
 						aitem->answer = gpinstruct_lesson_test_get_item_correct_choice (curr_lesson_test, i);
@@ -259,7 +259,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 
 						for (j=0; j<choices_num; j++)
 						{
-							GPInstructLogAnalyzerChoice* achoice = g_new0 (GPInstructLogAnalyzerChoice, 1);
+							GPInstructLogAnalyzerChoice *achoice = g_new0 (GPInstructLogAnalyzerChoice, 1);
 							achoice->id = j;
 							achoice->item = aitem;
 
@@ -273,12 +273,12 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 				{
 					curr_lesson_element_group = GPINSTRUCT_LESSON_ELEMENT_GROUP (curr_lesson_element);
 
-					GPInstructLogAnalyzerLessonElement* aelement = g_new0 (GPInstructLogAnalyzerLessonElement, 1);
+					GPInstructLogAnalyzerLessonElement *aelement = g_new0 (GPInstructLogAnalyzerLessonElement, 1);
 					aelement->is_test = FALSE;
 
 					alesson->elements = g_list_append (alesson->elements, aelement);
 
-					GPInstructLogAnalyzerGroup* agroup = g_new0 (GPInstructLogAnalyzerGroup, 1);
+					GPInstructLogAnalyzerGroup *agroup = g_new0 (GPInstructLogAnalyzerGroup, 1);
 					agroup->object = curr_lesson_element_group;
 					aelement->group = agroup;
 
@@ -293,7 +293,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 						{
 							curr_lesson_test = GPINSTRUCT_LESSON_TEST (curr_lesson_group_element);
 
-							GPInstructLogAnalyzerTest* atest = g_new0 (GPInstructLogAnalyzerTest, 1);
+							GPInstructLogAnalyzerTest *atest = g_new0 (GPInstructLogAnalyzerTest, 1);
 							atest->object = curr_lesson_test;
 							atest->lesson = alesson;
 							atest->group = agroup;
@@ -311,7 +311,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 
 							for (i=0; i<items_num; i++)
 							{
-								GPInstructLogAnalyzerItem* aitem = g_new0 (GPInstructLogAnalyzerItem, 1);
+								GPInstructLogAnalyzerItem *aitem = g_new0 (GPInstructLogAnalyzerItem, 1);
 								aitem->id = i;
 								aitem->test = atest;
 								aitem->answer = gpinstruct_lesson_test_get_item_correct_choice (curr_lesson_test, i);
@@ -324,7 +324,7 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 
 								for (j=0; j<choices_num; j++)
 								{
-									GPInstructLogAnalyzerChoice* achoice = g_new0 (GPInstructLogAnalyzerChoice, 1);
+									GPInstructLogAnalyzerChoice *achoice = g_new0 (GPInstructLogAnalyzerChoice, 1);
 									achoice->id = j;
 									achoice->item = aitem;
 
@@ -364,11 +364,11 @@ create_project_tree (GPInstructLogAnalyzer* analyzer,
 }
 
 void
-add_test (GPInstructLogAnalyzerProject* aproject,
-          GPInstructLogTest* log_test,
-          GPInstructLogAnalyzerExaminee* examinee)
+add_test (GPInstructLogAnalyzerProject *aproject,
+          GPInstructLogTest *log_test,
+          GPInstructLogAnalyzerExaminee *examinee)
 {
-	GPInstructLogAnalyzerTest* test = g_datalist_id_get_data (&aproject->tests_list, log_test->id);
+	GPInstructLogAnalyzerTest *test = g_datalist_id_get_data (&aproject->tests_list, log_test->id);
 
 	if (test == NULL)
 		return;
@@ -393,12 +393,12 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 		aproject->last_group = test->group->object;
 	}
 
-	GList* answers = log_test->answers;
+	GList *answers = log_test->answers;
 
 	while (answers)
 	{
-		GPInstructLogAnswer* answer = answers->data;
-		GPInstructLogAnalyzerItem* item = g_list_nth_data (test->items, answer->item_id);
+		GPInstructLogAnswer *answer = answers->data;
+		GPInstructLogAnalyzerItem *item = g_list_nth_data (test->items, answer->item_id);
 
 		if (item)
 		{
@@ -424,14 +424,14 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 				test->lesson->category->project->items_correctly_answered += 1;
 			}
 
-			GPInstructLogAnalyzerChoice* choice = NULL;
+			GPInstructLogAnalyzerChoice *choice = NULL;
 			if (test->is_string)
 			{
 				GList *choices = item->choices;
 
 				while (choices)
 				{
-					GPInstructLogAnalyzerChoice* curr_choice = choices->data;
+					GPInstructLogAnalyzerChoice *curr_choice = choices->data;
 
 					if (g_ascii_strcasecmp (curr_choice->string,
 					                        answer->answer_string) == 1)
@@ -463,7 +463,7 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 				choice->times_chosen += 1;
 				choice->time_spent += answer->time_spent;
 
-				GPInstructLogAnalyzerAnswer* aanswer = g_new0 (GPInstructLogAnalyzerAnswer, 1);
+				GPInstructLogAnalyzerAnswer *aanswer = g_new0 (GPInstructLogAnalyzerAnswer, 1);
 				aanswer->choice = choice;
 				aanswer->examinee = examinee;
 				aanswer->time_spent = answer->time_spent;
@@ -477,10 +477,10 @@ add_test (GPInstructLogAnalyzerProject* aproject,
 }
 
 
-GPInstructLogAnalyzer*
-gpinstruct_log_analyzer_new (GPInstructProject* project)
+GPInstructLogAnalyzer *
+gpinstruct_log_analyzer_new (GPInstructProject *project)
 {
-	GPInstructLogAnalyzer* analyzer = g_object_new (GPINSTRUCT_TYPE_LOG_ANALYZER, NULL);
+	GPInstructLogAnalyzer *analyzer = g_object_new (GPINSTRUCT_TYPE_LOG_ANALYZER, NULL);
 
 	analyzer->priv->aproject = create_project_tree (analyzer, project);
 
@@ -490,12 +490,12 @@ gpinstruct_log_analyzer_new (GPInstructProject* project)
 }
 
 void
-gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer* analyzer,
-                                 GPInstructLog* log)
+gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer *analyzer,
+                                 GPInstructLog *log)
 {
 	analyzer->priv->aproject->times_taken += 1;
 
-	GPInstructLogAnalyzerExaminee* examinee = g_new0 (GPInstructLogAnalyzerExaminee, 1);
+	GPInstructLogAnalyzerExaminee *examinee = g_new0 (GPInstructLogAnalyzerExaminee, 1);
 	examinee->last_name = g_strdup (gpinstruct_log_get_last_name (log));
 	examinee->first_name = g_strdup (gpinstruct_log_get_first_name (log));
 	examinee->project = create_project_tree (analyzer, analyzer->priv->project);
@@ -503,12 +503,12 @@ gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer* analyzer,
 
 	examinee->project->times_taken += 1;
 
-	GList* tests = gpinstruct_log_get_tests (log);
-	GList* curr_tests = tests;
+	GList *tests = gpinstruct_log_get_tests (log);
+	GList *curr_tests = tests;
 
 	while (curr_tests)
 	{
-		GPInstructLogTest* log_test = curr_tests->data;
+		GPInstructLogTest *log_test = curr_tests->data;
 		add_test (analyzer->priv->aproject, log_test, examinee);
 		add_test (examinee->project, log_test, examinee);
 		curr_tests = curr_tests->next;
@@ -517,14 +517,14 @@ gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer* analyzer,
 	g_list_free (tests);
 }
 
-GPInstructLogAnalyzerProject*
-gpinstruct_log_analyzer_get_project (GPInstructLogAnalyzer* analyzer)
+GPInstructLogAnalyzerProject *
+gpinstruct_log_analyzer_get_project (GPInstructLogAnalyzer *analyzer)
 {
 	return analyzer->priv->aproject;
 }
 
-GList*
-gpinstruct_log_analyzer_get_examinees (GPInstructLogAnalyzer* analyzer)
+GList *
+gpinstruct_log_analyzer_get_examinees (GPInstructLogAnalyzer *analyzer)
 {
 	return g_list_copy (analyzer->priv->examinees);
 }

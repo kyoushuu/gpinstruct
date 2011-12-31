@@ -120,7 +120,7 @@ server_callback (SoupServer        *server,
                  SoupClientContext *client,
                  gpointer           user_data)
 {
-	GPInstructServerSession* session = GPINSTRUCT_SERVER_SESSION (user_data);
+	GPInstructServerSession *session = GPINSTRUCT_SERVER_SESSION (user_data);
 
 	SoupSoapMessage *request = soup_soap_message_new_request (msg);
 	guint response_status = SOUP_STATUS_OK;
@@ -395,9 +395,9 @@ gpinstruct_server_session_constructed (GObject *object)
 	GPInstructServerSession *session = GPINSTRUCT_SERVER_SESSION (object);
 	GPInstructServerSessionPrivate *priv = session->priv;
 
-	GError* error = NULL;
+	GError *error = NULL;
 
-	GPInstructParser* parser = gpinstruct_parser_new ();
+	GPInstructParser *parser = gpinstruct_parser_new ();
 
 	priv->project = gpinstruct_parser_load_from_file (parser,
 	                                                  priv->project_file,

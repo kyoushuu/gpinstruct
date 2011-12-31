@@ -28,20 +28,20 @@
 
 struct _GPInstructLessonElementGroupEditorPrivate
 {
-	GPInstructEditorWindow* window;
-	GPInstructLessonElementGroup* group;
+	GPInstructEditorWindow *window;
+	GPInstructLessonElementGroup *group;
 
-	GtkWidget* title_label;
-	GtkWidget* title_entry;
+	GtkWidget *title_label;
+	GtkWidget *title_entry;
 
-	GtkWidget* single_score_label;
-	GtkWidget* single_score_switch;
+	GtkWidget *single_score_label;
+	GtkWidget *single_score_switch;
 
-	GtkWidget* single_directions_label;
-	GtkWidget* single_directions_switch;
+	GtkWidget *single_directions_label;
+	GtkWidget *single_directions_switch;
 
-	GtkWidget* directions_label;
-	GtkWidget* directions_view;
+	GtkWidget *directions_label;
+	GtkWidget *directions_view;
 };
 
 #define GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_ELEMENT_GROUP_EDITOR, GPInstructLessonElementGroupEditorPrivate))
@@ -91,7 +91,7 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	                  0, 1, 3, 4,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	GtkWidget* directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	object->priv->directions_view = gtk_text_view_new ();
@@ -112,8 +112,8 @@ gpinstruct_lesson_element_group_editor_finalize (GObject *object)
 static void
 gpinstruct_lesson_element_group_editor_class_init (GPInstructLessonElementGroupEditorClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructObjectEditorClass* parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructObjectEditorClass *parent_class = GPINSTRUCT_OBJECT_EDITOR_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonElementGroupEditorPrivate));
 
@@ -125,7 +125,7 @@ static void
 title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
-	GPInstructLessonElementGroupEditor* editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
+	GPInstructLessonElementGroupEditor *editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
 
 	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (editor->priv->group),
 	                                     gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
@@ -138,7 +138,7 @@ single_score_activate (GObject    *gobject,
                        GParamSpec *pspec,
                        gpointer    user_data)
 {
-	GPInstructLessonElementGroupEditor* editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
+	GPInstructLessonElementGroupEditor *editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
 
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->single_score_switch));
 
@@ -155,7 +155,7 @@ single_directions_activate (GObject    *gobject,
                             GParamSpec *pspec,
                             gpointer    user_data)
 {
-	GPInstructLessonElementGroupEditor* editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
+	GPInstructLessonElementGroupEditor *editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
 
 	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->single_directions_switch));
 
@@ -171,10 +171,10 @@ static void
 directions_buffer_changed (GtkTextBuffer *textbuffer,
                            gpointer       user_data)
 {
-	GPInstructLessonElementGroupEditor* editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
+	GPInstructLessonElementGroupEditor *editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
 
 	GtkTextIter start, end;
-	gchar* text;
+	gchar *text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
 	gpinstruct_lesson_element_group_set_directions (editor->priv->group,
@@ -183,13 +183,13 @@ directions_buffer_changed (GtkTextBuffer *textbuffer,
 	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
 }
 
-GPInstructLessonElementGroupEditor*
-gpinstruct_lesson_element_group_editor_new (GPInstructEditorWindow* window,
+GPInstructLessonElementGroupEditor *
+gpinstruct_lesson_element_group_editor_new (GPInstructEditorWindow *window,
                                             GPInstructLessonElementGroup *group)
 {
-	GPInstructLessonElementGroupEditor* editor = g_object_new (GPINSTRUCT_TYPE_LESSON_ELEMENT_GROUP_EDITOR, NULL);
+	GPInstructLessonElementGroupEditor *editor = g_object_new (GPINSTRUCT_TYPE_LESSON_ELEMENT_GROUP_EDITOR, NULL);
 
-	GtkTextBuffer* buffer;
+	GtkTextBuffer *buffer;
 
 	editor->priv->window = window;
 	editor->priv->group = group;

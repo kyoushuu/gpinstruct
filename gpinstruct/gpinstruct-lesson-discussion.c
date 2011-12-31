@@ -22,7 +22,7 @@
 
 struct _GPInstructLessonDiscussionPrivate
 {
-	gchar* text;
+	gchar *text;
 };
 
 #define GPINSTRUCT_LESSON_DISCUSSION_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_DISCUSSION, GPInstructLessonDiscussionPrivate))
@@ -42,7 +42,7 @@ gpinstruct_lesson_discussion_init (GPInstructLessonDiscussion *object)
 static void
 gpinstruct_lesson_discussion_finalize (GObject *object)
 {
-	GPInstructLessonDiscussion* discussion = GPINSTRUCT_LESSON_DISCUSSION (object);
+	GPInstructLessonDiscussion *discussion = GPINSTRUCT_LESSON_DISCUSSION (object);
 
 	g_free (discussion->priv->text);
 
@@ -52,8 +52,8 @@ gpinstruct_lesson_discussion_finalize (GObject *object)
 static void
 gpinstruct_lesson_discussion_class_init (GPInstructLessonDiscussionClass *klass)
 {
-	GObjectClass* object_class = G_OBJECT_CLASS (klass);
-	/*GPInstructLessonElementClass* parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	/*GPInstructLessonElementClass *parent_class = GPINSTRUCT_LESSON_ELEMENT_CLASS (klass);*/
 
 	g_type_class_add_private (klass, sizeof (GPInstructLessonDiscussionPrivate));
 
@@ -61,21 +61,21 @@ gpinstruct_lesson_discussion_class_init (GPInstructLessonDiscussionClass *klass)
 }
 
 
-GPInstructLessonDiscussion*
+GPInstructLessonDiscussion *
 gpinstruct_lesson_discussion_new (void)
 {
 	return g_object_new (GPINSTRUCT_TYPE_LESSON_DISCUSSION, NULL);
 }
 
-const gchar*
-gpinstruct_lesson_discussion_get_text (GPInstructLessonDiscussion* discussion)
+const gchar *
+gpinstruct_lesson_discussion_get_text (GPInstructLessonDiscussion *discussion)
 {
 	return discussion->priv->text;
 }
 
 void
-gpinstruct_lesson_discussion_set_text (GPInstructLessonDiscussion* discussion,
-                                       const gchar* text)
+gpinstruct_lesson_discussion_set_text (GPInstructLessonDiscussion *discussion,
+                                       const gchar *text)
 {
 	g_free (discussion->priv->text);
 	discussion->priv->text = g_strdup (text);

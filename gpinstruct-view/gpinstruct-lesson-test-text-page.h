@@ -43,11 +43,11 @@ struct _GPInstructLessonTestTextPage
 {
 	GPInstructLessonViewPage parent_instance;
 
-	GPInstructLessonTestTextPagePrivate* priv;
+	GPInstructLessonTestTextPagePrivate *priv;
 };
 
 GType gpinstruct_lesson_test_text_page_get_type (void) G_GNUC_CONST;
-GPInstructLessonTestTextPage* gpinstruct_lesson_test_text_page_new (GPInstructLessonTestText* test, GPInstructLessonScore* score, GPInstructLog* log);
+GPInstructLessonTestTextPage *gpinstruct_lesson_test_text_page_new (GPInstructLessonTestText *test, GPInstructLessonScore *score, GPInstructLog *log);
 
 G_END_DECLS
 

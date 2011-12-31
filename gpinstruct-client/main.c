@@ -31,14 +31,14 @@ main (int argc,
       char *argv[])
 {
 #ifdef G_OS_WIN32
-	gchar* prefix = g_win32_get_package_installation_directory_of_module (NULL);
+	gchar *prefix = g_win32_get_package_installation_directory_of_module (NULL);
 #endif
 
 #ifdef ENABLE_NLS
 #ifdef G_OS_WIN32
-	gchar* localedir = g_build_filename (prefix, "share", "locale", NULL);
+	gchar *localedir = g_build_filename (prefix, "share", "locale", NULL);
 #else
-	gchar* localedir = g_strdup (PACKAGE_LOCALE_DIR);
+	gchar *localedir = g_strdup (PACKAGE_LOCALE_DIR);
 #endif
 	bindtextdomain (GETTEXT_PACKAGE, localedir);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
