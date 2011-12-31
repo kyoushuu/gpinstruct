@@ -61,6 +61,20 @@ main (int argc,
 
 	gtk_widget_show_all (window);
 
+	if (argc > 1)
+	{
+		gpinstruct_analyzer_window_new_session (GPINSTRUCT_ANALYZER_WINDOW (window),
+		                                        argv[1]);
+		if (argc > 2)
+		{
+			int i;
+
+			for (i = 2; i < argc; i++)
+				gpinstruct_analyzer_window_add_log_file (GPINSTRUCT_ANALYZER_WINDOW (window),
+				                                         argv[i]);
+		}
+	}
+
 	gtk_main ();
 
 #ifdef G_OS_WIN32

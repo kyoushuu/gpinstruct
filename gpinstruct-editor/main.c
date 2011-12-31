@@ -60,6 +60,10 @@ main (int argc,
 
 	gtk_widget_show_all (window);
 
+	if (argc > 1)
+		gpinstruct_editor_window_open_file (GPINSTRUCT_EDITOR_WINDOW (window),
+		                                    argv[1]);
+
 	gtk_main ();
 
 #ifdef G_OS_WIN32

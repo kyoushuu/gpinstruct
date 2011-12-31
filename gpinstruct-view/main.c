@@ -57,7 +57,13 @@ main (int argc,
 
 	GPInstructParser *parser = gpinstruct_parser_new ();
 
-	gchar *project_file = g_build_filename (datadir, "default-project.gpinstruct-project", NULL);
+	gchar *project_file;
+	if (argc > 1)
+		project_file = g_strdup (argv[1]);
+	else
+		project_file = g_build_filename (datadir,
+		                                 "default-project.gpinstruct-project",
+		                                 NULL);
 
 	if (g_file_test (project_file, G_FILE_TEST_IS_REGULAR) == FALSE)
 	{

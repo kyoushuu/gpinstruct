@@ -102,7 +102,27 @@ file_new_action (GtkAction *action,
 {
 	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
 
-	gpinstruct_analyzer_window_new_session (window);
+	GtkWidget *dialog = gtk_file_chooser_dialog_new (_("Choose Project File"),
+	                                                 GTK_WINDOW (window),
+	                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
+	                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	                                                 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+	                                                 NULL);
+	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
+
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("GPInstruct project file"));
+	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		gchar *project_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		gpinstruct_analyzer_window_new_session (window, project_file);
+		g_free (project_file);
+	}
+
+	gtk_widget_destroy (dialog);
 }
 
 
@@ -380,7 +400,8 @@ gpinstruct_analyzer_window_new (void)
 }
 
 void
-gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window)
+gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window,
+                                        const gchar *file)
 {
 	GPInstructAnalyzerWindowPrivate *priv = window->priv;
 
@@ -390,56 +411,36 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window)
 			return;
 	}
 
-	GtkWidget *dialog = gtk_file_chooser_dialog_new (_("Choose Project File"),
-	                                                 GTK_WINDOW (window),
-	                                                 GTK_FILE_CHOOSER_ACTION_OPEN,
-	                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-	                                                 GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-	                                                 NULL);
-	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (dialog), FALSE);
+	GError *error = NULL;
 
-	GtkFileFilter *filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("GPInstruct project file"));
-	gtk_file_filter_add_pattern (filter, "*.gpinstruct-project");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+	GPInstructParser *parser = gpinstruct_parser_new ();
+	GPInstructProject *project = gpinstruct_parser_load_from_file (parser, file, &error);
+	g_object_unref (parser);
 
-	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	if (error)
 	{
-		GError *error = NULL;
-
-		GPInstructParser *parser = gpinstruct_parser_new ();
-
-		gchar *project_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		GPInstructProject *project = gpinstruct_parser_load_from_file (parser, project_file, &error);
-		if (error)
-		{
-			g_critical (_("Error: %s\n"), error->message);
-			g_error_free (error);
-			error = NULL;
-			goto error;
-		}
-		g_free (project_file);
-
-		if (project == NULL)
-			goto error;
-
-		priv->analyzer = gpinstruct_log_analyzer_new (project);
-
-		gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
-		                                                       "file-add"),
-		                          TRUE);
-		gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
-		                                                       "file-close"),
-		                          TRUE);
-
-		gtk_widget_set_sensitive (priv->view_combobox, TRUE);
-
-		gtk_combo_box_set_active (GTK_COMBO_BOX (priv->view_combobox), -1);
-		gtk_combo_box_set_active (GTK_COMBO_BOX (priv->view_combobox), 0);
+		g_critical (_("Error: %s\n"), error->message);
+		g_error_free (error);
+		error = NULL;
+		return;
 	}
 
-	error:
-		gtk_widget_destroy (dialog);
+	if (project == NULL)
+		return;
+
+	priv->analyzer = gpinstruct_log_analyzer_new (project);
+
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-add"),
+	                          TRUE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-close"),
+	                          TRUE);
+
+	gtk_widget_set_sensitive (priv->view_combobox, TRUE);
+
+	gtk_combo_box_set_active (GTK_COMBO_BOX (priv->view_combobox), -1);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (priv->view_combobox), 0);
 }
 
 gboolean

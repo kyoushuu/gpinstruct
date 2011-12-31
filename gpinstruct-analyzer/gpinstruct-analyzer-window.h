@@ -48,7 +48,7 @@ struct _GPInstructAnalyzerWindow
 
 GType gpinstruct_analyzer_window_get_type (void) G_GNUC_CONST;
 GtkWidget *gpinstruct_analyzer_window_new (void);
-void gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window);
+void gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window, const gchar *file);
 gboolean gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow *window);
 gboolean gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow *window, const gchar *file);
 gboolean gpinstruct_analyzer_window_quit (GPInstructAnalyzerWindow *window);
