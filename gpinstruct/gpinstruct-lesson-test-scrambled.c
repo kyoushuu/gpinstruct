@@ -73,17 +73,19 @@ static void
 gpinstruct_lesson_test_scrambled_init (GPInstructLessonTestScrambled *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_GET_PRIVATE (object);
+	GPInstructLessonTestScrambledPrivate *priv = object->priv;
 
-	object->priv->questions = NULL;
+	priv->questions = NULL;
 }
 
 static void
 gpinstruct_lesson_test_scrambled_finalize (GObject *object)
 {
 	GPInstructLessonTestScrambled *test = GPINSTRUCT_LESSON_TEST_SCRAMBLED (object);
+	GPInstructLessonTestScrambledPrivate *priv = test->priv;
 
-	if (test->priv->questions)
-		g_list_free_full (test->priv->questions, g_object_unref);
+	if (priv->questions)
+		g_list_free_full (priv->questions, g_object_unref);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_scrambled_parent_class)->finalize (object);
 }
@@ -117,35 +119,45 @@ gpinstruct_lesson_test_scrambled_add_question (GPInstructLessonTestScrambled *te
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (test));
 
-	test->priv->questions = g_list_append (test->priv->questions, question);
+	GPInstructLessonTestScrambledPrivate *priv = test->priv;
+
+	priv->questions = g_list_append (priv->questions, question);
 }
 
 void
 gpinstruct_lesson_test_scrambled_remove_question (GPInstructLessonTestScrambled *test,
                                                   guint question)
 {
-	GList *nth_link = g_list_nth (test->priv->questions, question);
+	GPInstructLessonTestScrambledPrivate *priv = test->priv;
+
+	GList *nth_link = g_list_nth (priv->questions, question);
 	g_object_unref (nth_link->data);
-	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
+	priv->questions = g_list_delete_link (priv->questions, nth_link);
 }
 
 GPInstructLessonTestScrambledQuestion *
 gpinstruct_lesson_test_scrambled_get_question (GPInstructLessonTestScrambled *test,
                                                guint question)
 {
-	return g_list_nth_data (test->priv->questions, question);
+	GPInstructLessonTestScrambledPrivate *priv = test->priv;
+
+	return g_list_nth_data (priv->questions, question);
 }
 
 GList *
 gpinstruct_lesson_test_scrambled_get_questions (GPInstructLessonTestScrambled *test)
 {
-	return g_list_copy (test->priv->questions);
+	GPInstructLessonTestScrambledPrivate *priv = test->priv;
+
+	return g_list_copy (priv->questions);
 }
 
 guint
 gpinstruct_lesson_test_scrambled_get_questions_length (GPInstructLessonTestScrambled *test)
 {
-	return g_list_length (test->priv->questions);
+	GPInstructLessonTestScrambledPrivate *priv = test->priv;
+
+	return g_list_length (priv->questions);
 }
 
 gboolean

@@ -80,6 +80,7 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
                            gpointer user_data)
 {
 	GPInstructAnalyzerProjectView *view = GPINSTRUCT_ANALYZER_PROJECT_VIEW (user_data);
+	GPInstructAnalyzerProjectViewPrivate *priv = view->priv;
 
 	GtkTreeIter iter, iterItem, iterChoice;
 	GtkTreeModel *model;
@@ -95,7 +96,7 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 	gchar *title_text, *children_text, *frequency_text, *score_text,
 	*percentage_text, *time_text, *ave_time_text;
 
-	gtk_tree_store_clear (view->priv->test_store);
+	gtk_tree_store_clear (priv->test_store);
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter))
 	{
@@ -133,7 +134,7 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 				sec = ave_time_spent - (min * 60);
 				ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-				gtk_tree_store_insert_with_values (view->priv->test_store,
+				gtk_tree_store_insert_with_values (priv->test_store,
 				                                   &iterItem, NULL,
 				                                   -1,
 				                                   TEST_TITLE_COLUMN, title_text,
@@ -180,7 +181,7 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 					sec = ave_time_spent - (min * 60);
 					ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-					gtk_tree_store_insert_with_values (view->priv->test_store,
+					gtk_tree_store_insert_with_values (priv->test_store,
 					                                   &iterChoice, &iterItem,
 					                                   -1,
 					                                   TEST_TITLE_COLUMN, title_text,
@@ -211,7 +212,7 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 						sec = time_spent - (min * 60);
 						time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-						gtk_tree_store_insert_with_values (view->priv->test_store,
+						gtk_tree_store_insert_with_values (priv->test_store,
 						                                   NULL, &iterChoice,
 						                                   -1,
 						                                   TEST_TITLE_COLUMN, title_text,
@@ -243,6 +244,7 @@ static void
 gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 {
 	object->priv = GPINSTRUCT_ANALYZER_PROJECT_VIEW_GET_PRIVATE (object);
+	GPInstructAnalyzerProjectViewPrivate *priv = object->priv;
 
 	GtkTreeSelection *selection;
 	GtkCellRenderer *renderer;
@@ -253,7 +255,7 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack1 (GTK_PANED (object), project_scrolledwindow, TRUE, TRUE);
 
-	object->priv->project_store = gtk_tree_store_new (PROJECT_N_COLUMNS,
+	priv->project_store = gtk_tree_store_new (PROJECT_N_COLUMNS,
 	                                                  G_TYPE_STRING,
 	                                                  G_TYPE_STRING,
 	                                                  G_TYPE_STRING,
@@ -265,9 +267,9 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	                                                  G_TYPE_UINT,
 	                                                  G_TYPE_POINTER);
 
-	GtkWidget *project_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->project_store));
+	GtkWidget *project_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->project_store));
 	gtk_container_add (GTK_CONTAINER (project_scrolledwindow), project_treeview);
-	object->priv->project_treeview = project_treeview;
+	priv->project_treeview = project_treeview;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (project_treeview));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
@@ -353,7 +355,7 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack2 (GTK_PANED (object), test_scrolledwindow, TRUE, TRUE);
 
-	object->priv->test_store = gtk_tree_store_new (TEST_N_COLUMNS,
+	priv->test_store = gtk_tree_store_new (TEST_N_COLUMNS,
 	                                               G_TYPE_STRING,
 	                                               G_TYPE_STRING,
 	                                               G_TYPE_STRING,
@@ -365,9 +367,9 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	                                               G_TYPE_UINT,
 	                                               G_TYPE_POINTER);
 
-	GtkWidget *test_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->test_store));
+	GtkWidget *test_treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->test_store));
 	gtk_container_add (GTK_CONTAINER (test_scrolledwindow), test_treeview);
-	object->priv->test_treeview = test_treeview;
+	priv->test_treeview = test_treeview;
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_renderer_set_alignment (renderer, 0, 0.5);
@@ -442,12 +444,13 @@ static void
 gpinstruct_analyzer_project_view_finalize (GObject *object)
 {
 	GPInstructAnalyzerProjectView *view = GPINSTRUCT_ANALYZER_PROJECT_VIEW (object);
+	GPInstructAnalyzerProjectViewPrivate *priv = view->priv;
 
-	if (view->priv->project_store)
-		g_object_unref (view->priv->project_store);
+	if (priv->project_store)
+		g_object_unref (priv->project_store);
 
-	if (view->priv->test_store)
-		g_object_unref (view->priv->test_store);
+	if (priv->test_store)
+		g_object_unref (priv->test_store);
 
 	G_OBJECT_CLASS (gpinstruct_analyzer_project_view_parent_class)->finalize (object);
 }
@@ -468,6 +471,7 @@ GtkWidget *
 gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 {
 	GPInstructAnalyzerProjectView *view = g_object_new (GPINSTRUCT_TYPE_ANALYZER_PROJECT_VIEW, NULL);
+	GPInstructAnalyzerProjectViewPrivate *priv = view->priv;
 
 	GtkTreeIter iterProject, iterCategory, iterLesson, iterGroup;
 
@@ -501,7 +505,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 	sec = ave_time_spent - (min * 60);
 	ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-	gtk_tree_store_insert_with_values (view->priv->project_store, &iterProject, NULL, -1,
+	gtk_tree_store_insert_with_values (priv->project_store, &iterProject, NULL, -1,
 	                                   PROJECT_TITLE_COLUMN, gpinstruct_project_get_title (project->object),
 	                                   PROJECT_ITEMS_COLUMN, items_text,
 	                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
@@ -548,7 +552,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 		sec = ave_time_spent - (min * 60);
 		ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-		gtk_tree_store_insert_with_values (view->priv->project_store, &iterCategory, &iterProject, -1,
+		gtk_tree_store_insert_with_values (priv->project_store, &iterCategory, &iterProject, -1,
 		                                   PROJECT_TITLE_COLUMN, gpinstruct_category_get_title (category->object),
 		                                   PROJECT_ITEMS_COLUMN, items_text,
 		                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
@@ -595,7 +599,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 			sec = ave_time_spent - (min * 60);
 			ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-			gtk_tree_store_insert_with_values (view->priv->project_store, &iterLesson, &iterCategory, -1,
+			gtk_tree_store_insert_with_values (priv->project_store, &iterLesson, &iterCategory, -1,
 			                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_get_title (lesson->object),
 			                                   PROJECT_ITEMS_COLUMN, items_text,
 			                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
@@ -644,7 +648,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 					sec = ave_time_spent - (min * 60);
 					ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-					gtk_tree_store_insert_with_values (view->priv->project_store, NULL, &iterLesson, -1,
+					gtk_tree_store_insert_with_values (priv->project_store, NULL, &iterLesson, -1,
 					                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test->object)),
 					                                   PROJECT_ITEMS_COLUMN, items_text,
 					                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
@@ -689,7 +693,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 					sec = ave_time_spent - (min * 60);
 					ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-					gtk_tree_store_insert_with_values (view->priv->project_store, &iterGroup, &iterLesson, -1,
+					gtk_tree_store_insert_with_values (priv->project_store, &iterGroup, &iterLesson, -1,
 					                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (group->object)),
 					                                   PROJECT_ITEMS_COLUMN, items_text,
 					                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
@@ -736,7 +740,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 						sec = ave_time_spent - (min * 60);
 						ave_time_text = g_strdup_printf ("%dm %.2fs", min, sec);
 
-						gtk_tree_store_insert_with_values (view->priv->project_store, NULL, &iterGroup, -1,
+						gtk_tree_store_insert_with_values (priv->project_store, NULL, &iterGroup, -1,
 						                                   PROJECT_TITLE_COLUMN, gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test->object)),
 						                                   PROJECT_ITEMS_COLUMN, items_text,
 						                                   PROJECT_FREQUENCY_COLUMN, frequency_text,
@@ -770,7 +774,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 		categories = categories->next;
 	}
 
-	gtk_tree_view_expand_all (GTK_TREE_VIEW (view->priv->project_treeview));
+	gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->project_treeview));
 
 	return GTK_WIDGET (view);
 }

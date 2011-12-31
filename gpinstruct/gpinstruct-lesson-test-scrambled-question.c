@@ -37,20 +37,22 @@ static void
 gpinstruct_lesson_test_scrambled_question_init (GPInstructLessonTestScrambledQuestion *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION_GET_PRIVATE (object);
+	GPInstructLessonTestScrambledQuestionPrivate *priv = object->priv;
 
-	object->priv->text = g_strdup ("");
-	object->priv->explanation = g_strdup ("");
-	object->priv->answer = g_strdup ("");
+	priv->text = g_strdup ("");
+	priv->explanation = g_strdup ("");
+	priv->answer = g_strdup ("");
 }
 
 static void
 gpinstruct_lesson_test_scrambled_question_finalize (GObject *object)
 {
 	GPInstructLessonTestScrambledQuestion *question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (object);
+	GPInstructLessonTestScrambledQuestionPrivate *priv = question->priv;
 
-	g_free (question->priv->text);
-	g_free (question->priv->explanation);
-	g_free (question->priv->answer);
+	g_free (priv->text);
+	g_free (priv->explanation);
+	g_free (priv->answer);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_scrambled_question_parent_class)->finalize (object);
 }
@@ -76,41 +78,53 @@ gpinstruct_lesson_test_scrambled_question_new (void)
 const gchar *
 gpinstruct_lesson_test_scrambled_question_get_text (GPInstructLessonTestScrambledQuestion *question)
 {
-	return question->priv->text;
+	GPInstructLessonTestScrambledQuestionPrivate *priv = question->priv;
+
+	return priv->text;
 }
 
 void
 gpinstruct_lesson_test_scrambled_question_set_text (GPInstructLessonTestScrambledQuestion *question,
                                                     const gchar *text)
 {
-	g_free (question->priv->text);
-	question->priv->text = g_strdup (text);
+	GPInstructLessonTestScrambledQuestionPrivate *priv = question->priv;
+
+	g_free (priv->text);
+	priv->text = g_strdup (text);
 }
 
 const gchar *
 gpinstruct_lesson_test_scrambled_question_get_answer (GPInstructLessonTestScrambledQuestion *question)
 {
-	return question->priv->answer;
+	GPInstructLessonTestScrambledQuestionPrivate *priv = question->priv;
+
+	return priv->answer;
 }
 
 void
 gpinstruct_lesson_test_scrambled_question_set_answer (GPInstructLessonTestScrambledQuestion *question,
                                                       const gchar *answer)
 {
-	g_free (question->priv->answer);
-	question->priv->answer = g_strdup (answer);
+	GPInstructLessonTestScrambledQuestionPrivate *priv = question->priv;
+
+	g_free (priv->answer);
+	priv->answer = g_strdup (answer);
 }
 
 const gchar *
 gpinstruct_lesson_test_scrambled_question_get_explanation (GPInstructLessonTestScrambledQuestion *question)
 {
-	return question->priv->explanation;
+	GPInstructLessonTestScrambledQuestionPrivate *priv = question->priv;
+
+	return priv->explanation;
 }
 
 void
 gpinstruct_lesson_test_scrambled_question_set_explanation (GPInstructLessonTestScrambledQuestion *question,
                                                            const gchar *explanation)
 {
-	g_free (question->priv->explanation);
-	question->priv->explanation = g_strdup (explanation);
+	GPInstructLessonTestScrambledQuestionPrivate *priv = question->priv;
+
+	g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }

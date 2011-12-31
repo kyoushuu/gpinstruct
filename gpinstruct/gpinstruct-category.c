@@ -38,18 +38,20 @@ static void
 gpinstruct_category_init (GPInstructCategory *object)
 {
 	object->priv = GPINSTRUCT_CATEGORY_GET_PRIVATE (object);
+	GPInstructCategoryPrivate *priv = object->priv;
 
-	object->priv->title = g_strdup ("");
-	object->priv->lessons = NULL;
+	priv->title = g_strdup ("");
+	priv->lessons = NULL;
 }
 
 static void
 gpinstruct_category_finalize (GObject *object)
 {
 	GPInstructCategory *category = GPINSTRUCT_CATEGORY (object);
+	GPInstructCategoryPrivate *priv = category->priv;
 
-	g_free (category->priv->title);
-	g_list_free_full (category->priv->lessons, g_object_unref);
+	g_free (priv->title);
+	g_list_free_full (priv->lessons, g_object_unref);
 
 	G_OBJECT_CLASS (gpinstruct_category_parent_class)->finalize (object);
 }
@@ -75,21 +77,27 @@ gpinstruct_category_new (void)
 const gchar *
 gpinstruct_category_get_title (GPInstructCategory *category)
 {
-	return category->priv->title;
+	GPInstructCategoryPrivate *priv = category->priv;
+
+	return priv->title;
 }
 
 void
 gpinstruct_category_set_title (GPInstructCategory *category,
                                const gchar *title)
 {
-	g_free (category->priv->title);
-	category->priv->title = g_strdup (title);
+	GPInstructCategoryPrivate *priv = category->priv;
+
+	g_free (priv->title);
+	priv->title = g_strdup (title);
 }
 
 guint
 gpinstruct_category_get_lessons_length (GPInstructCategory *category)
 {
-	return g_list_length (category->priv->lessons);
+	GPInstructCategoryPrivate *priv = category->priv;
+
+	return g_list_length (priv->lessons);
 }
 
 void
@@ -98,20 +106,26 @@ gpinstruct_category_add_lesson (GPInstructCategory *category,
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON (lesson));
 
-	category->priv->lessons = g_list_append (category->priv->lessons, lesson);
+	GPInstructCategoryPrivate *priv = category->priv;
+
+	priv->lessons = g_list_append (priv->lessons, lesson);
 }
 
 void
 gpinstruct_category_remove_lesson (GPInstructCategory *category,
                                    guint lesson)
 {
-	GList *nth_link = g_list_nth (category->priv->lessons, lesson);
+	GPInstructCategoryPrivate *priv = category->priv;
+
+	GList *nth_link = g_list_nth (priv->lessons, lesson);
 	g_object_unref (nth_link->data);
-	category->priv->lessons = g_list_delete_link (category->priv->lessons, nth_link);
+	priv->lessons = g_list_delete_link (priv->lessons, nth_link);
 }
 
 GList *
 gpinstruct_category_get_lessons (GPInstructCategory *category)
 {
-	return g_list_copy (category->priv->lessons);
+	GPInstructCategoryPrivate *priv = category->priv;
+
+	return g_list_copy (priv->lessons);
 }

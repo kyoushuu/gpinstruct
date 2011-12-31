@@ -112,31 +112,33 @@ static void
 gpinstruct_log_init (GPInstructLog *object)
 {
 	object->priv = GPINSTRUCT_LOG_GET_PRIVATE (object);
+	GPInstructLogPrivate *priv = object->priv;
 
-	object->priv->tests_list = NULL;
+	priv->tests_list = NULL;
 
-	object->priv->timer = g_timer_new ();
+	priv->timer = g_timer_new ();
 
-	object->priv->last_test = 0;
+	priv->last_test = 0;
 
-	object->priv->last_name = NULL;
-	object->priv->first_name = NULL;
+	priv->last_name = NULL;
+	priv->first_name = NULL;
 
-	object->priv->group_elements = 1;
-	object->priv->curr_group_element = 0;
+	priv->group_elements = 1;
+	priv->curr_group_element = 0;
 }
 
 static void
 gpinstruct_log_finalize (GObject *object)
 {
 	GPInstructLog *log = GPINSTRUCT_LOG (object);
+	GPInstructLogPrivate *priv = log->priv;
 
-	g_list_free_full (log->priv->tests_list, (GDestroyNotify)free_answers_foreach);
+	g_list_free_full (priv->tests_list, (GDestroyNotify)free_answers_foreach);
 
-	g_timer_destroy (log->priv->timer);
+	g_timer_destroy (priv->timer);
 
-	g_free (log->priv->last_name);
-	g_free (log->priv->first_name);
+	g_free (priv->last_name);
+	g_free (priv->first_name);
 
 	G_OBJECT_CLASS (gpinstruct_log_parent_class)->finalize (object);
 }
@@ -163,39 +165,49 @@ void
 gpinstruct_log_set_last_name (GPInstructLog *log,
                               const gchar *last_name)
 {
-	g_free (log->priv->last_name);
-	log->priv->last_name = g_strdup (last_name);
+	GPInstructLogPrivate *priv = log->priv;
+
+	g_free (priv->last_name);
+	priv->last_name = g_strdup (last_name);
 }
 
 const gchar *
 gpinstruct_log_get_last_name (GPInstructLog *log)
 {
-	return log->priv->last_name;
+	GPInstructLogPrivate *priv = log->priv;
+
+	return priv->last_name;
 }
 
 void
 gpinstruct_log_set_first_name (GPInstructLog *log,
                                const gchar *first_name)
 {
-	g_free (log->priv->first_name);
-	log->priv->first_name = g_strdup (first_name);
+	GPInstructLogPrivate *priv = log->priv;
+
+	g_free (priv->first_name);
+	priv->first_name = g_strdup (first_name);
 }
 
 const gchar *
 gpinstruct_log_get_first_name (GPInstructLog *log)
 {
-	return log->priv->first_name;
+	GPInstructLogPrivate *priv = log->priv;
+
+	return priv->first_name;
 }
 
 void
 gpinstruct_log_set_group (GPInstructLog *log,
                           guint elements)
 {
+	GPInstructLogPrivate *priv = log->priv;
+
 	if (elements == 0)
 		return;
 
-	log->priv->group_elements = elements;
-	log->priv->curr_group_element = elements;
+	priv->group_elements = elements;
+	priv->curr_group_element = elements;
 }
 
 void
@@ -203,22 +215,24 @@ gpinstruct_log_add_choice (GPInstructLog *log,
                            GPInstructLessonTest *test,
                            guint item_id, guint answer_id)
 {
+	GPInstructLogPrivate *priv = log->priv;
+
 	GQuark test_quark = g_quark_from_string (gpinstruct_lesson_test_get_id (test));
 
 	GPInstructLogAnswer *answer = g_new0 (GPInstructLogAnswer, 1);
 	answer->item_id = item_id;
 	answer->answer_id = answer_id;
-	answer->time_spent = g_timer_elapsed (log->priv->timer, NULL);
+	answer->time_spent = g_timer_elapsed (priv->timer, NULL);
 
-	if (log->priv->curr_group_element)
+	if (priv->curr_group_element)
 	{
-		answer->time_spent /= log->priv->group_elements;
-		log->priv->curr_group_element--;
+		answer->time_spent /= priv->group_elements;
+		priv->curr_group_element--;
 	}
 
-	if (log->priv->last_test == test_quark)
+	if (priv->last_test == test_quark)
 	{
-		GList *last_test = g_list_last (log->priv->tests_list);
+		GList *last_test = g_list_last (priv->tests_list);
 		last_test->data = g_list_append ((GList*) last_test->data, answer);
 	}
 	else
@@ -227,8 +241,8 @@ gpinstruct_log_add_choice (GPInstructLog *log,
 		GPInstructLogTest *test = g_new (GPInstructLogTest, 1);
 		test->id = test_quark;
 		test->answers = answers_list;
-		log->priv->tests_list = g_list_append (log->priv->tests_list, test);
-		log->priv->last_test = test_quark;
+		priv->tests_list = g_list_append (priv->tests_list, test);
+		priv->last_test = test_quark;
 	}
 }
 
@@ -237,22 +251,24 @@ gpinstruct_log_add_string (GPInstructLog *log,
                            GPInstructLessonTest *test,
                            guint item_id, const gchar *answer_string)
 {
+	GPInstructLogPrivate *priv = log->priv;
+
 	GQuark test_quark = g_quark_from_string (gpinstruct_lesson_test_get_id (test));
 
 	GPInstructLogAnswer *answer = g_new0 (GPInstructLogAnswer, 1);
 	answer->item_id = item_id;
 	answer->answer_string = g_strdup (answer_string);
-	answer->time_spent = g_timer_elapsed (log->priv->timer, NULL);
+	answer->time_spent = g_timer_elapsed (priv->timer, NULL);
 
-	if (log->priv->curr_group_element)
+	if (priv->curr_group_element)
 	{
-		answer->time_spent /= log->priv->group_elements;
-		log->priv->curr_group_element--;
+		answer->time_spent /= priv->group_elements;
+		priv->curr_group_element--;
 	}
 
-	if (log->priv->last_test == test_quark)
+	if (priv->last_test == test_quark)
 	{
-		GList *last_test = g_list_last (log->priv->tests_list);
+		GList *last_test = g_list_last (priv->tests_list);
 		last_test->data = g_list_append ((GList*) last_test->data, answer);
 	}
 	else
@@ -261,33 +277,41 @@ gpinstruct_log_add_string (GPInstructLog *log,
 		GPInstructLogTest *test = g_new (GPInstructLogTest, 1);
 		test->id = test_quark;
 		test->answers = answers_list;
-		log->priv->tests_list = g_list_append (log->priv->tests_list, test);
-		log->priv->last_test = test_quark;
+		priv->tests_list = g_list_append (priv->tests_list, test);
+		priv->last_test = test_quark;
 	}
 }
 
 void
 gpinstruct_log_close_test (GPInstructLog *log)
 {
-	log->priv->last_test = 0;
+	GPInstructLogPrivate *priv = log->priv;
+
+	priv->last_test = 0;
 }
 
 void
 gpinstruct_log_timer_start (GPInstructLog *log)
 {
-	g_timer_start (log->priv->timer);
+	GPInstructLogPrivate *priv = log->priv;
+
+	g_timer_start (priv->timer);
 }
 
 void
 gpinstruct_log_timer_stop (GPInstructLog *log)
 {
-	g_timer_stop (log->priv->timer);
+	GPInstructLogPrivate *priv = log->priv;
+
+	g_timer_stop (priv->timer);
 }
 
 GList *
 gpinstruct_log_get_tests (GPInstructLog *log)
 {
-	return g_list_copy (log->priv->tests_list);
+	GPInstructLogPrivate *priv = log->priv;
+
+	return g_list_copy (priv->tests_list);
 }
 
 gboolean
@@ -296,6 +320,8 @@ load_log_from_xml_document (GPInstructLog *log,
 {
 	xmlNode *current_node, *parent_node;
 	xmlChar *temp;
+
+	GPInstructLogPrivate *priv = log->priv;
 
 	if (doc)
 	{
@@ -328,7 +354,7 @@ load_log_from_xml_document (GPInstructLog *log,
 				    xmlStrEqual (current_node->name, BAD_CAST "test"))
 				{
 					GPInstructLogTest *test = g_new0 (GPInstructLogTest, 1);
-					log->priv->tests_list = g_list_append (log->priv->tests_list, test);
+					priv->tests_list = g_list_append (priv->tests_list, test);
 
 					temp = xmlGetProp (current_node, BAD_CAST "id");
 					if (temp)
@@ -398,9 +424,11 @@ create_xml_document_from_log (GPInstructLog *log)
 {
 	xmlNodePtr current_node;
 
+	GPInstructLogPrivate *priv = log->priv;
+
 	current_node = xmlNewNode (NULL, BAD_CAST "log");
-	xmlSetProp (current_node, BAD_CAST "last-name", BAD_CAST log->priv->last_name);
-	xmlSetProp (current_node, BAD_CAST "first-name", BAD_CAST log->priv->first_name);
+	xmlSetProp (current_node, BAD_CAST "last-name", BAD_CAST priv->last_name);
+	xmlSetProp (current_node, BAD_CAST "first-name", BAD_CAST priv->first_name);
 
 	xmlSetNs (current_node, xmlNewNs (current_node,
 	                                  BAD_CAST PACKAGE_URL,
@@ -409,7 +437,7 @@ create_xml_document_from_log (GPInstructLog *log)
 	xmlDocPtr doc = xmlNewDoc (BAD_CAST "1.0");
 	xmlDocSetRootElement (doc, current_node);
 
-	g_list_foreach (log->priv->tests_list, (GFunc)add_test_node, current_node);
+	g_list_foreach (priv->tests_list, (GFunc)add_test_node, current_node);
 
 	return doc;
 }

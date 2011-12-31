@@ -131,25 +131,27 @@ static void
 gpinstruct_log_analyzer_init (GPInstructLogAnalyzer *object)
 {
 	object->priv = GPINSTRUCT_LOG_ANALYZER_GET_PRIVATE (object);
+	GPInstructLogAnalyzerPrivate *priv = object->priv;
 
-	object->priv->aproject = NULL;
-	object->priv->project = NULL;
-	object->priv->examinees = NULL;
+	priv->aproject = NULL;
+	priv->project = NULL;
+	priv->examinees = NULL;
 }
 
 static void
 gpinstruct_log_analyzer_finalize (GObject *object)
 {
 	GPInstructLogAnalyzer *analyzer = GPINSTRUCT_LOG_ANALYZER (object);
+	GPInstructLogAnalyzerPrivate *priv = analyzer->priv;
 
-	if (analyzer->priv->aproject)
-		free_project (analyzer->priv->aproject);
+	if (priv->aproject)
+		free_project (priv->aproject);
 
-	if (analyzer->priv->project)
-		g_object_unref (analyzer->priv->project);
+	if (priv->project)
+		g_object_unref (priv->project);
 
-	if (analyzer->priv->examinees)
-		g_list_free_full (analyzer->priv->examinees, (GDestroyNotify)free_examinee);
+	if (priv->examinees)
+		g_list_free_full (priv->examinees, (GDestroyNotify)free_examinee);
 
 	G_OBJECT_CLASS (gpinstruct_log_analyzer_parent_class)->finalize (object);
 }
@@ -481,10 +483,11 @@ GPInstructLogAnalyzer *
 gpinstruct_log_analyzer_new (GPInstructProject *project)
 {
 	GPInstructLogAnalyzer *analyzer = g_object_new (GPINSTRUCT_TYPE_LOG_ANALYZER, NULL);
+	GPInstructLogAnalyzerPrivate *priv = analyzer->priv;
 
-	analyzer->priv->aproject = create_project_tree (analyzer, project);
+	priv->aproject = create_project_tree (analyzer, project);
 
-	analyzer->priv->project = g_object_ref (project);
+	priv->project = g_object_ref (project);
 
 	return analyzer;
 }
@@ -493,13 +496,15 @@ void
 gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer *analyzer,
                                  GPInstructLog *log)
 {
-	analyzer->priv->aproject->times_taken += 1;
+	GPInstructLogAnalyzerPrivate *priv = analyzer->priv;
+
+	priv->aproject->times_taken += 1;
 
 	GPInstructLogAnalyzerExaminee *examinee = g_new0 (GPInstructLogAnalyzerExaminee, 1);
 	examinee->last_name = g_strdup (gpinstruct_log_get_last_name (log));
 	examinee->first_name = g_strdup (gpinstruct_log_get_first_name (log));
-	examinee->project = create_project_tree (analyzer, analyzer->priv->project);
-	analyzer->priv->examinees = g_list_append (analyzer->priv->examinees, examinee);
+	examinee->project = create_project_tree (analyzer, priv->project);
+	priv->examinees = g_list_append (priv->examinees, examinee);
 
 	examinee->project->times_taken += 1;
 
@@ -509,7 +514,7 @@ gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer *analyzer,
 	while (curr_tests)
 	{
 		GPInstructLogTest *log_test = curr_tests->data;
-		add_test (analyzer->priv->aproject, log_test, examinee);
+		add_test (priv->aproject, log_test, examinee);
 		add_test (examinee->project, log_test, examinee);
 		curr_tests = curr_tests->next;
 	}
@@ -520,11 +525,15 @@ gpinstruct_log_analyzer_add_log (GPInstructLogAnalyzer *analyzer,
 GPInstructLogAnalyzerProject *
 gpinstruct_log_analyzer_get_project (GPInstructLogAnalyzer *analyzer)
 {
-	return analyzer->priv->aproject;
+	GPInstructLogAnalyzerPrivate *priv = analyzer->priv;
+
+	return priv->aproject;
 }
 
 GList *
 gpinstruct_log_analyzer_get_examinees (GPInstructLogAnalyzer *analyzer)
 {
-	return g_list_copy (analyzer->priv->examinees);
+	GPInstructLogAnalyzerPrivate *priv = analyzer->priv;
+
+	return g_list_copy (priv->examinees);
 }

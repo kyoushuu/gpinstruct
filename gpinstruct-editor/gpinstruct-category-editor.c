@@ -43,14 +43,15 @@ static void
 gpinstruct_category_editor_init (GPInstructCategoryEditor *object)
 {
 	object->priv = GPINSTRUCT_CATEGORY_EDITOR_GET_PRIVATE (object);
+	GPInstructCategoryEditorPrivate *priv = object->priv;
 
-	object->priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,
+	priv->title_label = gtk_label_new (_("Title:"));
+	gtk_table_attach (GTK_TABLE (object), priv->title_label,
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	object->priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), object->priv->title_entry,
+	priv->title_entry = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
 	                  1, 2, 0, 1,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
@@ -79,11 +80,12 @@ title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
 	GPInstructCategoryEditor *editor = GPINSTRUCT_CATEGORY_EDITOR (user_data);
+	GPInstructCategoryEditorPrivate *priv = editor->priv;
 
-	gpinstruct_category_set_title (editor->priv->category,
-	                               gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
-	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
-	gpinstruct_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->category);
+	gpinstruct_category_set_title (priv->category,
+	                               gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
+	gpinstruct_editor_window_set_modified (priv->window, TRUE);
+	gpinstruct_editor_window_update_tree_store (priv->window, (gpointer)priv->category);
 }
 
 
@@ -92,13 +94,14 @@ gpinstruct_category_editor_new (GPInstructEditorWindow *window,
                                 GPInstructCategory *category)
 {
 	GPInstructCategoryEditor *editor = g_object_new (GPINSTRUCT_TYPE_CATEGORY_EDITOR, NULL);
+	GPInstructCategoryEditorPrivate *priv = editor->priv;
 
-	editor->priv->window = window;
-	editor->priv->category = category;
+	priv->window = window;
+	priv->category = category;
 
-	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
+	gtk_entry_set_text (GTK_ENTRY (priv->title_entry),
 	                    gpinstruct_category_get_title (category));
-	g_signal_connect (editor->priv->title_entry, "activate",
+	g_signal_connect (priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
 	return editor;

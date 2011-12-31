@@ -104,17 +104,19 @@ static void
 gpinstruct_lesson_test_multi_choice_init (GPInstructLessonTestMultiChoice *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_GET_PRIVATE (object);
+	GPInstructLessonTestMultiChoicePrivate *priv = object->priv;
 
-	object->priv->questions = NULL;
+	priv->questions = NULL;
 }
 
 static void
 gpinstruct_lesson_test_multi_choice_finalize (GObject *object)
 {
 	GPInstructLessonTestMultiChoice *test = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (object);
+	GPInstructLessonTestMultiChoicePrivate *priv = test->priv;
 
-	if (test->priv->questions)
-		g_list_free_full (test->priv->questions, g_object_unref);
+	if (priv->questions)
+		g_list_free_full (priv->questions, g_object_unref);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_multi_choice_parent_class)->finalize (object);
 }
@@ -149,35 +151,45 @@ gpinstruct_lesson_test_multi_choice_add_question (GPInstructLessonTestMultiChoic
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE (test));
 
-	test->priv->questions = g_list_append (test->priv->questions, question);
+	GPInstructLessonTestMultiChoicePrivate *priv = test->priv;
+
+	priv->questions = g_list_append (priv->questions, question);
 }
 
 void
 gpinstruct_lesson_test_multi_choice_remove_question (GPInstructLessonTestMultiChoice *test,
                                                      guint question)
 {
-	GList *nth_link = g_list_nth (test->priv->questions, question);
+	GPInstructLessonTestMultiChoicePrivate *priv = test->priv;
+
+	GList *nth_link = g_list_nth (priv->questions, question);
 	g_object_unref (nth_link->data);
-	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
+	priv->questions = g_list_delete_link (priv->questions, nth_link);
 }
 
 GPInstructLessonTestMultiChoiceQuestion *
 gpinstruct_lesson_test_multi_choice_get_question (GPInstructLessonTestMultiChoice *test,
                                                   guint question)
 {
-	return g_list_nth_data (test->priv->questions, question);
+	GPInstructLessonTestMultiChoicePrivate *priv = test->priv;
+
+	return g_list_nth_data (priv->questions, question);
 }
 
 GList *
 gpinstruct_lesson_test_multi_choice_get_questions (GPInstructLessonTestMultiChoice *test)
 {
-	return g_list_copy (test->priv->questions);
+	GPInstructLessonTestMultiChoicePrivate *priv = test->priv;
+
+	return g_list_copy (priv->questions);
 }
 
 guint
 gpinstruct_lesson_test_multi_choice_get_questions_length (GPInstructLessonTestMultiChoice *test)
 {
-	return g_list_length (test->priv->questions);
+	GPInstructLessonTestMultiChoicePrivate *priv = test->priv;
+
+	return g_list_length (priv->questions);
 }
 
 gboolean

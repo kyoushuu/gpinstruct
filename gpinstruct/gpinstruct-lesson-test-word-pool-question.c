@@ -37,19 +37,21 @@ static void
 gpinstruct_lesson_test_word_pool_question_init (GPInstructLessonTestWordPoolQuestion *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION_GET_PRIVATE (object);
+	GPInstructLessonTestWordPoolQuestionPrivate *priv = object->priv;
 
-	object->priv->text = g_strdup ("");
-	object->priv->explanation = g_strdup ("");
-	object->priv->answer = 0;
+	priv->text = g_strdup ("");
+	priv->explanation = g_strdup ("");
+	priv->answer = 0;
 }
 
 static void
 gpinstruct_lesson_test_word_pool_question_finalize (GObject *object)
 {
 	GPInstructLessonTestWordPoolQuestion *question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (object);
+	GPInstructLessonTestWordPoolQuestionPrivate *priv = question->priv;
 
-	g_free (question->priv->text);
-	g_free (question->priv->explanation);
+	g_free (priv->text);
+	g_free (priv->explanation);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_word_pool_question_parent_class)->finalize (object);
 }
@@ -75,40 +77,52 @@ gpinstruct_lesson_test_word_pool_question_new (void)
 const gchar *
 gpinstruct_lesson_test_word_pool_question_get_text (GPInstructLessonTestWordPoolQuestion *question)
 {
-	return question->priv->text;
+	GPInstructLessonTestWordPoolQuestionPrivate *priv = question->priv;
+
+	return priv->text;
 }
 
 void
 gpinstruct_lesson_test_word_pool_question_set_text (GPInstructLessonTestWordPoolQuestion *question,
                                                     const gchar *text)
 {
-	g_free (question->priv->text);
-	question->priv->text = g_strdup (text);
+	GPInstructLessonTestWordPoolQuestionPrivate *priv = question->priv;
+
+	g_free (priv->text);
+	priv->text = g_strdup (text);
 }
 
 guint
 gpinstruct_lesson_test_word_pool_question_get_answer (GPInstructLessonTestWordPoolQuestion *question)
 {
-	return question->priv->answer;
+	GPInstructLessonTestWordPoolQuestionPrivate *priv = question->priv;
+
+	return priv->answer;
 }
 
 void
 gpinstruct_lesson_test_word_pool_question_set_answer (GPInstructLessonTestWordPoolQuestion *question,
                                                       guint answer)
 {
-	question->priv->answer = answer;
+	GPInstructLessonTestWordPoolQuestionPrivate *priv = question->priv;
+
+	priv->answer = answer;
 }
 
 const gchar *
 gpinstruct_lesson_test_word_pool_question_get_explanation (GPInstructLessonTestWordPoolQuestion *question)
 {
-	return question->priv->explanation;
+	GPInstructLessonTestWordPoolQuestionPrivate *priv = question->priv;
+
+	return priv->explanation;
 }
 
 void
 gpinstruct_lesson_test_word_pool_question_set_explanation (GPInstructLessonTestWordPoolQuestion *question,
                                                            const gchar *explanation)
 {
-	g_free (question->priv->explanation);
-	question->priv->explanation = g_strdup (explanation);
+	GPInstructLessonTestWordPoolQuestionPrivate *priv = question->priv;
+
+	g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }

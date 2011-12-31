@@ -39,20 +39,22 @@ static void
 gpinstruct_lesson_init (GPInstructLesson *object)
 {
 	object->priv = GPINSTRUCT_LESSON_GET_PRIVATE (object);
+	GPInstructLessonPrivate *priv = object->priv;
 
-	object->priv->title = g_strdup ("");
-	object->priv->lesson_elements = NULL;
-	object->priv->single_score = FALSE;
+	priv->title = g_strdup ("");
+	priv->lesson_elements = NULL;
+	priv->single_score = FALSE;
 }
 
 static void
 gpinstruct_lesson_finalize (GObject *object)
 {
 	GPInstructLesson *lesson = GPINSTRUCT_LESSON (object);
+	GPInstructLessonPrivate *priv = lesson->priv;
 
-	g_free (lesson->priv->title);
-	if (lesson->priv->lesson_elements)
-		g_list_free_full (lesson->priv->lesson_elements, g_object_unref);
+	g_free (priv->title);
+	if (priv->lesson_elements)
+		g_list_free_full (priv->lesson_elements, g_object_unref);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_parent_class)->finalize (object);
 }
@@ -78,21 +80,27 @@ gpinstruct_lesson_new (void)
 const gchar *
 gpinstruct_lesson_get_title (GPInstructLesson *lesson)
 {
-	return lesson->priv->title;
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	return priv->title;
 }
 
 void
 gpinstruct_lesson_set_title (GPInstructLesson *lesson,
                              const gchar *title)
 {
-	g_free (lesson->priv->title);
-	lesson->priv->title = g_strdup (title);
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	g_free (priv->title);
+	priv->title = g_strdup (title);
 }
 
 guint
 gpinstruct_lesson_get_lesson_elements_length (GPInstructLesson *lesson)
 {
-	return g_list_length (lesson->priv->lesson_elements);
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	return g_list_length (priv->lesson_elements);
 }
 
 void
@@ -101,31 +109,41 @@ gpinstruct_lesson_add_lesson_element (GPInstructLesson *lesson,
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_ELEMENT (element));
 
-	lesson->priv->lesson_elements = g_list_append (lesson->priv->lesson_elements, element);
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	priv->lesson_elements = g_list_append (priv->lesson_elements, element);
 }
 
 void
 gpinstruct_lesson_remove_lesson_element (GPInstructLesson *lesson,
                                          guint lesson_element)
 {
-	GList *nth_link = g_list_nth (lesson->priv->lesson_elements, lesson_element);
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	GList *nth_link = g_list_nth (priv->lesson_elements, lesson_element);
 	g_object_unref (nth_link->data);
-	lesson->priv->lesson_elements = g_list_delete_link (lesson->priv->lesson_elements, nth_link);
+	priv->lesson_elements = g_list_delete_link (priv->lesson_elements, nth_link);
 }
 
 GList *
 gpinstruct_lesson_get_lesson_elements (GPInstructLesson *lesson)
 {
-	return g_list_copy (lesson->priv->lesson_elements);
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	return g_list_copy (priv->lesson_elements);
 }
 
 gboolean gpinstruct_lesson_get_single_score (GPInstructLesson *lesson)
 {
-	return lesson->priv->single_score;
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	return priv->single_score;
 }
 
 void gpinstruct_lesson_set_single_score (GPInstructLesson *lesson,
                                          gboolean single_score)
 {
-	lesson->priv->single_score = single_score;
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	priv->single_score = single_score;
 }

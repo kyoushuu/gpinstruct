@@ -561,7 +561,9 @@ gpinstruct_server_session_get_project_filename (GPInstructServerSession *session
 {
 	g_return_val_if_fail (GPINSTRUCT_IS_SERVER_SESSION (session), NULL);
 
-	return session->priv->project_file;
+	GPInstructServerSessionPrivate *priv = session->priv;
+
+	return priv->project_file;
 }
 
 const gchar *
@@ -569,7 +571,9 @@ gpinstruct_server_session_get_log_folder (GPInstructServerSession *session)
 {
 	g_return_val_if_fail (GPINSTRUCT_IS_SERVER_SESSION (session), NULL);
 
-	return session->priv->log_folder;
+	GPInstructServerSessionPrivate *priv = session->priv;
+
+	return priv->log_folder;
 }
 
 void
@@ -590,7 +594,9 @@ gpinstruct_server_session_get_project (GPInstructServerSession *session)
 {
 	g_return_val_if_fail (GPINSTRUCT_IS_SERVER_SESSION (session), 0);
 
-	return session->priv->project;
+	GPInstructServerSessionPrivate *priv = session->priv;
+
+	return priv->project;
 }
 
 guint
@@ -598,5 +604,7 @@ gpinstruct_server_session_get_port (GPInstructServerSession *session)
 {
 	g_return_val_if_fail (GPINSTRUCT_IS_SERVER_SESSION (session), 0);
 
-	return soup_server_get_port (session->priv->soap_server);
+	GPInstructServerSessionPrivate *priv = session->priv;
+
+	return soup_server_get_port (priv->soap_server);
 }

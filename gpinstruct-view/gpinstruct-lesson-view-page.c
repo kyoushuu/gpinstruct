@@ -71,14 +71,15 @@ static void
 gpinstruct_lesson_view_page_init (GPInstructLessonViewPage *object)
 {
 	object->priv = GPINSTRUCT_LESSON_VIEW_PAGE_GET_PRIVATE (object);
+	GPInstructLessonViewPagePrivate *priv = object->priv;
 
-	object->priv->title = NULL;
+	priv->title = NULL;
 
-	object->priv->next = TRUE;
-	object->priv->back = TRUE;
+	priv->next = TRUE;
+	priv->back = TRUE;
 
-	object->priv->message = GTK_MESSAGE_INFO;
-	object->priv->explanation = g_strdup ("");
+	priv->message = GTK_MESSAGE_INFO;
+	priv->explanation = g_strdup ("");
 
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (object),
 	                                GTK_POLICY_AUTOMATIC,
@@ -89,9 +90,10 @@ static void
 gpinstruct_lesson_view_page_finalize (GObject *object)
 {
 	GPInstructLessonViewPage *page = GPINSTRUCT_LESSON_VIEW_PAGE (object);
+	GPInstructLessonViewPagePrivate *priv = page->priv;
 
-	g_free (page->priv->title);
-	g_free (page->priv->explanation);
+	g_free (priv->title);
+	g_free (priv->explanation);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_view_page_parent_class)->finalize (object);
 }
@@ -158,41 +160,53 @@ gpinstruct_lesson_view_page_new (void)
 const gchar *
 gpinstruct_lesson_view_page_get_title (GPInstructLessonViewPage *page)
 {
-	return page->priv->title;
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	return priv->title;
 }
 
 void
 gpinstruct_lesson_view_page_set_title (GPInstructLessonViewPage *page,
                                        const gchar *title)
 {
-	g_free (page->priv->title);
-	page->priv->title = g_strdup (title);
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	g_free (priv->title);
+	priv->title = g_strdup (title);
 }
 
 gboolean
 gpinstruct_lesson_view_page_get_show_next_button (GPInstructLessonViewPage *page)
 {
-	return page->priv->next;
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	return priv->next;
 }
 
 void
 gpinstruct_lesson_view_page_set_show_next_button (GPInstructLessonViewPage *page,
                                                   gboolean show)
 {
-	page->priv->next = show;
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	priv->next = show;
 }
 
 gboolean
 gpinstruct_lesson_view_page_get_show_back_button (GPInstructLessonViewPage *page)
 {
-	return page->priv->back;
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	return priv->back;
 }
 
 void
 gpinstruct_lesson_view_page_set_show_back_button (GPInstructLessonViewPage *page,
                                                   gboolean show)
 {
-	page->priv->back = show;
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	priv->back = show;
 }
 
 gboolean
@@ -227,25 +241,33 @@ void
 gpinstruct_lesson_view_page_set_message (GPInstructLessonViewPage *page,
                                          GPInstructMessageType message)
 {
-	page->priv->message = message;
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	priv->message = message;
 }
 
 GPInstructMessageType
 gpinstruct_lesson_view_page_get_message (GPInstructLessonViewPage *page)
 {
-	return page->priv->message;
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	return priv->message;
 }
 
 void
 gpinstruct_lesson_view_page_set_explanation (GPInstructLessonViewPage *page,
                                              const gchar *explanation)
 {
-	g_free (page->priv->explanation);
-	page->priv->explanation = g_strdup (explanation);
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }
 
 const gchar *
 gpinstruct_lesson_view_page_get_explanation (GPInstructLessonViewPage *page)
 {
-	return page->priv->explanation;
+	GPInstructLessonViewPagePrivate *priv = page->priv;
+
+	return priv->explanation;
 }

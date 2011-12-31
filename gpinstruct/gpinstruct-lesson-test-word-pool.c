@@ -92,20 +92,22 @@ static void
 gpinstruct_lesson_test_word_pool_init (GPInstructLessonTestWordPool *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_WORD_POOL_GET_PRIVATE (object);
+	GPInstructLessonTestWordPoolPrivate *priv = object->priv;
 
-	object->priv->questions = NULL;
-	object->priv->choices = NULL;
+	priv->questions = NULL;
+	priv->choices = NULL;
 }
 
 static void
 gpinstruct_lesson_test_word_pool_finalize (GObject *object)
 {
 	GPInstructLessonTestWordPool *test = GPINSTRUCT_LESSON_TEST_WORD_POOL (object);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
 
-	if (test->priv->questions)
-		g_list_free_full (test->priv->questions, g_object_unref);
-	if (test->priv->choices)
-		g_list_free_full (test->priv->choices, g_free);
+	if (priv->questions)
+		g_list_free_full (priv->questions, g_object_unref);
+	if (priv->choices)
+		g_list_free_full (priv->choices, g_free);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_word_pool_parent_class)->finalize (object);
 }
@@ -140,35 +142,45 @@ gpinstruct_lesson_test_word_pool_add_question (GPInstructLessonTestWordPool *tes
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (test));
 
-	test->priv->questions = g_list_append (test->priv->questions, question);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	priv->questions = g_list_append (priv->questions, question);
 }
 
 void
 gpinstruct_lesson_test_word_pool_remove_question (GPInstructLessonTestWordPool *test,
                                                   guint question)
 {
-	GList *nth_link = g_list_nth (test->priv->questions, question);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	GList *nth_link = g_list_nth (priv->questions, question);
 	g_object_unref (nth_link->data);
-	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
+	priv->questions = g_list_delete_link (priv->questions, nth_link);
 }
 
 GPInstructLessonTestWordPoolQuestion *
 gpinstruct_lesson_test_word_pool_get_question (GPInstructLessonTestWordPool *test,
                                                guint question)
 {
-	return g_list_nth_data (test->priv->questions, question);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	return g_list_nth_data (priv->questions, question);
 }
 
 GList *
 gpinstruct_lesson_test_word_pool_get_questions (GPInstructLessonTestWordPool *test)
 {
-	return g_list_copy (test->priv->questions);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	return g_list_copy (priv->questions);
 }
 
 guint
 gpinstruct_lesson_test_word_pool_get_questions_length (GPInstructLessonTestWordPool *test)
 {
-	return g_list_length (test->priv->questions);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	return g_list_length (priv->questions);
 }
 
 void
@@ -177,23 +189,29 @@ gpinstruct_lesson_test_word_pool_add_choice (GPInstructLessonTestWordPool *test,
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (test));
 
-	test->priv->choices = g_list_append (test->priv->choices, g_strdup (choice));
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	priv->choices = g_list_append (priv->choices, g_strdup (choice));
 }
 
 void
 gpinstruct_lesson_test_word_pool_remove_choice (GPInstructLessonTestWordPool *test,
                                                 guint choice)
 {
-	GList *nth_link = g_list_nth (test->priv->choices, choice);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	GList *nth_link = g_list_nth (priv->choices, choice);
 	g_free (nth_link->data);
-	test->priv->choices = g_list_delete_link (test->priv->choices, nth_link);
+	priv->choices = g_list_delete_link (priv->choices, nth_link);
 }
 
 const gchar *
 gpinstruct_lesson_test_word_pool_get_choice (GPInstructLessonTestWordPool *test,
                                              guint choice)
 {
-	return g_list_nth_data (test->priv->choices, choice);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	return g_list_nth_data (priv->choices, choice);
 }
 
 void
@@ -201,7 +219,9 @@ gpinstruct_lesson_test_word_pool_set_choice (GPInstructLessonTestWordPool *test,
                                              guint choice,
                                              const gchar *text)
 {
-	GList *nth_node = g_list_nth (test->priv->choices, choice);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	GList *nth_node = g_list_nth (priv->choices, choice);
 
 	g_free (nth_node->data);
 	nth_node->data = g_strdup (text);
@@ -210,13 +230,17 @@ gpinstruct_lesson_test_word_pool_set_choice (GPInstructLessonTestWordPool *test,
 GList *
 gpinstruct_lesson_test_word_pool_get_choices (GPInstructLessonTestWordPool *test)
 {
-	return g_list_copy (test->priv->choices);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	return g_list_copy (priv->choices);
 }
 
 guint
 gpinstruct_lesson_test_word_pool_get_choices_length (GPInstructLessonTestWordPool *test)
 {
-	return g_list_length (test->priv->choices);
+	GPInstructLessonTestWordPoolPrivate *priv = test->priv;
+
+	return g_list_length (priv->choices);
 }
 
 gboolean

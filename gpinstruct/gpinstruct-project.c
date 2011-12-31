@@ -38,20 +38,22 @@ static void
 gpinstruct_project_init (GPInstructProject *object)
 {
 	object->priv = GPINSTRUCT_PROJECT_GET_PRIVATE (object);
+	GPInstructProjectPrivate *priv = object->priv;
 
-	object->priv->title = g_strdup ("");
-	object->priv->categories = NULL;
+	priv->title = g_strdup ("");
+	priv->categories = NULL;
 }
 
 static void
 gpinstruct_project_finalize (GObject *object)
 {
 	GPInstructProject *project = GPINSTRUCT_PROJECT (object);
+	GPInstructProjectPrivate *priv = project->priv;
 
-	g_free (project->priv->title);
+	g_free (priv->title);
 
-	if (project->priv->categories)
-		g_list_free_full (project->priv->categories, g_object_unref);
+	if (priv->categories)
+		g_list_free_full (priv->categories, g_object_unref);
 
 	G_OBJECT_CLASS (gpinstruct_project_parent_class)->finalize (object);
 }
@@ -77,21 +79,27 @@ gpinstruct_project_new (void)
 const gchar *
 gpinstruct_project_get_title (GPInstructProject *project)
 {
-	return project->priv->title;
+	GPInstructProjectPrivate *priv = project->priv;
+
+	return priv->title;
 }
 
 void
 gpinstruct_project_set_title (GPInstructProject *project,
                               const gchar *title)
 {
-	g_free (project->priv->title);
-	project->priv->title = g_strdup (title);
+	GPInstructProjectPrivate *priv = project->priv;
+
+	g_free (priv->title);
+	priv->title = g_strdup (title);
 }
 
 guint
 gpinstruct_project_get_categories_length (GPInstructProject *project)
 {
-	return g_list_length (project->priv->categories);
+	GPInstructProjectPrivate *priv = project->priv;
+
+	return g_list_length (priv->categories);
 }
 
 void
@@ -100,20 +108,26 @@ gpinstruct_project_add_category (GPInstructProject *project,
 {
 	g_return_if_fail (GPINSTRUCT_IS_CATEGORY (category));
 
-	project->priv->categories = g_list_append (project->priv->categories, category);
+	GPInstructProjectPrivate *priv = project->priv;
+
+	priv->categories = g_list_append (priv->categories, category);
 }
 
 void
 gpinstruct_project_remove_category (GPInstructProject *project,
                                     guint category)
 {
-	GList *nth_link = g_list_nth (project->priv->categories, category);
+	GPInstructProjectPrivate *priv = project->priv;
+
+	GList *nth_link = g_list_nth (priv->categories, category);
 	g_object_unref (nth_link->data);
-	project->priv->categories = g_list_delete_link (project->priv->categories, nth_link);
+	priv->categories = g_list_delete_link (priv->categories, nth_link);
 }
 
 GList *
 gpinstruct_project_get_categories (GPInstructProject *project)
 {
-	return g_list_copy (project->priv->categories);
+	GPInstructProjectPrivate *priv = project->priv;
+
+	return g_list_copy (priv->categories);
 }

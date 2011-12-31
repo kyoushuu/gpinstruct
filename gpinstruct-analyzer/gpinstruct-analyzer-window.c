@@ -71,25 +71,26 @@ view_combobox_changed (GtkComboBox *widget,
 		return;
 
 	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindowPrivate *priv = window->priv;
 
-	if (window->priv->analyzer == NULL)
+	if (priv->analyzer == NULL)
 		return;
 
-	if (window->priv->view)
-		gtk_widget_destroy (window->priv->view);
-	window->priv->view = NULL;
+	if (priv->view)
+		gtk_widget_destroy (priv->view);
+	priv->view = NULL;
 
 	switch (active)
 	{
 		case 0:
-			window->priv->view = gpinstruct_analyzer_project_view_new (window->priv->analyzer);
-			gtk_box_pack_start (GTK_BOX (window->priv->main_vbox), window->priv->view, TRUE, TRUE, 0);
-			gtk_widget_show_all (window->priv->view);
+			priv->view = gpinstruct_analyzer_project_view_new (priv->analyzer);
+			gtk_box_pack_start (GTK_BOX (priv->main_vbox), priv->view, TRUE, TRUE, 0);
+			gtk_widget_show_all (priv->view);
 			break;
 		case 1:
-			window->priv->view = gpinstruct_analyzer_examinee_view_new (window->priv->analyzer);
-			gtk_box_pack_start (GTK_BOX (window->priv->main_vbox), window->priv->view, TRUE, TRUE, 0);
-			gtk_widget_show_all (window->priv->view);
+			priv->view = gpinstruct_analyzer_examinee_view_new (priv->analyzer);
+			gtk_box_pack_start (GTK_BOX (priv->main_vbox), priv->view, TRUE, TRUE, 0);
+			gtk_widget_show_all (priv->view);
 			break;
 	}
 }
@@ -110,6 +111,7 @@ file_add_action (GtkAction *action,
                  gpointer   user_data)
 {
 	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindowPrivate *priv = window->priv;
 
 	GtkWidget *dialog = gtk_file_chooser_dialog_new (_("Choose Log Files"),
 	                                                 GTK_WINDOW (window),
@@ -140,8 +142,8 @@ file_add_action (GtkAction *action,
 	}
 	else
 	{
-		g_object_unref (window->priv->analyzer);
-		window->priv->analyzer = NULL;
+		g_object_unref (priv->analyzer);
+		priv->analyzer = NULL;
 	}
 
 	gtk_widget_destroy (dialog);
@@ -222,8 +224,9 @@ static void
 gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 {
 	object->priv = GPINSTRUCT_ANALYZER_WINDOW_GET_PRIVATE (object);
+	GPInstructAnalyzerWindowPrivate *priv = object->priv;
 
-	object->priv->analyzer = NULL;
+	priv->analyzer = NULL;
 
 	GError *error = NULL;
 
@@ -276,24 +279,24 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 	gtk_window_set_title (GTK_WINDOW (object), _("GPInstruct Analyzer"));
 	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
 
-	object->priv->main_vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (object), object->priv->main_vbox);
+	priv->main_vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (object), priv->main_vbox);
 
 
-	object->priv->manager = gtk_ui_manager_new ();
-	gtk_window_add_accel_group (GTK_WINDOW (object), gtk_ui_manager_get_accel_group (object->priv->manager));
+	priv->manager = gtk_ui_manager_new ();
+	gtk_window_add_accel_group (GTK_WINDOW (object), gtk_ui_manager_get_accel_group (priv->manager));
 
-	object->priv->action_group = gtk_action_group_new ("gpinstruct-analyzer-window");
-	gtk_action_group_add_actions (object->priv->action_group, actions, G_N_ELEMENTS (actions), object);
-	gtk_action_set_sensitive (gtk_action_group_get_action (object->priv->action_group,
+	priv->action_group = gtk_action_group_new ("gpinstruct-analyzer-window");
+	gtk_action_group_add_actions (priv->action_group, actions, G_N_ELEMENTS (actions), object);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-add"),
 	                          FALSE);
-	gtk_action_set_sensitive (gtk_action_group_get_action (object->priv->action_group,
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
 	                          FALSE);
 
-	gtk_ui_manager_insert_action_group (object->priv->manager, object->priv->action_group, 0);
-	gtk_ui_manager_add_ui_from_string (object->priv->manager, ui, -1, &error);
+	gtk_ui_manager_insert_action_group (priv->manager, priv->action_group, 0);
+	gtk_ui_manager_add_ui_from_string (priv->manager, ui, -1, &error);
 
 	if (error)
 	{
@@ -301,18 +304,18 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 		g_error_free (error);
 	}
 
-	GtkWidget *main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
-	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), main_menu, FALSE, TRUE, 0);
+	GtkWidget *main_menu = gtk_ui_manager_get_widget (priv->manager, "/menubar");
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), main_menu, FALSE, TRUE, 0);
 
-	GtkWidget *toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
+	GtkWidget *toolbar = gtk_ui_manager_get_widget (priv->manager, "/toolbar");
 #if GTK_MAJOR_VERSION >= 3
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
 	                             GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 #endif
-	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), toolbar, FALSE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), toolbar, FALSE, TRUE, 0);
 
 	GtkWidget *view_hbox = gtk_hbox_new (FALSE, 3);
-	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), view_hbox, FALSE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), view_hbox, FALSE, TRUE, 0);
 
 	GtkWidget *view_label = gtk_label_new (_("Select View:"));
 	gtk_box_pack_start (GTK_BOX (view_hbox), view_label, FALSE, TRUE, 0);
@@ -329,7 +332,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 	gtk_widget_set_sensitive (view_combobox, FALSE);
 	g_signal_connect (view_combobox, "changed", G_CALLBACK (view_combobox_changed), object);
 	gtk_box_pack_start (GTK_BOX (view_hbox), view_combobox, TRUE, TRUE, 0);
-	object->priv->view_combobox = view_combobox;
+	priv->view_combobox = view_combobox;
 
 	g_object_unref (view_store);
 
@@ -337,10 +340,10 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (view_combobox), view_textrenderer, TRUE);
 	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (view_combobox), view_textrenderer, "text", 0);
 
-	object->priv->view = NULL;
+	priv->view = NULL;
 
-	object->priv->statusbar = gtk_statusbar_new ();
-	gtk_box_pack_end (GTK_BOX (object->priv->main_vbox), object->priv->statusbar, FALSE, TRUE, 0);
+	priv->statusbar = gtk_statusbar_new ();
+	gtk_box_pack_end (GTK_BOX (priv->main_vbox), priv->statusbar, FALSE, TRUE, 0);
 
 
 	g_signal_connect (object, "delete-event", G_CALLBACK (window_delete_event), NULL);
@@ -350,9 +353,10 @@ static void
 gpinstruct_analyzer_window_finalize (GObject *object)
 {
 	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (object);
+	GPInstructAnalyzerWindowPrivate *priv = window->priv;
 
-	if (window->priv->action_group)
-		g_object_unref (window->priv->action_group);
+	if (priv->action_group)
+		g_object_unref (priv->action_group);
 
 	G_OBJECT_CLASS (gpinstruct_analyzer_window_parent_class)->finalize (object);
 }
@@ -378,7 +382,9 @@ gpinstruct_analyzer_window_new (void)
 void
 gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window)
 {
-	if (window->priv->analyzer)
+	GPInstructAnalyzerWindowPrivate *priv = window->priv;
+
+	if (priv->analyzer)
 	{
 		if (gpinstruct_analyzer_window_close_session (window) == FALSE)
 			return;
@@ -417,19 +423,19 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window)
 		if (project == NULL)
 			goto error;
 
-		window->priv->analyzer = gpinstruct_log_analyzer_new (project);
+		priv->analyzer = gpinstruct_log_analyzer_new (project);
 
-		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+		gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 		                                                       "file-add"),
 		                          TRUE);
-		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+		gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 		                                                       "file-close"),
 		                          TRUE);
 
-		gtk_widget_set_sensitive (window->priv->view_combobox, TRUE);
+		gtk_widget_set_sensitive (priv->view_combobox, TRUE);
 
-		gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), -1);
-		gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), 0);
+		gtk_combo_box_set_active (GTK_COMBO_BOX (priv->view_combobox), -1);
+		gtk_combo_box_set_active (GTK_COMBO_BOX (priv->view_combobox), 0);
 	}
 
 	error:
@@ -439,23 +445,25 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window)
 gboolean
 gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow *window)
 {
-	if (window->priv->analyzer == NULL)
+	GPInstructAnalyzerWindowPrivate *priv = window->priv;
+
+	if (priv->analyzer == NULL)
 		return FALSE;
 
-	gtk_widget_destroy (window->priv->view);
+	gtk_widget_destroy (priv->view);
 
-	g_object_unref (window->priv->analyzer);
+	g_object_unref (priv->analyzer);
 
-	window->priv->analyzer = NULL;
+	priv->analyzer = NULL;
 
-	gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-add"),
 	                          FALSE);
-	gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
 	                          FALSE);
 
-	gtk_widget_set_sensitive (window->priv->view_combobox, FALSE);
+	gtk_widget_set_sensitive (priv->view_combobox, FALSE);
 
 	return TRUE;
 }
@@ -465,7 +473,9 @@ gboolean
 gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow *window,
                                          const gchar *file)
 {
-	if (window->priv->analyzer == NULL)
+	GPInstructAnalyzerWindowPrivate *priv = window->priv;
+
+	if (priv->analyzer == NULL)
 		return FALSE;
 
 	GPInstructLog *log = gpinstruct_log_new ();
@@ -475,12 +485,12 @@ gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow *window,
 		return FALSE;
 	}
 
-	gpinstruct_log_analyzer_add_log (window->priv->analyzer, log);
+	gpinstruct_log_analyzer_add_log (priv->analyzer, log);
 
 	g_object_unref (log);
 
-	gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), -1);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (window->priv->view_combobox), 0);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (priv->view_combobox), -1);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (priv->view_combobox), 0);
 
 	return TRUE;
 }
@@ -488,7 +498,9 @@ gpinstruct_analyzer_window_add_log_file (GPInstructAnalyzerWindow *window,
 gboolean
 gpinstruct_analyzer_window_quit (GPInstructAnalyzerWindow *window)
 {
-	if (window->priv->analyzer)
+	GPInstructAnalyzerWindowPrivate *priv = window->priv;
+
+	if (priv->analyzer)
 	{
 		if (gpinstruct_analyzer_window_close_session (window) == FALSE)
 			return FALSE;

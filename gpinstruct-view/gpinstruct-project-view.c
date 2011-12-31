@@ -42,8 +42,9 @@ lesson_button_clicked (GtkButton *button,
                        gpointer   user_data)
 {
 	GPInstructProjectView *view = GPINSTRUCT_PROJECT_VIEW (user_data);
+	GPInstructProjectViewPrivate *priv = view->priv;
 
-	GPInstructLessonView *lesson_view = g_hash_table_lookup (view->priv->hashtable, button);
+	GPInstructLessonView *lesson_view = g_hash_table_lookup (priv->hashtable, button);
 
 	if (lesson_view)
 	{
@@ -60,8 +61,9 @@ static void
 gpinstruct_project_view_init (GPInstructProjectView *object)
 {
 	object->priv = GPINSTRUCT_PROJECT_VIEW_GET_PRIVATE (object);
+	GPInstructProjectViewPrivate *priv = object->priv;
 
-	object->priv->hashtable = g_hash_table_new (NULL, NULL);
+	priv->hashtable = g_hash_table_new (NULL, NULL);
 
 	gtk_widget_set_size_request (GTK_WIDGET (object), 600, 400);
 }
@@ -70,10 +72,11 @@ static void
 gpinstruct_project_view_finalize (GObject *object)
 {
 	GPInstructProjectView *view = GPINSTRUCT_PROJECT_VIEW (object);
+	GPInstructProjectViewPrivate *priv = view->priv;
 
-	if (view->priv->hashtable)
+	if (priv->hashtable)
 	{
-		GList *views = g_hash_table_get_values (view->priv->hashtable);
+		GList *views = g_hash_table_get_values (priv->hashtable);
 		GList *current_views = views;
 
 		while (current_views)
@@ -85,17 +88,17 @@ gpinstruct_project_view_finalize (GObject *object)
 
 		g_list_free (views);
 
-		g_hash_table_destroy (view->priv->hashtable);
+		g_hash_table_destroy (priv->hashtable);
 	}
 
-	if (view->priv->project)
-		g_object_unref (view->priv->project);
+	if (priv->project)
+		g_object_unref (priv->project);
 
-	if (view->priv->pool)
-		g_object_unref (view->priv->pool);
+	if (priv->pool)
+		g_object_unref (priv->pool);
 
-	if (view->priv->log)
-		g_object_unref (view->priv->log);
+	if (priv->log)
+		g_object_unref (priv->log);
 
 	G_OBJECT_CLASS (gpinstruct_project_view_parent_class)->finalize (object);
 }
@@ -120,13 +123,14 @@ gpinstruct_project_view_new (GPInstructProject *project,
 	g_return_val_if_fail (project != NULL, NULL);
 
 	GPInstructProjectView *view = g_object_new (GPINSTRUCT_TYPE_PROJECT_VIEW, NULL);
+	GPInstructProjectViewPrivate *priv = view->priv;
 
 	if (pool)
-		view->priv->pool = g_object_ref (pool);
+		priv->pool = g_object_ref (pool);
 	else
 	{
-		view->priv->pool = gpinstruct_message_pool_new ();
-		gpinstruct_message_pool_add_multiple (view->priv->pool,
+		priv->pool = gpinstruct_message_pool_new ();
+		gpinstruct_message_pool_add_multiple (priv->pool,
 		                                      GPINSTRUCT_MESSAGE_TYPE_CORRECT,		_("Your last answer is correct."),
 		                                      GPINSTRUCT_MESSAGE_TYPE_CORRECT_ALL,	_("All of your answers are correct."),
 		                                      GPINSTRUCT_MESSAGE_TYPE_WRONG,		_("Your last answer is wrong."),
@@ -139,9 +143,9 @@ gpinstruct_project_view_new (GPInstructProject *project,
 	}
 
 	if (log)
-		view->priv->log = g_object_ref (log);
+		priv->log = g_object_ref (log);
 
-	view->priv->project = g_object_ref (project);
+	priv->project = g_object_ref (project);
 	gtk_window_set_default_size (GTK_WINDOW (view), 600, 400);
 	gtk_window_set_title (GTK_WINDOW (view), gpinstruct_project_get_title (project));
 
@@ -195,9 +199,9 @@ gpinstruct_project_view_new (GPInstructProject *project,
 			gtk_box_pack_start (GTK_BOX (category_vbox), lesson_button, FALSE, FALSE, 3);
 			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), view);
 
-			GPInstructLessonView *lesson_view = gpinstruct_lesson_view_new (lesson, view->priv->pool, view->priv->log);
+			GPInstructLessonView *lesson_view = gpinstruct_lesson_view_new (lesson, priv->pool, priv->log);
 
-			g_hash_table_insert (view->priv->hashtable, lesson_button, lesson_view);
+			g_hash_table_insert (priv->hashtable, lesson_button, lesson_view);
 
 			curr_lessons = curr_lessons->next;
 		}

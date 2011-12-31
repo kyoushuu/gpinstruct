@@ -39,9 +39,10 @@ static void
 gpinstruct_lesson_score_init (GPInstructLessonScore *object)
 {
 	object->priv = GPINSTRUCT_LESSON_SCORE_GET_PRIVATE (object);
+	GPInstructLessonScorePrivate *priv = object->priv;
 
-	object->priv->total = 0;
-	object->priv->score = 0;
+	priv->total = 0;
+	priv->score = 0;
 }
 
 static void
@@ -71,30 +72,40 @@ gpinstruct_lesson_score_new (void)
 void
 gpinstruct_lesson_score_increase_total (GPInstructLessonScore *score)
 {
-	score->priv->total++;
+	GPInstructLessonScorePrivate *priv = score->priv;
+
+	priv->total++;
 }
 
 guint
 gpinstruct_lesson_score_get_total (GPInstructLessonScore *score)
 {
-	return score->priv->total;
+	GPInstructLessonScorePrivate *priv = score->priv;
+
+	return priv->total;
 }
 
 void
 gpinstruct_lesson_score_increase_score (GPInstructLessonScore *score)
 {
-	score->priv->score++;
+	GPInstructLessonScorePrivate *priv = score->priv;
+
+	priv->score++;
 }
 
 guint
 gpinstruct_lesson_score_get_score (GPInstructLessonScore *score)
 {
-	return score->priv->score;
+	GPInstructLessonScorePrivate *priv = score->priv;
+
+	return priv->score;
 }
 
 void
 gpinstruct_lesson_score_clear (GPInstructLessonScore *score)
 {
-	score->priv->total = 0;
-	score->priv->score = 0;
+	GPInstructLessonScorePrivate *priv = score->priv;
+
+	priv->total = 0;
+	priv->score = 0;
 }

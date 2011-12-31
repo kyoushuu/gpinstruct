@@ -37,20 +37,22 @@ static void
 gpinstruct_lesson_test_text_question_init (GPInstructLessonTestTextQuestion *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION_GET_PRIVATE (object);
+	GPInstructLessonTestTextQuestionPrivate *priv = object->priv;
 
-	object->priv->text = g_strdup ("");
-	object->priv->explanation = g_strdup ("");
-	object->priv->answer = g_strdup ("");
+	priv->text = g_strdup ("");
+	priv->explanation = g_strdup ("");
+	priv->answer = g_strdup ("");
 }
 
 static void
 gpinstruct_lesson_test_text_question_finalize (GObject *object)
 {
 	GPInstructLessonTestTextQuestion *question = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION (object);
+	GPInstructLessonTestTextQuestionPrivate *priv = question->priv;
 
-	g_free (question->priv->text);
-	g_free (question->priv->explanation);
-	g_free (question->priv->answer);
+	g_free (priv->text);
+	g_free (priv->explanation);
+	g_free (priv->answer);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_text_question_parent_class)->finalize (object);
 }
@@ -76,41 +78,53 @@ gpinstruct_lesson_test_text_question_new (void)
 const gchar *
 gpinstruct_lesson_test_text_question_get_text (GPInstructLessonTestTextQuestion *question)
 {
-	return question->priv->text;
+	GPInstructLessonTestTextQuestionPrivate *priv = question->priv;
+
+	return priv->text;
 }
 
 void
 gpinstruct_lesson_test_text_question_set_text (GPInstructLessonTestTextQuestion *question,
                                                const gchar *text)
 {
-	g_free (question->priv->text);
-	question->priv->text = g_strdup (text);
+	GPInstructLessonTestTextQuestionPrivate *priv = question->priv;
+
+	g_free (priv->text);
+	priv->text = g_strdup (text);
 }
 
 const gchar *
 gpinstruct_lesson_test_text_question_get_answer (GPInstructLessonTestTextQuestion *question)
 {
-	return question->priv->answer;
+	GPInstructLessonTestTextQuestionPrivate *priv = question->priv;
+
+	return priv->answer;
 }
 
 void
 gpinstruct_lesson_test_text_question_set_answer (GPInstructLessonTestTextQuestion *question,
                                                  const gchar *answer)
 {
-	g_free (question->priv->answer);
-	question->priv->answer = g_strdup (answer);
+	GPInstructLessonTestTextQuestionPrivate *priv = question->priv;
+
+	g_free (priv->answer);
+	priv->answer = g_strdup (answer);
 }
 
 const gchar *
 gpinstruct_lesson_test_text_question_get_explanation (GPInstructLessonTestTextQuestion *question)
 {
-	return question->priv->explanation;
+	GPInstructLessonTestTextQuestionPrivate *priv = question->priv;
+
+	return priv->explanation;
 }
 
 void
 gpinstruct_lesson_test_text_question_set_explanation (GPInstructLessonTestTextQuestion *question,
                                                       const gchar *explanation)
 {
-	g_free (question->priv->explanation);
-	question->priv->explanation = g_strdup (explanation);
+	GPInstructLessonTestTextQuestionPrivate *priv = question->priv;
+
+	g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }

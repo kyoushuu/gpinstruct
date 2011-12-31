@@ -40,23 +40,25 @@ static void
 gpinstruct_lesson_test_multi_choice_question_init (GPInstructLessonTestMultiChoiceQuestion *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION_GET_PRIVATE (object);
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = object->priv;
 
-	object->priv->text = g_strdup ("");
-	object->priv->explanation = g_strdup ("");
-	object->priv->answer = 0;
-	object->priv->choices = NULL;
+	priv->text = g_strdup ("");
+	priv->explanation = g_strdup ("");
+	priv->answer = 0;
+	priv->choices = NULL;
 }
 
 static void
 gpinstruct_lesson_test_multi_choice_question_finalize (GObject *object)
 {
 	GPInstructLessonTestMultiChoiceQuestion *question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (object);
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
 
-	g_free (question->priv->text);
-	g_free (question->priv->explanation);
+	g_free (priv->text);
+	g_free (priv->explanation);
 
-	if (question->priv->choices)
-		g_list_free_full (question->priv->choices, g_free);
+	if (priv->choices)
+		g_list_free_full (priv->choices, g_free);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_multi_choice_question_parent_class)->finalize (object);
 }
@@ -82,28 +84,36 @@ gpinstruct_lesson_test_multi_choice_question_new (void)
 const gchar *
 gpinstruct_lesson_test_multi_choice_question_get_text (GPInstructLessonTestMultiChoiceQuestion *question)
 {
-	return question->priv->text;
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	return priv->text;
 }
 
 void
 gpinstruct_lesson_test_multi_choice_question_set_text (GPInstructLessonTestMultiChoiceQuestion *question,
                                                        const gchar *text)
 {
-	g_free (question->priv->text);
-	question->priv->text = g_strdup (text);
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	g_free (priv->text);
+	priv->text = g_strdup (text);
 }
 
 guint
 gpinstruct_lesson_test_multi_choice_question_get_answer (GPInstructLessonTestMultiChoiceQuestion *question)
 {
-	return question->priv->answer;
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	return priv->answer;
 }
 
 void
 gpinstruct_lesson_test_multi_choice_question_set_answer (GPInstructLessonTestMultiChoiceQuestion *question,
                                                          guint answer)
 {
-	question->priv->answer = answer;
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	priv->answer = answer;
 }
 
 void
@@ -112,30 +122,38 @@ gpinstruct_lesson_test_multi_choice_question_add_choice (GPInstructLessonTestMul
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_MULTI_CHOICE_QUESTION (question));
 
-	question->priv->choices = g_list_append (question->priv->choices, g_strdup (choice));
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	priv->choices = g_list_append (priv->choices, g_strdup (choice));
 }
 
 void
 gpinstruct_lesson_test_multi_choice_question_remove_choice (GPInstructLessonTestMultiChoiceQuestion *question,
                                                             guint choice)
 {
-	GList *nth_link = g_list_nth (question->priv->choices, choice);
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	GList *nth_link = g_list_nth (priv->choices, choice);
 	g_free (nth_link->data);
-	question->priv->choices = g_list_delete_link (question->priv->choices, nth_link);
+	priv->choices = g_list_delete_link (priv->choices, nth_link);
 }
 
 const gchar *
 gpinstruct_lesson_test_multi_choice_question_get_choice (GPInstructLessonTestMultiChoiceQuestion *question,
                                                          guint choice)
 {
-	return g_list_nth_data (question->priv->choices, choice);
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	return g_list_nth_data (priv->choices, choice);
 }
 
 void
 gpinstruct_lesson_test_multi_choice_question_set_choice (GPInstructLessonTestMultiChoiceQuestion *question,
                                                          guint choice, const gchar *text)
 {
-	GList *nth_node = g_list_nth (question->priv->choices, choice);;
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	GList *nth_node = g_list_nth (priv->choices, choice);;
 
 	g_free (nth_node->data);
 	nth_node->data = g_strdup (text);
@@ -144,25 +162,33 @@ gpinstruct_lesson_test_multi_choice_question_set_choice (GPInstructLessonTestMul
 GList *
 gpinstruct_lesson_test_multi_choice_question_get_choices (GPInstructLessonTestMultiChoiceQuestion *question)
 {
-	return g_list_copy (question->priv->choices);
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	return g_list_copy (priv->choices);
 }
 
 guint
 gpinstruct_lesson_test_multi_choice_question_get_choices_length (GPInstructLessonTestMultiChoiceQuestion *question)
 {
-	return g_list_length (question->priv->choices);
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	return g_list_length (priv->choices);
 }
 
 const gchar *
 gpinstruct_lesson_test_multi_choice_question_get_explanation (GPInstructLessonTestMultiChoiceQuestion *question)
 {
-	return question->priv->explanation;
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	return priv->explanation;
 }
 
 void
 gpinstruct_lesson_test_multi_choice_question_set_explanation (GPInstructLessonTestMultiChoiceQuestion *question,
                                                               const gchar *explanation)
 {
-	g_free (question->priv->explanation);
-	question->priv->explanation = g_strdup (explanation);
+	GPInstructLessonTestMultiChoiceQuestionPrivate *priv = question->priv;
+
+	g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }

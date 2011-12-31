@@ -149,6 +149,7 @@ static void
 gpinstruct_server_window_init (GPInstructServerWindow *object)
 {
 	object->priv = GPINSTRUCT_SERVER_WINDOW_GET_PRIVATE (object);
+	GPInstructServerWindowPrivate *priv = object->priv;
 
 	GError *error = NULL;
 
@@ -200,21 +201,21 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	gtk_window_set_title (GTK_WINDOW (object), _("GPInstruct Server"));
 	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
 
-	object->priv->main_vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (object), object->priv->main_vbox);
+	priv->main_vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (object), priv->main_vbox);
 
 
-	object->priv->manager = gtk_ui_manager_new ();
-	gtk_window_add_accel_group (GTK_WINDOW (object), gtk_ui_manager_get_accel_group (object->priv->manager));
+	priv->manager = gtk_ui_manager_new ();
+	gtk_window_add_accel_group (GTK_WINDOW (object), gtk_ui_manager_get_accel_group (priv->manager));
 
-	object->priv->action_group = gtk_action_group_new ("gpinstruct-server-window");
-	gtk_action_group_add_actions (object->priv->action_group, actions, G_N_ELEMENTS (actions), object);
-	gtk_action_set_sensitive (gtk_action_group_get_action (object->priv->action_group,
+	priv->action_group = gtk_action_group_new ("gpinstruct-server-window");
+	gtk_action_group_add_actions (priv->action_group, actions, G_N_ELEMENTS (actions), object);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
 	                          FALSE);
 
-	gtk_ui_manager_insert_action_group (object->priv->manager, object->priv->action_group, 0);
-	gtk_ui_manager_add_ui_from_string (object->priv->manager, ui, -1, &error);
+	gtk_ui_manager_insert_action_group (priv->manager, priv->action_group, 0);
+	gtk_ui_manager_add_ui_from_string (priv->manager, ui, -1, &error);
 
 	if (error)
 	{
@@ -222,19 +223,19 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 		g_error_free (error);
 	}
 
-	GtkWidget *main_menu = gtk_ui_manager_get_widget (object->priv->manager, "/menubar");
-	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), main_menu, FALSE, TRUE, 0);
+	GtkWidget *main_menu = gtk_ui_manager_get_widget (priv->manager, "/menubar");
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), main_menu, FALSE, TRUE, 0);
 
-	GtkWidget *toolbar = gtk_ui_manager_get_widget (object->priv->manager, "/toolbar");
+	GtkWidget *toolbar = gtk_ui_manager_get_widget (priv->manager, "/toolbar");
 #if GTK_MAJOR_VERSION >= 3
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
 	                             GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 #endif
-	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), toolbar, FALSE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), toolbar, FALSE, TRUE, 0);
 
 
 	GtkWidget *info_frame = gtk_frame_new (_("Project Information"));
-	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), info_frame,
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), info_frame,
 	                    FALSE, TRUE, 0);
 
 	GtkWidget *info_table = gtk_table_new (2, 2, FALSE);
@@ -245,9 +246,9 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  0, 0);
-	object->priv->title_entry = gtk_entry_new ();
-	gtk_editable_set_editable (GTK_EDITABLE (object->priv->title_entry), FALSE);
-	gtk_table_attach (GTK_TABLE (info_table), object->priv->title_entry,
+	priv->title_entry = gtk_entry_new ();
+	gtk_editable_set_editable (GTK_EDITABLE (priv->title_entry), FALSE);
+	gtk_table_attach (GTK_TABLE (info_table), priv->title_entry,
 	                  1, 2, 0, 1,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  0, 0);
@@ -257,24 +258,24 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  0, 0);
-	object->priv->port_entry = gtk_entry_new ();
-	gtk_editable_set_editable (GTK_EDITABLE (object->priv->port_entry), FALSE);
-	gtk_table_attach (GTK_TABLE (info_table), object->priv->port_entry,
+	priv->port_entry = gtk_entry_new ();
+	gtk_editable_set_editable (GTK_EDITABLE (priv->port_entry), FALSE);
+	gtk_table_attach (GTK_TABLE (info_table), priv->port_entry,
 	                  1, 2, 1, 2,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  0, 0);
 
-	object->priv->store = gtk_tree_store_new (SERVER_N_COLUMNS,
+	priv->store = gtk_tree_store_new (SERVER_N_COLUMNS,
 	                                          G_TYPE_STRING,
 	                                          G_TYPE_STRING,
 	                                          G_TYPE_UINT);
 
-	object->priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (object->priv->store));
-	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), object->priv->tree_view, FALSE, TRUE, 0);
+	priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->store));
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), priv->tree_view, FALSE, TRUE, 0);
 
 
-	object->priv->statusbar = gtk_statusbar_new ();
-	gtk_box_pack_start (GTK_BOX (object->priv->main_vbox), object->priv->statusbar, FALSE, TRUE, 0);
+	priv->statusbar = gtk_statusbar_new ();
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox), priv->statusbar, FALSE, TRUE, 0);
 }
 
 static void
@@ -306,7 +307,9 @@ gpinstruct_server_window_new (void)
 void
 gpinstruct_server_window_new_session (GPInstructServerWindow *window)
 {
-	if (window->priv->session)
+	GPInstructServerWindowPrivate *priv = window->priv;
+
+	if (priv->session)
 	{
 		if (gpinstruct_server_window_close_session (window) == FALSE)
 			return;
@@ -374,20 +377,20 @@ gpinstruct_server_window_new_session (GPInstructServerWindow *window)
 		    !g_file_test (log_folder, G_FILE_TEST_IS_DIR))
 			goto error;
 
-		window->priv->session = gpinstruct_server_session_new (project_file,
+		priv->session = gpinstruct_server_session_new (project_file,
 		                                                       log_folder);
 
-		gtk_entry_set_text (GTK_ENTRY (window->priv->title_entry),
-		                    gpinstruct_project_get_title (gpinstruct_server_session_get_project (window->priv->session)));
+		gtk_entry_set_text (GTK_ENTRY (priv->title_entry),
+		                    gpinstruct_project_get_title (gpinstruct_server_session_get_project (priv->session)));
 
 		gchar *port = g_strdup_printf ("%d",
-		                               gpinstruct_server_session_get_port (window->priv->session));
-		gtk_entry_set_text (GTK_ENTRY (window->priv->port_entry),
+		                               gpinstruct_server_session_get_port (priv->session));
+		gtk_entry_set_text (GTK_ENTRY (priv->port_entry),
 		                    port);
 		g_free (port);
 
 
-		gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+		gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 			                                                   "file-close"),
 			                      TRUE);
 
@@ -402,15 +405,17 @@ gpinstruct_server_window_new_session (GPInstructServerWindow *window)
 gboolean
 gpinstruct_server_window_close_session (GPInstructServerWindow *window)
 {
-	if (window->priv->session == NULL)
+	GPInstructServerWindowPrivate *priv = window->priv;
+
+	if (priv->session == NULL)
 		return FALSE;
 	else
 	{
-		g_object_unref (window->priv->session);
-		window->priv->session = NULL;
+		g_object_unref (priv->session);
+		priv->session = NULL;
 	}
 
-	gtk_action_set_sensitive (gtk_action_group_get_action (window->priv->action_group,
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
 	                          FALSE);
 
@@ -420,7 +425,9 @@ gpinstruct_server_window_close_session (GPInstructServerWindow *window)
 gboolean
 gpinstruct_server_window_quit (GPInstructServerWindow *window)
 {
-	if (window->priv->session)
+	GPInstructServerWindowPrivate *priv = window->priv;
+
+	if (priv->session)
 	{
 		if (gpinstruct_server_window_close_session (window) == FALSE)
 			return FALSE;

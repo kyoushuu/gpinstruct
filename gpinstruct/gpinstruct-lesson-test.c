@@ -56,19 +56,21 @@ static void
 gpinstruct_lesson_test_init (GPInstructLessonTest *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_GET_PRIVATE (object);
+	GPInstructLessonTestPrivate *priv = object->priv;
 
-	object->priv->directions = g_strdup ("");
-	object->priv->explain = FALSE;
-	object->priv->id = NULL;
+	priv->directions = g_strdup ("");
+	priv->explain = FALSE;
+	priv->id = NULL;
 }
 
 static void
 gpinstruct_lesson_test_finalize (GObject *object)
 {
 	GPInstructLessonTest *test = GPINSTRUCT_LESSON_TEST (object);
+	GPInstructLessonTestPrivate *priv = test->priv;
 
-	g_free (test->priv->directions);
-	g_free (test->priv->id);
+	g_free (priv->directions);
+	g_free (priv->id);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_parent_class)->finalize (object);
 }
@@ -102,44 +104,56 @@ gpinstruct_lesson_test_new (void)
 const gchar *
 gpinstruct_lesson_test_get_directions (GPInstructLessonTest *test)
 {
-	return test->priv->directions;
+	GPInstructLessonTestPrivate *priv = test->priv;
+
+	return priv->directions;
 }
 
 void
 gpinstruct_lesson_test_set_directions (GPInstructLessonTest *test,
                                        const gchar *directions)
 {
-	g_free (test->priv->directions);
-	test->priv->directions = g_strdup (directions);
+	GPInstructLessonTestPrivate *priv = test->priv;
+
+	g_free (priv->directions);
+	priv->directions = g_strdup (directions);
 }
 
 gboolean
 gpinstruct_lesson_test_get_explain (GPInstructLessonTest *test)
 {
-	return test->priv->explain;
+	GPInstructLessonTestPrivate *priv = test->priv;
+
+	return priv->explain;
 }
 
 void
 gpinstruct_lesson_test_set_explain (GPInstructLessonTest *test,
                                     gboolean explain)
 {
-	test->priv->explain = explain;
+	GPInstructLessonTestPrivate *priv = test->priv;
+
+	priv->explain = explain;
 }
 
 const gchar *
 gpinstruct_lesson_test_get_id (GPInstructLessonTest *test)
 {
-	if (test->priv->id == NULL)
-		test->priv->id = create_id ();
-	return test->priv->id;
+	GPInstructLessonTestPrivate *priv = test->priv;
+
+	if (priv->id == NULL)
+		priv->id = create_id ();
+	return priv->id;
 }
 
 void
 gpinstruct_lesson_test_set_id (GPInstructLessonTest *test,
                                const gchar *id)
 {
-	g_free (test->priv->id);
-	test->priv->id = g_strdup (id);
+	GPInstructLessonTestPrivate *priv = test->priv;
+
+	g_free (priv->id);
+	priv->id = g_strdup (id);
 }
 
 gchar *

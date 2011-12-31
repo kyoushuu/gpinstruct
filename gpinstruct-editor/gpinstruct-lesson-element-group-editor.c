@@ -52,51 +52,52 @@ static void
 gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor *object)
 {
 	object->priv = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR_GET_PRIVATE (object);
+	GPInstructLessonElementGroupEditorPrivate *priv = object->priv;
 
-	object->priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,
+	priv->title_label = gtk_label_new (_("Title:"));
+	gtk_table_attach (GTK_TABLE (object), priv->title_label,
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	object->priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), object->priv->title_entry,
+	priv->title_entry = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
 	                  1, 2, 0, 1,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	object->priv->single_score_label = gtk_label_new (_("Single Score:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->single_score_label,
+	priv->single_score_label = gtk_label_new (_("Single Score:"));
+	gtk_table_attach (GTK_TABLE (object), priv->single_score_label,
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	object->priv->single_score_switch = gtk_switch_new ();
-	gtk_table_attach (GTK_TABLE (object), object->priv->single_score_switch,
+	priv->single_score_switch = gtk_switch_new ();
+	gtk_table_attach (GTK_TABLE (object), priv->single_score_switch,
 	                  1, 2, 1, 2,
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	object->priv->single_directions_label = gtk_label_new (_("Single Directions:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->single_directions_label,
+	priv->single_directions_label = gtk_label_new (_("Single Directions:"));
+	gtk_table_attach (GTK_TABLE (object), priv->single_directions_label,
 	                  0, 1, 2, 3,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	object->priv->single_directions_switch = gtk_switch_new ();
-	gtk_table_attach (GTK_TABLE (object), object->priv->single_directions_switch,
+	priv->single_directions_switch = gtk_switch_new ();
+	gtk_table_attach (GTK_TABLE (object), priv->single_directions_switch,
 	                  1, 2, 2, 3,
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	object->priv->directions_label = gtk_label_new (_("Directions:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->directions_label,
+	priv->directions_label = gtk_label_new (_("Directions:"));
+	gtk_table_attach (GTK_TABLE (object), priv->directions_label,
 	                  0, 1, 3, 4,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	object->priv->directions_view = gtk_text_view_new ();
-	gtk_container_add (GTK_CONTAINER (directions_view_scrolled_window), object->priv->directions_view);
-	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (object->priv->directions_view), GTK_WRAP_WORD_CHAR);
+	priv->directions_view = gtk_text_view_new ();
+	gtk_container_add (GTK_CONTAINER (directions_view_scrolled_window), priv->directions_view);
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->directions_view), GTK_WRAP_WORD_CHAR);
 	gtk_table_attach (GTK_TABLE (object), directions_view_scrolled_window,
 	                  1, 2, 3, 4,
 	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
@@ -126,11 +127,12 @@ title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
 	GPInstructLessonElementGroupEditor *editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
+	GPInstructLessonElementGroupEditorPrivate *priv = editor->priv;
 
-	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (editor->priv->group),
-	                                     gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
-	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
-	gpinstruct_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->group);
+	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (priv->group),
+	                                     gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
+	gpinstruct_editor_window_set_modified (priv->window, TRUE);
+	gpinstruct_editor_window_update_tree_store (priv->window, (gpointer)priv->group);
 }
 
 static void
@@ -139,14 +141,15 @@ single_score_activate (GObject    *gobject,
                        gpointer    user_data)
 {
 	GPInstructLessonElementGroupEditor *editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
+	GPInstructLessonElementGroupEditorPrivate *priv = editor->priv;
 
-	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->single_score_switch));
+	gboolean active = gtk_switch_get_active (GTK_SWITCH (priv->single_score_switch));
 
-	if (active != gpinstruct_lesson_element_group_get_single_score (editor->priv->group))
+	if (active != gpinstruct_lesson_element_group_get_single_score (priv->group))
 	{
-		gpinstruct_lesson_element_group_set_single_score (editor->priv->group,
+		gpinstruct_lesson_element_group_set_single_score (priv->group,
 		                                                  active);
-		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+		gpinstruct_editor_window_set_modified (priv->window, TRUE);
 	}
 }
 
@@ -156,14 +159,15 @@ single_directions_activate (GObject    *gobject,
                             gpointer    user_data)
 {
 	GPInstructLessonElementGroupEditor *editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
+	GPInstructLessonElementGroupEditorPrivate *priv = editor->priv;
 
-	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->single_directions_switch));
+	gboolean active = gtk_switch_get_active (GTK_SWITCH (priv->single_directions_switch));
 
-	if (active != gpinstruct_lesson_element_group_get_single_directions (editor->priv->group))
+	if (active != gpinstruct_lesson_element_group_get_single_directions (priv->group))
 	{
-		gpinstruct_lesson_element_group_set_single_directions (editor->priv->group,
+		gpinstruct_lesson_element_group_set_single_directions (priv->group,
 		                                                       active);
-		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+		gpinstruct_editor_window_set_modified (priv->window, TRUE);
 	}
 }
 
@@ -172,15 +176,16 @@ directions_buffer_changed (GtkTextBuffer *textbuffer,
                            gpointer       user_data)
 {
 	GPInstructLessonElementGroupEditor *editor = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR (user_data);
+	GPInstructLessonElementGroupEditorPrivate *priv = editor->priv;
 
 	GtkTextIter start, end;
 	gchar *text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
-	gpinstruct_lesson_element_group_set_directions (editor->priv->group,
+	gpinstruct_lesson_element_group_set_directions (priv->group,
 	                                                text);
 	g_free (text);
-	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_set_modified (priv->window, TRUE);
 }
 
 GPInstructLessonElementGroupEditor *
@@ -188,28 +193,29 @@ gpinstruct_lesson_element_group_editor_new (GPInstructEditorWindow *window,
                                             GPInstructLessonElementGroup *group)
 {
 	GPInstructLessonElementGroupEditor *editor = g_object_new (GPINSTRUCT_TYPE_LESSON_ELEMENT_GROUP_EDITOR, NULL);
+	GPInstructLessonElementGroupEditorPrivate *priv = editor->priv;
 
 	GtkTextBuffer *buffer;
 
-	editor->priv->window = window;
-	editor->priv->group = group;
+	priv->window = window;
+	priv->group = group;
 
-	gtk_switch_set_active (GTK_SWITCH (editor->priv->single_score_switch),
+	gtk_switch_set_active (GTK_SWITCH (priv->single_score_switch),
 	                       gpinstruct_lesson_element_group_get_single_score (group));
-	g_signal_connect (editor->priv->single_score_switch, "notify::active",
+	g_signal_connect (priv->single_score_switch, "notify::active",
 	                  G_CALLBACK (single_score_activate), editor);
 
-	gtk_switch_set_active (GTK_SWITCH (editor->priv->single_directions_switch),
+	gtk_switch_set_active (GTK_SWITCH (priv->single_directions_switch),
 	                       gpinstruct_lesson_element_group_get_single_directions (group));
-	g_signal_connect (editor->priv->single_directions_switch, "notify::active",
+	g_signal_connect (priv->single_directions_switch, "notify::active",
 	                  G_CALLBACK (single_directions_activate), editor);
 
-	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
+	gtk_entry_set_text (GTK_ENTRY (priv->title_entry),
 	                    gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (group)));
-	g_signal_connect (editor->priv->title_entry, "activate",
+	g_signal_connect (priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->directions_view));
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->directions_view));
 	gtk_text_buffer_set_text (buffer,
 	                          gpinstruct_lesson_element_group_get_directions (group), -1);
 	g_signal_connect (buffer, "changed",

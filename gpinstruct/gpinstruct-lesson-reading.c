@@ -35,16 +35,18 @@ static void
 gpinstruct_lesson_reading_init (GPInstructLessonReading *object)
 {
 	object->priv = GPINSTRUCT_LESSON_READING_GET_PRIVATE (object);
+	GPInstructLessonReadingPrivate *priv = object->priv;
 
-	object->priv->text = g_strdup ("");
+	priv->text = g_strdup ("");
 }
 
 static void
 gpinstruct_lesson_reading_finalize (GObject *object)
 {
 	GPInstructLessonReading *reading = GPINSTRUCT_LESSON_READING (object);
+	GPInstructLessonReadingPrivate *priv = reading->priv;
 
-	g_free (reading->priv->text);
+	g_free (priv->text);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_reading_parent_class)->finalize (object);
 }
@@ -70,13 +72,17 @@ gpinstruct_lesson_reading_new (void)
 const gchar *
 gpinstruct_lesson_reading_get_text (GPInstructLessonReading *reading)
 {
-	return reading->priv->text;
+	GPInstructLessonReadingPrivate *priv = reading->priv;
+
+	return priv->text;
 }
 
 void
 gpinstruct_lesson_reading_set_text (GPInstructLessonReading *reading,
                                     const gchar *text)
 {
-	g_free (reading->priv->text);
-	reading->priv->text = g_strdup (text);
+	GPInstructLessonReadingPrivate *priv = reading->priv;
+
+	g_free (priv->text);
+	priv->text = g_strdup (text);
 }

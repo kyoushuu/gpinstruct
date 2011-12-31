@@ -35,16 +35,18 @@ static void
 gpinstruct_lesson_discussion_init (GPInstructLessonDiscussion *object)
 {
 	object->priv = GPINSTRUCT_LESSON_DISCUSSION_GET_PRIVATE (object);
+	GPInstructLessonDiscussionPrivate *priv = object->priv;
 
-	object->priv->text = g_strdup ("");
+	priv->text = g_strdup ("");
 }
 
 static void
 gpinstruct_lesson_discussion_finalize (GObject *object)
 {
 	GPInstructLessonDiscussion *discussion = GPINSTRUCT_LESSON_DISCUSSION (object);
+	GPInstructLessonDiscussionPrivate *priv = discussion->priv;
 
-	g_free (discussion->priv->text);
+	g_free (priv->text);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_discussion_parent_class)->finalize (object);
 }
@@ -70,14 +72,18 @@ gpinstruct_lesson_discussion_new (void)
 const gchar *
 gpinstruct_lesson_discussion_get_text (GPInstructLessonDiscussion *discussion)
 {
-	return discussion->priv->text;
+	GPInstructLessonDiscussionPrivate *priv = discussion->priv;
+
+	return priv->text;
 }
 
 void
 gpinstruct_lesson_discussion_set_text (GPInstructLessonDiscussion *discussion,
                                        const gchar *text)
 {
-	g_free (discussion->priv->text);
-	discussion->priv->text = g_strdup (text);
+	GPInstructLessonDiscussionPrivate *priv = discussion->priv;
+
+	g_free (priv->text);
+	priv->text = g_strdup (text);
 }
 

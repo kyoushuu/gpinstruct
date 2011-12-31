@@ -73,17 +73,19 @@ static void
 gpinstruct_lesson_test_text_init (GPInstructLessonTestText *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_TEXT_GET_PRIVATE (object);
+	GPInstructLessonTestTextPrivate *priv = object->priv;
 
-	object->priv->questions = NULL;
+	priv->questions = NULL;
 }
 
 static void
 gpinstruct_lesson_test_text_finalize (GObject *object)
 {
 	GPInstructLessonTestText *test = GPINSTRUCT_LESSON_TEST_TEXT (object);
+	GPInstructLessonTestTextPrivate *priv = test->priv;
 
-	if (test->priv->questions)
-		g_list_free_full (test->priv->questions, g_object_unref);
+	if (priv->questions)
+		g_list_free_full (priv->questions, g_object_unref);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_text_parent_class)->finalize (object);
 }
@@ -117,35 +119,45 @@ gpinstruct_lesson_test_text_add_question (GPInstructLessonTestText *test,
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_TEXT (test));
 
-	test->priv->questions = g_list_append (test->priv->questions, question);
+	GPInstructLessonTestTextPrivate *priv = test->priv;
+
+	priv->questions = g_list_append (priv->questions, question);
 }
 
 void
 gpinstruct_lesson_test_text_remove_question (GPInstructLessonTestText *test,
                                              guint question)
 {
-	GList *nth_link = g_list_nth (test->priv->questions, question);
+	GPInstructLessonTestTextPrivate *priv = test->priv;
+
+	GList *nth_link = g_list_nth (priv->questions, question);
 	g_object_unref (nth_link->data);
-	test->priv->questions = g_list_delete_link (test->priv->questions, nth_link);
+	priv->questions = g_list_delete_link (priv->questions, nth_link);
 }
 
 GPInstructLessonTestTextQuestion *
 gpinstruct_lesson_test_text_get_question (GPInstructLessonTestText *test,
                                           guint question)
 {
-	return g_list_nth_data (test->priv->questions, question);
+	GPInstructLessonTestTextPrivate *priv = test->priv;
+
+	return g_list_nth_data (priv->questions, question);
 }
 
 GList *
 gpinstruct_lesson_test_text_get_questions (GPInstructLessonTestText *test)
 {
-	return g_list_copy (test->priv->questions);
+	GPInstructLessonTestTextPrivate *priv = test->priv;
+
+	return g_list_copy (priv->questions);
 }
 
 guint
 gpinstruct_lesson_test_text_get_questions_length (GPInstructLessonTestText *test)
 {
-	return g_list_length (test->priv->questions);
+	GPInstructLessonTestTextPrivate *priv = test->priv;
+
+	return g_list_length (priv->questions);
 }
 
 gboolean

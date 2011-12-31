@@ -94,20 +94,22 @@ static void
 gpinstruct_lesson_test_order_init (GPInstructLessonTestOrder *object)
 {
 	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_GET_PRIVATE (object);
+	GPInstructLessonTestOrderPrivate *priv = object->priv;
 
-	object->priv->explanation = g_strdup ("");
-	object->priv->items = NULL;
+	priv->explanation = g_strdup ("");
+	priv->items = NULL;
 }
 
 static void
 gpinstruct_lesson_test_order_finalize (GObject *object)
 {
 	GPInstructLessonTestOrder *test = GPINSTRUCT_LESSON_TEST_ORDER (object);
+	GPInstructLessonTestOrderPrivate *priv = test->priv;
 
-	g_free (test->priv->explanation);
+	g_free (priv->explanation);
 
-	if (test->priv->items)
-		g_list_free_full (test->priv->items, g_object_unref);
+	if (priv->items)
+		g_list_free_full (priv->items, g_object_unref);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_test_order_parent_class)->finalize (object);
 }
@@ -142,49 +144,63 @@ gpinstruct_lesson_test_order_add_item (GPInstructLessonTestOrder *test,
 {
 	g_return_if_fail (GPINSTRUCT_IS_LESSON_TEST_ORDER (test));
 
-	test->priv->items = g_list_append (test->priv->items, item);
+	GPInstructLessonTestOrderPrivate *priv = test->priv;
+
+	priv->items = g_list_append (priv->items, item);
 }
 
 void
 gpinstruct_lesson_test_order_remove_item (GPInstructLessonTestOrder *test,
                                           guint item)
 {
-	GList *nth_link = g_list_nth (test->priv->items, item);
+	GPInstructLessonTestOrderPrivate *priv = test->priv;
+
+	GList *nth_link = g_list_nth (priv->items, item);
 	g_object_unref (nth_link->data);
-	test->priv->items = g_list_delete_link (test->priv->items, nth_link);
+	priv->items = g_list_delete_link (priv->items, nth_link);
 }
 
 GPInstructLessonTestOrderItem *
 gpinstruct_lesson_test_order_get_item (GPInstructLessonTestOrder *test,
                                        guint item)
 {
-	return g_list_nth_data (test->priv->items, item);
+	GPInstructLessonTestOrderPrivate *priv = test->priv;
+
+	return g_list_nth_data (priv->items, item);
 }
 
 GList *
 gpinstruct_lesson_test_order_get_items (GPInstructLessonTestOrder *test)
 {
-	return g_list_copy (test->priv->items);
+	GPInstructLessonTestOrderPrivate *priv = test->priv;
+
+	return g_list_copy (priv->items);
 }
 
 guint
 gpinstruct_lesson_test_order_get_items_length (GPInstructLessonTestOrder *test)
 {
-	return g_list_length (test->priv->items);
+	GPInstructLessonTestOrderPrivate *priv = test->priv;
+
+	return g_list_length (priv->items);
 }
 
 const gchar *
 gpinstruct_lesson_test_order_get_explanation (GPInstructLessonTestOrder *test)
 {
-	return test->priv->explanation;
+	GPInstructLessonTestOrderPrivate *priv = test->priv;
+
+	return priv->explanation;
 }
 
 void
 gpinstruct_lesson_test_order_set_explanation (GPInstructLessonTestOrder *test,
                                               const gchar *explanation)
 {
-	g_free (test->priv->explanation);
-	test->priv->explanation = g_strdup (explanation);
+	GPInstructLessonTestOrderPrivate *priv = test->priv;
+
+	g_free (priv->explanation);
+	priv->explanation = g_strdup (explanation);
 }
 
 gboolean

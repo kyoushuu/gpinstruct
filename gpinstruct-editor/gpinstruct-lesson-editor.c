@@ -48,25 +48,26 @@ static void
 gpinstruct_lesson_editor_init (GPInstructLessonEditor *object)
 {
 	object->priv = GPINSTRUCT_LESSON_EDITOR_GET_PRIVATE (object);
+	GPInstructLessonEditorPrivate *priv = object->priv;
 
-	object->priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,
+	priv->title_label = gtk_label_new (_("Title:"));
+	gtk_table_attach (GTK_TABLE (object), priv->title_label,
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	object->priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), object->priv->title_entry,
+	priv->title_entry = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
 	                  1, 2, 0, 1,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	object->priv->singlescore_label = gtk_label_new (_("Single Score:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->singlescore_label,
+	priv->singlescore_label = gtk_label_new (_("Single Score:"));
+	gtk_table_attach (GTK_TABLE (object), priv->singlescore_label,
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	object->priv->singlescore_switch = gtk_switch_new ();
-	gtk_table_attach (GTK_TABLE (object), object->priv->singlescore_switch,
+	priv->singlescore_switch = gtk_switch_new ();
+	gtk_table_attach (GTK_TABLE (object), priv->singlescore_switch,
 	                  1, 2, 1, 2,
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
@@ -95,11 +96,12 @@ title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
 	GPInstructLessonEditor *editor = GPINSTRUCT_LESSON_EDITOR (user_data);
+	GPInstructLessonEditorPrivate *priv = editor->priv;
 
-	gpinstruct_lesson_set_title (editor->priv->lesson,
-	                             gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
-	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
-	gpinstruct_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->lesson);
+	gpinstruct_lesson_set_title (priv->lesson,
+	                             gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
+	gpinstruct_editor_window_set_modified (priv->window, TRUE);
+	gpinstruct_editor_window_update_tree_store (priv->window, (gpointer)priv->lesson);
 }
 
 static void
@@ -108,14 +110,15 @@ singlescore_activate (GObject    *gobject,
                       gpointer    user_data)
 {
 	GPInstructLessonEditor *editor = GPINSTRUCT_LESSON_EDITOR (user_data);
+	GPInstructLessonEditorPrivate *priv = editor->priv;
 
-	gboolean active = gtk_switch_get_active (GTK_SWITCH (editor->priv->singlescore_switch));
+	gboolean active = gtk_switch_get_active (GTK_SWITCH (priv->singlescore_switch));
 
-	if (active != gpinstruct_lesson_get_single_score (editor->priv->lesson))
+	if (active != gpinstruct_lesson_get_single_score (priv->lesson))
 	{
-		gpinstruct_lesson_set_single_score (editor->priv->lesson,
+		gpinstruct_lesson_set_single_score (priv->lesson,
 		                                    active);
-		gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+		gpinstruct_editor_window_set_modified (priv->window, TRUE);
 	}
 }
 
@@ -125,18 +128,19 @@ gpinstruct_lesson_editor_new (GPInstructEditorWindow *window,
                               GPInstructLesson *lesson)
 {
 	GPInstructLessonEditor *editor = g_object_new (GPINSTRUCT_TYPE_LESSON_EDITOR, NULL);
+	GPInstructLessonEditorPrivate *priv = editor->priv;
 
-	editor->priv->window = window;
-	editor->priv->lesson = lesson;
+	priv->window = window;
+	priv->lesson = lesson;
 
-	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
+	gtk_entry_set_text (GTK_ENTRY (priv->title_entry),
 	                    gpinstruct_lesson_get_title (lesson));
-	g_signal_connect (editor->priv->title_entry, "activate",
+	g_signal_connect (priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
-	gtk_switch_set_active (GTK_SWITCH (editor->priv->singlescore_switch),
+	gtk_switch_set_active (GTK_SWITCH (priv->singlescore_switch),
 	                       gpinstruct_lesson_get_single_score (lesson));
-	g_signal_connect (editor->priv->singlescore_switch, "notify::active",
+	g_signal_connect (priv->singlescore_switch, "notify::active",
 	                  G_CALLBACK (singlescore_activate), editor);
 
 	return editor;

@@ -46,29 +46,30 @@ static void
 gpinstruct_lesson_reading_editor_init (GPInstructLessonReadingEditor *object)
 {
 	object->priv = GPINSTRUCT_LESSON_READING_EDITOR_GET_PRIVATE (object);
+	GPInstructLessonReadingEditorPrivate *priv = object->priv;
 
-	object->priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->title_label,
+	priv->title_label = gtk_label_new (_("Title:"));
+	gtk_table_attach (GTK_TABLE (object), priv->title_label,
 	                  0, 1, 0, 1,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
-	object->priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), object->priv->title_entry,
+	priv->title_entry = gtk_entry_new ();
+	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
 	                  1, 2, 0, 1,
 	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	object->priv->text_label = gtk_label_new (_("Text:"));
-	gtk_table_attach (GTK_TABLE (object), object->priv->text_label,
+	priv->text_label = gtk_label_new (_("Text:"));
+	gtk_table_attach (GTK_TABLE (object), priv->text_label,
 	                  0, 1, 1, 2,
 	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 	GtkWidget *text_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (text_view_scrolled_window),
 	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	object->priv->text_view = gtk_text_view_new ();
-	gtk_container_add (GTK_CONTAINER (text_view_scrolled_window), object->priv->text_view);
-	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (object->priv->text_view), GTK_WRAP_WORD_CHAR);
+	priv->text_view = gtk_text_view_new ();
+	gtk_container_add (GTK_CONTAINER (text_view_scrolled_window), priv->text_view);
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->text_view), GTK_WRAP_WORD_CHAR);
 	gtk_table_attach (GTK_TABLE (object), text_view_scrolled_window,
 	                  1, 2, 1, 2,
 	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
@@ -98,11 +99,12 @@ title_entry_activate (GtkEntry *entry,
                       gpointer  user_data)
 {
 	GPInstructLessonReadingEditor *editor = GPINSTRUCT_LESSON_READING_EDITOR (user_data);
+	GPInstructLessonReadingEditorPrivate *priv = editor->priv;
 
-	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (editor->priv->reading),
-	                                     gtk_entry_get_text (GTK_ENTRY (editor->priv->title_entry)));
-	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
-	gpinstruct_editor_window_update_tree_store (editor->priv->window, (gpointer)editor->priv->reading);
+	gpinstruct_lesson_element_set_title (GPINSTRUCT_LESSON_ELEMENT (priv->reading),
+	                                     gtk_entry_get_text (GTK_ENTRY (priv->title_entry)));
+	gpinstruct_editor_window_set_modified (priv->window, TRUE);
+	gpinstruct_editor_window_update_tree_store (priv->window, (gpointer)priv->reading);
 }
 
 static void
@@ -110,15 +112,16 @@ text_buffer_changed (GtkTextBuffer *textbuffer,
                      gpointer       user_data)
 {
 	GPInstructLessonReadingEditor *editor = GPINSTRUCT_LESSON_READING_EDITOR (user_data);
+	GPInstructLessonReadingEditorPrivate *priv = editor->priv;
 
 	GtkTextIter start, end;
 	gchar *text;
 	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
 	text = gtk_text_iter_get_text (&start, &end);
-	gpinstruct_lesson_reading_set_text (editor->priv->reading,
+	gpinstruct_lesson_reading_set_text (priv->reading,
 	                                    text);
 	g_free (text);
-	gpinstruct_editor_window_set_modified (editor->priv->window, TRUE);
+	gpinstruct_editor_window_set_modified (priv->window, TRUE);
 }
 
 
@@ -127,16 +130,17 @@ gpinstruct_lesson_reading_editor_new (GPInstructEditorWindow *window,
                                       GPInstructLessonReading *reading)
 {
 	GPInstructLessonReadingEditor *editor = g_object_new (GPINSTRUCT_TYPE_LESSON_READING_EDITOR, NULL);
+	GPInstructLessonReadingEditorPrivate *priv = editor->priv;
 
-	editor->priv->window = window;
-	editor->priv->reading = reading;
+	priv->window = window;
+	priv->reading = reading;
 
-	gtk_entry_set_text (GTK_ENTRY (editor->priv->title_entry),
+	gtk_entry_set_text (GTK_ENTRY (priv->title_entry),
 	                    gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (reading)));
-	g_signal_connect (editor->priv->title_entry, "activate",
+	g_signal_connect (priv->title_entry, "activate",
 	                  G_CALLBACK (title_entry_activate), editor);
 
-	GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text_view));
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->text_view));
 	gtk_text_buffer_set_text (buffer,
 	                          gpinstruct_lesson_reading_get_text (reading), -1);
 	g_signal_connect (buffer, "changed",

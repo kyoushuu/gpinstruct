@@ -71,32 +71,34 @@ void
 show_page (GPInstructLessonView *view,
            guint page_num)
 {
-	guint num_pages = g_list_length (view->priv->pages);
+	GPInstructLessonViewPrivate *priv = view->priv;
+
+	guint num_pages = g_list_length (priv->pages);
 
 	if (page_num < num_pages)
 	{
-		GPInstructLessonViewPage *page = g_list_nth_data (view->priv->pages, page_num);
-		view->priv->current_page = page_num;
-		view->priv->current_page_object = page;
+		GPInstructLessonViewPage *page = g_list_nth_data (priv->pages, page_num);
+		priv->current_page = page_num;
+		priv->current_page_object = page;
 
 		gpinstruct_lesson_view_page_show_current (page);
-		gtk_notebook_set_current_page (GTK_NOTEBOOK (view->priv->contents), page_num);
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->contents), page_num);
 
 		gchar *title = g_strdup_printf ("%s - %s",
-		                                gpinstruct_lesson_get_title (view->priv->lesson),
+		                                gpinstruct_lesson_get_title (priv->lesson),
 		                                gpinstruct_lesson_view_page_get_title (page));
 		gtk_window_set_title (GTK_WINDOW (view), title);
 		g_free (title);
 
 		if (page_num != 0 && gpinstruct_lesson_view_page_get_show_back_button (page))
-			gtk_widget_set_sensitive (view->priv->back, TRUE);
+			gtk_widget_set_sensitive (priv->back, TRUE);
 		else
-			gtk_widget_set_sensitive (view->priv->back, FALSE);
+			gtk_widget_set_sensitive (priv->back, FALSE);
 
 		if (page_num != num_pages-1 && gpinstruct_lesson_view_page_get_show_next_button (page))
-			gtk_widget_set_sensitive (view->priv->next, TRUE);
+			gtk_widget_set_sensitive (priv->next, TRUE);
 		else
-			gtk_widget_set_sensitive (view->priv->next, FALSE);
+			gtk_widget_set_sensitive (priv->next, FALSE);
 	}
 }
 
@@ -121,8 +123,9 @@ view_show (GtkWidget *widget,
            gpointer   user_data)
 {
 	GPInstructLessonView *view = GPINSTRUCT_LESSON_VIEW (widget);
+	GPInstructLessonViewPrivate *priv = view->priv;
 
-	GList *current_pages = view->priv->pages;
+	GList *current_pages = priv->pages;
 
 	while (current_pages)
 	{
@@ -131,9 +134,9 @@ view_show (GtkWidget *widget,
 		current_pages = current_pages->next;
 	}
 
-	gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_INFO);
-	gtk_label_set_text (GTK_LABEL (view->priv->infobar_label), _("Welcome! Click Next to continue."));
-	gtk_widget_hide (view->priv->explain_button);
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_INFO);
+	gtk_label_set_text (GTK_LABEL (priv->infobar_label), _("Welcome! Click Next to continue."));
+	gtk_widget_hide (priv->explain_button);
 
 	show_page (view, 0);
 }
@@ -144,6 +147,7 @@ explanation_show (GtkInfoBar *info_bar,
                   gpointer    user_data)
 {
 	GPInstructLessonView *view = GPINSTRUCT_LESSON_VIEW (user_data);
+	GPInstructLessonViewPrivate *priv = view->priv;
 
 	GtkWidget *dialog = gtk_dialog_new_with_buttons (_("Explanation"),
 	                                                 GTK_WINDOW (view),
@@ -171,7 +175,7 @@ explanation_show (GtkInfoBar *info_bar,
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (explanation), GTK_WRAP_WORD);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (explanation), FALSE);
 	gtk_text_buffer_set_markup (gtk_text_view_get_buffer (GTK_TEXT_VIEW (explanation)),
-	                            view->priv->explanation);
+	                            priv->explanation);
 	gtk_container_add (GTK_CONTAINER (scrolled_window), explanation);
 
 	gtk_widget_show_all (dialog);
@@ -184,39 +188,40 @@ static void
 gpinstruct_lesson_view_init (GPInstructLessonView *object)
 {
 	object->priv = GPINSTRUCT_LESSON_VIEW_GET_PRIVATE (object);
+	GPInstructLessonViewPrivate *priv = object->priv;
 
-	object->priv->current_page = 0;
-	object->priv->current_page_object = NULL;
-	object->priv->pages = NULL;
-	object->priv->explanation = g_strdup ("");
+	priv->current_page = 0;
+	priv->current_page_object = NULL;
+	priv->pages = NULL;
+	priv->explanation = g_strdup ("");
 
 	GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
 	GtkWidget *action_area = gtk_dialog_get_action_area (GTK_DIALOG (object));
 
-	object->priv->contents = gtk_notebook_new ();
-	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (object->priv->contents), FALSE);
-	gtk_widget_show_all (object->priv->contents);
-	gtk_box_pack_start (GTK_BOX (content_area), object->priv->contents, TRUE, TRUE, 3);
+	priv->contents = gtk_notebook_new ();
+	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (priv->contents), FALSE);
+	gtk_widget_show_all (priv->contents);
+	gtk_box_pack_start (GTK_BOX (content_area), priv->contents, TRUE, TRUE, 3);
 
-	object->priv->infobar = gtk_info_bar_new ();
-	object->priv->infobar_label = gtk_label_new (NULL);
-	gtk_box_pack_start (GTK_BOX (gtk_info_bar_get_content_area (GTK_INFO_BAR (object->priv->infobar))),
-	                    object->priv->infobar_label, FALSE, TRUE, 3);
-	g_signal_connect (object->priv->infobar, "response", G_CALLBACK (explanation_show), object);
-	gtk_widget_show_all (object->priv->infobar);
-	object->priv->explain_button = gtk_info_bar_add_button (GTK_INFO_BAR (object->priv->infobar), _("Explanation"), GTK_RESPONSE_OK);
-	gtk_widget_hide (object->priv->explain_button);
-	gtk_box_pack_start (GTK_BOX (content_area), object->priv->infobar, FALSE, FALSE, 3);
+	priv->infobar = gtk_info_bar_new ();
+	priv->infobar_label = gtk_label_new (NULL);
+	gtk_box_pack_start (GTK_BOX (gtk_info_bar_get_content_area (GTK_INFO_BAR (priv->infobar))),
+	                    priv->infobar_label, FALSE, TRUE, 3);
+	g_signal_connect (priv->infobar, "response", G_CALLBACK (explanation_show), object);
+	gtk_widget_show_all (priv->infobar);
+	priv->explain_button = gtk_info_bar_add_button (GTK_INFO_BAR (priv->infobar), _("Explanation"), GTK_RESPONSE_OK);
+	gtk_widget_hide (priv->explain_button);
+	gtk_box_pack_start (GTK_BOX (content_area), priv->infobar, FALSE, FALSE, 3);
 
-	object->priv->back = gtk_button_new_with_mnemonic (_("_Back"));
-	g_signal_connect (object->priv->back, "clicked", G_CALLBACK (back_button_clicked), object);
-	gtk_box_pack_start (GTK_BOX (action_area), object->priv->back, FALSE, TRUE, 3);
-	gtk_widget_show (object->priv->back);
+	priv->back = gtk_button_new_with_mnemonic (_("_Back"));
+	g_signal_connect (priv->back, "clicked", G_CALLBACK (back_button_clicked), object);
+	gtk_box_pack_start (GTK_BOX (action_area), priv->back, FALSE, TRUE, 3);
+	gtk_widget_show (priv->back);
 
-	object->priv->next = gtk_button_new_with_mnemonic (_("_Next"));
-	g_signal_connect (object->priv->next, "clicked", G_CALLBACK (next_button_clicked), object);
-	gtk_box_pack_start (GTK_BOX (action_area), object->priv->next, FALSE, TRUE, 3);
-	gtk_widget_show (object->priv->next);
+	priv->next = gtk_button_new_with_mnemonic (_("_Next"));
+	g_signal_connect (priv->next, "clicked", G_CALLBACK (next_button_clicked), object);
+	gtk_box_pack_start (GTK_BOX (action_area), priv->next, FALSE, TRUE, 3);
+	gtk_widget_show (priv->next);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (object),
 	                        _("C_lose"), 0,
@@ -227,27 +232,28 @@ gpinstruct_lesson_view_init (GPInstructLessonView *object)
 
 	g_signal_connect (object, "show", G_CALLBACK (view_show), NULL);
 
-	object->priv->pages_size_group = gtk_size_group_new (GTK_SIZE_GROUP_BOTH);
+	priv->pages_size_group = gtk_size_group_new (GTK_SIZE_GROUP_BOTH);
 }
 
 static void
 gpinstruct_lesson_view_finalize (GObject *object)
 {
 	GPInstructLessonView *view = GPINSTRUCT_LESSON_VIEW (object);
+	GPInstructLessonViewPrivate *priv = view->priv;
 
-	if (view->priv->pages)
-		g_list_free (view->priv->pages);
+	if (priv->pages)
+		g_list_free (priv->pages);
 
-	g_free (view->priv->explanation);
+	g_free (priv->explanation);
 
-	if (view->priv->lesson)
-		g_object_unref (view->priv->lesson);
+	if (priv->lesson)
+		g_object_unref (priv->lesson);
 
-	if (view->priv->pool)
-		g_object_unref (view->priv->pool);
+	if (priv->pool)
+		g_object_unref (priv->pool);
 
-	if (view->priv->log)
-		g_object_unref (view->priv->log);
+	if (priv->log)
+		g_object_unref (priv->log);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_view_parent_class)->finalize (object);
 }
@@ -256,76 +262,77 @@ static gboolean
 gpinstruct_lesson_view_next (GPInstructLessonView *view,
                              gpointer user_data)
 {
-	GPInstructLessonViewPage *current_page = view->priv->current_page_object;
+	GPInstructLessonViewPrivate *priv = view->priv;
+	GPInstructLessonViewPage *current_page = priv->current_page_object;
 
-	if (view->priv->log)
-		gpinstruct_log_timer_stop (view->priv->log);
+	if (priv->log)
+		gpinstruct_log_timer_stop (priv->log);
 
-	gboolean show_next = !gpinstruct_lesson_view_page_show_next (view->priv->current_page_object);
+	gboolean show_next = !gpinstruct_lesson_view_page_show_next (priv->current_page_object);
 
-	if (view->priv->log)
-		gpinstruct_log_timer_start (view->priv->log);
+	if (priv->log)
+		gpinstruct_log_timer_start (priv->log);
 
 	GPInstructMessageType message = gpinstruct_lesson_view_page_get_message (current_page);
 
 	switch (message)
 	{
 		case GPINSTRUCT_MESSAGE_TYPE_CORRECT:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_QUESTION);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_QUESTION);
 			break;
 		case GPINSTRUCT_MESSAGE_TYPE_CORRECT_ALL:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_QUESTION);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_QUESTION);
 			break;
 		case GPINSTRUCT_MESSAGE_TYPE_WRONG:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_ERROR);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_ERROR);
 			break;
 		case GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_WARNING);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_WARNING);
 			break;
 		case GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_ERROR);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_ERROR);
 			break;
 		case GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_ERROR);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_ERROR);
 			break;
 		case GPINSTRUCT_MESSAGE_TYPE_PASS:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_INFO);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_INFO);
 			break;
 		case GPINSTRUCT_MESSAGE_TYPE_FAIL:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_ERROR);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_ERROR);
 			break;
 		default:
-			gtk_info_bar_set_message_type (GTK_INFO_BAR (view->priv->infobar), GTK_MESSAGE_OTHER);
+			gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->infobar), GTK_MESSAGE_OTHER);
 			break;
 	}
 
-	gtk_label_set_text (GTK_LABEL (view->priv->infobar_label),
-	                    gpinstruct_message_pool_get_random (view->priv->pool, message));
+	gtk_label_set_text (GTK_LABEL (priv->infobar_label),
+	                    gpinstruct_message_pool_get_random (priv->pool, message));
 
 	if (message == GPINSTRUCT_MESSAGE_TYPE_WRONG ||
 	    message == GPINSTRUCT_MESSAGE_TYPE_WRONG_SOME ||
 	    message == GPINSTRUCT_MESSAGE_TYPE_WRONG_MOST ||
 	    message == GPINSTRUCT_MESSAGE_TYPE_WRONG_ALL)
 	{
-		g_free (view->priv->explanation);
-		view->priv->explanation = g_strdup (gpinstruct_lesson_view_page_get_explanation (current_page));
+		g_free (priv->explanation);
+		priv->explanation = g_strdup (gpinstruct_lesson_view_page_get_explanation (current_page));
 
-		if (view->priv->explanation == NULL ||
-		    g_strcmp0 (view->priv->explanation, "") == 0)
+		if (priv->explanation == NULL ||
+		    g_strcmp0 (priv->explanation, "") == 0)
 		{
-			g_free (view->priv->explanation);
-			view->priv->explanation = g_strdup (_("No explanation available."));
+			g_free (priv->explanation);
+			priv->explanation = g_strdup (_("No explanation available."));
 		}
 
-		gtk_widget_show (view->priv->explain_button);
+		gtk_widget_show (priv->explain_button);
 	}
 	else
-		gtk_widget_hide (view->priv->explain_button);
+		gtk_widget_hide (priv->explain_button);
 
-	gpinstruct_message_pool_play_sound_random (view->priv->pool, message);
+	gpinstruct_message_pool_play_sound_random (priv->pool, message);
 
 	if (show_next)
-		show_page (GPINSTRUCT_LESSON_VIEW (view), view->priv->current_page+1);
+		show_page (GPINSTRUCT_LESSON_VIEW (view), priv->current_page+1);
 
 	return TRUE;
 }
@@ -334,8 +341,10 @@ static gboolean
 gpinstruct_lesson_view_back (GPInstructLessonView *view,
                              gpointer user_data)
 {
-	if (!gpinstruct_lesson_view_page_show_previous (view->priv->current_page_object))
-		show_page (GPINSTRUCT_LESSON_VIEW (view), view->priv->current_page-1);
+	GPInstructLessonViewPrivate *priv = view->priv;
+
+	if (!gpinstruct_lesson_view_page_show_previous (priv->current_page_object))
+		show_page (GPINSTRUCT_LESSON_VIEW (view), priv->current_page-1);
 
 	return TRUE;
 }
@@ -379,6 +388,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
                             GPInstructLog *log)
 {
 	GPInstructLessonView *view = g_object_new (GPINSTRUCT_TYPE_LESSON_VIEW, NULL);
+	GPInstructLessonViewPrivate *priv = view->priv;
 
 	GPInstructLessonElementGroup *curr_element_group;
 	GPInstructLessonElement *curr_group_element;
@@ -394,11 +404,11 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 
 	gboolean single_score, group_single_score, single_directions;
 
-	view->priv->lesson = g_object_ref (lesson);
+	priv->lesson = g_object_ref (lesson);
 	if (pool)
-		view->priv->pool = g_object_ref (pool);
+		priv->pool = g_object_ref (pool);
 	if (log)
-		view->priv->log = g_object_ref (log);
+		priv->log = g_object_ref (log);
 
 	gchar *title;
 	const gchar *lesson_title = gpinstruct_lesson_get_title (lesson);
@@ -465,7 +475,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestMultiChoicePage *question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, view->priv->log);
+				GPInstructLessonTestMultiChoicePage *question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (curr_element))
@@ -477,7 +487,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestWordPoolPage *question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, view->priv->log);
+				GPInstructLessonTestWordPoolPage *question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (curr_element))
@@ -489,7 +499,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestOrderPage *question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, view->priv->log);
+				GPInstructLessonTestOrderPage *question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (curr_element))
@@ -501,7 +511,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestTextPage *question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, view->priv->log);
+				GPInstructLessonTestTextPage *question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 			else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (curr_element))
@@ -513,7 +523,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 					                                       gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (curr_element)));
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 
-				GPInstructLessonTestScrambledPage *question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, view->priv->log);
+				GPInstructLessonTestScrambledPage *question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, priv->log);
 				gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 			}
 
@@ -584,7 +594,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestMultiChoicePage *question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, view->priv->log);
+						GPInstructLessonTestMultiChoicePage *question_page = gpinstruct_lesson_test_multi_choice_page_new (curr_test_multi_choice, curr_score, priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 					else if (GPINSTRUCT_IS_LESSON_TEST_WORD_POOL (curr_group_element))
@@ -599,7 +609,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestWordPoolPage *question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, view->priv->log);
+						GPInstructLessonTestWordPoolPage *question_page = gpinstruct_lesson_test_word_pool_page_new (curr_test_word_pool, curr_score, priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 					else if (GPINSTRUCT_IS_LESSON_TEST_ORDER (curr_group_element))
@@ -614,7 +624,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestOrderPage *question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, view->priv->log);
+						GPInstructLessonTestOrderPage *question_page = gpinstruct_lesson_test_order_page_new (curr_test_order, curr_score, priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 					else if (GPINSTRUCT_IS_LESSON_TEST_TEXT (curr_group_element))
@@ -629,7 +639,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestTextPage *question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, view->priv->log);
+						GPInstructLessonTestTextPage *question_page = gpinstruct_lesson_test_text_page_new (curr_test_text, curr_score, priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 					else if (GPINSTRUCT_IS_LESSON_TEST_SCRAMBLED (curr_group_element))
@@ -644,7 +654,7 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 							gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (directions_page));
 						}
 
-						GPInstructLessonTestScrambledPage *question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, view->priv->log);
+						GPInstructLessonTestScrambledPage *question_page = gpinstruct_lesson_test_scrambled_page_new (curr_test_scrambled, curr_score, priv->log);
 						gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (question_page));
 					}
 
@@ -696,21 +706,25 @@ void
 gpinstruct_lesson_view_append_page (GPInstructLessonView *view,
                                     GPInstructLessonViewPage *page)
 {
-	guint page_num = g_list_length (view->priv->pages) -1;
+	GPInstructLessonViewPrivate *priv = view->priv;
 
-	view->priv->pages = g_list_insert (view->priv->pages, page, page_num);
+	guint page_num = g_list_length (priv->pages) -1;
 
-	gtk_size_group_add_widget (view->priv->pages_size_group, GTK_WIDGET (page));
+	priv->pages = g_list_insert (priv->pages, page, page_num);
+
+	gtk_size_group_add_widget (priv->pages_size_group, GTK_WIDGET (page));
 
 	gtk_widget_show_all (GTK_WIDGET (page));
 
-	gtk_notebook_insert_page (GTK_NOTEBOOK (view->priv->contents), GTK_WIDGET (page), NULL, page_num);
+	gtk_notebook_insert_page (GTK_NOTEBOOK (priv->contents), GTK_WIDGET (page), NULL, page_num);
 }
 
 guint
 gpinstruct_lesson_view_get_current_page (GPInstructLessonView *view)
 {
-	return view->priv->current_page;
+	GPInstructLessonViewPrivate *priv = view->priv;
+
+	return priv->current_page;
 }
 
 void
@@ -723,5 +737,7 @@ gpinstruct_lesson_view_set_current_page (GPInstructLessonView *view,
 GPInstructLessonViewPage *
 gpinstruct_lesson_view_get_current_page_object (GPInstructLessonView *view)
 {
-	return view->priv->current_page_object;
+	GPInstructLessonViewPrivate *priv = view->priv;
+
+	return priv->current_page_object;
 }

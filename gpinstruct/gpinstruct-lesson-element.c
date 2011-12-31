@@ -35,16 +35,18 @@ static void
 gpinstruct_lesson_element_init (GPInstructLessonElement *object)
 {
 	object->priv = GPINSTRUCT_LESSON_ELEMENT_GET_PRIVATE (object);
+	GPInstructLessonElementPrivate *priv = object->priv;
 
-	object->priv->title = g_strdup ("");
+	priv->title = g_strdup ("");
 }
 
 static void
 gpinstruct_lesson_element_finalize (GObject *object)
 {
 	GPInstructLessonElement *element = GPINSTRUCT_LESSON_ELEMENT (object);
+	GPInstructLessonElementPrivate *priv = element->priv;
 
-	g_free (element->priv->title);
+	g_free (priv->title);
 
 	G_OBJECT_CLASS (gpinstruct_lesson_element_parent_class)->finalize (object);
 }
@@ -70,13 +72,17 @@ gpinstruct_lesson_element_new (void)
 const gchar *
 gpinstruct_lesson_element_get_title (GPInstructLessonElement *element)
 {
-	return element->priv->title;
+	GPInstructLessonElementPrivate *priv = element->priv;
+
+	return priv->title;
 }
 
 void
 gpinstruct_lesson_element_set_title (GPInstructLessonElement *element,
                                      const gchar *title)
 {
-	g_free (element->priv->title);
-	element->priv->title = g_strdup (title);
+	GPInstructLessonElementPrivate *priv = element->priv;
+
+	g_free (priv->title);
+	priv->title = g_strdup (title);
 }

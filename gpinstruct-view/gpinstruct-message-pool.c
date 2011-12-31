@@ -96,38 +96,38 @@ G_DEFINE_TYPE (GPInstructMessagePool, gpinstruct_message_pool, G_TYPE_OBJECT);
 static void
 gpinstruct_message_pool_init (GPInstructMessagePool *object)
 {
-#if HAVE_GSTREAMER
-	GstElement *demuxer, *decoder, *conv, *sink;
-#endif
+	object->priv = GPINSTRUCT_MESSAGE_POOL_GET_PRIVATE (object);
+	GPInstructMessagePoolPrivate *priv = object->priv;
+
 	int i;
 
-	object->priv = GPINSTRUCT_MESSAGE_POOL_GET_PRIVATE (object);
-
 	for (i = 0; i < GPINSTRUCT_MESSAGE_TYPE_SIZE; i++)
-		object->priv->messages[i] = NULL;
+		priv->messages[i] = NULL;
 
 #if HAVE_GSTREAMER
+	GstElement *demuxer, *decoder, *conv, *sink;
+
 	if (!gst_is_initialized ())
 		gst_init (NULL, NULL);
 
 	for (i = 0; i < GPINSTRUCT_MESSAGE_TYPE_SIZE; i++)
-		object->priv->sounds[i] = NULL;
+		priv->sounds[i] = NULL;
 
-	object->priv->pipeline = gst_pipeline_new ("audio-player");
-	object->priv->source  = gst_element_factory_make ("filesrc", "file-source");
+	priv->pipeline = gst_pipeline_new ("audio-player");
+	priv->source  = gst_element_factory_make ("filesrc", "file-source");
 	demuxer = gst_element_factory_make ("oggdemux",      "ogg-demuxer");
 	decoder = gst_element_factory_make ("vorbisdec",     "vorbis-decoder");
 	conv    = gst_element_factory_make ("audioconvert",  "converter");
 	sink    = gst_element_factory_make ("autoaudiosink", "audio-output");
 
-	gst_bin_add_many (GST_BIN (object->priv->pipeline),
-	                  object->priv->source, demuxer, decoder, conv, sink, NULL);
+	gst_bin_add_many (GST_BIN (priv->pipeline),
+	                  priv->source, demuxer, decoder, conv, sink, NULL);
 
-	gst_element_link (object->priv->source, demuxer);
+	gst_element_link (priv->source, demuxer);
 	gst_element_link_many (decoder, conv, sink, NULL);
 	g_signal_connect (demuxer, "pad-added", G_CALLBACK (on_pad_added), decoder);
 
-	GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (object->priv->pipeline));
+	GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (priv->pipeline));
 	gst_bus_add_watch (bus, bus_call, NULL);
 	gst_object_unref (bus);
 #endif
@@ -137,23 +137,25 @@ static void
 gpinstruct_message_pool_finalize (GObject *object)
 {
 	GPInstructMessagePool *pool = GPINSTRUCT_MESSAGE_POOL (object);
+	GPInstructMessagePoolPrivate *priv = pool->priv;
+
 	int i;
 
 	for (i = 0; i < GPINSTRUCT_MESSAGE_TYPE_SIZE; i++)
 	{
-		if (pool->priv->messages[i])
-			g_list_free_full (pool->priv->messages[i], g_free);
+		if (priv->messages[i])
+			g_list_free_full (priv->messages[i], g_free);
 	}
 
 #if HAVE_GSTREAMER
 	for (i = 0; i < GPINSTRUCT_MESSAGE_TYPE_SIZE; i++)
 	{
-		if (pool->priv->sounds[i])
-			g_list_free_full (pool->priv->sounds[i], g_free);
+		if (priv->sounds[i])
+			g_list_free_full (priv->sounds[i], g_free);
 	}
 
-	gst_element_set_state (pool->priv->pipeline, GST_STATE_NULL);
-	gst_object_unref (GST_OBJECT (pool->priv->pipeline));
+	gst_element_set_state (priv->pipeline, GST_STATE_NULL);
+	gst_object_unref (GST_OBJECT (priv->pipeline));
 #endif
 
 	G_OBJECT_CLASS (gpinstruct_message_pool_parent_class)->finalize (object);
@@ -181,6 +183,8 @@ void
 gpinstruct_message_pool_load_from_file (GPInstructMessagePool *pool,
                                         const gchar *file)
 {
+	GPInstructMessagePoolPrivate *priv = pool->priv;
+
 	GKeyFile *key_file = g_key_file_new ();
 	g_key_file_set_list_separator (key_file, ';');
 	GError *error = NULL;
@@ -217,7 +221,7 @@ gpinstruct_message_pool_load_from_file (GPInstructMessagePool *pool,
 			{
 				for (key = 0; keys[key] != NULL; key++)
 				{
-					pool->priv->messages[type] = g_list_append (pool->priv->messages[type],
+					priv->messages[type] = g_list_append (priv->messages[type],
 					                                            g_strdup (keys[key]));
 				}
 
@@ -259,7 +263,7 @@ gpinstruct_message_pool_load_from_file (GPInstructMessagePool *pool,
 					}
 
 					if (path)
-						pool->priv->sounds[type] = g_list_append (pool->priv->sounds[type],
+						priv->sounds[type] = g_list_append (priv->sounds[type],
 						                                          path);
 				}
 
@@ -284,7 +288,9 @@ gpinstruct_message_pool_get_random (GPInstructMessagePool *pool,
 	if (type <= GPINSTRUCT_MESSAGE_TYPE_NONE || type >= GPINSTRUCT_MESSAGE_TYPE_SIZE)
 		return NULL;
 
-	GList *messages = pool->priv->messages[type];
+	GPInstructMessagePoolPrivate *priv = pool->priv;
+
+	GList *messages = priv->messages[type];
 	guint num_messages = g_list_length (messages);
 
 	if (num_messages == 0)
@@ -304,7 +310,9 @@ gpinstruct_message_pool_add (GPInstructMessagePool *pool,
 {
 	g_return_if_fail (type > GPINSTRUCT_MESSAGE_TYPE_NONE && type < GPINSTRUCT_MESSAGE_TYPE_SIZE);
 
-	pool->priv->messages[type] = g_list_append (pool->priv->messages[type],
+	GPInstructMessagePoolPrivate *priv = pool->priv;
+
+	priv->messages[type] = g_list_append (priv->messages[type],
 	                                            g_strdup (message));
 }
 
@@ -313,8 +321,10 @@ gpinstruct_message_pool_add_multiple (GPInstructMessagePool *pool,
                                       ...)
 {
 	GPInstructMessageType type;
-
 	va_list args;
+
+	GPInstructMessagePoolPrivate *priv = pool->priv;
+
 	va_start (args, pool);
 
 	while (TRUE)
@@ -323,7 +333,7 @@ gpinstruct_message_pool_add_multiple (GPInstructMessagePool *pool,
 		if (type <= GPINSTRUCT_MESSAGE_TYPE_NONE || type > GPINSTRUCT_MESSAGE_TYPE_SIZE)
 			return;
 
-		pool->priv->messages[type] = g_list_append (pool->priv->messages[type],
+		priv->messages[type] = g_list_append (priv->messages[type],
 		                                            g_strdup (va_arg (args, gchar*)));
 	}
 	va_end (args);
@@ -336,11 +346,13 @@ gpinstruct_message_pool_remove (GPInstructMessagePool *pool,
 {
 	g_return_if_fail (type > GPINSTRUCT_MESSAGE_TYPE_NONE && type < GPINSTRUCT_MESSAGE_TYPE_SIZE);
 
-	GList *messages = pool->priv->messages[type];
+	GPInstructMessagePoolPrivate *priv = pool->priv;
+
+	GList *messages = priv->messages[type];
 	GList *selected = g_list_nth (messages, message);
 
 	g_free (selected->data);
-	pool->priv->messages[type] = g_list_delete_link (messages, selected);
+	priv->messages[type] = g_list_delete_link (messages, selected);
 }
 
 const gchar *
@@ -351,7 +363,9 @@ gpinstruct_message_pool_get (GPInstructMessagePool *pool,
 	if (type <= GPINSTRUCT_MESSAGE_TYPE_NONE || type >= GPINSTRUCT_MESSAGE_TYPE_SIZE)
 		return NULL;
 
-	return g_list_nth_data (pool->priv->messages[type], message);
+	GPInstructMessagePoolPrivate *priv = pool->priv;
+
+	return g_list_nth_data (priv->messages[type], message);
 }
 
 void
@@ -362,7 +376,9 @@ gpinstruct_message_pool_play_sound_random (GPInstructMessagePool *pool,
 	if (type <= GPINSTRUCT_MESSAGE_TYPE_NONE || type >= GPINSTRUCT_MESSAGE_TYPE_SIZE)
 		return;
 
-	GList *sounds = pool->priv->sounds[type];
+	GPInstructMessagePoolPrivate *priv = pool->priv;
+
+	GList *sounds = priv->sounds[type];
 	guint num_sounds = g_list_length (sounds);
 	gint sound = 0;
 
@@ -376,9 +392,9 @@ gpinstruct_message_pool_play_sound_random (GPInstructMessagePool *pool,
 		sound = g_random_int_range (0, num_sounds);
 	}
 
-	gst_element_set_state (pool->priv->pipeline, GST_STATE_NULL);
-	g_object_set (pool->priv->source, "location", (gchar*) g_list_nth_data (sounds, sound), NULL);
-	gst_element_set_state (pool->priv->pipeline, GST_STATE_PLAYING);
+	gst_element_set_state (priv->pipeline, GST_STATE_NULL);
+	g_object_set (priv->source, "location", (gchar*) g_list_nth_data (sounds, sound), NULL);
+	gst_element_set_state (priv->pipeline, GST_STATE_PLAYING);
 #endif
 }
 
