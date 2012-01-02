@@ -843,10 +843,10 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	g_object_set (object, "icon-name", "gpinstruct-view", NULL);
 	g_object_set (object, "default-width", 400, NULL);
 
-	GtkWidget *main_vbox = gtk_vbox_new (FALSE, 3);
+	GtkWidget *main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 	gtk_container_add (GTK_CONTAINER (object), main_vbox);
 
-	GtkWidget *content_area = gtk_vbox_new (FALSE, 3);
+	GtkWidget *content_area = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 	gtk_box_pack_start (GTK_BOX (main_vbox),
 	                    content_area,
 	                    FALSE, FALSE, 3);
@@ -962,7 +962,7 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 		gtk_entry_set_text (GTK_ENTRY (priv->password_entry),
 			                priv->password);
 
-	GtkWidget *action_area = gtk_hbutton_box_new ();
+	GtkWidget *action_area = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (action_area), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (main_vbox),
 	                    action_area,

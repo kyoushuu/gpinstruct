@@ -319,7 +319,7 @@ gpinstruct_lesson_test_scrambled_editor_init (GPInstructLessonTestScrambledEdito
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	GtkWidget *questions_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *questions_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_table_attach (GTK_TABLE (object), questions_hbox,
 	                  0, 2, 3, 4,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
@@ -341,7 +341,7 @@ gpinstruct_lesson_test_scrambled_editor_init (GPInstructLessonTestScrambledEdito
 	                                                                                NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (priv->questions_tree_view), questions_column);
 
-	GtkWidget *questions_buttonbox = gtk_vbutton_box_new ();
+	GtkWidget *questions_buttonbox = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (questions_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_buttonbox, FALSE, TRUE, 0);
 

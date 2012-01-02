@@ -309,7 +309,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	                  3, 3);
 
 
-	GtkWidget *items_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *items_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_table_attach (GTK_TABLE (object), items_hbox,
 	                  0, 2, 4, 5,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
@@ -331,7 +331,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	                                                                      NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (priv->tree_view), column);
 
-	GtkWidget *items_buttonbox = gtk_vbutton_box_new ();
+	GtkWidget *items_buttonbox = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (items_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (items_hbox), items_buttonbox, FALSE, TRUE, 0);
 

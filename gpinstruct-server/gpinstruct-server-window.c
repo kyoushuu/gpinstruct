@@ -203,7 +203,7 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	gtk_window_set_title (GTK_WINDOW (object), _("GPInstruct Server"));
 	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
 
-	priv->main_vbox = gtk_vbox_new (FALSE, 0);
+	priv->main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (object), priv->main_vbox);
 
 

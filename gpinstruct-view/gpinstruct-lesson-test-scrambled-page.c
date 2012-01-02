@@ -221,7 +221,7 @@ gpinstruct_lesson_test_scrambled_page_new (GPInstructLessonTestScrambled *test,
 	priv->score = score;
 	priv->log = log;
 
-	priv->vbox = gtk_vbox_new (FALSE, 3);
+	priv->vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), priv->vbox);
 
 	priv->question_textview = gtk_text_view_new ();

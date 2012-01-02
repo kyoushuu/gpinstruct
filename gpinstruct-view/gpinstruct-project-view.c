@@ -157,7 +157,7 @@ gpinstruct_project_view_new (GPInstructProject *project,
 	                                GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (view), scrolled_window);
 
-	GtkWidget *main_vbox = gtk_vbox_new (FALSE, 3);
+	GtkWidget *main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), main_vbox);
 
 	GtkWidget *category_frame, *category_label, *category_vbox, *lesson_button;
@@ -184,7 +184,7 @@ gpinstruct_project_view_new (GPInstructProject *project,
 		g_free (title);
 		gtk_frame_set_label_widget (GTK_FRAME (category_frame), category_label);
 
-		category_vbox = gtk_vbox_new (FALSE, 0);
+		category_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_container_add (GTK_CONTAINER (category_frame), category_vbox);
 
 		gtk_box_pack_start (GTK_BOX (main_vbox), category_frame, FALSE, TRUE, 3);

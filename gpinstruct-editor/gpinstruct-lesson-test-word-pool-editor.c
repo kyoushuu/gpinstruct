@@ -484,7 +484,7 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
 	                  3, 3);
 
-	GtkWidget *questions_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *questions_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_table_attach (GTK_TABLE (object), questions_hbox,
 	                  0, 2, 3, 4,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
@@ -506,7 +506,7 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	                                                                                NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (priv->questions_tree_view), questions_column);
 
-	GtkWidget *questions_buttonbox = gtk_vbutton_box_new ();
+	GtkWidget *questions_buttonbox = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (questions_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_buttonbox, FALSE, TRUE, 0);
 
@@ -519,7 +519,7 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	gtk_box_pack_start (GTK_BOX (questions_buttonbox), questions_remove_button, FALSE, TRUE, 0);
 
 
-	GtkWidget *choices_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *choices_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_table_attach (GTK_TABLE (object), choices_hbox,
 	                  0, 2, 4, 5,
 	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
@@ -541,7 +541,7 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	                                                                              NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (priv->choices_tree_view), choices_column);
 
-	GtkWidget *choices_buttonbox = gtk_vbutton_box_new ();
+	GtkWidget *choices_buttonbox = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (choices_buttonbox), GTK_BUTTONBOX_START);
 	gtk_box_pack_start (GTK_BOX (choices_hbox), choices_buttonbox, FALSE, TRUE, 0);
 

@@ -948,7 +948,7 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 	gtk_window_set_title (GTK_WINDOW (object), _("GPInstruct Editor"));
 	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
 
-	priv->main_vbox = gtk_vbox_new (FALSE, 0);
+	priv->main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (object), priv->main_vbox);
 
 
@@ -1002,7 +1002,7 @@ gpinstruct_editor_window_init (GPInstructEditorWindow *object)
 	                    priv->infobarlabel, FALSE, TRUE, 0);
 
 
-	priv->hpaned = gtk_hpaned_new ();
+	priv->hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_paned_set_position (GTK_PANED (priv->hpaned), 300);
 	gtk_box_pack_start (GTK_BOX (priv->main_vbox), priv->hpaned, TRUE, TRUE, 3);
 

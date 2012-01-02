@@ -68,7 +68,7 @@ multi_choice_show_question (GPInstructLessonTestMultiChoicePage *page,
 		if (priv->choices_vbox)
 			gtk_widget_destroy (priv->choices_vbox);
 
-		priv->choices_vbox = gtk_vbox_new (FALSE, 0);
+		priv->choices_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_box_pack_start (GTK_BOX (priv->vbox), priv->choices_vbox, FALSE, TRUE, 3);
 
 		GtkWidget *choice_radio_button;
@@ -300,7 +300,7 @@ gpinstruct_lesson_test_multi_choice_page_new (GPInstructLessonTestMultiChoice *t
 	priv->score = score;
 	priv->log = log;
 
-	priv->vbox = gtk_vbox_new (FALSE, 3);
+	priv->vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), priv->vbox);
 
 	priv->question_textview = gtk_text_view_new ();

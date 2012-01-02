@@ -60,7 +60,7 @@ gpinstruct_lesson_directions_page_new (const gchar *title,
 	gpinstruct_lesson_view_page_set_title (GPINSTRUCT_LESSON_VIEW_PAGE (page), title);
 	gpinstruct_lesson_view_page_set_show_back_button (GPINSTRUCT_LESSON_VIEW_PAGE (page), FALSE);
 
-	GtkWidget *vbox = gtk_vbox_new (FALSE, 3);
+	GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), vbox);
 
 	GtkWidget *title_label = gtk_label_new (NULL);

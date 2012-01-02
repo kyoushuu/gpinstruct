@@ -590,7 +590,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	gtk_tree_view_column_set_resizable (column, TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (examinee_treeview), column);
 
-	GtkWidget *vpaned = gtk_vpaned_new ();
+	GtkWidget *vpaned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
 	gtk_paned_pack2 (GTK_PANED (object), vpaned, TRUE, TRUE);
 
 	GtkWidget *project_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);

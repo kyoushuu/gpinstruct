@@ -301,7 +301,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 	gtk_window_set_title (GTK_WINDOW (object), _("GPInstruct Analyzer"));
 	gtk_window_set_default_size (GTK_WINDOW (object), 800, 600);
 
-	priv->main_vbox = gtk_vbox_new (FALSE, 0);
+	priv->main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (object), priv->main_vbox);
 
 
@@ -336,7 +336,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 #endif
 	gtk_box_pack_start (GTK_BOX (priv->main_vbox), toolbar, FALSE, TRUE, 0);
 
-	GtkWidget *view_hbox = gtk_hbox_new (FALSE, 3);
+	GtkWidget *view_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_box_pack_start (GTK_BOX (priv->main_vbox), view_hbox, FALSE, TRUE, 0);
 
 	GtkWidget *view_label = gtk_label_new (_("Select View:"));
