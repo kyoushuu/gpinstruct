@@ -785,6 +785,46 @@ cancel_button_clicked (GtkButton *button,
 }
 
 
+static void
+about_button_clicked (GtkButton *button,
+                      gpointer   user_data)
+{
+	GPInstructClientWindow *window = user_data;
+
+	static gchar *authors[] = {"Arnel A. Borja <kyoushuu@yahoo.com>", NULL};
+	gchar *license = _(
+	                   "This program is free software; you can redistribute it and/or modify "
+	                   "it under the terms of the GNU General Public License as published by "
+	                   "the Free Software Foundation; either version 3 of the License, or "
+	                   "(at your option) any later version.\n"
+	                   "\n"
+	                   "This program is distributed in the hope that it will be useful, "
+	                   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+	                   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+	                   "GNU General Public License for more details.\n"
+	                   "\n"
+	                   "You should have received a copy of the GNU General Public License along "
+	                   "with this program.  If not, see <http://www.gnu.org/licenses/>.");
+
+	gtk_show_about_dialog (GTK_WINDOW (window),
+		                  "program-name", _("GPInstruct Client"),
+		                  "version", PACKAGE_VERSION,
+		                  "title", _("About GPInstruct Editor"),
+		                  "comments", _("GPInstruct Project Client"),
+		                  "website", PACKAGE_URL,
+		                  "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
+#if GTK_MAJOR_VERSION >= 3
+		                  "license-type", GTK_LICENSE_GPL_3_0,
+#endif
+		                  "license", license,
+		                  "wrap-license", TRUE,
+		                  "authors", authors,
+		                  "logo-icon-name", "gpinstruct-client",
+		                  NULL);
+	                   
+}
+
+
 G_DEFINE_TYPE (GPInstructClientWindow, gpinstruct_client_window, GTK_TYPE_WINDOW);
 
 static void
@@ -942,6 +982,15 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	gtk_box_pack_start (GTK_BOX (action_area),
 	                    cancel_button,
 	                    FALSE, FALSE, 3);
+
+	GtkWidget *about_button = gtk_button_new_from_stock (GTK_STOCK_ABOUT);
+	g_signal_connect (about_button, "clicked",
+	                  G_CALLBACK (about_button_clicked), object);
+	gtk_box_pack_start (GTK_BOX (action_area),
+	                    about_button,
+	                    FALSE, FALSE, 3);
+	gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (action_area),
+	                                    about_button, TRUE);
 }
 
 static void
