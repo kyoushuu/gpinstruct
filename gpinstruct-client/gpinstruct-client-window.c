@@ -800,7 +800,9 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	priv->firstname = NULL;
 	priv->password = NULL;
 
+	g_object_set (object, "title", _("GPInstruct Client"), NULL);
 	g_object_set (object, "icon-name", "gpinstruct-view", NULL);
+	g_object_set (object, "default-width", 400, NULL);
 
 	GtkWidget *main_vbox = gtk_vbox_new (FALSE, 3);
 	gtk_container_add (GTK_CONTAINER (object), main_vbox);
