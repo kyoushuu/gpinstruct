@@ -157,7 +157,7 @@ gpinstruct_project_view_new (GPInstructProject *project,
 	                                GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (view), scrolled_window);
 
-	GtkWidget *main_vbox = gtk_hbox_new (TRUE, 3);
+	GtkWidget *main_vbox = gtk_vbox_new (FALSE, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), main_vbox);
 
 	GtkWidget *category_frame, *category_label, *category_vbox, *lesson_button;
@@ -184,7 +184,7 @@ gpinstruct_project_view_new (GPInstructProject *project,
 		g_free (title);
 		gtk_frame_set_label_widget (GTK_FRAME (category_frame), category_label);
 
-		category_vbox = gtk_vbox_new (FALSE, 3);
+		category_vbox = gtk_vbox_new (FALSE, 0);
 		gtk_container_add (GTK_CONTAINER (category_frame), category_vbox);
 
 		gtk_box_pack_start (GTK_BOX (main_vbox), category_frame, FALSE, TRUE, 3);
@@ -198,7 +198,8 @@ gpinstruct_project_view_new (GPInstructProject *project,
 
 			lesson_button = gtk_button_new ();
 			gtk_button_set_label (GTK_BUTTON (lesson_button), gpinstruct_lesson_get_title (lesson));
-			gtk_box_pack_start (GTK_BOX (category_vbox), lesson_button, FALSE, FALSE, 3);
+			gtk_button_set_relief (GTK_BUTTON (lesson_button), GTK_RELIEF_NONE);
+			gtk_box_pack_start (GTK_BOX (category_vbox), lesson_button, FALSE, FALSE, 0);
 			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), view);
 
 			GPInstructLessonView *lesson_view = gpinstruct_lesson_view_new (lesson, priv->pool, priv->log);
