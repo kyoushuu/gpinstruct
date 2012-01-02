@@ -579,22 +579,22 @@ help_about_action (GtkAction *action,
 	                   "You should have received a copy of the GNU General Public License along "
 	                   "with this program.  If not, see <http://www.gnu.org/licenses/>.");
 
-	                   gtk_show_about_dialog (GTK_WINDOW (window),
-	                                          "program-name", _("GPInstruct Editor"),
-	                                          "version", PACKAGE_VERSION,
-	                                          "title", _("About GPInstruct Editor"),
-	                                          "comments", _("GPInstruct Project Editor"),
-	                                          "website", PACKAGE_URL,
-	                                          "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
+	gtk_show_about_dialog (GTK_WINDOW (window),
+		                  "program-name", _("GPInstruct Editor"),
+		                  "version", PACKAGE_VERSION,
+		                  "title", _("About GPInstruct Editor"),
+		                  "comments", _("Create, edit and view GPInstruct projects"),
+		                  "website", PACKAGE_URL,
+		                  "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
 #if GTK_MAJOR_VERSION >= 3
-	                                          "license-type", GTK_LICENSE_GPL_3_0,
+		                  "license-type", GTK_LICENSE_GPL_3_0,
 #endif
-	                                          "license", license,
-	                                          "wrap-license", TRUE,
-	                                          "authors", authors,
-	                                          "logo-icon-name", "gpinstruct-editor",
-	                                          NULL);
-                   }
+		                  "license", license,
+		                  "wrap-license", TRUE,
+		                  "authors", authors,
+		                  "logo-icon-name", "gpinstruct-editor",
+		                  NULL);
+}
 
 
 static void

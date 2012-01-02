@@ -810,7 +810,7 @@ about_button_clicked (GtkButton *button,
 		                  "program-name", _("GPInstruct Client"),
 		                  "version", PACKAGE_VERSION,
 		                  "title", _("About GPInstruct Editor"),
-		                  "comments", _("GPInstruct Project Client"),
+		                  "comments", _("Answer GPInstruct projects from a server"),
 		                  "website", PACKAGE_URL,
 		                  "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
 #if GTK_MAJOR_VERSION >= 3
@@ -821,7 +821,6 @@ about_button_clicked (GtkButton *button,
 		                  "authors", authors,
 		                  "logo-icon-name", "gpinstruct-client",
 		                  NULL);
-	                   
 }
 
 
