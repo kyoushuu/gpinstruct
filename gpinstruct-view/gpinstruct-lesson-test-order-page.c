@@ -17,6 +17,7 @@
  */
 
 #include <config.h>
+#include <glib/gi18n.h>
 
 #include <gtk/gtk.h>
 
@@ -113,9 +114,13 @@ page_show_next (GPInstructLessonTestOrderPage *page,
                 gpointer user_data)
 {
 	GtkTreeIter iter;
-	guint questions_num = 0, wrong = 0, position;
+	guint questions_num = 0, wrong = 0, position, items_num;
+	gboolean *items_array;
 
 	GPInstructLessonTestOrderPagePrivate *priv = page->priv;
+
+	items_num = gpinstruct_lesson_test_order_get_items_length (priv->test);
+	items_array = g_new0 (gboolean, items_num);
 
 	if (priv->log)
 		gpinstruct_log_set_group (priv->log,
@@ -135,9 +140,15 @@ page_show_next (GPInstructLessonTestOrderPage *page,
 				                           position, questions_num);
 
 			if (questions_num == position)
+			{
 				gpinstruct_lesson_score_increase_score (priv->score);
+				items_array[position] = TRUE;
+			}
 			else
+			{
 				wrong++;
+				items_array[position] = FALSE;
+			}
 
 			questions_num++;
 		} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->store), &iter));
@@ -170,7 +181,7 @@ page_show_next (GPInstructLessonTestOrderPage *page,
 				                                             explanation);
 			else
 			{
-				GString *explanation_answer = g_string_new (NULL);
+				GString *explanation_answer = g_string_new (_("Wrong answers are in bold font style:\n\n"));
 
 				GList *items = gpinstruct_lesson_test_order_get_items (priv->test);
 				guint length = g_list_length (items);
@@ -185,7 +196,7 @@ page_show_next (GPInstructLessonTestOrderPage *page,
 				for (i = 0; i<length; i++)
 				{
 					g_string_append_printf (explanation_answer,
-								            "%d. %s\n",
+								            items_array[i]? "%d. %s\n":"<b>%d. %s</b>\n",
 					                        i+1,
 								            answers[i]);
 				}
@@ -201,6 +212,8 @@ page_show_next (GPInstructLessonTestOrderPage *page,
 			gpinstruct_lesson_view_page_set_message (GPINSTRUCT_LESSON_VIEW_PAGE (page),
 			                                         GPINSTRUCT_MESSAGE_TYPE_CORRECT_ALL);
 	}
+
+	g_free (items_array);
 
 	return FALSE;
 }
