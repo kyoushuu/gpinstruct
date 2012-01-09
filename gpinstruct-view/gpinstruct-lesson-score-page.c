@@ -36,7 +36,7 @@ struct _GPInstructLessonScorePagePrivate
 
 
 
-void
+static void
 score_reset (GPInstructLessonViewPage *view,
              gpointer user_data)
 {
@@ -80,7 +80,7 @@ gpinstruct_lesson_score_page_class_init (GPInstructLessonScorePageClass *klass)
 }
 
 
-void
+static void
 page_show (GPInstructLessonScorePage *page,
            gpointer user_data)
 {

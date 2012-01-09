@@ -1246,7 +1246,7 @@ gpinstruct_parser_new (void)
 	return parser;
 }
 
-GPInstructProject *
+static GPInstructProject *
 create_project_from_xml_document (xmlDocPtr doc)
 {
 	xmlNode *current_node;
@@ -1264,7 +1264,7 @@ create_project_from_xml_document (xmlDocPtr doc)
 	return NULL;
 }
 
-xmlDocPtr
+static xmlDocPtr
 create_xml_document_from_project (GPInstructProject *project)
 {
 	xmlNodePtr current_node = add_project (project);

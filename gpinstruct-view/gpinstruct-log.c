@@ -314,7 +314,7 @@ gpinstruct_log_get_tests (GPInstructLog *log)
 	return g_list_copy (priv->tests_list);
 }
 
-gboolean
+static gboolean
 load_log_from_xml_document (GPInstructLog *log,
                             xmlDocPtr doc)
 {
@@ -419,7 +419,7 @@ load_log_from_xml_document (GPInstructLog *log,
 	return FALSE;
 }
 
-xmlDocPtr
+static xmlDocPtr
 create_xml_document_from_log (GPInstructLog *log)
 {
 	xmlNodePtr current_node;

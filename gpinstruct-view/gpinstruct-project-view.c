@@ -37,7 +37,7 @@ struct _GPInstructProjectViewPrivate
 
 
 
-void
+static void
 lesson_button_clicked (GtkButton *button,
                        gpointer   user_data)
 {

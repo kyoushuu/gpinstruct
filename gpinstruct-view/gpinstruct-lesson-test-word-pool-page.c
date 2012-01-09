@@ -45,7 +45,7 @@ struct _GPInstructLessonTestWordPoolPagePrivate
 
 
 
-void
+static void
 word_pool_show_question (GPInstructLessonTestWordPoolPage *page,
                          guint question_num)
 {

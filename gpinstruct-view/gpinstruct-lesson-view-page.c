@@ -52,7 +52,7 @@ enum
 static guint lesson_view_page_signals[LAST_SIGNAL] = { 0 };
 
 
-void
+static void
 page_reset (GPInstructLessonViewPage *view,
             gpointer user_data)
 {

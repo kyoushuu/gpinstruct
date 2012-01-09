@@ -43,7 +43,7 @@ struct _GPInstructLessonTestTextPagePrivate
 
 
 
-void
+static void
 text_show_question (GPInstructLessonTestTextPage *page,
                          guint question_num)
 {

@@ -45,7 +45,7 @@ struct _GPInstructLessonTestMultiChoicePagePrivate
 
 
 
-void
+static void
 multi_choice_show_question (GPInstructLessonTestMultiChoicePage *page,
                             guint question_num)
 {

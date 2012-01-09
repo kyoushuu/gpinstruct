@@ -31,7 +31,7 @@ struct _GPInstructLessonTestPrivate
 
 
 
-gchar *
+static gchar *
 create_id ()
 {
 	static const gint length = 8;

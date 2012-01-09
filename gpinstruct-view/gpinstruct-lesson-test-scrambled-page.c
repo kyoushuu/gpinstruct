@@ -45,7 +45,7 @@ struct _GPInstructLessonTestScrambledPagePrivate
 
 
 
-void
+static void
 scrambled_show_question (GPInstructLessonTestScrambledPage *page,
                          guint question_num)
 {

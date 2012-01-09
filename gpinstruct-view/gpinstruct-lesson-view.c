@@ -67,7 +67,7 @@ static guint lesson_view_signals[LAST_SIGNAL] = { 0 };
 G_DEFINE_TYPE (GPInstructLessonView, gpinstruct_lesson_view, GTK_TYPE_DIALOG);
 
 
-void
+static void
 show_page (GPInstructLessonView *view,
            guint page_num)
 {
@@ -102,7 +102,7 @@ show_page (GPInstructLessonView *view,
 	}
 }
 
-void
+static void
 next_button_clicked (GtkButton *button,
                      gpointer   user_data)
 {
@@ -110,7 +110,7 @@ next_button_clicked (GtkButton *button,
 	g_signal_emit (user_data, lesson_view_signals[NEXT], 0, &clicked);
 }
 
-void
+static void
 back_button_clicked (GtkButton *button,
                      gpointer   user_data)
 {
@@ -118,7 +118,7 @@ back_button_clicked (GtkButton *button,
 	g_signal_emit (user_data, lesson_view_signals[BACK], 0, &clicked);
 }
 
-void
+static void
 view_show (GtkWidget *widget,
            gpointer   user_data)
 {
@@ -141,7 +141,7 @@ view_show (GtkWidget *widget,
 	show_page (view, 0);
 }
 
-void
+static void
 explanation_show (GtkInfoBar *info_bar,
                   gint        response_id,
                   gpointer    user_data)
