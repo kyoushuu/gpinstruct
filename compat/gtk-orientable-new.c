@@ -1,6 +1,6 @@
 /*
  * GPInstruct - Programmed Instruction
- * Copyright (C) 2011  Arnel A. Borja <kyoushuu@yahoo.com>
+ * Copyright (C) 2012  Arnel A. Borja <kyoushuu@yahoo.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if GTK_MAJOR_VERSION < 3
+#include <config.h>
+
+#include <gtk/gtk.h>
+
 #include "gtk-orientable-new.h"
-#include "gtk-switch.h"
-#include "gtk-tree-model-iter-previous.h"
+
+#if (GTK_MAJOR_VERSION < 3)
+GtkWidget *
+gtk_box_new (GtkOrientation orientation,
+             gint spacing)
+{
+	if (orientation == GTK_ORIENTATION_HORIZONTAL)
+		return gtk_hbox_new (FALSE, spacing);
+	else
+		return gtk_vbox_new (FALSE, spacing);
+}
+
+GtkWidget *
+gtk_paned_new (GtkOrientation orientation)
+{
+	if (orientation == GTK_ORIENTATION_HORIZONTAL)
+		return gtk_hpaned_new ();
+	else
+		return gtk_vpaned_new ();
+}
+
+GtkWidget *
+gtk_button_box_new (GtkOrientation orientation)
+{
+	if (orientation == GTK_ORIENTATION_HORIZONTAL)
+		return gtk_hbutton_box_new ();
+	else
+		return gtk_vbutton_box_new ();
+}
 #endif
 
-#ifdef __GDK_KEYSYMS_H__
-#ifndef GDK_KEY_Menu
-#define GDK_KEY_Menu GDK_Menu
-#endif
-#ifndef GDK_KEY_Left
-#define GDK_KEY_Left GDK_Left
-#endif
-#ifndef GDK_KEY_Right
-#define GDK_KEY_Right GDK_Right
-#endif
-#endif

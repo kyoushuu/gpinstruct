@@ -1,6 +1,6 @@
 /*
  * GPInstruct - Programmed Instruction
- * Copyright (C) 2011  Arnel A. Borja <kyoushuu@yahoo.com>
+ * Copyright (C) 2012  Arnel A. Borja <kyoushuu@yahoo.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if GTK_MAJOR_VERSION < 3
-#include "gtk-orientable-new.h"
-#include "gtk-switch.h"
-#include "gtk-tree-model-iter-previous.h"
-#endif
+GtkWidget *gtk_box_new (GtkOrientation orientation, gint spacing);
+GtkWidget *gtk_paned_new (GtkOrientation orientation);
+GtkWidget *gtk_button_box_new (GtkOrientation orientation);
 
-#ifdef __GDK_KEYSYMS_H__
-#ifndef GDK_KEY_Menu
-#define GDK_KEY_Menu GDK_Menu
-#endif
-#ifndef GDK_KEY_Left
-#define GDK_KEY_Left GDK_Left
-#endif
-#ifndef GDK_KEY_Right
-#define GDK_KEY_Right GDK_Right
-#endif
-#endif
