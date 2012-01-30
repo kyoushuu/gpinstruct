@@ -67,7 +67,7 @@ gen_session_id (void)
 {
 	static const gint length = 32;
 	static const gchar lookup_table[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	static const gint lookup_table_elements = G_N_ELEMENTS (lookup_table);
+	static const gint lookup_table_elements = G_N_ELEMENTS (lookup_table)-1;
 
 	gchar *id = g_new (gchar, length+1);
 	id[length] = 0;

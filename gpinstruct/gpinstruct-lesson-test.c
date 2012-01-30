@@ -36,7 +36,7 @@ create_id ()
 {
 	static const gint length = 8;
 	static const char lookup_table[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-	static const gint lookup_table_elements = G_N_ELEMENTS (lookup_table);
+	static const gint lookup_table_elements = G_N_ELEMENTS (lookup_table)-1;
 
 	gchar *id = g_new (gchar, length+1);
 	id[length] = 0;
