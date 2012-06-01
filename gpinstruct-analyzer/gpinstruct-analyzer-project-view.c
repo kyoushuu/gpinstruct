@@ -117,7 +117,7 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 				children = item->choices_length;
 				frequency = item->times_answered;
 				score = item->times_correctly_answered;
-				percentage = (children?(score/children):0) * 100;
+				percentage = (frequency?((gdouble) score/frequency):0) * 100;
 				time_spent = item->time_spent;
 				ave_time_spent = frequency? time_spent/frequency:0;
 
@@ -168,7 +168,7 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 						                                                item_num,
 						                                                choice_num);
 					frequency = choice->times_chosen;
-					percentage = (item->times_answered?(frequency/item->times_answered):0) * 100;
+					percentage = (item->times_answered?((gdouble) frequency/item->times_answered):0) * 100;
 					time_spent = choice->time_spent;
 					ave_time_spent = frequency? time_spent/frequency:0;
 
@@ -488,7 +488,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 	items = project->items_length;
 	frequency = project->times_taken;
 	score = project->items_correctly_answered;
-	ave_score =  (frequency? score/frequency:0);
+	ave_score =  (frequency? (gdouble) score/frequency:0);
 	percentage = (items?(ave_score/items):0) * 100;
 	time_spent = project->time_spent;
 	ave_time_spent = frequency? time_spent/frequency:0;
@@ -535,7 +535,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 		items = category->items_length;
 		frequency = category->times_taken;
 		score = category->items_correctly_answered;
-		ave_score =  (frequency? score/frequency:0);
+		ave_score =  (frequency? (gdouble) score/frequency:0);
 		percentage = (items?(ave_score/items):0) * 100;
 		time_spent = category->time_spent;
 		ave_time_spent = frequency? time_spent/frequency:0;
@@ -582,7 +582,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 			items = lesson->items_length;
 			frequency = lesson->times_taken;
 			score = lesson->items_correctly_answered;
-			ave_score =  (frequency? score/frequency:0);
+			ave_score =  (frequency? (gdouble) score/frequency:0);
 			percentage = (items?(ave_score/items):0) * 100;
 			time_spent = lesson->time_spent;
 			ave_time_spent = frequency? time_spent/frequency:0;
@@ -631,7 +631,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 					items = test->items_length;
 					frequency = test->times_taken;
 					score = test->items_correctly_answered;
-					ave_score =  (frequency? score/frequency:0);
+					ave_score =  (frequency? (gdouble) score/frequency:0);
 					percentage = (items?(ave_score/items):0) * 100;
 					time_spent = test->time_spent;
 					ave_time_spent = frequency? time_spent/frequency:0;
@@ -676,7 +676,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 					items = group->items_length;
 					frequency = group->times_taken;
 					score = group->items_correctly_answered;
-					ave_score =  (frequency? score/frequency:0);
+					ave_score =  (frequency? (gdouble) score/frequency:0);
 					percentage = (items?(ave_score/items):0) * 100;
 					time_spent = group->time_spent;
 					ave_time_spent = frequency? time_spent/frequency:0;
@@ -723,7 +723,7 @@ gpinstruct_analyzer_project_view_new (GPInstructLogAnalyzer *analyzer)
 						items = test->items_length;
 						frequency = test->times_taken;
 						score = test->items_correctly_answered;
-						ave_score =  (frequency? score/frequency:0);
+						ave_score =  (frequency? (gdouble) score/frequency:0);
 						percentage = (items?(ave_score/items):0) * 100;
 						time_spent = test->time_spent;
 						ave_time_spent = frequency? time_spent/frequency:0;
