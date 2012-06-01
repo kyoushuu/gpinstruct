@@ -406,6 +406,10 @@ add_test (GPInstructLogAnalyzerProject *aproject,
 		{
 			item->times_answered += 1;
 
+			if (item->times_answered > test->times_taken) {
+				test->times_taken = item->times_answered;
+			}
+
 			item->time_spent += answer->time_spent;
 			test->time_spent += answer->time_spent;
 			if (test->group) test->group->time_spent += answer->time_spent;
