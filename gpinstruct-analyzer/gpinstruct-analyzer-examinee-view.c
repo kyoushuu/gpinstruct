@@ -29,12 +29,15 @@ struct _GPInstructAnalyzerExamineeViewPrivate
 {
 	GtkListStore *examinee_store;
 	GtkWidget *examinee_treeview;
+	GtkWidget *examinee_scrolledwindow;
 
 	GtkTreeStore *project_store;
 	GtkWidget *project_treeview;
+	GtkWidget *project_scrolledwindow;
 
 	GtkTreeStore *test_store;
 	GtkWidget *test_treeview;
+	GtkWidget *test_scrolledwindow;
 };
 
 #define GPINSTRUCT_ANALYZER_EXAMINEE_VIEW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_EXAMINEE_VIEW, GPInstructAnalyzerExamineeViewPrivate))
@@ -407,6 +410,14 @@ examinee_tree_selection_changed_cb (GtkTreeSelection *selection,
 			}
 
 			gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->project_treeview));
+
+			if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->project_store), &iter))
+			{
+				selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->project_treeview));
+				gtk_tree_selection_select_iter (selection, &iter);
+				GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->project_scrolledwindow));
+				gtk_adjustment_set_value (adjustment, gtk_adjustment_get_lower (adjustment));
+			}
 		}
 	}
 }
@@ -541,6 +552,14 @@ project_tree_selection_changed_cb (GtkTreeSelection *selection,
 				item_num++;
 				items = items->next;
 			}
+
+			if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->test_store), &iter))
+			{
+				selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->test_treeview));
+				gtk_tree_selection_select_iter (selection, &iter);
+				GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->test_scrolledwindow));
+				gtk_adjustment_set_value (adjustment, gtk_adjustment_get_lower (adjustment));
+			}
 		}
 	}
 }
@@ -565,6 +584,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (examinee_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack1 (GTK_PANED (object), examinee_scrolledwindow, FALSE, TRUE);
+	priv->examinee_scrolledwindow = examinee_scrolledwindow;
 
 	priv->examinee_store = gtk_list_store_new (EXAMINEE_N_COLUMNS,
 	                                                   G_TYPE_STRING,
@@ -597,6 +617,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (project_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack1 (GTK_PANED (vpaned), project_scrolledwindow, TRUE, TRUE);
+	priv->project_scrolledwindow = project_scrolledwindow;
 
 	priv->project_store = gtk_tree_store_new (PROJECT_N_COLUMNS,
 	                                                  G_TYPE_STRING,
@@ -697,6 +718,7 @@ gpinstruct_analyzer_examinee_view_init (GPInstructAnalyzerExamineeView *object)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (test_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack2 (GTK_PANED (vpaned), test_scrolledwindow, TRUE, TRUE);
+	priv->test_scrolledwindow = test_scrolledwindow;
 
 	priv->test_store = gtk_tree_store_new (TEST_N_COLUMNS,
 	                                               G_TYPE_STRING,

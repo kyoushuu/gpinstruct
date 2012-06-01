@@ -29,9 +29,11 @@ struct _GPInstructAnalyzerProjectViewPrivate
 {
 	GtkTreeStore *project_store;
 	GtkWidget *project_treeview;
+	GtkWidget *project_scrolledwindow;
 
 	GtkTreeStore *test_store;
 	GtkWidget *test_treeview;
+	GtkWidget *test_scrolledwindow;
 };
 
 #define GPINSTRUCT_ANALYZER_PROJECT_VIEW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_ANALYZER_PROJECT_VIEW, GPInstructAnalyzerProjectViewPrivate))
@@ -232,6 +234,14 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
 				item_num++;
 				items = items->next;
 			}
+
+			if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->test_store), &iter))
+			{
+				selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->test_treeview));
+				gtk_tree_selection_select_iter (selection, &iter);
+				GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->test_scrolledwindow));
+				gtk_adjustment_set_value (adjustment, gtk_adjustment_get_lower (adjustment));
+			}
 		}
 	}
 }
@@ -254,6 +264,7 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (project_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack1 (GTK_PANED (object), project_scrolledwindow, TRUE, TRUE);
+	priv->project_scrolledwindow = project_scrolledwindow;
 
 	priv->project_store = gtk_tree_store_new (PROJECT_N_COLUMNS,
 	                                                  G_TYPE_STRING,
@@ -354,6 +365,7 @@ gpinstruct_analyzer_project_view_init (GPInstructAnalyzerProjectView *object)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (test_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_pack2 (GTK_PANED (object), test_scrolledwindow, TRUE, TRUE);
+	priv->test_scrolledwindow = test_scrolledwindow;
 
 	priv->test_store = gtk_tree_store_new (TEST_N_COLUMNS,
 	                                               G_TYPE_STRING,
