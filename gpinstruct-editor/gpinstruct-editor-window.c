@@ -1467,7 +1467,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 				{
 					/*GPInstructLessonDiscussion *lesson_discussion = GPINSTRUCT_LESSON_DISCUSSION (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Discussion: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Discussion: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1479,7 +1479,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 				{
 					/*GPInstructLessonReading *lesson_reading = GPINSTRUCT_LESSON_READING (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Reading: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Reading: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1491,7 +1491,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 				{
 					/*GPInstructLessonTestMultiChoice *lesson_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Test (Multi-Choice): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Test (Multi-Choice): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1503,7 +1503,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 				{
 					/*GPInstructLessonTestWordPool *lesson_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Test (Word Pool): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Test (Word Pool): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1515,7 +1515,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 				{
 					/*GPInstructLessonTestOrder *lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Test (Order): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Test (Order): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1527,7 +1527,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 				{
 					/*GPInstructLessonTestText *lesson_test_text = GPINSTRUCT_LESSON_TEST_TEXT (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Test (Text): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Test (Text): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1539,7 +1539,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 				{
 					/*GPInstructLessonTestScrambled *lesson_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (lesson_element);*/
 
-					title = g_strdup_printf (_("Lesson Test (Scrambled): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
+					title = g_strdup_printf (_("Test (Scrambled): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element));
 					gtk_tree_store_append (priv->store, &iterLessonElement, &iterLesson);
 					gtk_tree_store_set (priv->store, &iterLessonElement,
 					                    TITLE_COLUMN, title,
@@ -1570,7 +1570,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 						{
 							/*GPInstructLessonDiscussion *lesson_discussion = GPINSTRUCT_LESSON_DISCUSSION (lesson_element_group);*/
 
-							title = g_strdup_printf (_("Lesson Discussion: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
+							title = g_strdup_printf (_("Discussion: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (priv->store, &iterLessonElement, &iterLessonElementGroup);
 							gtk_tree_store_set (priv->store, &iterLessonElement,
 							                    TITLE_COLUMN, title,
@@ -1582,7 +1582,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 						{
 							/*GPInstructLessonReading *lesson_reading = GPINSTRUCT_LESSON_READING (lesson_element_group);*/
 
-							title = g_strdup_printf (_("Lesson Reading: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
+							title = g_strdup_printf (_("Reading: \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (priv->store, &iterLessonElement, &iterLessonElementGroup);
 							gtk_tree_store_set (priv->store, &iterLessonElement,
 							                    TITLE_COLUMN, title,
@@ -1594,7 +1594,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 						{
 							/*GPInstructLessonTestMultiChoice *lesson_test_multi_choice = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE (lesson_element_group);*/
 
-							title = g_strdup_printf (_("Lesson Test (Multi-Choice): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
+							title = g_strdup_printf (_("Test (Multi-Choice): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (priv->store, &iterLessonElement, &iterLessonElementGroup);
 							gtk_tree_store_set (priv->store, &iterLessonElement,
 							                    TITLE_COLUMN, title,
@@ -1606,7 +1606,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 						{
 							/*GPInstructLessonTestWordPool *lesson_test_word_pool = GPINSTRUCT_LESSON_TEST_WORD_POOL (lesson_element_group);*/
 
-							title = g_strdup_printf (_("Lesson Test (Word Pool): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
+							title = g_strdup_printf (_("Test (Word Pool): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (priv->store, &iterLessonElement, &iterLessonElementGroup);
 							gtk_tree_store_set (priv->store, &iterLessonElement,
 							                    TITLE_COLUMN, title,
@@ -1618,7 +1618,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 						{
 							/*GPInstructLessonTestOrder *lesson_test_order = GPINSTRUCT_LESSON_TEST_ORDER (lesson_element_group);*/
 
-							title = g_strdup_printf (_("Lesson Test (Order): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
+							title = g_strdup_printf (_("Test (Order): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (priv->store, &iterLessonElement, &iterLessonElementGroup);
 							gtk_tree_store_set (priv->store, &iterLessonElement,
 							                    TITLE_COLUMN, title,
@@ -1630,7 +1630,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 						{
 							/*GPInstructLessonTestText *lesson_test_text = GPINSTRUCT_LESSON_TEST_TEXT (lesson_element_group);*/
 
-							title = g_strdup_printf (_("Lesson Test (Text): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
+							title = g_strdup_printf (_("Test (Text): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (priv->store, &iterLessonElement, &iterLessonElementGroup);
 							gtk_tree_store_set (priv->store, &iterLessonElement,
 							                    TITLE_COLUMN, title,
@@ -1642,7 +1642,7 @@ gpinstruct_editor_window_update_tree_store (GPInstructEditorWindow *window,
 						{
 							/*GPInstructLessonTestScrambled *lesson_test_scrambled = GPINSTRUCT_LESSON_TEST_SCRAMBLED (lesson_element_group);*/
 
-							title = g_strdup_printf (_("Lesson Test (Scrambled): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
+							title = g_strdup_printf (_("Test (Scrambled): \"%s\""), gpinstruct_lesson_element_get_title (lesson_element_group));
 							gtk_tree_store_append (priv->store, &iterLessonElement, &iterLessonElementGroup);
 							gtk_tree_store_set (priv->store, &iterLessonElement,
 							                    TITLE_COLUMN, title,
