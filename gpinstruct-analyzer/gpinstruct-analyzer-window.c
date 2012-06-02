@@ -453,7 +453,9 @@ gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow *window)
 	if (priv->analyzer == NULL)
 		return FALSE;
 
-	gtk_widget_destroy (priv->view);
+	if (priv->view)
+		gtk_widget_destroy (priv->view);
+	priv->view = NULL;
 
 	g_object_unref (priv->analyzer);
 
