@@ -745,8 +745,8 @@ static xmlNodePtr
 add_discussion (GPInstructLessonDiscussion *discussion,
                 xmlNodePtr parent_node)
 {
-	xmlNodePtr node = xmlNewChild (parent_node, NULL, BAD_CAST "discussion",
-	                               BAD_CAST gpinstruct_lesson_discussion_get_text (discussion));
+	xmlNodePtr node = xmlNewTextChild (parent_node, NULL, BAD_CAST "discussion",
+	                                   BAD_CAST gpinstruct_lesson_discussion_get_text (discussion));
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (discussion)));
 
@@ -757,8 +757,8 @@ static xmlNodePtr
 add_reading (GPInstructLessonReading *reading,
              xmlNodePtr parent_node)
 {
-	xmlNodePtr node = xmlNewChild (parent_node, NULL, BAD_CAST "reading",
-	                               BAD_CAST gpinstruct_lesson_reading_get_text (reading));
+	xmlNodePtr node = xmlNewTextChild (parent_node, NULL, BAD_CAST "reading",
+	                                   BAD_CAST gpinstruct_lesson_reading_get_text (reading));
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (reading)));
 
@@ -778,8 +778,8 @@ add_multi_choice_test (GPInstructLessonTestMultiChoice *test,
 
 	xmlNodePtr question_node;
 
-	xmlNodePtr node = xmlNewChild (parent_node, NULL,
-	                               BAD_CAST "test-multi-choice", NULL);
+	xmlNodePtr node = xmlNewTextChild (parent_node, NULL,
+	                                   BAD_CAST "test-multi-choice", NULL);
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
 	xmlSetProp (node, BAD_CAST "id",
@@ -787,8 +787,8 @@ add_multi_choice_test (GPInstructLessonTestMultiChoice *test,
 	xmlSetProp (node, BAD_CAST "explain",
 	            gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test))?BAD_CAST "true":BAD_CAST "false");
 
-	xmlNewChild (node, NULL, BAD_CAST "directions",
-	             BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
+	xmlNewTextChild (node, NULL, BAD_CAST "directions",
+	                 BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
 
 	questions = gpinstruct_lesson_test_multi_choice_get_questions (test);
 	curr_questions = questions;
@@ -797,16 +797,16 @@ add_multi_choice_test (GPInstructLessonTestMultiChoice *test,
 	{
 		curr_question = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_QUESTION (curr_questions->data);
 
-		question_node = xmlNewChild (node, NULL, BAD_CAST "question", NULL);
+		question_node = xmlNewTextChild (node, NULL, BAD_CAST "question", NULL);
 		temp = g_strdup_printf ("%d", gpinstruct_lesson_test_multi_choice_question_get_answer (curr_question));
 		xmlSetProp (question_node, BAD_CAST "answer", BAD_CAST temp);
 		g_free (temp);
 
-		xmlNewChild (question_node, NULL, BAD_CAST "text",
-		             BAD_CAST gpinstruct_lesson_test_multi_choice_question_get_text (curr_question));
+		xmlNewTextChild (question_node, NULL, BAD_CAST "text",
+		                 BAD_CAST gpinstruct_lesson_test_multi_choice_question_get_text (curr_question));
 
-		xmlNewChild (question_node, NULL, BAD_CAST "explanation",
-		             BAD_CAST gpinstruct_lesson_test_multi_choice_question_get_explanation (curr_question));
+		xmlNewTextChild (question_node, NULL, BAD_CAST "explanation",
+		                 BAD_CAST gpinstruct_lesson_test_multi_choice_question_get_explanation (curr_question));
 
 		choices = gpinstruct_lesson_test_multi_choice_question_get_choices (curr_question);
 		curr_choices = choices;
@@ -815,8 +815,8 @@ add_multi_choice_test (GPInstructLessonTestMultiChoice *test,
 		{
 			curr_choice = curr_choices->data;
 
-			xmlNewChild (question_node, NULL, BAD_CAST "choice",
-			             BAD_CAST curr_choice);
+			xmlNewTextChild (question_node, NULL, BAD_CAST "choice",
+			                 BAD_CAST curr_choice);
 
 			curr_choices = curr_choices->next;
 		}
@@ -844,8 +844,8 @@ add_word_pool_test (GPInstructLessonTestWordPool *test,
 
 	xmlNodePtr question_node;
 
-	xmlNodePtr node = xmlNewChild (parent_node, NULL,
-	                               BAD_CAST "test-word-pool", NULL);
+	xmlNodePtr node = xmlNewTextChild (parent_node, NULL,
+	                                   BAD_CAST "test-word-pool", NULL);
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
 	xmlSetProp (node, BAD_CAST "id",
@@ -853,8 +853,8 @@ add_word_pool_test (GPInstructLessonTestWordPool *test,
 	xmlSetProp (node, BAD_CAST "explain",
 	            gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test))?BAD_CAST "true":BAD_CAST "false");
 
-	xmlNewChild (node, NULL, BAD_CAST "directions",
-	             BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
+	xmlNewTextChild (node, NULL, BAD_CAST "directions",
+	                 BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
 
 	choices = gpinstruct_lesson_test_word_pool_get_choices (test);
 	curr_choices = choices;
@@ -863,7 +863,7 @@ add_word_pool_test (GPInstructLessonTestWordPool *test,
 	{
 		curr_choice = curr_choices->data;
 
-		xmlNewChild (node, NULL, BAD_CAST "choice", BAD_CAST curr_choice);
+		xmlNewTextChild (node, NULL, BAD_CAST "choice", BAD_CAST curr_choice);
 
 		curr_choices = curr_choices->next;
 	}
@@ -877,16 +877,16 @@ add_word_pool_test (GPInstructLessonTestWordPool *test,
 	{
 		curr_question = GPINSTRUCT_LESSON_TEST_WORD_POOL_QUESTION (curr_questions->data);
 
-		question_node = xmlNewChild (node, NULL, BAD_CAST "question", NULL);
+		question_node = xmlNewTextChild (node, NULL, BAD_CAST "question", NULL);
 		temp = g_strdup_printf ("%d", gpinstruct_lesson_test_word_pool_question_get_answer (curr_question));
 		xmlSetProp (question_node, BAD_CAST "answer", BAD_CAST temp);
 		g_free (temp);
 
-		xmlNewChild (question_node, NULL, BAD_CAST "text",
-		             BAD_CAST gpinstruct_lesson_test_word_pool_question_get_text (curr_question));
+		xmlNewTextChild (question_node, NULL, BAD_CAST "text",
+		                 BAD_CAST gpinstruct_lesson_test_word_pool_question_get_text (curr_question));
 
-		xmlNewChild (question_node, NULL, BAD_CAST "explanation",
-		             BAD_CAST gpinstruct_lesson_test_word_pool_question_get_explanation (curr_question));
+		xmlNewTextChild (question_node, NULL, BAD_CAST "explanation",
+		                 BAD_CAST gpinstruct_lesson_test_word_pool_question_get_explanation (curr_question));
 
 		curr_questions = curr_questions->next;
 	}
@@ -908,8 +908,8 @@ add_order_test (GPInstructLessonTestOrder *test,
 
 	xmlNodePtr item_node;
 
-	xmlNodePtr node = xmlNewChild (parent_node, NULL,
-	                               BAD_CAST "test-order", NULL);
+	xmlNodePtr node = xmlNewTextChild (parent_node, NULL,
+	                                   BAD_CAST "test-order", NULL);
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
 	xmlSetProp (node, BAD_CAST "id",
@@ -917,11 +917,11 @@ add_order_test (GPInstructLessonTestOrder *test,
 	xmlSetProp (node, BAD_CAST "explain",
 	            gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test))?BAD_CAST "true":BAD_CAST "false");
 
-	xmlNewChild (node, NULL, BAD_CAST "directions",
-	             BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
+	xmlNewTextChild (node, NULL, BAD_CAST "directions",
+	                 BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
 
-	xmlNewChild (node, NULL, BAD_CAST "explanation",
-	             BAD_CAST gpinstruct_lesson_test_order_get_explanation (test));
+	xmlNewTextChild (node, NULL, BAD_CAST "explanation",
+	                 BAD_CAST gpinstruct_lesson_test_order_get_explanation (test));
 
 	items = gpinstruct_lesson_test_order_get_items (test);
 	curr_items = items;
@@ -930,8 +930,8 @@ add_order_test (GPInstructLessonTestOrder *test,
 	{
 		curr_item = GPINSTRUCT_LESSON_TEST_ORDER_ITEM (curr_items->data);
 
-		item_node = xmlNewChild (node, NULL, BAD_CAST "item",
-		                         BAD_CAST gpinstruct_lesson_test_order_item_get_text (curr_item));
+		item_node = xmlNewTextChild (node, NULL, BAD_CAST "item",
+		                             BAD_CAST gpinstruct_lesson_test_order_item_get_text (curr_item));
 		temp = g_strdup_printf ("%d", gpinstruct_lesson_test_order_item_get_answer (curr_item));
 		xmlSetProp (item_node, BAD_CAST "answer", BAD_CAST temp);
 		g_free (temp);
@@ -954,8 +954,8 @@ add_text_test (GPInstructLessonTestText *test,
 
 	xmlNodePtr question_node;
 
-	xmlNodePtr node = xmlNewChild (parent_node, NULL,
-	                               BAD_CAST "test-text", NULL);
+	xmlNodePtr node = xmlNewTextChild (parent_node, NULL,
+	                                   BAD_CAST "test-text", NULL);
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
 	xmlSetProp (node, BAD_CAST "id",
@@ -963,8 +963,8 @@ add_text_test (GPInstructLessonTestText *test,
 	xmlSetProp (node, BAD_CAST "explain",
 	            gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test))?BAD_CAST "true":BAD_CAST "false");
 
-	xmlNewChild (node, NULL, BAD_CAST "directions",
-	             BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
+	xmlNewTextChild (node, NULL, BAD_CAST "directions",
+	                 BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
 
 	questions = gpinstruct_lesson_test_text_get_questions (test);
 	curr_questions = questions;
@@ -973,15 +973,15 @@ add_text_test (GPInstructLessonTestText *test,
 	{
 		curr_question = GPINSTRUCT_LESSON_TEST_TEXT_QUESTION (curr_questions->data);
 
-		question_node = xmlNewChild (node, NULL, BAD_CAST "question", NULL);
+		question_node = xmlNewTextChild (node, NULL, BAD_CAST "question", NULL);
 		xmlSetProp (question_node, BAD_CAST "answer",
 		            BAD_CAST gpinstruct_lesson_test_text_question_get_answer (curr_question));
 
-		xmlNewChild (question_node, NULL, BAD_CAST "text",
-		             BAD_CAST gpinstruct_lesson_test_text_question_get_text (curr_question));
+		xmlNewTextChild (question_node, NULL, BAD_CAST "text",
+		                 BAD_CAST gpinstruct_lesson_test_text_question_get_text (curr_question));
 
-		xmlNewChild (question_node, NULL, BAD_CAST "explanation",
-		             BAD_CAST gpinstruct_lesson_test_text_question_get_explanation (curr_question));
+		xmlNewTextChild (question_node, NULL, BAD_CAST "explanation",
+		                 BAD_CAST gpinstruct_lesson_test_text_question_get_explanation (curr_question));
 
 		curr_questions = curr_questions->next;
 	}
@@ -1001,8 +1001,8 @@ add_scrambled_test (GPInstructLessonTestScrambled *test,
 
 	xmlNodePtr question_node;
 
-	xmlNodePtr node = xmlNewChild (parent_node, NULL,
-	                               BAD_CAST "test-scrambled", NULL);
+	xmlNodePtr node = xmlNewTextChild (parent_node, NULL,
+	                                   BAD_CAST "test-scrambled", NULL);
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (test)));
 	xmlSetProp (node, BAD_CAST "id",
@@ -1010,8 +1010,8 @@ add_scrambled_test (GPInstructLessonTestScrambled *test,
 	xmlSetProp (node, BAD_CAST "explain",
 	            gpinstruct_lesson_test_get_explain (GPINSTRUCT_LESSON_TEST (test))?BAD_CAST "true":BAD_CAST "false");
 
-	xmlNewChild (node, NULL, BAD_CAST "directions",
-	             BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
+	xmlNewTextChild (node, NULL, BAD_CAST "directions",
+	                 BAD_CAST gpinstruct_lesson_test_get_directions (GPINSTRUCT_LESSON_TEST (test)));
 
 	questions = gpinstruct_lesson_test_scrambled_get_questions (test);
 	curr_questions = questions;
@@ -1020,15 +1020,15 @@ add_scrambled_test (GPInstructLessonTestScrambled *test,
 	{
 		curr_question = GPINSTRUCT_LESSON_TEST_SCRAMBLED_QUESTION (curr_questions->data);
 
-		question_node = xmlNewChild (node, NULL, BAD_CAST "question", NULL);
+		question_node = xmlNewTextChild (node, NULL, BAD_CAST "question", NULL);
 		xmlSetProp (question_node, BAD_CAST "answer",
 		            BAD_CAST gpinstruct_lesson_test_scrambled_question_get_answer (curr_question));
 
-		xmlNewChild (question_node, NULL, BAD_CAST "text",
-		             BAD_CAST gpinstruct_lesson_test_scrambled_question_get_text (curr_question));
+		xmlNewTextChild (question_node, NULL, BAD_CAST "text",
+		                 BAD_CAST gpinstruct_lesson_test_scrambled_question_get_text (curr_question));
 
-		xmlNewChild (question_node, NULL, BAD_CAST "explanation",
-		             BAD_CAST gpinstruct_lesson_test_scrambled_question_get_explanation (curr_question));
+		xmlNewTextChild (question_node, NULL, BAD_CAST "explanation",
+		                 BAD_CAST gpinstruct_lesson_test_scrambled_question_get_explanation (curr_question));
 
 		curr_questions = curr_questions->next;
 	}
@@ -1047,8 +1047,8 @@ add_group (GPInstructLessonElementGroup *group,
 	GList *lesson_elements;
 	GList *curr_lesson_elements;
 
-	xmlNodePtr current_node = xmlNewChild (parent_node, NULL,
-	                                       BAD_CAST "group", NULL);
+	xmlNodePtr current_node = xmlNewTextChild (parent_node, NULL,
+	                                           BAD_CAST "group", NULL);
 	xmlSetProp (current_node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (group)));
 	xmlSetProp (current_node, BAD_CAST "single-score",
@@ -1056,8 +1056,8 @@ add_group (GPInstructLessonElementGroup *group,
 	xmlSetProp (current_node, BAD_CAST "single-directions",
 	            gpinstruct_lesson_element_group_get_single_directions (group)?BAD_CAST "true":BAD_CAST "false");
 
-	xmlNewChild (current_node, NULL, BAD_CAST "directions",
-	             BAD_CAST gpinstruct_lesson_element_group_get_directions (group));
+	xmlNewTextChild (current_node, NULL, BAD_CAST "directions",
+	                 BAD_CAST gpinstruct_lesson_element_group_get_directions (group));
 
 	lesson_elements = gpinstruct_lesson_element_group_get_lesson_elements (group);
 	curr_lesson_elements = lesson_elements;
@@ -1105,8 +1105,8 @@ add_lesson (GPInstructLesson *lesson,
 	GList *lesson_elements;
 	GList *curr_lesson_elements;
 
-	xmlNodePtr current_node = xmlNewChild (parent_node, NULL,
-	                                       BAD_CAST "lesson", NULL);
+	xmlNodePtr current_node = xmlNewTextChild (parent_node, NULL,
+	                                           BAD_CAST "lesson", NULL);
 	xmlSetProp (current_node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_lesson_get_title (lesson));
 	xmlSetProp (current_node, BAD_CAST "single-score",
@@ -1159,8 +1159,8 @@ add_category (GPInstructCategory *category,
 	GPInstructLesson *curr_lesson;
 	GList *lessons, *curr_lessons;
 
-	xmlNodePtr node = xmlNewChild (parent_node, NULL,
-	                               BAD_CAST "category", NULL);
+	xmlNodePtr node = xmlNewTextChild (parent_node, NULL,
+	                                   BAD_CAST "category", NULL);
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_category_get_title (category));
 
