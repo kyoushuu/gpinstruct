@@ -171,6 +171,273 @@ file_add_action (GtkAction *action,
 
 
 static void
+file_save_action (GtkAction *action,
+                  gpointer   user_data)
+{
+	GPInstructAnalyzerWindow *window = GPINSTRUCT_ANALYZER_WINDOW (user_data);
+	GPInstructAnalyzerWindowPrivate *priv = window->priv;
+
+	GtkWidget *dialog = gtk_file_chooser_dialog_new (_("Save"),
+	                                                 GTK_WINDOW (window),
+	                                                 GTK_FILE_CHOOSER_ACTION_SAVE,
+	                                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	                                                 GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+	                                                 NULL);
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), "Untitled.csv");
+
+	GtkFileFilter *filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("Text CSV"));
+	gtk_file_filter_add_pattern (filter, "*.csv");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		GError *error = NULL;
+		GFile *file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
+		GFileOutputStream *output = g_file_replace (file, NULL, TRUE,
+		                                            G_FILE_CREATE_REPLACE_DESTINATION,
+		                                            NULL, &error);
+
+		if (!error)
+		{
+			char *buffer, *buffer2;
+
+
+			GPInstructProject *project = gpinstruct_log_analyzer_get_project (priv->analyzer)->object;
+
+			GList *categories = gpinstruct_project_get_categories (project);
+			GList *current_category = categories;
+
+			while (current_category && !error)
+			{
+				GPInstructCategory *category = (GPInstructCategory*) current_category->data;
+
+				GList *lessons = gpinstruct_category_get_lessons (category);
+				GList *current_lesson = lessons;
+
+				while (current_lesson && !error)
+				{
+					GPInstructLesson *lesson = (GPInstructLesson*) current_lesson->data;
+
+					GList *elements = gpinstruct_lesson_get_lesson_elements (lesson);
+					GList *current_element = elements;
+
+					buffer2 = g_strescape (gpinstruct_lesson_get_title (lesson), NULL);
+
+					buffer = g_strconcat (", \"", buffer2, "\"", NULL);
+
+					g_free (buffer2);
+
+					g_output_stream_write (G_OUTPUT_STREAM (output),
+										   buffer, strlen (buffer),
+										   NULL, &error);
+
+					g_free (buffer);
+
+					int num = 0;
+
+					while (current_element && !error)
+					{
+						if (GPINSTRUCT_IS_LESSON_TEST (current_element->data) || GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (current_element->data))
+						{
+							if (num)
+							{
+								buffer = ",";
+
+								g_output_stream_write (G_OUTPUT_STREAM (output),
+								                       buffer, strlen (buffer),
+								                       NULL, &error);
+							}
+
+							num++;
+						}
+
+						current_element = current_element->next;
+					}
+
+					g_list_free (elements);
+
+					current_lesson = current_lesson->next;
+				}
+
+				g_list_free (lessons);
+
+				current_category = current_category->next;
+			}
+
+			buffer = "\n";
+
+			g_output_stream_write (G_OUTPUT_STREAM (output),
+			                       buffer, strlen (buffer),
+			                       NULL, &error);
+
+
+			current_category = categories;
+
+			while (current_category && !error)
+			{
+				GPInstructCategory *category = (GPInstructCategory*) current_category->data;
+
+				GList *lessons = gpinstruct_category_get_lessons (category);
+				GList *current_lesson = lessons;
+
+				while (current_lesson && !error)
+				{
+					GPInstructLesson *lesson = (GPInstructLesson*) current_lesson->data;
+
+					GList *elements = gpinstruct_lesson_get_lesson_elements (lesson);
+					GList *current_element = elements;
+
+					while (current_element && !error)
+					{
+						if (GPINSTRUCT_IS_LESSON_TEST (current_element->data) || GPINSTRUCT_IS_LESSON_ELEMENT_GROUP (current_element->data))
+						{
+							buffer2 = g_strescape (gpinstruct_lesson_element_get_title (GPINSTRUCT_LESSON_ELEMENT (current_element->data)), NULL);
+
+							buffer = g_strconcat (", \"", buffer2, "\"", NULL);
+
+							g_free (buffer2);
+
+							g_output_stream_write (G_OUTPUT_STREAM (output),
+												   buffer, strlen (buffer),
+												   NULL, &error);
+
+							g_free (buffer);
+						}
+
+						current_element = current_element->next;
+					}
+
+					g_list_free (elements);
+
+					current_lesson = current_lesson->next;
+				}
+
+				g_list_free (lessons);
+
+				current_category = current_category->next;
+			}
+
+			g_list_free (categories);
+
+			buffer = "\n";
+
+			g_output_stream_write (G_OUTPUT_STREAM (output),
+			                       buffer, strlen (buffer),
+			                       NULL, &error);
+
+
+			GList *examinees = gpinstruct_log_analyzer_get_examinees (priv->analyzer);
+			GList *current_examinees = examinees;
+			guint score;
+
+			while (current_examinees && !error)
+			{
+				GPInstructLogAnalyzerExaminee *examinee = current_examinees->data;
+
+				buffer = g_strdup_printf ("%s, %s",
+				                          examinee->last_name,
+				                          examinee->first_name);
+
+				buffer2 = g_strescape (buffer, NULL);
+
+				g_free (buffer);
+
+				buffer = g_strconcat ("\"", buffer2, "\"", NULL);
+
+				g_free (buffer2);
+
+				g_output_stream_write (G_OUTPUT_STREAM (output),
+				                       buffer, strlen (buffer),
+				                       NULL, &error);
+
+				g_free (buffer);
+
+
+				GPInstructLogAnalyzerProject *project = examinee->project;
+
+				GList *categories = project->categories;
+
+				while (categories && !error)
+				{
+					GPInstructLogAnalyzerCategory *category = (GPInstructLogAnalyzerCategory*) categories->data;
+
+					GList *lessons = category->lessons;
+
+					while (lessons && !error)
+					{
+						GPInstructLogAnalyzerLesson *lesson = (GPInstructLogAnalyzerLesson*) lessons->data;
+
+						GList *elements = lesson->elements;
+
+						while (elements && !error)
+						{
+							if (((GPInstructLogAnalyzerLessonElement*) elements->data)->is_test)
+							{
+								score = ((GPInstructLogAnalyzerLessonElement*) elements->data)->test->items_correctly_answered;
+							}
+							else
+							{
+								score = ((GPInstructLogAnalyzerLessonElement*) elements->data)->group->items_correctly_answered;
+							}
+
+							buffer = g_strdup_printf (", %u", score);
+
+							g_output_stream_write (G_OUTPUT_STREAM (output),
+											       buffer, strlen (buffer),
+											       NULL, &error);
+
+							g_free (buffer);
+
+							elements = elements->next;
+						}
+
+						lessons = lessons->next;
+					}
+
+					categories = categories->next;
+				}
+
+
+				buffer = "\n";
+
+				g_output_stream_write (G_OUTPUT_STREAM (output),
+				                       buffer, strlen (buffer),
+				                       NULL, &error);
+
+				current_examinees = current_examinees->next;
+			}
+
+			g_list_free (examinees);
+		}
+
+		if (error)
+		{
+			g_critical (_("Error: %s\n"), error->message);
+			g_error_free (error);
+			error = NULL;
+		}
+
+		if (output)
+		{
+			g_output_stream_close (G_OUTPUT_STREAM (output),
+			                       NULL, &error);
+			if (error)
+			{
+				g_critical (_("Error: %s\n"), error->message);
+				g_error_free (error);
+			}
+		}
+
+		g_object_unref (file);
+	}
+
+	gtk_widget_destroy (dialog);
+}
+
+
+static void
 file_close_action (GtkAction *action,
                    gpointer   user_data)
 {
@@ -257,6 +524,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 		{"file", NULL, _("_File")},
 		{"file-new", GTK_STOCK_NEW, NULL, "<Control>N", NULL, G_CALLBACK (file_new_action)},
 		{"file-add", GTK_STOCK_ADD, _("Add Log File"), "<Control>A", NULL, G_CALLBACK (file_add_action)},
+		{"file-save", GTK_STOCK_SAVE, _("Save"), "<Control>S", NULL, G_CALLBACK (file_save_action)},
 		{"file-close", GTK_STOCK_CLOSE, NULL, "<Control>W", NULL, G_CALLBACK (file_close_action)},
 		{"file-quit", GTK_STOCK_QUIT, NULL, "<Control>Q", NULL, G_CALLBACK (file_quit_action)},
 		{"edit", NULL, _("_Edit")},
@@ -271,6 +539,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 		"    <menu name=\"FileMenu\" action=\"file\">"
 		"      <menuitem name=\"New\" action=\"file-new\" />"
 		"      <menuitem name=\"Add Log File\" action=\"file-add\" />"
+		"      <menuitem name=\"Save\" action=\"file-save\" />"
 		"      <separator/>"
 		"      <menuitem name=\"Close\" action=\"file-close\" />"
 		"      <separator/>"
@@ -293,6 +562,7 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 		"      <separator/>"
 		"      <toolitem name=\"New\" action=\"file-new\" />"
 		"      <toolitem name=\"Add Log File\" action=\"file-add\" />"
+		"      <toolitem name=\"Save\" action=\"file-save\" />"
 		"      <separator/>"
 		"    </placeholder>"
 		"  </toolbar>"
@@ -312,6 +582,9 @@ gpinstruct_analyzer_window_init (GPInstructAnalyzerWindow *object)
 	gtk_action_group_add_actions (priv->action_group, actions, G_N_ELEMENTS (actions), object);
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-add"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-save"),
 	                          FALSE);
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
@@ -436,6 +709,9 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window,
 	                                                       "file-add"),
 	                          TRUE);
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-save"),
+	                          TRUE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),
 	                          TRUE);
 
@@ -463,6 +739,9 @@ gpinstruct_analyzer_window_close_session (GPInstructAnalyzerWindow *window)
 
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-add"),
+	                          FALSE);
+	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
+	                                                       "file-save"),
 	                          FALSE);
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-close"),

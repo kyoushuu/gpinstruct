@@ -7,6 +7,7 @@ AM_CPPFLAGS = \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
 	-I$(top_srcdir) \
+	$(GIO_CFLAGS) \
 	$(GTK_CFLAGS)
 
 lib_LTLIBRARIES =  \
@@ -30,7 +31,9 @@ libgpinstruct_analyzer_la_LDFLAGS = \
 	-no-undefined \
 	-version-info $(LT_VERSION_INFO)
 
-libgpinstruct_analyzer_la_LIBADD = $(GTK_LIBS) \
+libgpinstruct_analyzer_la_LIBADD = \
+	$(GIO_LIBS) \
+	$(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	$(top_builddir)/compat/libcompat-glib.la \
