@@ -17,7 +17,7 @@ VS_VERSION_INFO VERSIONINFO
         VALUE "FileDescription", "GPInstruct @GPINSTRUCT_VERSION@"
         VALUE "FileVersion", "@GPINSTRUCT_VERSION@.0"
 	VALUE "InternalName", "libgpinstruct-@LT_CURRENT_MINUS_AGE@"
-        VALUE "LegalCopyright", "Copyright © 2011 Arnel A. Borja"
+        VALUE "LegalCopyright", "Copyright © 2011-2012  Arnel A. Borja"
         VALUE "OriginalFilename", "libgpinstruct-@LT_CURRENT_MINUS_AGE@.dll"
         VALUE "ProductName", "GPInstruct"
         VALUE "ProductVersion", "@GPINSTRUCT_VERSION@.0"

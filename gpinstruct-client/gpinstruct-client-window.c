@@ -1,6 +1,6 @@
 /*
  * GPInstruct - Programmed Instruction
- * Copyright (C) 2011 - Arnel A. Borja (kyoushuu@yahoo.com)
+ * Copyright (C) 2011-2012  Arnel A. Borja (kyoushuu@yahoo.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -812,7 +812,7 @@ about_button_clicked (GtkButton *button,
 		                  "title", _("About GPInstruct Editor"),
 		                  "comments", _("Answer GPInstruct projects from a server"),
 		                  "website", PACKAGE_URL,
-		                  "copyright", _("Copyright (c) 2011  Arnel A. Borja"),
+		                  "copyright", _("Copyright (c) 2011-2012  Arnel A. Borja"),
 #if GTK_MAJOR_VERSION >= 3
 		                  "license-type", GTK_LICENSE_GPL_3_0,
 #endif
