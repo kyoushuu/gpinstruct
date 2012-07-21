@@ -15,7 +15,7 @@ AM_CPPFLAGS = \
 	$(LIBSOUP_CFLAGS) \
 	$(LIBSOUP_SOAP_CFLAGS)
 
-lib_LTLIBRARIES =  \
+lib_LTLIBRARIES = \
 	libgpinstruct-server.la
 
 libgpinstruct_server_la_SOURCES = \
@@ -24,14 +24,16 @@ gpinstruct-server-window.h \
 	gpinstruct-server.h \
 	gpinstruct-server-session.h \
 	gpinstruct-server-session.c
-libgpinstruct_server_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Server\" \
+libgpinstruct_server_la_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"GPInstruct-Server\" \
 	$(AM_CPPFLAGS)
 
 libgpinstruct_server_la_LDFLAGS = \
 	-no-undefined \
 	-version-info $(LT_VERSION_INFO)
 
-libgpinstruct_server_la_LIBADD = $(GTK_LIBS) \
+libgpinstruct_server_la_LIBADD = \
+	$(GTK_LIBS) \
 	$(LIBXML_LIBS) \
 	$(LIBSOUP_LIBS) \
 	$(LIBSOUP_SOAP_LIBS) \
@@ -39,12 +41,14 @@ libgpinstruct_server_la_LIBADD = $(GTK_LIBS) \
 	$(top_builddir)/compat/libcompat-glib.la \
 	$(top_builddir)/compat/libcompat-gtk.la
 
-bin_PROGRAMS = gpinstruct-server
+bin_PROGRAMS = \
+	gpinstruct-server
 
 gpinstruct_server_SOURCES = \
 	main.c
 
-gpinstruct_server_LDADD = $(GTK_LIBS) \
+gpinstruct_server_LDADD = \
+	$(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	libgpinstruct-server.la
 

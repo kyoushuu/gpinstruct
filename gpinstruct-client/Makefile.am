@@ -24,7 +24,8 @@ libgpinstruct_client_la_SOURCES = \
 	gpinstruct-client-window.h \
 	gpinstruct-client-window.c
 
-libgpinstruct_client_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Client\" \
+libgpinstruct_client_la_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"GPInstruct-Client\" \
 	$(AM_CPPFLAGS)
 
 libgpinstruct_client_la_LDFLAGS = \
@@ -41,10 +42,10 @@ libgpinstruct_client_la_LIBADD = \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	$(top_builddir)/compat/libcompat-gtk.la
 
-bin_PROGRAMS =  \
+bin_PROGRAMS = \
 	gpinstruct-client
 
-gpinstruct_client_SOURCES =  \
+gpinstruct_client_SOURCES = \
 	main.c
 
 gpinstruct_client_LDADD = \

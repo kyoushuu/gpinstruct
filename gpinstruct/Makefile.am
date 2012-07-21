@@ -15,10 +15,10 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(LIBXML_CFLAGS)
 
-lib_LTLIBRARIES =  \
+lib_LTLIBRARIES = \
 	libgpinstruct.la
 
-libgpinstruct_la_SOURCES =  \
+libgpinstruct_la_SOURCES = \
 	gpinstruct.c \
 	gpinstruct.h \
 	gpinstruct-category.c \
@@ -66,14 +66,16 @@ libgpinstruct_la_SOURCES =  \
 	gpinstruct-project.c \
 	gpinstruct-project.h
 
-libgpinstruct_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct\" \
+libgpinstruct_la_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"GPInstruct\" \
 	$(AM_CPPFLAGS)
 
 libgpinstruct_la_LDFLAGS = \
 	-no-undefined \
 	-version-info $(LT_VERSION_INFO)
 
-libgpinstruct_la_LIBADD = $(GOBJECT_LIBS) \
+libgpinstruct_la_LIBADD = \
+	$(GOBJECT_LIBS) \
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(LIBXML_LIBS) \

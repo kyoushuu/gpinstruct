@@ -12,10 +12,10 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	$(GTK_CFLAGS)
 
-lib_LTLIBRARIES =  \
+lib_LTLIBRARIES = \
 	libgpinstruct-editor.la
 
-libgpinstruct_editor_la_SOURCES =  \
+libgpinstruct_editor_la_SOURCES = \
 	gpinstruct-editor.h \
 	gpinstruct-object-editor.h \
 	gpinstruct-object-editor.c \
@@ -44,24 +44,28 @@ libgpinstruct_editor_la_SOURCES =  \
 	gpinstruct-editor-window.h \
 	gpinstruct-editor-window.c
 
-libgpinstruct_editor_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-Editor\" \
+libgpinstruct_editor_la_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"GPInstruct-Editor\" \
 	$(AM_CPPFLAGS)
 
 libgpinstruct_editor_la_LDFLAGS = \
 	-no-undefined \
 	-version-info $(LT_VERSION_INFO)
 
-libgpinstruct_editor_la_LIBADD = $(GTK_LIBS) \
+libgpinstruct_editor_la_LIBADD = \
+	$(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	$(top_builddir)/compat/libcompat-gtk.la
 
-bin_PROGRAMS = gpinstruct-editor
+bin_PROGRAMS = \
+	gpinstruct-editor
 
-gpinstruct_editor_SOURCES =  \
+gpinstruct_editor_SOURCES = \
 	main.c
 
-gpinstruct_editor_LDADD = $(GTK_LIBS) \
+gpinstruct_editor_LDADD = \
+	$(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
 	libgpinstruct-editor.la

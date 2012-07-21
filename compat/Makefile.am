@@ -9,7 +9,7 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(GTK_CFLAGS)
 
-noinst_LTLIBRARIES =  \
+noinst_LTLIBRARIES = \
 	libcompat-glib.la \
 	libcompat-gtk.la
 

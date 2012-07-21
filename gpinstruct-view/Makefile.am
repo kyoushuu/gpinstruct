@@ -13,10 +13,10 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS) \
 	$(LIBXML_CFLAGS)
 
-lib_LTLIBRARIES =  \
+lib_LTLIBRARIES = \
 	libgpinstruct-view.la
 
-libgpinstruct_view_la_SOURCES =  \
+libgpinstruct_view_la_SOURCES = \
 	gpinstruct-view.c \
 	gpinstruct-view.h \
 	gpinstruct-view-private.h \
@@ -53,25 +53,29 @@ libgpinstruct_view_la_SOURCES =  \
 	gtktextbuffermarkup.c \
 	gtktextbuffermarkup.h
 
-libgpinstruct_view_la_CPPFLAGS = -DG_LOG_DOMAIN=\"GPInstruct-View\" \
+libgpinstruct_view_la_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"GPInstruct-View\" \
 	$(AM_CPPFLAGS)
 
 libgpinstruct_view_la_LDFLAGS = \
 	-no-undefined \
 	-version-info $(LT_VERSION_INFO)
 
-libgpinstruct_view_la_LIBADD = $(GTK_LIBS) \
+libgpinstruct_view_la_LIBADD = \
+	$(GTK_LIBS) \
 	$(LIBXML_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	$(top_builddir)/compat/libcompat-glib.la \
 	$(top_builddir)/compat/libcompat-gtk.la
 
-bin_PROGRAMS = gpinstruct-view
+bin_PROGRAMS = \
+	gpinstruct-view
 
 gpinstruct_view_SOURCES = \
 	main.c
 
-gpinstruct_view_LDADD = $(GTK_LIBS) \
+gpinstruct_view_LDADD = \
+	$(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
 	libgpinstruct-view.la
 
