@@ -566,13 +566,6 @@ parse_group (xmlNode *node)
 		xmlFree (temp);
 	}
 
-	temp = xmlGetProp (node, BAD_CAST "directions");
-	if (temp)
-	{
-		gpinstruct_lesson_element_group_set_directions (group, (gchar*) temp);
-		xmlFree (temp);
-	}
-
 	temp = xmlGetProp (node, BAD_CAST "single-score");
 	if (temp)
 	{
@@ -593,7 +586,16 @@ parse_group (xmlNode *node)
 	{
 		if (current_node->type == XML_ELEMENT_NODE)
 		{
-			if (xmlStrEqual (current_node->name, BAD_CAST "test-multi-choice"))
+			if (xmlStrEqual (current_node->name, BAD_CAST "directions"))
+			{
+				temp = xmlNodeGetContent (current_node);
+				if (temp)
+				{
+					gpinstruct_lesson_element_group_set_directions (group, (gchar*) temp);
+					xmlFree (temp);
+				}
+			}
+			else if (xmlStrEqual (current_node->name, BAD_CAST "test-multi-choice"))
 				gpinstruct_lesson_element_group_add_lesson_element (group,
 				                                                    GPINSTRUCT_LESSON_ELEMENT (parse_multi_choice_test (current_node)));
 			else if (xmlStrEqual (current_node->name, BAD_CAST "test-word-pool"))
