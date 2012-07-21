@@ -705,6 +705,8 @@ gpinstruct_analyzer_window_new_session (GPInstructAnalyzerWindow *window,
 
 	priv->analyzer = gpinstruct_log_analyzer_new (project);
 
+	g_object_unref (project);
+
 	gtk_action_set_sensitive (gtk_action_group_get_action (priv->action_group,
 	                                                       "file-add"),
 	                          TRUE);
