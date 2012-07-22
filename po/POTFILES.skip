@@ -1,0 +1,5 @@
+data/gpinstruct-view.desktop.in
+data/gpinstruct-editor.desktop.in
+data/gpinstruct-analyzer.desktop.in
+data/gpinstruct-server.desktop.in
+data/gpinstruct-client.desktop.in

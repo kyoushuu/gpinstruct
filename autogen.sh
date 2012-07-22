@@ -1,34 +1,23 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
 
-test -n "$srcdir" || srcdir=`dirname "$0"`
-test -n "$srcdir" || srcdir=.
+srcdir=`dirname $0`
+test -z "$srcdir" && srcdir=.
 
-olddir=`pwd`
-cd "$srcdir"
+PKG_NAME="gpinstruct"
 
-mkdir -p m4
+(test -f $srcdir/configure.ac \
+  && test -f $srcdir/README \
+  && test -d $srcdir/gpinstruct) || {
+    echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
+    echo " top-level $PKG_NAME directory"
+    exit 1
+}
 
-GTKDOCIZE=`which gtkdocize`
-if test -z $GTKDOCIZE; then
-        echo "*** No GTK-Doc found, please install it ***"
-        exit 1
-else
-        gtkdocize || exit $?
-fi
+which gnome-autogen.sh || {
+    echo "You need to install gnome-common from GNOME Git (or from"
+    echo "your OS vendor's package manager)."
+    exit 1
+}
 
-# README and INSTALL are required by automake, but may be deleted by clean
-# up rules. to get automake to work, simply touch these here, they will be
-# regenerated from their corresponding *.in files by ./configure anyway.
-touch README INSTALL
-
-AUTORECONF=`which autoreconf`
-if test -z $AUTORECONF; then
-        echo "*** No autoreconf found, please install it ***"
-        exit 1
-else
-        autoreconf --force --install --verbose || exit $?
-fi
-
-cd "$olddir"
-test -n "$NOCONFIGURE" || "$srcdir/configure" "$@"
+USE_GNOME2_MACROS=1 USE_COMMON_DOC_BUILD=yes . gnome-autogen.sh

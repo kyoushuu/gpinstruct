@@ -34,8 +34,10 @@ AC_INIT([GPInstruct], [gpinstruct_version],
 		[kyoushuu@yahoo.com],
 		[gpinstruct],
 		[http://gpinstruct.sourceforge.net/])
+
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([ChangeLog])
+AC_CONFIG_MACRO_DIR([m4])
 
 GPINSTRUCT_MAJOR_VERSION=gpinstruct_major_version
 GPINSTRUCT_MINOR_VERSION=gpinstruct_minor_version
@@ -64,15 +66,17 @@ AC_SUBST(LT_VERSION_INFO)
 AC_SUBST(LT_CURRENT_MINUS_AGE)
 
 
-AM_INIT_AUTOMAKE([-Wall -Werror gnu no-dist-gzip dist-xz])
-AM_SILENT_RULES([yes])
+AM_INIT_AUTOMAKE([-Wall -Werror gnu dist-xz no-dist-gzip])
+AM_MAINTAINER_MODE([enable])
+
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+
+
+AC_PROG_CC
 
 
 LT_INIT([disable-static win32-dll])
 LT_OUTPUT
-
-
-AC_PROG_CC
 
 
 dnl ***************************************************************************
@@ -90,23 +94,27 @@ dnl ***************************************************************************
 dnl Internationalization
 dnl ***************************************************************************
 
-GETTEXT_PACKAGE=AC_PACKAGE_NAME
+IT_PROG_INTLTOOL([0.40.1])
+
+AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT([external])
+
+GETTEXT_PACKAGE="$PACKAGE"
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
-AM_GLIB_GNU_GETTEXT
-IT_PROG_INTLTOOL([0.35.0])
 
 
 dnl ***************************************************************************
 dnl Check for gtk-doc.
 dnl ***************************************************************************
 
-GTK_DOC_CHECK([1.11],[--flavour no-tmpl])
+GTK_DOC_CHECK([1.4])
 
 
-dnl ================================================================
+dnl ***************************************************************************
 dnl Check for windows
-dnl ================================================================
+dnl ***************************************************************************
+
 case $host_os in
   *mingw* | pw32* | cygwin*)
     platform_win32=yes
@@ -160,7 +168,7 @@ if test "$with_gstreamer" != "no" ; then
 fi
 
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 compat/Makefile
 gpinstruct/Makefile
@@ -188,3 +196,4 @@ data/gpinstruct-view.desktop.in
 data/Makefile
 data/icons/Makefile
 po/Makefile.in])
+AC_OUTPUT

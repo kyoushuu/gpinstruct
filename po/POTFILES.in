@@ -72,3 +72,9 @@ gpinstruct-server/gpinstruct-server-window.c
 # GPInstruct Client
 gpinstruct-client/main.c
 
+# Desktop files
+data/gpinstruct-view.desktop.in.in
+data/gpinstruct-editor.desktop.in.in
+data/gpinstruct-analyzer.desktop.in.in
+data/gpinstruct-server.desktop.in.in
+data/gpinstruct-client.desktop.in.in
