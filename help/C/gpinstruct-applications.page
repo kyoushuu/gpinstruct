@@ -1,0 +1,27 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic" style="task"
+      id="gpinstruct-applications">
+
+  <info>
+    <link type="guide" xref="index"/>
+    <link type="seealso" xref="gpinstruct-project-structure"/>
+    <revision pkgversion="3.0" version="1.0" date="2012-07-22" status="final"/>
+    <credit type="author">
+      <name>Arnel A. Borja</name>
+      <email>kyoushuu@yahoo.com</email>
+    </credit>
+  </info>
+
+  <title>GPInstruct Applications</title>
+  <p><app>GPInstruct</app> contains five applications: <app>Viewer</app>, <app>Editor</app>, <app>Analyzer</app>, <app>Server</app> and <app>Client</app>.  The <app>Viewer</app> is for viewing and answering projects in wizard/assistant dialogs; the <app>Editor</app> is for editing projects; and the <app>Analyzer</app> is for viewing the results obtained from tests.  The <app>Server</app> is used to serve to multiple examinees, who will then use the <app>Client</app> to connect to the server.</p>
+
+  <p>You will usually use these applications this way:</p>
+  <list type="numbered">
+    <item><p>Create your <app>GPInstruct</app> project file using the <app>Editor</app> application.</p></item>
+    <item><p>Load the project file to the <app>Viewer</app> so the examinee could answer the tests, or load it to the <app>Server</app> so that the examinees could answer the tests connected to the network.</p></item>
+    <item><p>Load the log file/s obtained from the <app>Viewer</app> or <app>Server</app> to the <app>Analyzer</app> to view test scores and other information obtained.</p></item>
+  </list>
+
+  <p>To learn about each of these applications, explore <link xref="index">the other portions</link> of the <app>GPInstruct</app> help.</p>
+
+</page>

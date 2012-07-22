@@ -1,0 +1,21 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic" style="task"
+      id="gpinstruct-project-structure">
+
+  <info>
+    <link type="guide" xref="index#gpinstruct-project-structure-section"/>
+    <link type="seealso" xref="gpinstruct-applications"/>
+    <revision pkgversion="3.0" version="1.0" date="2012-07-22" status="final"/>
+    <credit type="author">
+      <name>Arnel A. Borja</name>
+      <email>kyoushuu@yahoo.com</email>
+    </credit>
+  </info>
+
+  <title>Project Structure</title>
+  <p>A "program" in Programmed Instruction is called a "project" in <app>GPInstruct</app>.  Projects are divided into categories, then divided further into lessons.  Each lesson may contain discussions, readings (texts) and tests.  Test types available are multiple choice, word pool, ordering, text (fill-in-the-blanks) and scrambled text (fill-in-the-blanks with scrambled text hint).</p>
+
+
+  <media type="image" mime="image/png" src="figures/gpinstruct-editor-screenshot.png"/>
+
+</page>

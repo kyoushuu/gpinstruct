@@ -112,6 +112,13 @@ GTK_DOC_CHECK([1.4])
 
 
 dnl ***************************************************************************
+dnl User manual
+dnl ***************************************************************************
+
+YELP_HELP_INIT
+
+
+dnl ***************************************************************************
 dnl Check for windows
 dnl ***************************************************************************
 
@@ -195,5 +202,6 @@ data/gpinstruct-server.desktop.in
 data/gpinstruct-view.desktop.in
 data/Makefile
 data/icons/Makefile
+help/Makefile
 po/Makefile.in])
 AC_OUTPUT

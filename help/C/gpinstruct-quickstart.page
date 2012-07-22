@@ -1,0 +1,24 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic" style="task"
+      id="gpinstruct-quickstart">
+
+  <info>
+    <link type="guide" xref="index"/>
+    <link type="seealso" xref="gpinstruct-project-structure"/>
+    <link type="seealso" xref="gpinstruct-applications"/>
+    <revision pkgversion="3.0" version="1.0" date="2012-07-22" status="final"/>
+    <credit type="author">
+      <name>Arnel A. Borja</name>
+      <email>kyoushuu@yahoo.com</email>
+    </credit>
+  </info>
+
+  <title>Get started with GPInstruct</title>
+  <p><app>GPInstruct</app> is a software suite for Programmed Instruction; you may create a set of lessons with questions then your users may view them and answer the questions.  You may then get the results which contains the total number of correct responses, number of times a question is answered, time spent on each questions, etc.</p>
+
+
+  <media type="image" mime="image/png" src="figures/gpinstruct-screenshot.png"/>
+
+  <p>To learn about additional <app>GPInstruct</app> features and to get assistance with performing additional tasks, explore <link xref="index">the other portions</link> of the <app>GPInstruct</app> help.</p>
+
+</page>

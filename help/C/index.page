@@ -1,0 +1,46 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      xmlns:e="http://projectmallard.org/experimental/"
+      type="guide" style="2column task"
+      id="index">
+
+  <info>
+    <title type="link">GPInstruct - Programmed Instruction</title>
+    <title type="text">GPInstruct - Programmed Instruction</title>
+
+    <revision pkgversion="0.1" version="1.0" date="2012-07-22" status="final"/>
+    <credit type="author">
+      <name>Arnel A. Borja</name>
+      <email>kyoushuu@yahoo.com</email>
+    </credit>
+
+<!--  
+   <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude" /> 
+-->
+  </info>  
+  
+  <title>
+    <media type="image" mime="image/png" src="figures/gpinstruct-logo.png">
+    </media>
+    GPInstruct - Programmed Instruction
+  </title>
+  <p>Welcome to the <app>GPInstruct</app> help guide.  For a quick introduction into <app>GPInstruct's</app> most basic features, visit the <link xref="gpinstruct-quickstart">Get started with GPInstruct</link> page.</p>
+
+  <p>Other help topics are grouped together into sections below.  Enjoy using <app>GPInstruct</app>!</p>
+
+  <section id="gpinstruct-project-structure-section">
+    <title>Project Structure</title>
+  </section>
+<!--
+  <section id="configure-gedit" style="2column">
+    <title>Configure gedit</title>
+  </section> 
+ 
+  <section id="gedit-plugins" style="2column">
+    <title>gedit Plugins</title>
+  </section>
+
+  <section id="gedit-printing-guide" style="2column">
+    <title>Printing with gedit</title>
+  </section>
+-->
+</page>
