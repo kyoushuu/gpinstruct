@@ -104,6 +104,54 @@ edit_preferences_action (GtkAction *action,
 
 
 static void
+help_contents_action (GtkAction *action,
+                      gpointer   user_data)
+{
+	GPInstructServerWindow *window = GPINSTRUCT_SERVER_WINDOW (user_data);
+
+	GAppInfo *app_info;
+	gchar *uri;
+
+	app_info = g_app_info_get_default_for_uri_scheme ("help");
+
+#ifdef G_OS_WIN32
+        gchar *prefix = g_win32_get_package_installation_directory_of_module (NULL);
+	gchar *index_filename = g_build_filename (prefix, "share", "help", "C", PACKAGE, "index.html", NULL);
+#else
+	gchar *index_filename = g_build_filename (PACKAGE_PREFIX, "share", "help", "C", PACKAGE, "index.html", NULL);
+#endif
+
+	if (app_info)
+	{
+		uri = g_strdup ("help:" PACKAGE);
+	}
+	else if (g_file_test (index_filename, G_FILE_TEST_IS_REGULAR))
+	{
+		uri = g_filename_to_uri (index_filename, NULL, NULL);
+	}
+	else
+	{
+		uri = g_strdup (PACKAGE_URL);
+	}
+
+	gtk_show_uri (gtk_widget_get_screen (GTK_WIDGET (window)),
+	              uri,
+	              GDK_CURRENT_TIME,
+	              NULL);
+
+	g_free (uri);
+	g_free (index_filename);
+
+	if (app_info)
+		g_object_unref (app_info);
+
+#ifdef G_OS_WIN32
+	g_free (prefix);
+#endif
+}
+
+
+static void
 help_about_action (GtkAction *action,
                    gpointer   user_data)
 {
@@ -164,7 +212,8 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 		{"edit", NULL, _("_Edit")},
 		{"edit-preferences", GTK_STOCK_PREFERENCES, NULL, NULL, NULL, G_CALLBACK (edit_preferences_action)},
 		{"help", NULL, _("_Help")},
-		{"help-about", GTK_STOCK_ABOUT, NULL, "F1", NULL, G_CALLBACK (help_about_action)}
+		{"help-contents", NULL, _("_Contents"), "F1", NULL, G_CALLBACK (help_contents_action)},
+		{"help-about", GTK_STOCK_ABOUT, NULL, NULL, NULL, G_CALLBACK (help_about_action)}
 	};
 
 	gchar *ui =
@@ -184,6 +233,8 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 		"      <menuitem name=\"Preferences\" action=\"edit-preferences\"/>"
 		"    </menu>"
 		"    <menu name=\"HelpMenu\" action=\"help\">"
+		"      <menuitem name=\"Contents\" action=\"help-contents\"/>"
+		"      <separator/>"
 		"      <placeholder name=\"HelpMenuAdditions\" />"
 		"      <separator/>"
 		"      <menuitem name=\"About\" action=\"help-about\"/>"
