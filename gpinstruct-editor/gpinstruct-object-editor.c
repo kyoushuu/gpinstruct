@@ -25,7 +25,7 @@
 
 
 
-G_DEFINE_TYPE (GPInstructObjectEditor, gpinstruct_object_editor, GTK_TYPE_GRID);
+G_DEFINE_ABSTRACT_TYPE (GPInstructObjectEditor, gpinstruct_object_editor, GTK_TYPE_GRID);
 
 static void
 gpinstruct_object_editor_init (GPInstructObjectEditor *object)
