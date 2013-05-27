@@ -26,9 +26,6 @@
 #include "gpinstruct-view/gpinstruct-view.h"
 #include "gpinstruct-analyzer/gpinstruct-analyzer.h"
 
-#include "compat/compat-glib.h"
-#include "compat/compat-gtk.h"
-
 struct _GPInstructAnalyzerWindowPrivate
 {
 	GtkWidget *main_vbox;

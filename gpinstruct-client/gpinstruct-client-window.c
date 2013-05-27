@@ -28,8 +28,6 @@
 #include "gpinstruct-view/gpinstruct-view.h"
 #include "gpinstruct-client/gpinstruct-client.h"
 
-#include "compat/compat-gtk.h"
-
 struct _GPInstructClientWindowPrivate
 {
 	SoupSession *session;

@@ -25,8 +25,6 @@
 #include "gpinstruct-view/gpinstruct-view.h"
 #include "gpinstruct-analyzer/gpinstruct-analyzer.h"
 
-#include "compat/compat-glib.h"
-
 struct _GPInstructLogAnalyzerPrivate
 {
 	GPInstructLogAnalyzerProject *aproject;

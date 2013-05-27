@@ -20,8 +20,6 @@
 
 #include "gpinstruct/gpinstruct.h"
 
-#include "compat/compat-glib.h"
-
 struct _GPInstructLessonTestWordPoolPrivate
 {
 	GList *questions;

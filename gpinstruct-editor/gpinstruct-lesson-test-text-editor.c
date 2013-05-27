@@ -24,8 +24,6 @@
 #include "gpinstruct/gpinstruct.h"
 #include "gpinstruct-editor/gpinstruct-editor.h"
 
-#include "compat/compat-gtk.h"
-
 struct _GPInstructLessonTestTextEditorPrivate
 {
 	GPInstructEditorWindow *window;

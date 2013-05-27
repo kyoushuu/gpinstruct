@@ -177,7 +177,6 @@ fi
 
 AC_CONFIG_FILES([
 Makefile
-compat/Makefile
 gpinstruct/Makefile
 gpinstruct/libgpinstruct.rc
 gpinstruct-view/Makefile

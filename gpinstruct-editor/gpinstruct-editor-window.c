@@ -26,8 +26,6 @@
 #include "gpinstruct-editor/gpinstruct-editor.h"
 #include "gpinstruct-view/gpinstruct-view.h"
 
-#include "compat/compat-gtk.h"
-
 struct _GPInstructEditorWindowPrivate
 {
 	GtkWidget *main_vbox;

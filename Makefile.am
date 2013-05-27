@@ -3,7 +3,7 @@
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = compat gpinstruct gpinstruct-view gpinstruct-editor gpinstruct-analyzer gpinstruct-server gpinstruct-client data help po
+SUBDIRS = gpinstruct gpinstruct-view gpinstruct-editor gpinstruct-analyzer gpinstruct-server gpinstruct-client data help po
 
 dist_doc_DATA = \
 	README\

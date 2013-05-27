@@ -37,9 +37,7 @@ libgpinstruct_server_la_LIBADD = \
 	$(LIBXML_LIBS) \
 	$(LIBSOUP_LIBS) \
 	$(LIBSOUP_SOAP_LIBS) \
-	$(top_builddir)/gpinstruct/libgpinstruct.la \
-	$(top_builddir)/compat/libcompat-glib.la \
-	$(top_builddir)/compat/libcompat-gtk.la
+	$(top_builddir)/gpinstruct/libgpinstruct.la
 
 bin_PROGRAMS = \
 	gpinstruct-server

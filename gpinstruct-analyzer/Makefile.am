@@ -36,9 +36,7 @@ libgpinstruct_analyzer_la_LIBADD = \
 	$(GIO_LIBS) \
 	$(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
-	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
-	$(top_builddir)/compat/libcompat-glib.la \
-	$(top_builddir)/compat/libcompat-gtk.la
+	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la
 
 bin_PROGRAMS = \
 	gpinstruct-analyzer

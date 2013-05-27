@@ -55,8 +55,7 @@ libgpinstruct_editor_la_LDFLAGS = \
 libgpinstruct_editor_la_LIBADD = \
 	$(GTK_LIBS) \
 	$(top_builddir)/gpinstruct/libgpinstruct.la \
-	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la \
-	$(top_builddir)/compat/libcompat-gtk.la
+	$(top_builddir)/gpinstruct-view/libgpinstruct-view.la
 
 bin_PROGRAMS = \
 	gpinstruct-editor
