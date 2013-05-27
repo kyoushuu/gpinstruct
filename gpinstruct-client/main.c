@@ -53,6 +53,10 @@ main (int argc,
 
 
 	window = gpinstruct_client_window_new ();
+
+	/* Exit when the window is closed */
+	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
 	gtk_widget_show_all (window);
 
 	gtk_main ();
