@@ -96,6 +96,10 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	gtk_widget_set_hexpand (priv->directions_view, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), directions_view_scrolled_window,
 	                         directions_label, GTK_POS_RIGHT, 1, 3);
+
+	g_object_bind_property (priv->single_directions_switch, "active",
+	                        priv->directions_view, "sensitive",
+	                        G_BINDING_SYNC_CREATE);
 }
 
 static void
