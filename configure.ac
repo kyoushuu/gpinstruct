@@ -164,7 +164,7 @@ PKG_CHECK_MODULES(LIBSOUP,libsoup-2.4)
 
 PKG_CHECK_MODULES(LIBSOUP_SOAP,libsoup-soap-0.1)
 
-PKG_CHECK_MODULES(GTK,gtk+-3.0,,[PKG_CHECK_MODULES(GTK,gtk+-2.0)])
+PKG_CHECK_MODULES(GTK,gtk+-3.0)
 
 if test "$with_gstreamer" != "no" ; then
 	PKG_CHECK_MODULES(GSTREAMER,
