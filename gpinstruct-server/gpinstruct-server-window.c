@@ -287,32 +287,25 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	gtk_box_pack_start (GTK_BOX (priv->main_vbox), info_frame,
 	                    FALSE, TRUE, 0);
 
-	GtkWidget *info_table = gtk_table_new (2, 2, FALSE);
-	gtk_container_add (GTK_CONTAINER (info_frame), info_table);
+	GtkWidget *info_grid = gtk_grid_new ();
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (info_grid), GTK_ORIENTATION_VERTICAL);
+	gtk_container_add (GTK_CONTAINER (info_frame), info_grid);
 
 	GtkWidget *title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (info_table), title_label,
-	                  0, 1, 0, 1,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  0, 0);
+	gtk_container_add (GTK_CONTAINER (info_grid), title_label);
 	priv->title_entry = gtk_entry_new ();
 	gtk_editable_set_editable (GTK_EDITABLE (priv->title_entry), FALSE);
-	gtk_table_attach (GTK_TABLE (info_table), priv->title_entry,
-	                  1, 2, 0, 1,
-	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_hexpand (priv->title_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (info_grid), priv->title_entry,
+	                         title_label, GTK_POS_RIGHT, 1, 1);
 
 	GtkWidget *port_label = gtk_label_new (_("Port:"));
-	gtk_table_attach (GTK_TABLE (info_table), port_label,
-	                  0, 1, 1, 2,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  0, 0);
+	gtk_container_add (GTK_CONTAINER (info_grid), port_label);
 	priv->port_entry = gtk_entry_new ();
 	gtk_editable_set_editable (GTK_EDITABLE (priv->port_entry), FALSE);
-	gtk_table_attach (GTK_TABLE (info_table), priv->port_entry,
-	                  1, 2, 1, 2,
-	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_hexpand (priv->port_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (info_grid), priv->port_entry,
+	                         port_label, GTK_POS_RIGHT, 1, 1);
 
 	priv->store = gtk_tree_store_new (SERVER_N_COLUMNS,
 	                                          G_TYPE_STRING,
@@ -373,19 +366,20 @@ gpinstruct_server_window_new_session (GPInstructServerWindow *window)
 
 	GtkWidget *content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
-	GtkWidget *content_table = gtk_table_new (3, 2, FALSE);
-	gtk_box_pack_start (GTK_BOX (content_area), content_table,
+	GtkWidget *content_grid = gtk_grid_new ();
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (content_grid), GTK_ORIENTATION_VERTICAL);
+	gtk_box_pack_start (GTK_BOX (content_area), content_grid,
 	                    TRUE, TRUE, 0);
 
-	gtk_table_attach (GTK_TABLE (content_table),
-	                  gtk_label_new (_("Project File:")),
-	                  0, 1, 0, 1,
-	                  GTK_FILL, GTK_FILL,
-	                  0, 0);
+	GtkWidget *project_file_label = gtk_label_new (_("Project File:"));
+	gtk_container_add (GTK_CONTAINER (content_grid), project_file_label);
 
 	GtkWidget *project_file_chooser =
 		gtk_file_chooser_button_new (_("Choose Project File"),
 		                             GTK_FILE_CHOOSER_ACTION_OPEN);
+	gtk_widget_set_hexpand (project_file_chooser, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (content_grid), project_file_chooser,
+	                         project_file_label, GTK_POS_RIGHT, 1, 1);
 
 	GtkFileFilter *filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("GPInstruct project file"));
@@ -393,29 +387,17 @@ gpinstruct_server_window_new_session (GPInstructServerWindow *window)
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (project_file_chooser),
 	                             filter);
 
-	gtk_table_attach (GTK_TABLE (content_table),
-	                  project_file_chooser,
-	                  1, 2, 0, 1,
-	                  GTK_FILL | GTK_EXPAND, GTK_FILL,
-	                  0, 0);
-
-	gtk_table_attach (GTK_TABLE (content_table),
-	                  gtk_label_new (_("Log Folder:")),
-	                  0, 1, 1, 2,
-	                  GTK_FILL, GTK_FILL,
-	                  0, 0);
+	GtkWidget *log_folder_label = gtk_label_new (_("Log Folder:"));
+	gtk_container_add (GTK_CONTAINER (content_grid), log_folder_label);
 
 	GtkWidget *log_folder_chooser =
 		gtk_file_chooser_button_new (_("Choose Log Folder"),
 		                             GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+	gtk_widget_set_hexpand (log_folder_chooser, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (content_grid), log_folder_chooser,
+	                         log_folder_label, GTK_POS_RIGHT, 1, 1);
 
-	gtk_table_attach (GTK_TABLE (content_table),
-	                  log_folder_chooser,
-	                  1, 2, 1, 2,
-	                  GTK_FILL | GTK_EXPAND, GTK_FILL,
-	                  0, 0);
-
-	gtk_widget_show_all (content_table);
+	gtk_widget_show_all (content_grid);
 
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 	{
