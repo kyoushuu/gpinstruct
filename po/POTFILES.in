@@ -30,6 +30,7 @@ gpinstruct-view/gpinstruct-lesson-score.c
 gpinstruct-view/gpinstruct-lesson-score-page.c
 gpinstruct-view/gpinstruct-lesson-test-multi-choice-page.c
 gpinstruct-view/gpinstruct-lesson-test-order-page.c
+gpinstruct-view/gpinstruct-lesson-test-scrambled-page.c
 gpinstruct-view/gpinstruct-lesson-test-word-pool-page.c
 gpinstruct-view/gpinstruct-lesson-view.c
 gpinstruct-view/gpinstruct-lesson-view-page.c
@@ -50,6 +51,8 @@ gpinstruct-editor/gpinstruct-lesson-element-group-editor.c
 gpinstruct-editor/gpinstruct-lesson-reading-editor.c
 gpinstruct-editor/gpinstruct-lesson-test-multi-choice-editor.c
 gpinstruct-editor/gpinstruct-lesson-test-order-editor.c
+gpinstruct-editor/gpinstruct-lesson-test-scrambled-editor.c
+gpinstruct-editor/gpinstruct-lesson-test-text-editor.c
 gpinstruct-editor/gpinstruct-lesson-test-word-pool-editor.c
 gpinstruct-editor/gpinstruct-object-editor.c
 gpinstruct-editor/gpinstruct-project-editor.c
@@ -67,10 +70,14 @@ gpinstruct-analyzer/gpinstruct-log-analyzer.c
 gpinstruct-server/main.c
 
 # GPInstruct Server Library
+gpinstruct-server/gpinstruct-server-session.c
 gpinstruct-server/gpinstruct-server-window.c
 
 # GPInstruct Client
 gpinstruct-client/main.c
+
+# GPInstruct Client Library
+gpinstruct-client/gpinstruct-client-window.c
 
 # Desktop files
 data/gpinstruct-view.desktop.in.in
