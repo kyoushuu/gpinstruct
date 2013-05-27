@@ -883,67 +883,44 @@ gpinstruct_client_window_init (GPInstructClientWindow *object)
 	                    priv->info_bar_label,
 	                    FALSE, FALSE, 3);
 
-	GtkWidget *main_table = gtk_table_new (3, 2, FALSE);
+	GtkWidget *main_grid = gtk_grid_new ();
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (main_grid), GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start (GTK_BOX (content_area),
-	                    main_table,
+	                    main_grid,
 	                    FALSE, FALSE, 3);
 
 	GtkWidget *server_address_label = gtk_label_new (_("Server Address:"));
-	gtk_table_attach (GTK_TABLE (main_table),
-	                  server_address_label,
-	                  0, 1, 0, 1,
-	                  GTK_SHRINK | GTK_FILL, GTK_FILL,
-	                  0, 0);
+	gtk_container_add (GTK_CONTAINER (main_grid), server_address_label);
 
 	priv->server_address_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (main_table),
-	                  priv->server_address_entry,
-	                  1, 2, 0, 1,
-	                  GTK_EXPAND | GTK_FILL, GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_hexpand (priv->server_address_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (main_grid), priv->server_address_entry,
+	                         server_address_label, GTK_POS_RIGHT, 1, 1);
 
 	GtkWidget *lastname_label = gtk_label_new (_("Last name:"));
-	gtk_table_attach (GTK_TABLE (main_table),
-	                  lastname_label,
-	                  0, 1, 1, 2,
-	                  GTK_SHRINK | GTK_FILL, GTK_FILL,
-	                  0, 0);
+	gtk_container_add (GTK_CONTAINER (main_grid), lastname_label);
 
 	priv->lastname_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (main_table),
-	                  priv->lastname_entry,
-	                  1, 2, 1, 2,
-	                  GTK_EXPAND | GTK_FILL, GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_hexpand (priv->lastname_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (main_grid), priv->lastname_entry,
+	                         lastname_label, GTK_POS_RIGHT, 1, 1);
 
 	GtkWidget *firstname_label = gtk_label_new (_("First name:"));
-	gtk_table_attach (GTK_TABLE (main_table),
-	                  firstname_label,
-	                  0, 1, 2, 3,
-	                  GTK_SHRINK | GTK_FILL, GTK_FILL,
-	                  0, 0);
+	gtk_container_add (GTK_CONTAINER (main_grid), firstname_label);
 
 	priv->firstname_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (main_table),
-	                  priv->firstname_entry,
-	                  1, 2, 2, 3,
-	                  GTK_EXPAND | GTK_FILL, GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_hexpand (priv->firstname_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (main_grid), priv->firstname_entry,
+	                         firstname_label, GTK_POS_RIGHT, 1, 1);
 
 	GtkWidget *password_label = gtk_label_new (_("Password:"));
-	gtk_table_attach (GTK_TABLE (main_table),
-	                  password_label,
-	                  0, 1, 3, 4,
-	                  GTK_SHRINK | GTK_FILL, GTK_FILL,
-	                  0, 0);
+	gtk_container_add (GTK_CONTAINER (main_grid), password_label);
 
 	priv->password_entry = gtk_entry_new ();
 	gtk_entry_set_visibility (GTK_ENTRY (priv->password_entry), FALSE);
-	gtk_table_attach (GTK_TABLE (main_table),
-	                  priv->password_entry,
-	                  1, 2, 3, 4,
-	                  GTK_EXPAND | GTK_FILL, GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_hexpand (priv->password_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (main_grid), priv->password_entry,
+	                         password_label, GTK_POS_RIGHT, 1, 1);
 
 	if (priv->server_uri)
 		gtk_entry_set_text (GTK_ENTRY (priv->server_address_entry),
