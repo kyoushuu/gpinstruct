@@ -66,7 +66,7 @@ AC_SUBST(LT_VERSION_INFO)
 AC_SUBST(LT_CURRENT_MINUS_AGE)
 
 
-AM_INIT_AUTOMAKE([-Wall -Werror gnu dist-xz no-dist-gzip])
+AM_INIT_AUTOMAKE([-Wall -Werror -Wno-obsolete gnu dist-xz no-dist-gzip])
 AM_MAINTAINER_MODE([enable])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
