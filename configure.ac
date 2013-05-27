@@ -74,6 +74,8 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_PROG_CC
 
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+
 
 LT_INIT([disable-static win32-dll])
 LT_OUTPUT
