@@ -179,9 +179,7 @@ help_about_action (GtkAction *action,
 		                  "comments", _("Serve GPInstruct projects through a local network"),
 		                  "website", PACKAGE_URL,
 		                  "copyright", _("Copyright (c) 2011-2012  Arnel A. Borja"),
-#if GTK_MAJOR_VERSION >= 3
 		                  "license-type", GTK_LICENSE_GPL_3_0,
-#endif
 		                  "license", license,
 		                  "wrap-license", TRUE,
 		                  "authors", authors,
@@ -280,10 +278,8 @@ gpinstruct_server_window_init (GPInstructServerWindow *object)
 	gtk_box_pack_start (GTK_BOX (priv->main_vbox), main_menu, FALSE, TRUE, 0);
 
 	GtkWidget *toolbar = gtk_ui_manager_get_widget (priv->manager, "/toolbar");
-#if GTK_MAJOR_VERSION >= 3
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
 	                             GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
-#endif
 	gtk_box_pack_start (GTK_BOX (priv->main_vbox), toolbar, FALSE, TRUE, 0);
 
 
