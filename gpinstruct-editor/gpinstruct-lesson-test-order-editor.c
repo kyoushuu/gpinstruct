@@ -122,7 +122,7 @@ tree_view_row_activated (GtkTreeView       *tree_view,
 
 			scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 			gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-			                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+			                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 			text_view = gtk_text_view_new ();
 			gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
 			gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view)),
@@ -270,7 +270,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	                  3, 3);
 	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
-	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	priv->directions_view = gtk_text_view_new ();
 	gtk_container_add (GTK_CONTAINER (directions_view_scrolled_window), priv->directions_view);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->directions_view), GTK_WRAP_WORD_CHAR);
@@ -297,7 +297,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	                  3, 3);
 	GtkWidget *explanation_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (explanation_view_scrolled_window),
-	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	priv->explanation_view = gtk_text_view_new ();
 	gtk_container_add (GTK_CONTAINER (explanation_view_scrolled_window), priv->explanation_view);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->explanation_view), GTK_WRAP_WORD_CHAR);

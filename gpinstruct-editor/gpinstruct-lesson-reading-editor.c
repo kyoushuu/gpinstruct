@@ -66,7 +66,7 @@ gpinstruct_lesson_reading_editor_init (GPInstructLessonReadingEditor *object)
 	                  3, 3);
 	GtkWidget *text_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (text_view_scrolled_window),
-	                                GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	priv->text_view = gtk_text_view_new ();
 	gtk_container_add (GTK_CONTAINER (text_view_scrolled_window), priv->text_view);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->text_view), GTK_WRAP_WORD_CHAR);
