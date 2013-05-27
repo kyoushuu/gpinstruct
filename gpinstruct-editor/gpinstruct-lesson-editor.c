@@ -29,10 +29,7 @@ struct _GPInstructLessonEditorPrivate
 	GPInstructEditorWindow *window;
 	GPInstructLesson *lesson;
 
-	GtkWidget *title_label;
 	GtkWidget *title_entry;
-
-	GtkWidget *single_score_label;
 	GtkWidget *single_score_switch;
 };
 
@@ -48,21 +45,21 @@ gpinstruct_lesson_editor_init (GPInstructLessonEditor *object)
 	object->priv = GPINSTRUCT_LESSON_EDITOR_GET_PRIVATE (object);
 	GPInstructLessonEditorPrivate *priv = object->priv;
 
-	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_container_add (GTK_CONTAINER (object), priv->title_label);
+	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();
 	gtk_widget_set_hexpand (priv->title_entry, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
-	                         priv->title_label, GTK_POS_RIGHT, 1, 1);
+	                         title_label, GTK_POS_RIGHT, 1, 1);
 
-	priv->single_score_label = gtk_label_new (_("Single Score:"));
-	gtk_container_add (GTK_CONTAINER (object), priv->single_score_label);
+	GtkWidget *single_score_label = gtk_label_new (_("Single Score:"));
+	gtk_container_add (GTK_CONTAINER (object), single_score_label);
 
 	priv->single_score_switch = gtk_switch_new ();
 	gtk_widget_set_halign (priv->single_score_switch, GTK_ALIGN_START);
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->single_score_switch,
-	                         priv->single_score_label, GTK_POS_RIGHT, 1, 1);
+	                         single_score_label, GTK_POS_RIGHT, 1, 1);
 }
 
 static void

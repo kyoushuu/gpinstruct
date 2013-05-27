@@ -29,7 +29,6 @@ struct _GPInstructProjectEditorPrivate
 	GPInstructEditorWindow *window;
 	GPInstructProject *project;
 
-	GtkWidget *title_label;
 	GtkWidget *title_entry;
 };
 
@@ -45,13 +44,13 @@ gpinstruct_project_editor_init (GPInstructProjectEditor *object)
 	object->priv = GPINSTRUCT_PROJECT_EDITOR_GET_PRIVATE (object);
 	GPInstructProjectEditorPrivate *priv = object->priv;
 
-	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_container_add (GTK_CONTAINER (object), priv->title_label);
+	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();
 	gtk_widget_set_hexpand (priv->title_entry, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
-	                         priv->title_label, GTK_POS_RIGHT, 1, 1);
+	                         title_label, GTK_POS_RIGHT, 1, 1);
 }
 
 static void

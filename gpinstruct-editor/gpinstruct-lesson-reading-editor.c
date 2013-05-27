@@ -29,10 +29,7 @@ struct _GPInstructLessonReadingEditorPrivate
 	GPInstructEditorWindow *window;
 	GPInstructLessonReading *reading;
 
-	GtkWidget *title_label;
 	GtkWidget *title_entry;
-
-	GtkWidget *text_label;
 	GtkWidget *text_view;
 };
 
@@ -48,17 +45,17 @@ gpinstruct_lesson_reading_editor_init (GPInstructLessonReadingEditor *object)
 	object->priv = GPINSTRUCT_LESSON_READING_EDITOR_GET_PRIVATE (object);
 	GPInstructLessonReadingEditorPrivate *priv = object->priv;
 
-	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_container_add (GTK_CONTAINER (object), priv->title_label);
+	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();
 	gtk_widget_set_hexpand (priv->title_entry, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
-	                         priv->title_label, GTK_POS_RIGHT, 1, 1);
+	                         title_label, GTK_POS_RIGHT, 1, 1);
 
-	priv->text_label = gtk_label_new (_("Text:"));
-	gtk_widget_set_valign (priv->text_label, GTK_ALIGN_START);
-	gtk_container_add (GTK_CONTAINER (object), priv->text_label);
+	GtkWidget *text_label = gtk_label_new (_("Text:"));
+	gtk_widget_set_valign (text_label, GTK_ALIGN_START);
+	gtk_container_add (GTK_CONTAINER (object), text_label);
 
 	GtkWidget *text_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (text_view_scrolled_window),
@@ -69,7 +66,7 @@ gpinstruct_lesson_reading_editor_init (GPInstructLessonReadingEditor *object)
 	gtk_widget_set_hexpand (priv->text_view, TRUE);
 	gtk_widget_set_vexpand (priv->text_view, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), text_view_scrolled_window,
-	                         priv->text_label, GTK_POS_RIGHT, 1, 5);
+	                         text_label, GTK_POS_RIGHT, 1, 5);
 }
 
 static void

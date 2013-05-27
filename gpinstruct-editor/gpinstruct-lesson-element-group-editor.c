@@ -29,16 +29,9 @@ struct _GPInstructLessonElementGroupEditorPrivate
 	GPInstructEditorWindow *window;
 	GPInstructLessonElementGroup *group;
 
-	GtkWidget *title_label;
 	GtkWidget *title_entry;
-
-	GtkWidget *single_score_label;
 	GtkWidget *single_score_switch;
-
-	GtkWidget *single_directions_label;
 	GtkWidget *single_directions_switch;
-
-	GtkWidget *directions_label;
 	GtkWidget *directions_view;
 };
 
@@ -52,32 +45,32 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	object->priv = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR_GET_PRIVATE (object);
 	GPInstructLessonElementGroupEditorPrivate *priv = object->priv;
 
-	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_container_add (GTK_CONTAINER (object), priv->title_label);
+	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();
 	gtk_widget_set_hexpand (priv->title_entry, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
-	                         priv->title_label, GTK_POS_RIGHT, 1, 1);
+	                         title_label, GTK_POS_RIGHT, 1, 1);
 
-	priv->single_score_label = gtk_label_new (_("Single Score:"));
-	gtk_container_add (GTK_CONTAINER (object), priv->single_score_label);
+	GtkWidget *single_score_label = gtk_label_new (_("Single Score:"));
+	gtk_container_add (GTK_CONTAINER (object), single_score_label);
 
 	priv->single_score_switch = gtk_switch_new ();
 	gtk_widget_set_halign (priv->single_score_switch, GTK_ALIGN_START);
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->single_score_switch,
-	                         priv->single_score_label, GTK_POS_RIGHT, 1, 1);
+	                         single_score_label, GTK_POS_RIGHT, 1, 1);
 
-	priv->single_directions_label = gtk_label_new (_("Single Directions:"));
-	gtk_container_add (GTK_CONTAINER (object), priv->single_directions_label);
+	GtkWidget *single_directions_label = gtk_label_new (_("Single Directions:"));
+	gtk_container_add (GTK_CONTAINER (object), single_directions_label);
 
 	priv->single_directions_switch = gtk_switch_new ();
 	gtk_widget_set_halign (priv->single_directions_switch, GTK_ALIGN_START);
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->single_directions_switch,
-	                         priv->single_directions_label, GTK_POS_RIGHT, 1, 1);
+	                         single_directions_label, GTK_POS_RIGHT, 1, 1);
 
-	priv->directions_label = gtk_label_new (_("Directions:"));
-	gtk_container_add (GTK_CONTAINER (object), priv->directions_label);
+	GtkWidget *directions_label = gtk_label_new (_("Directions:"));
+	gtk_container_add (GTK_CONTAINER (object), directions_label);
 
 	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
@@ -87,7 +80,7 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->directions_view), GTK_WRAP_WORD_CHAR);
 	gtk_widget_set_hexpand (priv->directions_view, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), directions_view_scrolled_window,
-	                         priv->directions_label, GTK_POS_RIGHT, 1, 3);
+	                         directions_label, GTK_POS_RIGHT, 1, 3);
 }
 
 static void
