@@ -229,36 +229,37 @@ gpinstruct_lesson_test_scrambled_page_new (GPInstructLessonTestScrambled *test,
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->question_textview), FALSE);
 	gtk_box_pack_start (GTK_BOX (priv->vbox), priv->question_textview, TRUE, TRUE, 3);
 
-	GtkWidget *table = gtk_table_new (2, 2, FALSE);
-	gtk_box_pack_start (GTK_BOX (priv->vbox), table, TRUE, TRUE, 3);
+	GtkWidget *grid = gtk_grid_new ();
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (grid), GTK_ORIENTATION_VERTICAL);
+	gtk_box_pack_start (GTK_BOX (priv->vbox), grid, TRUE, TRUE, 3);
 
 	GtkWidget *label;
 
 	label = gtk_label_new (_("Clue:"));
-	gtk_table_attach (GTK_TABLE (table), label,
-	                  0, 1, 0, 1,
-	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_hexpand (label, TRUE);
+	gtk_widget_set_vexpand (label, TRUE);
+	gtk_container_add (GTK_CONTAINER (grid), label);
 
 	priv->scrambled_entry = gtk_entry_new ();
 	gtk_entry_set_alignment (GTK_ENTRY (priv->scrambled_entry), 0.5);
-	gtk_table_attach (GTK_TABLE (table), priv->scrambled_entry,
-	                  1, 2, 0, 1,
-	                  GTK_EXPAND, GTK_EXPAND | GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_halign (priv->scrambled_entry, GTK_ALIGN_CENTER);
+	gtk_widget_set_hexpand (priv->scrambled_entry, TRUE);
+	gtk_widget_set_vexpand (priv->scrambled_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (grid), priv->scrambled_entry,
+	                         label, GTK_POS_RIGHT, 1, 1);
 
 	label = gtk_label_new (_("Answer:"));
-	gtk_table_attach (GTK_TABLE (table), label,
-	                  0, 1, 1, 2,
-	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_hexpand (label, TRUE);
+	gtk_widget_set_vexpand (label, TRUE);
+	gtk_container_add (GTK_CONTAINER (grid), label);
 
 	priv->answer_entry = gtk_entry_new ();
 	gtk_entry_set_alignment (GTK_ENTRY (priv->answer_entry), 0.5);
-	gtk_table_attach (GTK_TABLE (table), priv->answer_entry,
-	                  1, 2, 1, 2,
-	                  GTK_EXPAND, GTK_EXPAND | GTK_FILL,
-	                  0, 0);
+	gtk_widget_set_halign (priv->answer_entry, GTK_ALIGN_CENTER);
+	gtk_widget_set_hexpand (priv->answer_entry, TRUE);
+	gtk_widget_set_vexpand (priv->answer_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (grid), priv->answer_entry,
+	                         label, GTK_POS_RIGHT, 1, 1);
 
 	return page;
 }

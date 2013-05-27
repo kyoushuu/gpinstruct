@@ -104,48 +104,37 @@ main (int argc,
 		                                                 NULL);
 		gtk_window_set_default_size (GTK_WINDOW (dialog), 400, -1);
 
-		GtkWidget *dialog_table = gtk_table_new (5, 2, FALSE);
-		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), dialog_table,
+		GtkWidget *dialog_grid = gtk_grid_new ();
+		gtk_orientable_set_orientation (GTK_ORIENTABLE (dialog_grid), GTK_ORIENTATION_VERTICAL);
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), dialog_grid,
 		                    FALSE, TRUE, 3);
 
 		GtkWidget *last_name_label = gtk_label_new (_("Last Name:"));
-		gtk_table_attach (GTK_TABLE (dialog_table), last_name_label,
-		                  0, 1, 0, 1,
-		                  GTK_FILL, GTK_FILL,
-		                  0, 0);
+		gtk_container_add (GTK_CONTAINER (dialog_grid), last_name_label);
 
 		GtkWidget *last_name_entry = gtk_entry_new ();
-		gtk_table_attach (GTK_TABLE (dialog_table), last_name_entry,
-		                  1, 2, 0, 1,
-		                  GTK_EXPAND | GTK_FILL, GTK_FILL,
-		                  0, 0);
+		gtk_widget_set_hexpand (last_name_entry, TRUE);
+		gtk_grid_attach_next_to (GTK_GRID (dialog_grid), last_name_entry,
+		                         last_name_label, GTK_POS_RIGHT, 1, 1);
 
 		GtkWidget *first_name_label = gtk_label_new (_("First Name:"));
-		gtk_table_attach (GTK_TABLE (dialog_table), first_name_label,
-		                  0, 1, 1, 2,
-		                  GTK_FILL, GTK_FILL,
-		                  0, 0);
+		gtk_container_add (GTK_CONTAINER (dialog_grid), first_name_label);
 
 		GtkWidget *first_name_entry = gtk_entry_new ();
-		gtk_table_attach (GTK_TABLE (dialog_table), first_name_entry,
-		                  1, 2, 1, 2,
-		                  GTK_EXPAND | GTK_FILL, GTK_FILL,
-		                  0, 0);
+		gtk_widget_set_hexpand (first_name_entry, TRUE);
+		gtk_grid_attach_next_to (GTK_GRID (dialog_grid), first_name_entry,
+		                         first_name_label, GTK_POS_RIGHT, 1, 1);
 
 		GtkWidget *log_dir_label = gtk_label_new (_("Save Log File to:"));
-		gtk_table_attach (GTK_TABLE (dialog_table), log_dir_label,
-		                  0, 1, 2, 3,
-		                  GTK_FILL, GTK_FILL,
-		                  0, 0);
+		gtk_container_add (GTK_CONTAINER (dialog_grid), log_dir_label);
 
 		GtkWidget *log_dir_filechooser = gtk_file_chooser_button_new (_("Open Project File"),
 		                                                              GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-		gtk_table_attach (GTK_TABLE (dialog_table), log_dir_filechooser,
-		                  1, 2, 2, 3,
-		                  GTK_EXPAND | GTK_FILL, GTK_FILL,
-		                  0, 0);
+		gtk_widget_set_hexpand (log_dir_filechooser, TRUE);
+		gtk_grid_attach_next_to (GTK_GRID (dialog_grid), log_dir_filechooser,
+		                         log_dir_label, GTK_POS_RIGHT, 1, 1);
 
-		gtk_widget_show_all (dialog_table);
+		gtk_widget_show_all (dialog_grid);
 
 		if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
 		{
