@@ -42,10 +42,15 @@ G_DEFINE_TYPE (GPInstructLessonReadingEditor, gpinstruct_lesson_reading_editor, 
 static void
 gpinstruct_lesson_reading_editor_init (GPInstructLessonReadingEditor *object)
 {
+	GtkStyleContext *context;
+
 	object->priv = GPINSTRUCT_LESSON_READING_EDITOR_GET_PRIVATE (object);
 	GPInstructLessonReadingEditorPrivate *priv = object->priv;
 
-	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	GtkWidget *title_label = gtk_label_new (_("Title"));
+	context = gtk_widget_get_style_context (title_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (title_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();
@@ -53,7 +58,10 @@ gpinstruct_lesson_reading_editor_init (GPInstructLessonReadingEditor *object)
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
 	                         title_label, GTK_POS_RIGHT, 1, 1);
 
-	GtkWidget *text_label = gtk_label_new (_("Text:"));
+	GtkWidget *text_label = gtk_label_new (_("Text"));
+	context = gtk_widget_get_style_context (text_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (text_label, GTK_ALIGN_END);
 	gtk_widget_set_valign (text_label, GTK_ALIGN_START);
 	gtk_container_add (GTK_CONTAINER (object), text_label);
 

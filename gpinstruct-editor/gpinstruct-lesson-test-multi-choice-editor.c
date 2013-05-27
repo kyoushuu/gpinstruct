@@ -491,13 +491,18 @@ G_DEFINE_TYPE (GPInstructLessonTestMultiChoiceEditor, gpinstruct_lesson_test_mul
 static void
 gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoiceEditor *object)
 {
+	GtkStyleContext *context;
+
 	object->priv = GPINSTRUCT_LESSON_TEST_MULTI_CHOICE_EDITOR_GET_PRIVATE (object);
 	GPInstructLessonTestMultiChoiceEditorPrivate *priv = object->priv;
 
 	priv->questions_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 	priv->choices_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
-	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	GtkWidget *title_label = gtk_label_new (_("Title"));
+	context = gtk_widget_get_style_context (title_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (title_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();
@@ -505,7 +510,11 @@ gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoice
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
 	                         title_label, GTK_POS_RIGHT, 1, 1);
 
-	GtkWidget *directions_label = gtk_label_new (_("Directions:"));
+	GtkWidget *directions_label = gtk_label_new (_("Directions"));
+	context = gtk_widget_get_style_context (directions_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (directions_label, GTK_ALIGN_END);
+	gtk_widget_set_valign (directions_label, GTK_ALIGN_START);
 	gtk_container_add (GTK_CONTAINER (object), directions_label);
 
 	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -518,7 +527,10 @@ gpinstruct_lesson_test_multi_choice_editor_init (GPInstructLessonTestMultiChoice
 	gtk_grid_attach_next_to (GTK_GRID (object), directions_view_scrolled_window,
 	                         directions_label, GTK_POS_RIGHT, 1, 3);
 
-	GtkWidget *explain_label = gtk_label_new (_("Explain:"));
+	GtkWidget *explain_label = gtk_label_new (_("Explain"));
+	context = gtk_widget_get_style_context (explain_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (explain_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), explain_label);
 
 	priv->explain_switch = gtk_switch_new ();

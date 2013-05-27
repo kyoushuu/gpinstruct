@@ -41,10 +41,15 @@ G_DEFINE_TYPE (GPInstructProjectEditor, gpinstruct_project_editor, GPINSTRUCT_TY
 static void
 gpinstruct_project_editor_init (GPInstructProjectEditor *object)
 {
+	GtkStyleContext *context;
+
 	object->priv = GPINSTRUCT_PROJECT_EDITOR_GET_PRIVATE (object);
 	GPInstructProjectEditorPrivate *priv = object->priv;
 
-	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	GtkWidget *title_label = gtk_label_new (_("Title"));
+	context = gtk_widget_get_style_context (title_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (title_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();

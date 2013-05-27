@@ -41,10 +41,15 @@ G_DEFINE_TYPE (GPInstructCategoryEditor, gpinstruct_category_editor, GPINSTRUCT_
 static void
 gpinstruct_category_editor_init (GPInstructCategoryEditor *object)
 {
+	GtkStyleContext *context;
+
 	object->priv = GPINSTRUCT_CATEGORY_EDITOR_GET_PRIVATE (object);
 	GPInstructCategoryEditorPrivate *priv = object->priv;
 
-	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	GtkWidget *title_label = gtk_label_new (_("Title"));
+	context = gtk_widget_get_style_context (title_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (title_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();

@@ -240,12 +240,17 @@ G_DEFINE_TYPE (GPInstructLessonTestOrderEditor, gpinstruct_lesson_test_order_edi
 static void
 gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *object)
 {
+	GtkStyleContext *context;
+
 	object->priv = GPINSTRUCT_LESSON_TEST_ORDER_EDITOR_GET_PRIVATE (object);
 	GPInstructLessonTestOrderEditorPrivate *priv = object->priv;
 
 	priv->store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
-	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	GtkWidget *title_label = gtk_label_new (_("Title"));
+	context = gtk_widget_get_style_context (title_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (title_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();
@@ -253,7 +258,11 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
 	                         title_label, GTK_POS_RIGHT, 1, 1);
 
-	GtkWidget *directions_label = gtk_label_new (_("Directions:"));
+	GtkWidget *directions_label = gtk_label_new (_("Directions"));
+	context = gtk_widget_get_style_context (directions_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (directions_label, GTK_ALIGN_END);
+	gtk_widget_set_valign (directions_label, GTK_ALIGN_START);
 	gtk_container_add (GTK_CONTAINER (object), directions_label);
 
 	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -266,7 +275,10 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	gtk_grid_attach_next_to (GTK_GRID (object), directions_view_scrolled_window,
 	                         directions_label, GTK_POS_RIGHT, 1, 3);
 
-	GtkWidget *explain_label = gtk_label_new (_("Explain:"));
+	GtkWidget *explain_label = gtk_label_new (_("Explain"));
+	context = gtk_widget_get_style_context (explain_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (explain_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), explain_label);
 
 	priv->explain_switch = gtk_switch_new ();
@@ -274,7 +286,11 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->explain_switch,
 	                         explain_label, GTK_POS_RIGHT, 1, 1);
 
-	GtkWidget *explanation_label = gtk_label_new (_("Explanation:"));
+	GtkWidget *explanation_label = gtk_label_new (_("Explanation"));
+	context = gtk_widget_get_style_context (explanation_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (explanation_label, GTK_ALIGN_END);
+	gtk_widget_set_valign (explanation_label, GTK_ALIGN_START);
 	gtk_container_add (GTK_CONTAINER (object), explanation_label);
 
 	GtkWidget *explanation_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);

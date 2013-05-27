@@ -42,10 +42,15 @@ G_DEFINE_TYPE (GPInstructLessonElementGroupEditor, gpinstruct_lesson_element_gro
 static void
 gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor *object)
 {
+	GtkStyleContext *context;
+
 	object->priv = GPINSTRUCT_LESSON_ELEMENT_GROUP_EDITOR_GET_PRIVATE (object);
 	GPInstructLessonElementGroupEditorPrivate *priv = object->priv;
 
-	GtkWidget *title_label = gtk_label_new (_("Title:"));
+	GtkWidget *title_label = gtk_label_new (_("Title"));
+	context = gtk_widget_get_style_context (title_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (title_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), title_label);
 
 	priv->title_entry = gtk_entry_new ();
@@ -53,7 +58,10 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
 	                         title_label, GTK_POS_RIGHT, 1, 1);
 
-	GtkWidget *single_score_label = gtk_label_new (_("Single Score:"));
+	GtkWidget *single_score_label = gtk_label_new (_("Single Score"));
+	context = gtk_widget_get_style_context (single_score_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (single_score_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), single_score_label);
 
 	priv->single_score_switch = gtk_switch_new ();
@@ -61,7 +69,10 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->single_score_switch,
 	                         single_score_label, GTK_POS_RIGHT, 1, 1);
 
-	GtkWidget *single_directions_label = gtk_label_new (_("Single Directions:"));
+	GtkWidget *single_directions_label = gtk_label_new (_("Single Directions"));
+	context = gtk_widget_get_style_context (single_directions_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (single_directions_label, GTK_ALIGN_END);
 	gtk_container_add (GTK_CONTAINER (object), single_directions_label);
 
 	priv->single_directions_switch = gtk_switch_new ();
@@ -69,7 +80,11 @@ gpinstruct_lesson_element_group_editor_init (GPInstructLessonElementGroupEditor 
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->single_directions_switch,
 	                         single_directions_label, GTK_POS_RIGHT, 1, 1);
 
-	GtkWidget *directions_label = gtk_label_new (_("Directions:"));
+	GtkWidget *directions_label = gtk_label_new (_("Directions"));
+	context = gtk_widget_get_style_context (directions_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (directions_label, GTK_ALIGN_END);
+	gtk_widget_set_valign (directions_label, GTK_ALIGN_START);
 	gtk_container_add (GTK_CONTAINER (object), directions_label);
 
 	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
