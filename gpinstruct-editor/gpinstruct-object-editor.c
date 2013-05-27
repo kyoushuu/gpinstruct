@@ -25,12 +25,17 @@
 
 
 
-G_DEFINE_TYPE (GPInstructObjectEditor, gpinstruct_object_editor, GTK_TYPE_TABLE);
+G_DEFINE_TYPE (GPInstructObjectEditor, gpinstruct_object_editor, GTK_TYPE_GRID);
 
 static void
 gpinstruct_object_editor_init (GPInstructObjectEditor *object)
 {
-	/* TODO: Add initialization code here */
+	g_object_set (object,
+	              "orientation", GTK_ORIENTATION_VERTICAL,
+	              "column-spacing", 6,
+	              "row-spacing", 6,
+	              "margin", 9,
+	              NULL);
 }
 
 static void
@@ -45,7 +50,7 @@ static void
 gpinstruct_object_editor_class_init (GPInstructObjectEditorClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	/*GtkVBoxClass *parent_class = GTK_TABLE_CLASS (klass);*/
+	/*GtkVBoxClass *parent_class = GTK_GRID_CLASS (klass);*/
 
 	object_class->finalize = gpinstruct_object_editor_finalize;
 }

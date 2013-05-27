@@ -46,15 +46,12 @@ gpinstruct_category_editor_init (GPInstructCategoryEditor *object)
 	GPInstructCategoryEditorPrivate *priv = object->priv;
 
 	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), priv->title_label,
-	                  0, 1, 0, 1,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_container_add (GTK_CONTAINER (object), priv->title_label);
+
 	priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
-	                  1, 2, 0, 1,
-	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_widget_set_hexpand (priv->title_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
+	                         priv->title_label, GTK_POS_RIGHT, 1, 1);
 }
 
 static void

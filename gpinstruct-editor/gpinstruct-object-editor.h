@@ -35,12 +35,12 @@ typedef struct _GPInstructObjectEditor GPInstructObjectEditor;
 
 struct _GPInstructObjectEditorClass
 {
-	GtkTableClass parent_class;
+	GtkGridClass parent_class;
 };
 
 struct _GPInstructObjectEditor
 {
-	GtkTable parent_instance;
+	GtkGrid parent_instance;
 };
 
 GType gpinstruct_object_editor_get_type (void) G_GNUC_CONST;

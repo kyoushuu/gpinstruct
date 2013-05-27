@@ -253,65 +253,51 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	priv->store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
 	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), priv->title_label,
-	                  0, 1, 0, 1,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_container_add (GTK_CONTAINER (object), priv->title_label);
+
 	priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
-	                  1, 2, 0, 1,
-	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_widget_set_hexpand (priv->title_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
+	                         priv->title_label, GTK_POS_RIGHT, 1, 1);
 
 	priv->directions_label = gtk_label_new (_("Directions:"));
-	gtk_table_attach (GTK_TABLE (object), priv->directions_label,
-	                  0, 1, 1, 2,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_container_add (GTK_CONTAINER (object), priv->directions_label);
+
 	GtkWidget *directions_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (directions_view_scrolled_window),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	priv->directions_view = gtk_text_view_new ();
 	gtk_container_add (GTK_CONTAINER (directions_view_scrolled_window), priv->directions_view);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->directions_view), GTK_WRAP_WORD_CHAR);
-	gtk_table_attach (GTK_TABLE (object), directions_view_scrolled_window,
-	                  1, 2, 1, 2,
-	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-	                  3, 3);
+	gtk_widget_set_hexpand (priv->directions_view, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (object), directions_view_scrolled_window,
+	                         priv->directions_label, GTK_POS_RIGHT, 1, 3);
 
 	priv->explain_label = gtk_label_new (_("Explain:"));
-	gtk_table_attach (GTK_TABLE (object), priv->explain_label,
-	                  0, 1, 2, 3,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_container_add (GTK_CONTAINER (object), priv->explain_label);
+
 	priv->explain_switch = gtk_switch_new ();
-	gtk_table_attach (GTK_TABLE (object), priv->explain_switch,
-	                  1, 2, 2, 3,
-	                  GTK_SHRINK, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_widget_set_halign (priv->explain_switch, GTK_ALIGN_START);
+	gtk_grid_attach_next_to (GTK_GRID (object), priv->explain_switch,
+	                         priv->explain_label, GTK_POS_RIGHT, 1, 1);
 
 	priv->explanation_label = gtk_label_new (_("Explanation:"));
-	gtk_table_attach (GTK_TABLE (object), priv->explanation_label,
-	                  0, 1, 3, 4,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_container_add (GTK_CONTAINER (object), priv->explanation_label);
+
 	GtkWidget *explanation_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (explanation_view_scrolled_window),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	priv->explanation_view = gtk_text_view_new ();
 	gtk_container_add (GTK_CONTAINER (explanation_view_scrolled_window), priv->explanation_view);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->explanation_view), GTK_WRAP_WORD_CHAR);
-	gtk_table_attach (GTK_TABLE (object), explanation_view_scrolled_window,
-	                  1, 2, 3, 4,
-	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-	                  3, 3);
-
+	gtk_widget_set_hexpand (priv->explanation_view, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (object), explanation_view_scrolled_window,
+	                         priv->explanation_label, GTK_POS_RIGHT, 1, 3);
 
 	GtkWidget *items_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
-	gtk_table_attach (GTK_TABLE (object), items_hbox,
-	                  0, 2, 4, 5,
-	                  GTK_SHRINK | GTK_FILL, GTK_EXPAND | GTK_FILL,
-	                  3, 3);
+	gtk_widget_set_vexpand (items_hbox, TRUE);
+	gtk_container_add (GTK_CONTAINER (object), items_hbox);
+	gtk_container_child_set (GTK_CONTAINER (object), items_hbox, "width", 2, NULL);
 
 	GtkWidget *tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_view_scrolled_window),

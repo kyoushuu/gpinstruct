@@ -49,31 +49,27 @@ gpinstruct_lesson_reading_editor_init (GPInstructLessonReadingEditor *object)
 	GPInstructLessonReadingEditorPrivate *priv = object->priv;
 
 	priv->title_label = gtk_label_new (_("Title:"));
-	gtk_table_attach (GTK_TABLE (object), priv->title_label,
-	                  0, 1, 0, 1,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_container_add (GTK_CONTAINER (object), priv->title_label);
+
 	priv->title_entry = gtk_entry_new ();
-	gtk_table_attach (GTK_TABLE (object), priv->title_entry,
-	                  1, 2, 0, 1,
-	                  GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_widget_set_hexpand (priv->title_entry, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (object), priv->title_entry,
+	                         priv->title_label, GTK_POS_RIGHT, 1, 1);
 
 	priv->text_label = gtk_label_new (_("Text:"));
-	gtk_table_attach (GTK_TABLE (object), priv->text_label,
-	                  0, 1, 1, 2,
-	                  GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL,
-	                  3, 3);
+	gtk_widget_set_valign (priv->text_label, GTK_ALIGN_START);
+	gtk_container_add (GTK_CONTAINER (object), priv->text_label);
+
 	GtkWidget *text_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (text_view_scrolled_window),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	priv->text_view = gtk_text_view_new ();
 	gtk_container_add (GTK_CONTAINER (text_view_scrolled_window), priv->text_view);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->text_view), GTK_WRAP_WORD_CHAR);
-	gtk_table_attach (GTK_TABLE (object), text_view_scrolled_window,
-	                  1, 2, 1, 2,
-	                  GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL,
-	                  3, 3);
+	gtk_widget_set_hexpand (priv->text_view, TRUE);
+	gtk_widget_set_vexpand (priv->text_view, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (object), text_view_scrolled_window,
+	                         priv->text_label, GTK_POS_RIGHT, 1, 5);
 }
 
 static void
