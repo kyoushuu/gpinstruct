@@ -480,10 +480,17 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->explain_switch,
 	                         explain_label, GTK_POS_RIGHT, 1, 1);
 
+	GtkWidget *questions_label = gtk_label_new (_("Questions"));
+	context = gtk_widget_get_style_context (questions_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (questions_label, GTK_ALIGN_END);
+	gtk_widget_set_valign (questions_label, GTK_ALIGN_START);
+	gtk_container_add (GTK_CONTAINER (object), questions_label);
+
 	GtkWidget *questions_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_widget_set_vexpand (questions_hbox, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), questions_hbox,
-	                         explain_label, GTK_POS_BOTTOM, 2, 1);
+	                         questions_label, GTK_POS_RIGHT, 1, 3);
 
 	GtkWidget *questions_tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (questions_tree_view_scrolled_window),
@@ -491,6 +498,7 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	gtk_box_pack_start (GTK_BOX (questions_hbox), questions_tree_view_scrolled_window, TRUE, TRUE, 0);
 
 	priv->questions_tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->questions_store));
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->questions_tree_view), FALSE);
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (priv->questions_tree_view), TRUE);
 	gtk_widget_set_events (priv->questions_tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 	g_signal_connect (priv->questions_tree_view, "row-activated", G_CALLBACK (questions_tree_view_row_activated), object);
@@ -513,11 +521,17 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	g_signal_connect (questions_remove_button, "clicked", G_CALLBACK (questions_remove_button_clicked), object);
 	gtk_box_pack_start (GTK_BOX (questions_buttonbox), questions_remove_button, FALSE, TRUE, 0);
 
+	GtkWidget *choices_label = gtk_label_new (_("Choices"));
+	context = gtk_widget_get_style_context (choices_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (choices_label, GTK_ALIGN_END);
+	gtk_widget_set_valign (choices_label, GTK_ALIGN_START);
+	gtk_container_add (GTK_CONTAINER (object), choices_label);
 
 	GtkWidget *choices_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_widget_set_vexpand (choices_hbox, TRUE);
 	gtk_grid_attach_next_to (GTK_GRID (object), choices_hbox,
-	                         questions_hbox, GTK_POS_BOTTOM, 2, 1);
+	                         choices_label, GTK_POS_RIGHT, 1, 3);
 
 	GtkWidget *choices_tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (choices_tree_view_scrolled_window),
@@ -525,6 +539,7 @@ gpinstruct_lesson_test_word_pool_editor_init (GPInstructLessonTestWordPoolEditor
 	gtk_box_pack_start (GTK_BOX (choices_hbox), choices_tree_view_scrolled_window, TRUE, TRUE, 0);
 
 	priv->choices_tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->choices_store));
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->choices_tree_view), FALSE);
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (priv->choices_tree_view), TRUE);
 	gtk_widget_set_events (priv->choices_tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 	g_signal_connect (priv->choices_tree_view, "row-activated", G_CALLBACK (choices_tree_view_row_activated), object);

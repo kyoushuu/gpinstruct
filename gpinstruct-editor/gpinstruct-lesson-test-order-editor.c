@@ -303,10 +303,17 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	gtk_grid_attach_next_to (GTK_GRID (object), explanation_view_scrolled_window,
 	                         explanation_label, GTK_POS_RIGHT, 1, 3);
 
+	GtkWidget *items_label = gtk_label_new (_("Items"));
+	context = gtk_widget_get_style_context (items_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (items_label, GTK_ALIGN_END);
+	gtk_widget_set_valign (items_label, GTK_ALIGN_START);
+	gtk_container_add (GTK_CONTAINER (object), items_label);
+
 	GtkWidget *items_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 	gtk_widget_set_vexpand (items_hbox, TRUE);
-	gtk_container_add (GTK_CONTAINER (object), items_hbox);
-	gtk_container_child_set (GTK_CONTAINER (object), items_hbox, "width", 2, NULL);
+	gtk_grid_attach_next_to (GTK_GRID (object), items_hbox,
+	                         items_label, GTK_POS_RIGHT, 1, 3);
 
 	GtkWidget *tree_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_view_scrolled_window),
@@ -314,6 +321,7 @@ gpinstruct_lesson_test_order_editor_init (GPInstructLessonTestOrderEditor *objec
 	gtk_box_pack_start (GTK_BOX (items_hbox), tree_view_scrolled_window, TRUE, TRUE, 0);
 
 	priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->store));
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (priv->tree_view), TRUE);
 	gtk_widget_set_events (priv->tree_view, GDK_BUTTON_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 	g_signal_connect (priv->tree_view, "row-activated", G_CALLBACK (tree_view_row_activated), object);
