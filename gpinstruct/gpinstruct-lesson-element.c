@@ -29,7 +29,7 @@ struct _GPInstructLessonElementPrivate
 
 
 
-G_DEFINE_TYPE (GPInstructLessonElement, gpinstruct_lesson_element, GPINSTRUCT_TYPE_OBJECT);
+G_DEFINE_ABSTRACT_TYPE (GPInstructLessonElement, gpinstruct_lesson_element, GPINSTRUCT_TYPE_OBJECT);
 
 static void
 gpinstruct_lesson_element_init (GPInstructLessonElement *object)

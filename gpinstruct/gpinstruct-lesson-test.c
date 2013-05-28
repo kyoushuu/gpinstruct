@@ -50,7 +50,7 @@ create_id ()
 
 
 
-G_DEFINE_TYPE (GPInstructLessonTest, gpinstruct_lesson_test, GPINSTRUCT_TYPE_LESSON_ELEMENT);
+G_DEFINE_ABSTRACT_TYPE (GPInstructLessonTest, gpinstruct_lesson_test, GPINSTRUCT_TYPE_LESSON_ELEMENT);
 
 static void
 gpinstruct_lesson_test_init (GPInstructLessonTest *object)
