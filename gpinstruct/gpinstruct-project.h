@@ -51,6 +51,8 @@ GType gpinstruct_project_get_type (void) G_GNUC_CONST;
 GPInstructProject *gpinstruct_project_new (void);
 const gchar *gpinstruct_project_get_title (GPInstructProject *project);
 void gpinstruct_project_set_title (GPInstructProject *project, const gchar *title);
+const gchar *gpinstruct_project_get_instructions (GPInstructProject *test);
+void gpinstruct_project_set_instructions (GPInstructProject *test, const gchar *instructions);
 guint gpinstruct_project_get_categories_length (GPInstructProject *project);
 void gpinstruct_project_add_category (GPInstructProject *project, GPInstructCategory *category);
 void gpinstruct_project_remove_category (GPInstructProject *project, guint category);
