@@ -749,6 +749,15 @@ parse_project (xmlNode *node)
 					xmlFree (temp);
 				}
 			}
+			else if (xmlStrEqual (current_node->name, BAD_CAST "stylesheet"))
+			{
+				temp = xmlNodeGetContent (current_node);
+				if (temp)
+				{
+					gpinstruct_project_set_stylesheet (project, (gchar*) temp);
+					xmlFree (temp);
+				}
+			}
 			else if (xmlStrEqual (current_node->name, BAD_CAST "category"))
 				gpinstruct_project_add_category (project,
 				                                 parse_category (current_node));
@@ -1214,6 +1223,9 @@ add_project (GPInstructProject *project)
 
 	xmlNewTextChild (node, NULL, BAD_CAST "instructions",
 	                 BAD_CAST gpinstruct_project_get_instructions (project));
+
+	xmlNewTextChild (node, NULL, BAD_CAST "stylesheet",
+	                 BAD_CAST gpinstruct_project_get_stylesheet (project));
 
 	xmlSetNs (node, xmlNewNs (node,
 	                          BAD_CAST PACKAGE_URL,
