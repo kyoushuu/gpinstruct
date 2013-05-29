@@ -31,6 +31,7 @@ struct _GPInstructLessonEditorPrivate
 
 	GtkWidget *title_entry;
 	GtkWidget *single_score_switch;
+	GtkWidget *objective_view;
 };
 
 #define GPINSTRUCT_LESSON_EDITOR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_LESSON_EDITOR, GPInstructLessonEditorPrivate))
@@ -68,6 +69,23 @@ gpinstruct_lesson_editor_init (GPInstructLessonEditor *object)
 	gtk_widget_set_halign (priv->single_score_switch, GTK_ALIGN_START);
 	gtk_grid_attach_next_to (GTK_GRID (object), priv->single_score_switch,
 	                         single_score_label, GTK_POS_RIGHT, 1, 1);
+
+	GtkWidget *objective_label = gtk_label_new (_("Objective"));
+	context = gtk_widget_get_style_context (objective_label);
+	gtk_style_context_add_class (context, "dim-label");
+	gtk_widget_set_halign (objective_label, GTK_ALIGN_END);
+	gtk_widget_set_valign (objective_label, GTK_ALIGN_START);
+	gtk_container_add (GTK_CONTAINER (object), objective_label);
+
+	GtkWidget *objective_view_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (objective_view_scrolled_window),
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	priv->objective_view = gtk_text_view_new ();
+	gtk_container_add (GTK_CONTAINER (objective_view_scrolled_window), priv->objective_view);
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->objective_view), GTK_WRAP_WORD_CHAR);
+	gtk_widget_set_hexpand (priv->objective_view, TRUE);
+	gtk_grid_attach_next_to (GTK_GRID (object), objective_view_scrolled_window,
+	                         objective_label, GTK_POS_RIGHT, 1, 3);
 }
 
 static void
@@ -119,6 +137,23 @@ single_score_activate (GObject    *gobject,
 	}
 }
 
+static void
+objective_buffer_changed (GtkTextBuffer *textbuffer,
+                           gpointer       user_data)
+{
+	GPInstructLessonEditor *editor = GPINSTRUCT_LESSON_EDITOR (user_data);
+	GPInstructLessonEditorPrivate *priv = editor->priv;
+
+	GtkTextIter start, end;
+	gchar *text;
+	gtk_text_buffer_get_bounds (textbuffer, &start, &end);
+	text = gtk_text_iter_get_text (&start, &end);
+	gpinstruct_lesson_set_objective (priv->lesson,
+	                                 text);
+	g_free (text);
+	gpinstruct_editor_window_set_modified (priv->window, TRUE);
+}
+
 
 GPInstructLessonEditor *
 gpinstruct_lesson_editor_new (GPInstructEditorWindow *window,
@@ -139,6 +174,12 @@ gpinstruct_lesson_editor_new (GPInstructEditorWindow *window,
 	                       gpinstruct_lesson_get_single_score (lesson));
 	g_signal_connect (priv->single_score_switch, "notify::active",
 	                  G_CALLBACK (single_score_activate), editor);
+
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->objective_view));
+	gtk_text_buffer_set_text (buffer,
+	                          gpinstruct_lesson_get_objective (lesson), -1);
+	g_signal_connect (buffer, "changed",
+	                  G_CALLBACK (objective_buffer_changed), editor);
 
 	return editor;
 }
