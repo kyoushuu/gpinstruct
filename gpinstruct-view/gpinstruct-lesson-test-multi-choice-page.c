@@ -304,6 +304,8 @@ gpinstruct_lesson_test_multi_choice_page_new (GPInstructLessonTestMultiChoice *t
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), priv->vbox);
 
 	priv->question_textview = gtk_text_view_new ();
+	gtk_style_context_add_class (gtk_widget_get_style_context (priv->question_textview),
+	                             "test-question");
 	gtk_text_view_set_justification (GTK_TEXT_VIEW (priv->question_textview), GTK_JUSTIFY_CENTER);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->question_textview), GTK_WRAP_WORD);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->question_textview), FALSE);
