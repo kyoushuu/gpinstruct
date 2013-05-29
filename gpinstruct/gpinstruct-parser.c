@@ -731,7 +731,16 @@ parse_project (xmlNode *node)
 	{
 		if (current_node->type == XML_ELEMENT_NODE)
 		{
-			if (xmlStrEqual (current_node->name, BAD_CAST "category"))
+			if (xmlStrEqual (current_node->name, BAD_CAST "instructions"))
+			{
+				temp = xmlNodeGetContent (current_node);
+				if (temp)
+				{
+					gpinstruct_project_set_instructions (project, (gchar*) temp);
+					xmlFree (temp);
+				}
+			}
+			else if (xmlStrEqual (current_node->name, BAD_CAST "category"))
 				gpinstruct_project_add_category (project,
 				                                 parse_category (current_node));
 		}
@@ -1190,6 +1199,9 @@ add_project (GPInstructProject *project)
 	xmlNodePtr node = xmlNewNode (NULL, BAD_CAST "project");
 	xmlSetProp (node, BAD_CAST "title",
 	            BAD_CAST gpinstruct_project_get_title (project));
+
+	xmlNewTextChild (node, NULL, BAD_CAST "instructions",
+	                 BAD_CAST gpinstruct_project_get_instructions (project));
 
 	xmlSetNs (node, xmlNewNs (node,
 	                          BAD_CAST PACKAGE_URL,
