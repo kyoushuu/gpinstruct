@@ -650,7 +650,16 @@ parse_lesson (xmlNode *node)
 	{
 		if (current_node->type == XML_ELEMENT_NODE)
 		{
-			if (xmlStrEqual (current_node->name, BAD_CAST "test-multi-choice"))
+			if (xmlStrEqual (current_node->name, BAD_CAST "objective"))
+			{
+				temp = xmlNodeGetContent (current_node);
+				if (temp)
+				{
+					gpinstruct_lesson_set_objective (lesson, (gchar*) temp);
+					xmlFree (temp);
+				}
+			}
+			else if (xmlStrEqual (current_node->name, BAD_CAST "test-multi-choice"))
 				gpinstruct_lesson_add_lesson_element (lesson,
 				                                      GPINSTRUCT_LESSON_ELEMENT (parse_multi_choice_test (current_node)));
 			else if (xmlStrEqual (current_node->name, BAD_CAST "test-word-pool"))
@@ -1120,6 +1129,9 @@ add_lesson (GPInstructLesson *lesson,
 	            BAD_CAST gpinstruct_lesson_get_title (lesson));
 	xmlSetProp (current_node, BAD_CAST "single-score",
 	            gpinstruct_lesson_get_single_score (lesson)?BAD_CAST "true":BAD_CAST "false");
+
+	xmlNewTextChild (current_node, NULL, BAD_CAST "objective",
+	                 BAD_CAST gpinstruct_lesson_get_objective (lesson));
 
 	lesson_elements = gpinstruct_lesson_get_lesson_elements (lesson);
 	curr_lesson_elements = lesson_elements;
