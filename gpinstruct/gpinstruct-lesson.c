@@ -23,6 +23,7 @@
 struct _GPInstructLessonPrivate
 {
 	gchar *title;
+	gchar *objective;
 	GList *lesson_elements;
 	gboolean single_score;
 };
@@ -40,6 +41,7 @@ gpinstruct_lesson_init (GPInstructLesson *object)
 	GPInstructLessonPrivate *priv = object->priv;
 
 	priv->title = g_strdup ("");
+	priv->objective = g_strdup ("");
 	priv->lesson_elements = NULL;
 	priv->single_score = FALSE;
 }
@@ -51,6 +53,7 @@ gpinstruct_lesson_finalize (GObject *object)
 	GPInstructLessonPrivate *priv = lesson->priv;
 
 	g_free (priv->title);
+	g_free (priv->objective);
 	if (priv->lesson_elements)
 		g_list_free_full (priv->lesson_elements, g_object_unref);
 
@@ -91,6 +94,24 @@ gpinstruct_lesson_set_title (GPInstructLesson *lesson,
 
 	g_free (priv->title);
 	priv->title = g_strdup (title);
+}
+
+const gchar *
+gpinstruct_lesson_get_objective (GPInstructLesson *lesson)
+{
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	return priv->objective;
+}
+
+void
+gpinstruct_lesson_set_objective (GPInstructLesson *lesson,
+                                 const gchar *objective)
+{
+	GPInstructLessonPrivate *priv = lesson->priv;
+
+	g_free (priv->objective);
+	priv->objective = g_strdup (objective);
 }
 
 guint

@@ -50,6 +50,8 @@ GType gpinstruct_lesson_get_type (void) G_GNUC_CONST;
 GPInstructLesson *gpinstruct_lesson_new (void);
 const gchar *gpinstruct_lesson_get_title (GPInstructLesson *lesson);
 void gpinstruct_lesson_set_title (GPInstructLesson *lesson, const gchar *title);
+const gchar *gpinstruct_lesson_get_objective (GPInstructLesson *lesson);
+void gpinstruct_lesson_set_objective (GPInstructLesson *lesson, const gchar *objective);
 guint gpinstruct_lesson_get_lesson_elements_length (GPInstructLesson *lesson);
 void gpinstruct_lesson_add_lesson_element (GPInstructLesson *lesson, GPInstructLessonElement *element);
 void gpinstruct_lesson_remove_lesson_element (GPInstructLesson *lesson, guint lesson_element);
