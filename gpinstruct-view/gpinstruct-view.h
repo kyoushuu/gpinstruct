@@ -26,6 +26,7 @@
 #include <gpinstruct-view/gpinstruct-project-view.h>
 
 #include <gpinstruct-view/gpinstruct-lesson-view-page.h>
+#include <gpinstruct-view/gpinstruct-lesson-objective-page.h>
 #include <gpinstruct-view/gpinstruct-lesson-discussion-page.h>
 #include <gpinstruct-view/gpinstruct-lesson-reading-page.h>
 #include <gpinstruct-view/gpinstruct-lesson-directions-page.h>

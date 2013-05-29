@@ -435,6 +435,11 @@ gpinstruct_lesson_view_new (GPInstructLesson *lesson,
 
 	gpinstruct_lesson_view_append_page (view, welcome_page);
 
+	GPInstructLessonDirectionsPage *objective_page =
+		gpinstruct_lesson_objective_page_new (gpinstruct_lesson_get_title (lesson),
+		                                      gpinstruct_lesson_get_objective (lesson));
+	gpinstruct_lesson_view_append_page (view, GPINSTRUCT_LESSON_VIEW_PAGE (objective_page));
+
 	single_score = gpinstruct_lesson_get_single_score (lesson);
 
 	if (single_score)

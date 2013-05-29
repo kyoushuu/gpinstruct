@@ -24,6 +24,8 @@ libgpinstruct_view_la_SOURCES = \
 	gpinstruct-lesson-directions-page.h \
 	gpinstruct-lesson-discussion-page.c \
 	gpinstruct-lesson-discussion-page.h \
+	gpinstruct-lesson-objective-page.c \
+	gpinstruct-lesson-objective-page.h \
 	gpinstruct-lesson-reading-page.c \
 	gpinstruct-lesson-reading-page.h \
 	gpinstruct-lesson-score.c \
