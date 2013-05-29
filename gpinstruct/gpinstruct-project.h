@@ -53,6 +53,8 @@ const gchar *gpinstruct_project_get_title (GPInstructProject *project);
 void gpinstruct_project_set_title (GPInstructProject *project, const gchar *title);
 const gchar *gpinstruct_project_get_instructions (GPInstructProject *test);
 void gpinstruct_project_set_instructions (GPInstructProject *test, const gchar *instructions);
+const gchar *gpinstruct_project_get_stylesheet (GPInstructProject *test);
+void gpinstruct_project_set_stylesheet (GPInstructProject *test, const gchar *stylesheet);
 guint gpinstruct_project_get_categories_length (GPInstructProject *project);
 void gpinstruct_project_add_category (GPInstructProject *project, GPInstructCategory *category);
 void gpinstruct_project_remove_category (GPInstructProject *project, guint category);

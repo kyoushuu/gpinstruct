@@ -24,6 +24,7 @@ struct _GPInstructProjectPrivate
 {
 	gchar *title;
 	gchar *instructions;
+	gchar *stylesheet;
 	GList *categories;
 };
 
@@ -41,6 +42,7 @@ gpinstruct_project_init (GPInstructProject *object)
 
 	priv->title = g_strdup ("");
 	priv->instructions = g_strdup ("");
+	priv->stylesheet = g_strdup ("");
 	priv->categories = NULL;
 }
 
@@ -52,6 +54,7 @@ gpinstruct_project_finalize (GObject *object)
 
 	g_free (priv->title);
 	g_free (priv->instructions);
+	g_free (priv->stylesheet);
 
 	if (priv->categories)
 		g_list_free_full (priv->categories, g_object_unref);
@@ -111,6 +114,24 @@ gpinstruct_project_set_instructions (GPInstructProject *test,
 
 	g_free (priv->instructions);
 	priv->instructions = g_strdup (instructions);
+}
+
+const gchar *
+gpinstruct_project_get_stylesheet (GPInstructProject *test)
+{
+	GPInstructProjectPrivate *priv = test->priv;
+
+	return priv->stylesheet;
+}
+
+void
+gpinstruct_project_set_stylesheet (GPInstructProject *test,
+                                   const gchar *stylesheet)
+{
+	GPInstructProjectPrivate *priv = test->priv;
+
+	g_free (priv->stylesheet);
+	priv->stylesheet = g_strdup (stylesheet);
 }
 
 guint
