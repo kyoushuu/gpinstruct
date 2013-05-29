@@ -53,6 +53,14 @@ lesson_button_clicked (GtkButton *button,
 	}
 }
 
+static void
+apply_css (GtkWidget *widget, GtkStyleProvider *provider)
+{
+	gtk_style_context_add_provider (gtk_widget_get_style_context (widget), provider, G_MAXUINT);
+	if (GTK_IS_CONTAINER (widget))
+		gtk_container_forall (GTK_CONTAINER (widget), (GtkCallback) apply_css, provider);
+}
+
 
 
 G_DEFINE_TYPE (GPInstructProjectView, gpinstruct_project_view, GTK_TYPE_WINDOW);
@@ -151,6 +159,11 @@ gpinstruct_project_view_new (GPInstructProject *project,
 	gtk_window_set_default_size (GTK_WINDOW (view), 600, 400);
 	gtk_window_set_title (GTK_WINDOW (view), gpinstruct_project_get_title (project));
 
+	GtkCssProvider *provider = gtk_css_provider_new ();
+	gtk_css_provider_load_from_data (provider, gpinstruct_project_get_stylesheet (project), -1, NULL);
+
+	apply_css (GTK_WIDGET (view), GTK_STYLE_PROVIDER (provider));
+
 	GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 	                                GTK_POLICY_AUTOMATIC,
@@ -203,6 +216,7 @@ gpinstruct_project_view_new (GPInstructProject *project,
 			g_signal_connect (lesson_button, "clicked", G_CALLBACK (lesson_button_clicked), view);
 
 			GPInstructLessonView *lesson_view = gpinstruct_lesson_view_new (lesson, priv->pool, priv->log);
+			apply_css (GTK_WIDGET (lesson_view), GTK_STYLE_PROVIDER (provider));
 
 			g_hash_table_insert (priv->hashtable, lesson_button, lesson_view);
 
@@ -215,6 +229,8 @@ gpinstruct_project_view_new (GPInstructProject *project,
 	}
 
 	g_list_free (categories);
+
+	g_object_unref (provider);
 
 	return GTK_WIDGET (view);
 }
