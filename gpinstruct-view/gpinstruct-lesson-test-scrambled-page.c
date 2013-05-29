@@ -225,6 +225,7 @@ gpinstruct_lesson_test_scrambled_page_new (GPInstructLessonTestScrambled *test,
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), priv->vbox);
 
 	priv->question_textview = gtk_text_view_new ();
+	gtk_text_view_set_justification (GTK_TEXT_VIEW (priv->question_textview), GTK_JUSTIFY_CENTER);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->question_textview), GTK_WRAP_WORD);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->question_textview), FALSE);
 	gtk_box_pack_start (GTK_BOX (priv->vbox), priv->question_textview, TRUE, TRUE, 3);
