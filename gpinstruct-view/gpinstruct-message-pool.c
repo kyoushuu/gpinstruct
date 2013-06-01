@@ -37,56 +37,11 @@ struct _GPInstructMessagePoolPrivate
 
 #if HAVE_GSTREAMER
 	GList *sounds[GPINSTRUCT_MESSAGE_TYPE_SIZE];
-	GstElement *pipeline;
-	GstElement *source;
+	GstElement *player;
 #endif
 };
 
 #define GPINSTRUCT_MESSAGE_POOL_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPINSTRUCT_TYPE_MESSAGE_POOL, GPInstructMessagePoolPrivate))
-
-
-#if HAVE_GSTREAMER
-static gboolean
-bus_call (GstBus     *bus,
-          GstMessage *msg,
-          gpointer    data)
-{
-	switch (GST_MESSAGE_TYPE (msg))
-	{
-		case GST_MESSAGE_ERROR:
-		{
-			gchar  *debug;
-			GError *error;
-
-			gst_message_parse_error (msg, &error, &debug);
-			g_free (debug);
-
-			g_warning ("Error: %s\n", error->message);
-			g_error_free (error);
-			break;
-		}
-		default:
-			break;
-	}
-
-	return TRUE;
-}
-
-static void
-on_pad_added (GstElement *element,
-              GstPad     *pad,
-              gpointer    data)
-{
-	GstPad *sinkpad;
-	GstElement *decoder = (GstElement *) data;
-
-	sinkpad = gst_element_get_static_pad (decoder, "sink");
-
-	gst_pad_link (pad, sinkpad);
-
-	gst_object_unref (sinkpad);
-}
-#endif
 
 
 G_DEFINE_TYPE (GPInstructMessagePool, gpinstruct_message_pool, G_TYPE_OBJECT);
@@ -103,31 +58,13 @@ gpinstruct_message_pool_init (GPInstructMessagePool *object)
 		priv->messages[i] = NULL;
 
 #if HAVE_GSTREAMER
-	GstElement *demuxer, *decoder, *conv, *sink;
-
 	if (!gst_is_initialized ())
 		gst_init (NULL, NULL);
 
 	for (i = 0; i < GPINSTRUCT_MESSAGE_TYPE_SIZE; i++)
 		priv->sounds[i] = NULL;
 
-	priv->pipeline = gst_pipeline_new ("audio-player");
-	priv->source  = gst_element_factory_make ("filesrc", "file-source");
-	demuxer = gst_element_factory_make ("oggdemux",      "ogg-demuxer");
-	decoder = gst_element_factory_make ("vorbisdec",     "vorbis-decoder");
-	conv    = gst_element_factory_make ("audioconvert",  "converter");
-	sink    = gst_element_factory_make ("autoaudiosink", "audio-output");
-
-	gst_bin_add_many (GST_BIN (priv->pipeline),
-	                  priv->source, demuxer, decoder, conv, sink, NULL);
-
-	gst_element_link (priv->source, demuxer);
-	gst_element_link_many (decoder, conv, sink, NULL);
-	g_signal_connect (demuxer, "pad-added", G_CALLBACK (on_pad_added), decoder);
-
-	GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (priv->pipeline));
-	gst_bus_add_watch (bus, bus_call, NULL);
-	gst_object_unref (bus);
+	priv->player = gst_element_factory_make ("playbin", NULL);
 #endif
 }
 
@@ -152,8 +89,8 @@ gpinstruct_message_pool_finalize (GObject *object)
 			g_list_free_full (priv->sounds[i], g_free);
 	}
 
-	gst_element_set_state (priv->pipeline, GST_STATE_NULL);
-	gst_object_unref (GST_OBJECT (priv->pipeline));
+	gst_element_set_state (priv->player, GST_STATE_NULL);
+	gst_object_unref (GST_OBJECT (priv->player));
 #endif
 
 	G_OBJECT_CLASS (gpinstruct_message_pool_parent_class)->finalize (object);
@@ -232,7 +169,7 @@ gpinstruct_message_pool_load_from_file (GPInstructMessagePool *pool,
 			{
 				for (key = 0; keys[key] != NULL; key++)
 				{
-					gchar *path = NULL;
+					gchar *path = NULL, *uri = NULL;
 
 					if (g_path_is_absolute (keys[key]))
 						path = g_strdup (keys[key]);
@@ -261,8 +198,14 @@ gpinstruct_message_pool_load_from_file (GPInstructMessagePool *pool,
 					}
 
 					if (path)
+					{
+						uri = g_filename_to_uri (path, NULL, NULL);
+						g_free (path);
+					}
+
+					if (uri)
 						priv->sounds[type] = g_list_append (priv->sounds[type],
-						                                          path);
+						                                    uri);
 				}
 
 				g_strfreev (keys);
@@ -390,9 +333,9 @@ gpinstruct_message_pool_play_sound_random (GPInstructMessagePool *pool,
 		sound = g_random_int_range (0, num_sounds);
 	}
 
-	gst_element_set_state (priv->pipeline, GST_STATE_NULL);
-	g_object_set (priv->source, "location", (gchar*) g_list_nth_data (sounds, sound), NULL);
-	gst_element_set_state (priv->pipeline, GST_STATE_PLAYING);
+	gst_element_set_state (priv->player, GST_STATE_NULL);
+	g_object_set (priv->player, "uri", (gchar*) g_list_nth_data (sounds, sound), NULL);
+	gst_element_set_state (priv->player, GST_STATE_PLAYING);
 #endif
 }
 
