@@ -69,7 +69,8 @@ multi_choice_show_question (GPInstructLessonTestMultiChoicePage *page,
 			gtk_widget_destroy (priv->choices_vbox);
 
 		priv->choices_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-		gtk_box_pack_start (GTK_BOX (priv->vbox), priv->choices_vbox, FALSE, TRUE, 3);
+		gtk_widget_set_valign (priv->choices_vbox, GTK_ALIGN_END);
+		gtk_container_add (GTK_CONTAINER (priv->vbox), priv->choices_vbox);
 
 		GtkWidget *choice_radio_button;
 		GtkWidget *last_radio_button = NULL;
@@ -302,11 +303,14 @@ gpinstruct_lesson_test_multi_choice_page_new (GPInstructLessonTestMultiChoice *t
 
 	priv->vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (page), priv->vbox);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (page), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 
 	GtkWidget *question_scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (question_scrolledwindow),
 	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_box_pack_start (GTK_BOX (priv->vbox), question_scrolledwindow, TRUE, TRUE, 0);
+	gtk_widget_set_hexpand (question_scrolledwindow, TRUE);
+	gtk_widget_set_vexpand (question_scrolledwindow, TRUE);
+	gtk_container_add (GTK_CONTAINER (priv->vbox), question_scrolledwindow);
 
 	priv->question_textview = gtk_text_view_new ();
 	gtk_style_context_add_class (gtk_widget_get_style_context (priv->question_textview),
@@ -314,6 +318,7 @@ gpinstruct_lesson_test_multi_choice_page_new (GPInstructLessonTestMultiChoice *t
 	gtk_text_view_set_justification (GTK_TEXT_VIEW (priv->question_textview), GTK_JUSTIFY_CENTER);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->question_textview), GTK_WRAP_WORD);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->question_textview), FALSE);
+	gtk_widget_set_valign (priv->question_textview, GTK_ALIGN_CENTER);
 	gtk_container_add (GTK_CONTAINER (question_scrolledwindow), priv->question_textview);
 
 	return page;
